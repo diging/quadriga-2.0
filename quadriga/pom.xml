@@ -23,6 +23,13 @@
 		<db.database.url>jdbc-url-to-db</db.database.url>
 		<db.user>db-user</db.user>
 		<db.password>db-password</db.password>
+		
+		<email.user></email.user>
+ 		<email.password></email.password>
+ 		<email.host></email.host>
+ 		<email.port></email.port>
+ 		<email.from></email.from>
+ 		<app.url></app.url>
 
 		<mongo.database.name>quadriga</mongo.database.name>
 		<mongo.database.host>localhost</mongo.database.host>
