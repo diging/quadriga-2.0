@@ -8,42 +8,42 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <properties>
-        <org.slf4j-version>1.7.26</org.slf4j-version>
-        <org.springframework-version>5.2.9.RELEASE</org.springframework-version>
-        <spring-security-version>5.4.1</spring-security-version>
-        <spring-data.version>Neumann-SR4</spring-data.version>
-        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
-        <mongo-version>4.1.0</mongo-version>
-        <simple-users-version>1.1</simple-users-version>
+	<properties>
+		<org.slf4j-version>1.7.26</org.slf4j-version>
+		<org.springframework-version>5.2.9.RELEASE</org.springframework-version>
+		<spring-security-version>5.4.1</spring-security-version>
+		<spring-data.version>Neumann-SR4</spring-data.version>
+		<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+		<mongo-version>4.1.0</mongo-version>
+		<simple-users-version>1.1</simple-users-version>
 
-        <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
+		<admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
 
 		<db.driver>com.mysql.jdbc.Driver</db.driver>
-		<db.database.url>jdbc:mysql://localhost:3306/quadriga</db.database.url>
-		<db.user>dbadmin</db.user>
-		<db.password>dbadmin</db.password>
-		
+		<db.database.url>jdbc-url-to-db</db.database.url>
+		<db.user>db-user</db.user>
+		<db.password>db-password</db.password>
+
 		<email.user></email.user>
- 		<email.password></email.password>
- 		<email.host></email.host>
- 		<email.port></email.port>
- 		<email.from></email.from>
- 		<app.url></app.url>
+		<email.password></email.password>
+		<email.host></email.host>
+		<email.port></email.port>
+		<email.from></email.from>
+		<app.url></app.url>
 
-        <mongo.database.name>quadriga</mongo.database.name>
-        <mongo.database.host>localhost</mongo.database.host>
-        <mongo.database.port>27017</mongo.database.port>
-        <mongo.database.user></mongo.database.user>
-        <mongo.database.password></mongo.database.password>
-        <mongo.database.authdb>admin</mongo.database.authdb>
+		<mongo.database.name>quadriga</mongo.database.name>
+		<mongo.database.host>localhost</mongo.database.host>
+		<mongo.database.port>27017</mongo.database.port>
+		<mongo.database.user></mongo.database.user>
+		<mongo.database.password></mongo.database.password>
+		<mongo.database.authdb>admin</mongo.database.authdb>
 
-        <log.level>info</log.level>
+		<log.level>info</log.level>
 
-        <tomcat.deploy.path></tomcat.deploy.path>
-        <tomcat.app.name>quadriga2.0</tomcat.app.name>
-        <tomcat.server.id>TomcatServer</tomcat.server.id>
-    </properties>
+		<tomcat.deploy.path></tomcat.deploy.path>
+		<tomcat.app.name>quadriga2.0</tomcat.app.name>
+		<tomcat.server.id>TomcatServer</tomcat.server.id>
+	</properties>
 
     <dependencyManagement>
         <dependencies>
