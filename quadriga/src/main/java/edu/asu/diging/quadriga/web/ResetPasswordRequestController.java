@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ResetPasswordRequestController {
 
-	@RequestMapping(value = "/reset/password/request")
-	public String show(Model model) {
-		return "resetPassword";
-	}
+    @RequestMapping(value = "/reset/password/request")
+    public String show(Model model) {
+        return "resetPassword";
+    }
 }
