@@ -1,6 +1,6 @@
 <html layout:decorate="~{layouts/main}">
   <head>
-    <title>Authority Matcher</title>
+    <title>Quadriga 2.0</title>
   </head>
   <body>
   <div layout:fragment="content">
@@ -10,31 +10,32 @@
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		
 		<label>Username: </label>
-		<input th:field="*{username}" class="form-control input-sm"></input>
-		<p class="text-danger"><th:errors path="username"/></p>
+ 		<input th:field="*{username}" class="form-control input-sm searchbox"></input>
+ 		<p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
 	
 		<label>First name:</label>
-		<input th:field="*{firstName}" class="form-control input-sm"></input>
-		<p class="text-danger"><th:errors path="firstName"/></p>
+ 		<input th:field="*{firstName}" class="form-control input-sm"></input>
+ 		<p class="text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
 		
 		<label>Last name:</label>
-		<input th:field="*{lastName}" class="form-control input-sm"></input>
-		<p class="text-danger"><th:errors path="lastName"/></p>
+ 		<input th:field="*{lastName}" class="form-control input-sm"></input>
+ 		<p class="text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></p>
 		
 		<label>Email:</label>
-		<input th:field="*{email}" class="form-control input-sm"></input>
-		<p class="text-danger"><th:errors path="email"/></p>
+ 		<input th:field="*{email}" class="form-control input-sm"></input>
+ 		<p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
 		
 		<label>Password:</label>
-		<input type="password" th:field="*{password}" class="form-control input-sm"></password>
-		<p class="text-danger"><th:errors path="password"/></p>
+ 		<input type="password" th:field="*{password}" class="form-control input-sm"></input>
+		<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+ 		
 		
 		<label>Confirm Password:</label>
-		<input type="password" th:field="*{confirmPassword}" class="form-control input-sm"></password>
-		<p class="text-danger"><th:errors path="confirmPassword"/></p>
+ 		<input type="password" th:field="*{confirmPassword}" class="form-control input-sm"></input>
+ 		<p class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
 	
 		<div style="padding-top: 20px;">
-		<button class="btn btn-sm btn-primary pull-right">Create Account</button>
+		<button class="btn primary-btn">Create Account</button>
 		</div>
 	</form>
 
