@@ -10,7 +10,7 @@
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		
 		<label>Username: </label>
- 		<input th:field="*{username}" class="form-control input-sm"></input>
+ 		<input th:field="*{username}" class="form-control input-sm searchbox"></input>
  		<p class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
 	
 		<label>First name:</label>
@@ -27,7 +27,10 @@
 		
 		<label>Password:</label>
  		<input type="password" th:field="*{password}" class="form-control input-sm"></input>
- 		<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+ 		<div class="alert alert-danger" th:if="${#fields.hasErrors('password')}" role="alert">
+			<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+		</div>
+ 		
 		
 		<label>Confirm Password:</label>
  		<input type="password" th:field="*{confirmPassword}" class="form-control input-sm"></input>
