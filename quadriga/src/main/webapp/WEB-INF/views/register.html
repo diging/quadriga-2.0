@@ -27,9 +27,7 @@
 		
 		<label>Password:</label>
  		<input type="password" th:field="*{password}" class="form-control input-sm"></input>
- 		<div class="alert alert-danger" th:if="${#fields.hasErrors('password')}" role="alert">
-			<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-		</div>
+		<p class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
  		
 		
 		<label>Confirm Password:</label>
