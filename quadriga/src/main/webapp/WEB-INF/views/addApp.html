@@ -1,0 +1,29 @@
+<html layout:decorate="~{layouts/main}">
+<head>
+<title>Quadriga 2.0</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h2>Add new App</h2>
+
+		<form action="#" th:action="@{/admin/add}" method="POST"
+			th:object="${app}">
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" /> <label>App Name: </label> <input
+				th:field="*{username}" class="form-control input-sm searchbox"></input>
+			<p class="text-danger" th:if="${#fields.hasErrors('username')}"
+				th:errors="*{username}"></p>
+
+			<label>Description</label> <input th:field="*{firstName}"
+				class="form-control input-sm"></input>
+			<p class="text-danger" th:if="${#fields.hasErrors('firstName')}"
+				th:errors="*{firstName}"></p>
+
+			<div style="padding-top: 20px;">
+				<button class="btn primary-btn">Add App</button>
+			</div>
+		</form>
+
+	</div>
+</body>
+</html>
