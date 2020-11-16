@@ -49,6 +49,9 @@
 	          	<li sec:authorize="hasRole('ADMIN')" role="presentation">
 	          		<a th:href="@{/admin/user/list}" >Users</a>
 	          	</li>
+	          	<li sec:authorize="hasRole('ADMIN')" role="presentation">
+	          		<a th:href="@{/admin/add}" >Add App</a>
+	          	</li>
 	          	
 	          	<li sec:authorize="isAuthenticated()" role="presentation">
 	         	 	<form th:action="@{/logout}" method="POST">
