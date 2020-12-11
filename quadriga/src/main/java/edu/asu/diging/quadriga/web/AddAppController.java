@@ -28,7 +28,7 @@ public class AddAppController {
     @RequestMapping(value = "/admin/add", method=RequestMethod.GET)
     public String get(Model model) {
         model.addAttribute("app", new AppForm());
-        return "addApp";
+        return "admin/addApp";
     }
 
     @RequestMapping(value = "/admin/add", method = RequestMethod.POST)
