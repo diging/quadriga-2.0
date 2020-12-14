@@ -12,12 +12,7 @@
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" /> 
 				<label>App Name: </label> <input th:field="*{name}" class="form-control input-sm"></input>
-			<!-- <p class="text-danger" th:if="${#fields.hasErrors('username')}"
-				th:errors="*{username}"></p> -->
-
-			<label>Description:</label> <input th:field="*{description}" class="form-control input-sm"></input>
-			<!-- <p class="text-danger" th:if="${#fields.hasErrors('firstName')}"
-				th:errors="*{firstName}"></p> -->
+				<label>Description:</label> <input th:field="*{description}" class="form-control input-sm"></input>
 
 			<div style="padding-top: 20px;">
 				<button class="btn primary-btn">Add App</button>
