@@ -7,7 +7,7 @@
 	<span th:text="${alert_msg}"></span>
 		<h2>Add new App</h2>
 
-		<form action="#" th:action="@{/admin/add}" method="POST"
+		<form action="#" th:action="@{/admin/apps/add}" method="POST"
 			th:object="${app}">
 			<input type="hidden" name="${_csrf.parameterName}"
 				value="${_csrf.token}" /> 
