@@ -1,6 +1,8 @@
 package edu.asu.diging.quadriga.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,7 +14,11 @@ import edu.asu.diging.quadriga.core.service.IAppManager;
 import edu.asu.diging.quadriga.web.forms.AppForm;
 
 @Controller
+@PropertySource("classpath:messages.properties")
 public class AddAppController {
+
+    @Autowired
+    private Environment env;
 
     @Autowired
     private IAppManager appManager;
@@ -29,7 +35,7 @@ public class AddAppController {
         appManager.addApp(appForm);
 
         redirectAttrs.addFlashAttribute("alert_type", "success");
-        redirectAttrs.addFlashAttribute("alert_msg", "App was successfully added.");
+        redirectAttrs.addFlashAttribute("alert_msg", env.getRequiredProperty("101"));
         return "redirect:/admin/add";
     }
 
