@@ -6,9 +6,9 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Set;
 
-import org.dom4j.Namespace;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 
-import edu.asu.diging.quadriga.domain.elements.Element;
 import edu.asu.diging.quadriga.domain.elements.Term;
 import edu.asu.diging.quadriga.domain.elements.TermPart;
 import edu.asu.diging.quadriga.domain.elements.TermParts;

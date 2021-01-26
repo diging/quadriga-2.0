@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -21,6 +22,7 @@ import edu.asu.diging.quadriga.domain.events.AppellationEvent;
 import edu.asu.diging.quadriga.domain.events.RelationEvent;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
+import edu.asu.diging.quadriga.message.Message;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
 
 @Controller
@@ -39,6 +41,7 @@ public class QStore {
         }
     };
     
+    @Autowired
     private IRepositoryManager repositorymanager;
 
 
@@ -60,7 +63,7 @@ public class QStore {
      * @throws InvalidDataException
      */
     @ResponseBody
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/xml", method = RequestMethod.POST)
     public String processXML(HttpServletRequest request, HttpServletResponse response, @RequestBody String xml,
             @RequestHeader("Accept") String accept) throws ParserException, IOException, URISyntaxException,
                     ParseException, JSONException, InvalidDataException {

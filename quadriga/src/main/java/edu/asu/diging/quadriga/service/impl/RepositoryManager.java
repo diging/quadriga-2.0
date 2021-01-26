@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.converter.IXmltoObject;
 import edu.asu.diging.quadriga.domain.elements.Element;
@@ -15,7 +16,7 @@ import edu.asu.diging.quadriga.domain.events.CreationEvent;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
-
+@Service
 public class RepositoryManager implements IRepositoryManager {
     
     @Autowired
