@@ -63,7 +63,7 @@ public class QStore {
      * @throws InvalidDataException
      */
     @ResponseBody
-    @RequestMapping(value = "/xml", method = RequestMethod.POST)
+    @RequestMapping(value = "/rest/add", method = RequestMethod.POST)
     public String processXML(HttpServletRequest request, HttpServletResponse response, @RequestBody String xml,
             @RequestHeader("Accept") String accept) throws ParserException, IOException, URISyntaxException,
                     ParseException, JSONException, InvalidDataException {

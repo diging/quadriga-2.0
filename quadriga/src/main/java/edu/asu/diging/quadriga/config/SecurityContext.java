@@ -1,13 +1,17 @@
 package edu.asu.diging.quadriga.config;
 
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
 
@@ -25,7 +29,28 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       http.formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed").and()
+        HeadersConfigurer<HttpSecurity> config = http.cors().and().antMatcher("**").csrf()
+                .requireCsrfProtectionMatcher(new RequestMatcher() {
+                    @Override
+                    public boolean matches(HttpServletRequest arg0) {
+                        // don't require CSRF for REST calls
+                        if (arg0.getRequestURI().indexOf("/rest/") > -1) {
+                            return false;
+                        }
+                        // mitreid connect server can't deal with additional parameteres
+                        if (arg0.getRequestURI().indexOf("/signin/mitreid") > -1) {
+                            return false;
+                        }
+                        if (arg0.getMethod().equals("GET")) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }).and().headers().frameOptions().sameOrigin();
+        
+        
+        
+       config.and().formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed").and()
                 .logout()
                 .deleteCookies("JSESSIONID")
                 .logoutUrl("/logout")
@@ -35,7 +60,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // Anyone can access the urls
-                .antMatchers("/", "/resources/**", "/register","/login", "/loginFailed", "/register","/logout", "/reset/**","/xml").permitAll()
+                .antMatchers("/", "/resources/**", "/register","/login", "/loginFailed", "/register","/logout", "/reset/**","/rest/**").permitAll()
                 // The rest of the our application is protected.
                 .antMatchers("/users/**", "/admin/**").hasRole("ADMIN").antMatchers("/auth/**")
                 .hasAnyRole("USER", "ADMIN").antMatchers("/password/**")
