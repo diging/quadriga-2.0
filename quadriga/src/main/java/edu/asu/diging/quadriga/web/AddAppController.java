@@ -14,7 +14,7 @@ import edu.asu.diging.quadriga.core.service.IAppManager;
 import edu.asu.diging.quadriga.web.forms.AppForm;
 
 @Controller
-@PropertySource("classpath:messages.properties")
+@PropertySource("classpath:locale/messages_en_US.properties")
 public class AddAppController {
 
     @Autowired
@@ -35,7 +35,7 @@ public class AddAppController {
         appManager.addApp(appForm);
 
         redirectAttrs.addFlashAttribute("alert_type", "success");
-        redirectAttrs.addFlashAttribute("alert_msg", env.getRequiredProperty("101"));
+        redirectAttrs.addFlashAttribute("alert_msg", env.getRequiredProperty("app_create_success"));
         return "redirect:/admin/add";
     }
 
