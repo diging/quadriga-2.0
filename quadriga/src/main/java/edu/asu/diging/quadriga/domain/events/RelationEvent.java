@@ -1,12 +1,8 @@
 package edu.asu.diging.quadriga.domain.events;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import edu.asu.diging.quadriga.domain.elements.Actor;
 import edu.asu.diging.quadriga.domain.elements.Relation;
 
-@XmlRootElement
 public class RelationEvent extends CreationEvent {
 
     private Relation relation;
@@ -21,7 +17,6 @@ public class RelationEvent extends CreationEvent {
         this.relation = relation;
     }
 
-    @XmlElement(type = Actor.class)
     public Actor getRelationCreator() {
         return relation_creator;
     }

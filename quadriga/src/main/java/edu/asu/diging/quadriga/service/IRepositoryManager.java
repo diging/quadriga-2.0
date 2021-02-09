@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.service;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.List;
 
 import org.json.JSONException;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,6 @@ public interface IRepositoryManager {
      * @throws JSONException
      * @throws InvalidDataException
      */
-    public String processXMLandStoretoDb(String xml, String type) throws URISyntaxException, ParserException,
+    public List<String> processXMLandStoretoDb(String xml, String type) throws URISyntaxException, ParserException,
             IOException, ParseException, JSONException, InvalidDataException;
 }

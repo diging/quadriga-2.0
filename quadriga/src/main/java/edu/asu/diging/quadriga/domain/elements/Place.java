@@ -5,5 +5,5 @@ package edu.asu.diging.quadriga.domain.elements;
  *
  */
 public class Place extends Concept {
-    
+
 }

@@ -1,13 +1,8 @@
 package edu.asu.diging.quadriga.domain.elements;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
-//@NodeEntity
 public class TermPart extends Element {
 
-    //@GraphId
     Long graphId;
     
     private String formatted_pointer;
@@ -16,13 +11,9 @@ public class TermPart extends Element {
 
     private Integer position;
     
-    //@Property(name = "normalization")
-    //@Convert(VocabularyEntryConverter.class)
     private VocabularyEntry normalization;
 
     
-    //@Property(name = "source_reference")
-    //@Convert(SourceReferenceConverter.class)
     private SourceReference source_reference;
     
     public Integer getPosition() {
@@ -45,7 +36,6 @@ public class TermPart extends Element {
         this.normalization = normalization;
     }
 
-    @XmlElement(type=VocabularyEntry.class)
     public VocabularyEntry getNormalization() {
         return normalization;
     }
@@ -66,7 +56,6 @@ public class TermPart extends Element {
         return format;
     }
     
-    @XmlElement(type=SourceReference.class)
     public SourceReference getSourceReference() {
         return source_reference;
     }

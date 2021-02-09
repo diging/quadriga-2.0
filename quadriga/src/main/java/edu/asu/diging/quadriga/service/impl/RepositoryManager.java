@@ -4,15 +4,17 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.converter.IXmltoObject;
+import edu.asu.diging.quadriga.core.mongo.ElementDao;
 import edu.asu.diging.quadriga.domain.elements.Element;
-import edu.asu.diging.quadriga.domain.events.CreationEvent;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
@@ -22,26 +24,21 @@ public class RepositoryManager implements IRepositoryManager {
     @Autowired
     private IXmltoObject xmlToObject;
     
+    @Autowired
+    private ElementDao elementDao;
+    
 
     @Override
-    public String processXMLandStoretoDb(String xml, String type) throws URISyntaxException, ParserException,
+    public List<String> processXMLandStoretoDb(String xml, String type) throws URISyntaxException, ParserException,
             IOException, ParseException, JSONException, InvalidDataException {
 
         List<List<Element>> creationEventList = new ArrayList<List<Element>>();
-        List<CreationEvent> creationEventListwithID = new ArrayList<CreationEvent>();
 
         creationEventList = xmlToObject.parseXML(xml);
+        elementDao.saveElements(creationEventList);
         
+        return creationEventList.stream().flatMap(Collection::stream).map(e ->e.getId()).collect(Collectors.toList());
         
-
-//        creationEventListwithID = storeManager.insertIntoDb(creationEventList);
-//
-//        if (type.equals((JSON))) {
-//            return converter.convertToJson(creationEventListwithID);
-//        } else {
-//            return converter.convertToXML(creationEventListwithID);
-        ///}
-        return "";
     }
 
 }
