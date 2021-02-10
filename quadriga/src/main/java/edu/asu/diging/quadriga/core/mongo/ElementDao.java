@@ -6,6 +6,5 @@ import edu.asu.diging.quadriga.domain.elements.Element;
 
 public interface ElementDao {
 
-
     public void saveElements(List<List<Element>> elements);
 }

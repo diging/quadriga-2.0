@@ -24,7 +24,7 @@ public class PlaceFactory implements IPlaceFactory {
         Place placeObject = new Place();
         if (sourceUri == null) {
             placeObject.setSourceURI("");
-            } else {
+        } else {
             placeObject.setSourceURI(sourceUri);
         }
         return placeObject;

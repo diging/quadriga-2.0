@@ -18,15 +18,15 @@ import edu.asu.diging.quadriga.domain.elements.Element;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
+
 @Service
 public class RepositoryManager implements IRepositoryManager {
-    
+
     @Autowired
     private IXmltoObject xmlToObject;
-    
+
     @Autowired
     private ElementDao elementDao;
-    
 
     @Override
     public List<String> processXMLandStoretoDb(String xml, String type) throws URISyntaxException, ParserException,
@@ -36,9 +36,9 @@ public class RepositoryManager implements IRepositoryManager {
 
         creationEventList = xmlToObject.parseXML(xml);
         elementDao.saveElements(creationEventList);
-        
-        return creationEventList.stream().flatMap(Collection::stream).map(e ->e.getId()).collect(Collectors.toList());
-        
+
+        return creationEventList.stream().flatMap(Collection::stream).map(e -> e.getId()).collect(Collectors.toList());
+
     }
 
 }

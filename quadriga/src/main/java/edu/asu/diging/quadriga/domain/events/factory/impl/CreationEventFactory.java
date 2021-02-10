@@ -7,9 +7,9 @@ import edu.asu.diging.quadriga.domain.events.factory.ICreationEventFactory;
 
 @Service
 public class CreationEventFactory implements ICreationEventFactory {
-@Override
-    public CreationEvent createCreationEvent()
-    {
+
+    @Override
+    public CreationEvent createCreationEvent() {
         return new CreationEvent();
     }
 }

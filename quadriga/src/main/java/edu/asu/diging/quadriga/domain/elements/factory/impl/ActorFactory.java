@@ -8,21 +8,18 @@ import edu.asu.diging.quadriga.domain.elements.factory.IActorFactory;
 @Service
 public class ActorFactory implements IActorFactory {
     @Override
-    public Actor createActor()
-    {
+    public Actor createActor() {
         return new Actor();
     }
-    
+
     @Override
-    public Actor createActor(String sourceUri)
-    {
+    public Actor createActor(String sourceUri) {
         Actor actorObject = new Actor();
-        if(sourceUri==null)
-        {
+        if (sourceUri == null) {
             actorObject.setSourceURI("");
+        } else {
+            actorObject.setSourceURI(sourceUri);
         }
-        else{
-        actorObject.setSourceURI(sourceUri);}
         return actorObject;
     }
 

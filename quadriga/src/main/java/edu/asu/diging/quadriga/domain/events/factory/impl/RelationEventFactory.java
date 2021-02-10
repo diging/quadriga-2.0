@@ -7,9 +7,9 @@ import edu.asu.diging.quadriga.domain.events.factory.IRelationEventFactory;
 
 @Service
 public class RelationEventFactory implements IRelationEventFactory {
+
     @Override
-    public RelationEvent createRelationEvent()
-    {
+    public RelationEvent createRelationEvent() {
         return new RelationEvent();
     }
 }

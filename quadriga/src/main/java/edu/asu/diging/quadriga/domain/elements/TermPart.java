@@ -1,21 +1,19 @@
 package edu.asu.diging.quadriga.domain.elements;
 
-
 public class TermPart extends Element {
 
     Long graphId;
-    
+
     private String formatted_pointer;
     private String format;
     private String expression;
 
     private Integer position;
-    
+
     private VocabularyEntry normalization;
 
-    
     private SourceReference source_reference;
-    
+
     public Integer getPosition() {
         return position;
     }
@@ -55,7 +53,7 @@ public class TermPart extends Element {
     public String getFormat() {
         return format;
     }
-    
+
     public SourceReference getSourceReference() {
         return source_reference;
     }
@@ -63,5 +61,5 @@ public class TermPart extends Element {
     public void setSourceReference(SourceReference reference) {
         this.source_reference = reference;
     }
-    
+
 }

@@ -12,8 +12,7 @@ public class VocabularyEntry extends Element {
     public void setTerm(String term) {
         this.term = term;
     }
-    
-    
+
     public String getSourceURI() {
         return sourceURI;
     }

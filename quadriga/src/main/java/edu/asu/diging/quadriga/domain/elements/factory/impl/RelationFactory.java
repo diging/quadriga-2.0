@@ -7,8 +7,8 @@ import edu.asu.diging.quadriga.domain.elements.factory.IRelationFactory;
 
 @Service
 public class RelationFactory implements IRelationFactory {
-    public Relation createRelation()
-    {
+
+    public Relation createRelation() {
         return new Relation();
     }
 }

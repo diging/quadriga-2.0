@@ -7,9 +7,9 @@ import edu.asu.diging.quadriga.domain.events.factory.IAppellationEventFactory;
 
 @Service
 public class AppellationEventFactory implements IAppellationEventFactory {
-@Override
-    public AppellationEvent createAppellationEvent()
-    {
+
+    @Override
+    public AppellationEvent createAppellationEvent() {
         return new AppellationEvent();
     }
 }

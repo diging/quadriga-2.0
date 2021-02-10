@@ -7,5 +7,5 @@ public interface IActorFactory {
     Actor createActor();
 
     Actor createActor(String sourceUri);
-    
+
 }

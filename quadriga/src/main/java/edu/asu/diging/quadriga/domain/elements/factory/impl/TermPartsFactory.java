@@ -14,6 +14,7 @@ import edu.asu.diging.quadriga.domain.elements.factory.ITermPartsFactory;
  */
 @Service
 public class TermPartsFactory implements ITermPartsFactory {
+
     @Override
     public TermParts createTermParts() {
         return new TermParts();

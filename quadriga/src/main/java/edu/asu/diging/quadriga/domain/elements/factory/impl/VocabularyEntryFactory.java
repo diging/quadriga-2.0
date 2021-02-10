@@ -14,6 +14,7 @@ import edu.asu.diging.quadriga.domain.elements.factory.IVocabularyEntryFactory;
  */
 @Service
 public class VocabularyEntryFactory implements IVocabularyEntryFactory {
+
     @Override
     public VocabularyEntry createVocabularyEntry() {
         return new VocabularyEntry();

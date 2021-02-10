@@ -41,7 +41,6 @@ import edu.asu.diging.quadriga.domain.elements.factory.IVocabularyEntryFactory;
 import edu.asu.diging.quadriga.domain.events.AppellationEvent;
 import edu.asu.diging.quadriga.domain.events.RelationEvent;
 import edu.asu.diging.quadriga.domain.events.factory.IAppellationEventFactory;
-import edu.asu.diging.quadriga.domain.events.factory.ICreationEventFactory;
 import edu.asu.diging.quadriga.domain.events.factory.IRelationEventFactory;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
@@ -54,9 +53,6 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
 
     @Autowired
     private IAppellationEventFactory appellationEventFactory;
-
-    @Autowired
-    private ICreationEventFactory creationEventFactory;
 
     @Autowired
     private ITermPartsFactory termPartsFactory;

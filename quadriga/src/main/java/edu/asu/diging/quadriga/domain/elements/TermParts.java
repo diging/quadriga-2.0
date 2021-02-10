@@ -3,11 +3,6 @@ package edu.asu.diging.quadriga.domain.elements;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementRef;
-import javax.xml.bind.annotation.XmlElementRefs;
-import javax.xml.bind.annotation.XmlRootElement;
-
 public class TermParts extends Element {
 
     Long graphId;
