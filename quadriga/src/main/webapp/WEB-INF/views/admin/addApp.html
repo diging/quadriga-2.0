@@ -9,8 +9,6 @@
 
 		<form action="#" th:action="@{/admin/apps/add}" method="POST"
 			th:object="${app}">
-			<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" /> 
 				<label>App Name: </label> <input th:field="*{name}" class="form-control input-sm"></input>
 				<label>Description:</label> <input th:field="*{description}" class="form-control input-sm"></input>
 
