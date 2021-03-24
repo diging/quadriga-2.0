@@ -14,7 +14,7 @@ public class App implements IApp {
 
     @Id
     @GeneratedValue(generator = "app_id_generator")
-    @GenericGenerator(name = "app_id_generator", parameters = @Parameter(name = "prefix", value = "app"), strategy = "edu.asu.diging.quadriga.core.data.IdGenerator")
+    @GenericGenerator(name = "app_id_generator", parameters = @Parameter(name = "prefix", value = "APP"), strategy = "edu.asu.diging.quadriga.core.data.IdGenerator")
     private String id;
     private String name;
     private String description;
