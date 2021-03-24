@@ -160,6 +160,17 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
         relationEventObject
                 .setExternal_refId(checkForSpaces(relationEvent.getChildText(IXmlElements.EXTERNAL_REFID, nameSpace)));
 
+        createRelationEvent(relationEventObject, relationEvent, nameSpace, referencedObjectList, formatter);
+        if (relationEventObject.getRefId() != null) {
+            referencedObjectList.add(relationEventObject);
+        }
+        return relationEventObject;
+    }
+
+    private void createRelationEvent(RelationEvent relationEventObject, Element relationEvent, Namespace nameSpace,
+            List<edu.asu.diging.quadriga.domain.elements.Element> referencedObjectList, DateFormat formatter)
+            throws ParseException, ParserException, IOException, URISyntaxException, InvalidDataException {
+
         if (relationEventObject.getInternal_refId() == null && relationEventObject.getExternal_refId() == null) {
             relationEventObject.setId(checkForSpaces(relationEvent.getChildText(IXmlElements.ID, nameSpace)));
 
@@ -210,25 +221,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
 
                 if (subjectChild != null) {
 
-                    {
-                        List<Element> subject = subjectChild.getChildren();
-                        Iterator<Element> subjectIterator = subject.iterator();
-                        Element appellationRelation = subjectIterator.next();
-
-                        if (appellationRelation.getName().equals(IXmlElements.APPELLATION_EVENT)) {
-                            AppellationEvent appellationSubEventObject = getAppellationEvent(appellationRelation,
-                                    nameSpace, referencedObjectList);
-                            relationObject.setSubject(appellationSubEventObject);
-
-                        } else if (appellationRelation.getName().equals(IXmlElements.RELATION_EVENT)) {
-                            RelationEvent childRelationEventObject = relationEventFactory.createRelationEvent();
-                            childRelationEventObject = getRelationEvent(appellationRelation, nameSpace,
-                                    referencedObjectList);
-                            relationObject.setSubject(childRelationEventObject);
-
-                        }
-
-                    }
+                    createAppellationEvent(subjectChild, relationObject, nameSpace, referencedObjectList);
 
                 }
 
@@ -281,10 +274,28 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
 
             relationEventObject.setRelation(relationObject);
         }
-        if (relationEventObject.getRefId() != null) {
-            referencedObjectList.add(relationEventObject);
+
+    }
+
+    private void createAppellationEvent(Element subjectChild, Relation relationObject, Namespace nameSpace,
+            List<edu.asu.diging.quadriga.domain.elements.Element> referencedObjectList)
+            throws ParserException, IOException, URISyntaxException, ParseException, InvalidDataException {
+        List<Element> subject = subjectChild.getChildren();
+        Iterator<Element> subjectIterator = subject.iterator();
+        Element appellationRelation = subjectIterator.next();
+
+        if (appellationRelation.getName().equals(IXmlElements.APPELLATION_EVENT)) {
+            AppellationEvent appellationSubEventObject = getAppellationEvent(appellationRelation, nameSpace,
+                    referencedObjectList);
+            relationObject.setSubject(appellationSubEventObject);
+
+        } else if (appellationRelation.getName().equals(IXmlElements.RELATION_EVENT)) {
+            RelationEvent childRelationEventObject = relationEventFactory.createRelationEvent();
+            childRelationEventObject = getRelationEvent(appellationRelation, nameSpace, referencedObjectList);
+            relationObject.setSubject(childRelationEventObject);
+
         }
-        return relationEventObject;
+
     }
 
     /**
