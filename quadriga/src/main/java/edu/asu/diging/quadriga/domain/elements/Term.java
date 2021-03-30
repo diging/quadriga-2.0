@@ -3,16 +3,12 @@ package edu.asu.diging.quadriga.domain.elements;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * This file contains the definition of Term class.
  *
  */
-@XmlRootElement
 public class Term extends Element {
-
-    Long graphId;
 
     private Concept interpretation;
 

@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.web;
+package edu.asu.diging.quadriga.api.v0;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -24,7 +24,7 @@ import edu.asu.diging.quadriga.message.Message;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
 
 @Controller
-public class QStore {
+public class AddNetworkController {
 
     private static final String XML = "application/xml";
     private static final String JSON = "application/json";

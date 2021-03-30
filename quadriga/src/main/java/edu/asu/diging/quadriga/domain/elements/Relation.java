@@ -5,7 +5,7 @@ import edu.asu.diging.quadriga.domain.events.CreationEvent;
 
 public class Relation extends Element {
 
-    Long graphId;
+    private Long graphId;
 
     private CreationEvent subject;
 

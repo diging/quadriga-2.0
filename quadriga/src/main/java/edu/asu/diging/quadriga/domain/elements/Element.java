@@ -18,15 +18,6 @@ public class Element {
     @Transient
     private String refId;
 
-    @Transient
-    private String internal_refId;
-
-    @Transient
-    private String external_refId;
-
-    @Transient
-    private Boolean isIdAssigned;
-
     private Actor creator;
 
     private Date creation_date;
@@ -35,22 +26,6 @@ public class Element {
 
     public String getId() {
         return id;
-    }
-
-    public String getInternal_refId() {
-        return internal_refId;
-    }
-
-    public void setInternal_refId(String internal_refId) {
-        this.internal_refId = internal_refId;
-    }
-
-    public String getExternal_refId() {
-        return external_refId;
-    }
-
-    public void setExternal_refId(String external_refId) {
-        this.external_refId = external_refId;
     }
 
     public void setRefId(String refId) {
@@ -91,15 +66,4 @@ public class Element {
         this.creation_place = place;
     }
 
-    public boolean isIdAssigned() {
-
-        if (isIdAssigned == null)
-            return false;
-        else
-            return isIdAssigned;
-    }
-
-    public void setIdAssigned(boolean isIdAssigned) {
-        this.isIdAssigned = isIdAssigned;
-    }
 }

@@ -37,10 +37,6 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                         if (arg0.getRequestURI().indexOf("/rest/") > -1) {
                             return false;
                         }
-                        // mitreid connect server can't deal with additional parameteres
-                        if (arg0.getRequestURI().indexOf("/signin/mitreid") > -1) {
-                            return false;
-                        }
                         if (arg0.getMethod().equals("GET")) {
                             return false;
                         }
@@ -60,9 +56,9 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // Anyone can access the urls
-                .antMatchers("/", "/resources/**", "/register","/login", "/loginFailed", "/register","/logout", "/reset/**","/rest/**").permitAll()
+                .antMatchers("/", "/resources/**", "/register","/login", "/loginFailed", "/register","/logout", "/reset/**").permitAll()
                 // The rest of the our application is protected.
-                .antMatchers("/users/**", "/admin/**").hasRole("ADMIN").antMatchers("/auth/**")
+                .antMatchers("/users/**", "/admin/**", "/rest/**").hasRole("ADMIN").antMatchers("/auth/**")
                 .hasAnyRole("USER", "ADMIN").antMatchers("/password/**")
                 .hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE).anyRequest().hasRole("USER");
     }

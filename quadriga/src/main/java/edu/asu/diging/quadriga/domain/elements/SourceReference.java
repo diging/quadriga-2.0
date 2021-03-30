@@ -2,7 +2,7 @@ package edu.asu.diging.quadriga.domain.elements;
 
 public class SourceReference extends Element {
 
-    Long graphId;
+    private Long graphId;
 
     private String sourceURI;
 

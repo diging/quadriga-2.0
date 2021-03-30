@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.converter.IXmltoObject;
-import edu.asu.diging.quadriga.core.mongo.ElementDao;
+import edu.asu.diging.quadriga.core.mongo.ICreationEventService;
 import edu.asu.diging.quadriga.domain.elements.Element;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
@@ -26,7 +26,7 @@ public class RepositoryManager implements IRepositoryManager {
     private IXmltoObject xmlToObject;
 
     @Autowired
-    private ElementDao elementDao;
+    private ICreationEventService elementDao;
 
     @Override
     public List<String> processXMLandStoretoDb(String xml, String type) throws URISyntaxException, ParserException,

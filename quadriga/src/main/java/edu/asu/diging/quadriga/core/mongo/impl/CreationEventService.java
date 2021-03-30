@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.quadriga.core.mongo.ElementDao;
+import edu.asu.diging.quadriga.core.mongo.ICreationEventService;
 import edu.asu.diging.quadriga.domain.elements.Element;
 
 @Service
-public class ElementDaoImpl implements ElementDao {
+public class CreationEventService implements ICreationEventService {
 
     @Autowired
     private MongoTemplate mongoTemplate;

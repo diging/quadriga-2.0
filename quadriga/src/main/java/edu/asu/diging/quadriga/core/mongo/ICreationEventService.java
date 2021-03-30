@@ -4,7 +4,7 @@ import java.util.List;
 
 import edu.asu.diging.quadriga.domain.elements.Element;
 
-public interface ElementDao {
+public interface ICreationEventService {
 
     public void saveElements(List<List<Element>> elements);
 }

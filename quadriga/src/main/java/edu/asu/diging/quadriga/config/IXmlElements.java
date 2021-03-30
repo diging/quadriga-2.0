@@ -11,7 +11,7 @@ public class IXmlElements {
 
     public static String AND = "and";
     public static String OR = "or";
-        public static String SEARCH_TYPE = "search";
+    public static String SEARCH_TYPE = "search";
     public static String RELATION_EVENT = "relation_event";
     public static String ID = "id";
     public static String EXTERNAL_REFID = "external_refId";
