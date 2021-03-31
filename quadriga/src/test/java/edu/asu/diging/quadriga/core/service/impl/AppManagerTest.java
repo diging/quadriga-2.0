@@ -9,7 +9,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.quadriga.core.data.AppRepository;
-import edu.asu.diging.quadriga.core.model.IApp;
 import edu.asu.diging.quadriga.core.model.impl.App;
 import edu.asu.diging.quadriga.web.forms.AppForm;
 
@@ -46,9 +45,10 @@ public class AppManagerTest {
         String desc = "testApp";
         appForm.setName(name);
         appForm.setDescription(desc);
-        IApp app = managerToTest.addApp(appForm);
-        //Mockito.verify(appRepo).save((App)app);
+        App app = managerToTest.addApp(appForm);
+        Mockito.verify(appRepo).save(app);
         Assert.assertEquals(name,app.getName());
+        Assert.assertEquals(desc,app.getDescription());
     }
     
 }
