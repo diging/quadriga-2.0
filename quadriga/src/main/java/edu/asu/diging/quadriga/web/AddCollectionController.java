@@ -18,20 +18,20 @@ public class AddCollectionController {
     @Autowired
     private ICollectionManager collectionManager;
 
-    @RequestMapping(value = "/admin/collections/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/collections/add", method = RequestMethod.GET)
     public String get(Model model) {
         model.addAttribute("collection", new CollectionForm());
-        return "admin/addCollection";
+        return "admin/user/addCollection";
     }
 
-    @RequestMapping(value = "/admin/collections/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/auth/collections/add", method = RequestMethod.POST)
     public String add(@ModelAttribute CollectionForm collectionForm, RedirectAttributes redirectAttrs) {
 
         collectionManager.addCollection(collectionForm);
         
         redirectAttrs.addFlashAttribute("alert_type", "success");
         redirectAttrs.addFlashAttribute("alert_msg", "Collection has been added.");
-        return "redirect:/admin/collections/add";
+        return "redirect:/auth/collections/add";
     }
     
 }

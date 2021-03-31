@@ -1,8 +1,9 @@
 package edu.asu.diging.quadriga.service;
 
+import edu.asu.diging.quadriga.domain.elements.Collection;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
 public interface ICollectionManager {
 
-    public void addCollection(CollectionForm collectionForm);
+    public Collection addCollection(CollectionForm collectionForm);
 }

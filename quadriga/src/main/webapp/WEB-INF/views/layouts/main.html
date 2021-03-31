@@ -50,8 +50,8 @@
 	          		<a th:href="@{/admin/user/list}" >Users</a>
 	          	</li>
 	          	
-	          	<li sec:authorize="hasRole('ADMIN')" role="presentation">
-	          		<a th:href="@{/admin/collections/add}" >Add Collection</a>
+	          	<li sec:authorize="hasRole('USER')" role="presentation">
+	          		<a th:href="@{/auth/collections/add}" >Add Collection</a>
 	          	</li>
 	          	
 	          	<li sec:authorize="isAuthenticated()" role="presentation">

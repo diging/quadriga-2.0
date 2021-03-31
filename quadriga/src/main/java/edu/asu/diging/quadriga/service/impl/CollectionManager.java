@@ -3,7 +3,7 @@ package edu.asu.diging.quadriga.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.quadriga.core.mongo.CollectionDao;
+import edu.asu.diging.quadriga.core.mongo.CollectionRepository;
 import edu.asu.diging.quadriga.domain.elements.Collection;
 import edu.asu.diging.quadriga.service.ICollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
@@ -12,13 +12,24 @@ import edu.asu.diging.quadriga.web.forms.CollectionForm;
 public class CollectionManager implements ICollectionManager {
 
     @Autowired
-    private CollectionDao collectionDao;
+    private CollectionRepository collectionRepo;
 
-    public void addCollection(CollectionForm collectionForm) {
+    
+    /**
+     * Creates a new Collection instance and stores it in mongodb
+     * 
+     * @param collectionForm   Form data that needs to be added to database
+     * 
+     * 
+     * @return Collection Instance that is saved in database
+     * 
+     **/
+    public Collection addCollection(CollectionForm collectionForm) {
         Collection collection = new Collection();
         collection.setName(collectionForm.getName());
         collection.setDescription(collectionForm.getDescription());
-        collectionDao.saveCollection(collection);
+        collectionRepo.save(collection);
+        return collection;
     }
 
 }

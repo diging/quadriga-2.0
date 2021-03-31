@@ -7,7 +7,7 @@
 	<span th:text="${alert_msg}"></span>
 		<h2>Add new Collection</h2>
 
-		<form action="#" th:action="@{/admin/collections/add}" method="POST"
+		<form action="#" th:action="@{/auth/collections/add}" method="POST"
 			th:object="${collection}">
 				<label>Collection Name: </label> <input th:field="*{name}" class="form-control input-sm"></input>
 				<label>Description:</label> <input th:field="*{description}" class="form-control input-sm"></input>
