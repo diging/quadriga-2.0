@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.mongo.ICreationEventService;
-import edu.asu.diging.quadriga.domain.elements.Element;
-
+import edu.asu.diging.quadriga.model.elements.Element;
+@Deprecated
 @Service
 public class CreationEventService implements ICreationEventService {
 

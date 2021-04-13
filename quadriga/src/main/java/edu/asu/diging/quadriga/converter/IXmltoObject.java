@@ -5,9 +5,9 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.List;
 
-import edu.asu.diging.quadriga.domain.elements.Element;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
+import edu.asu.diging.quadriga.model.elements.Element;
 
 public interface IXmltoObject {
 
