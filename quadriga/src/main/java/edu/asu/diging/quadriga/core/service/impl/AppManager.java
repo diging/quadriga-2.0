@@ -17,12 +17,10 @@ public class AppManager implements IAppManager {
     @Autowired
     private AppRepository appRepo;
 
-    
-    
     /**
      * Creates a new App instance and stores it in the database
      * 
-     * @param appForm   Form data that needs to be added to database
+     * @param appForm Form data that needs to be added to database
      * 
      * 
      * @return App Instance that is saved in database
@@ -30,11 +28,7 @@ public class AppManager implements IAppManager {
      **/
     @Override
     public App addApp(AppForm appForm) {
-        App app = new App();
-        app.setName(appForm.getName());
-        app.setDescription(appForm.getDescription());
-        appRepo.save(app);
-        return app;
+        return appRepo.saveApp(appForm);
     }
 
 }
