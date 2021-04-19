@@ -16,7 +16,7 @@ import edu.asu.diging.quadriga.converter.IXmltoObject;
 import edu.asu.diging.quadriga.core.mongo.ICreationEventService;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
-import edu.asu.diging.quadriga.model.elements.Element;
+import edu.asu.diging.quadriga.model.events.CreationEvent;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
 @Deprecated
 @Service
@@ -32,10 +32,11 @@ public class RepositoryManager implements IRepositoryManager {
     public List<String> processXMLandStoretoDb(String xml, String type) throws URISyntaxException, ParserException,
             IOException, ParseException, JSONException, InvalidDataException {
 
-        List<List<Element>> creationEventList = new ArrayList<List<Element>>();
-
+        List<List<CreationEvent>> creationEventList = new ArrayList<List<CreationEvent>>();
+        
         creationEventList = xmlToObject.parseXML(xml);
-        elementDao.saveElements(creationEventList);
+        List<CreationEvent> flattenedlist = creationEventList.stream().flatMap(List::stream).collect(Collectors.toList());
+        elementDao.saveElements(flattenedlist);
 
         return creationEventList.stream().flatMap(Collection::stream).map(e -> e.getId()).collect(Collectors.toList());
 

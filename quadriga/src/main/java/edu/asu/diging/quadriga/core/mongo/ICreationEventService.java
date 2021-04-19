@@ -2,9 +2,9 @@ package edu.asu.diging.quadriga.core.mongo;
 
 import java.util.List;
 
-import edu.asu.diging.quadriga.model.elements.Element;
+import edu.asu.diging.quadriga.model.events.CreationEvent;
 
 public interface ICreationEventService {
 
-    public void saveElements(List<List<Element>> elements);
+    public void saveElements(List<CreationEvent> elements);
 }

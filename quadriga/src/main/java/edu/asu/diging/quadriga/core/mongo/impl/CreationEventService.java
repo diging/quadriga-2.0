@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.mongo.ICreationEventService;
 import edu.asu.diging.quadriga.model.elements.Element;
+import edu.asu.diging.quadriga.model.events.CreationEvent;
+
 @Deprecated
 @Service
 public class CreationEventService implements ICreationEventService {
@@ -16,11 +18,9 @@ public class CreationEventService implements ICreationEventService {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public void saveElements(List<List<Element>> elements) {
-        for (List<Element> list : elements)
-            for (Element element : list) {
-                mongoTemplate.insert(element);
-            }
+    public void saveElements(List<CreationEvent> elements) {
+        for (Element element : elements) {
+            mongoTemplate.insert(element);
+        }
     }
-
 }

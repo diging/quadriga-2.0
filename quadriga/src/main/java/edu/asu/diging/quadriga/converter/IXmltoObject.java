@@ -7,7 +7,7 @@ import java.util.List;
 
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
-import edu.asu.diging.quadriga.model.elements.Element;
+import edu.asu.diging.quadriga.model.events.CreationEvent;
 
 public interface IXmltoObject {
 
@@ -22,7 +22,7 @@ public interface IXmltoObject {
      * @throws ParseException
      * @throws InvalidDataException
      */
-    List<List<Element>> parseXML(String xml) throws ParserException, IOException, URISyntaxException, ParseException, InvalidDataException;
+    List<List<CreationEvent>> parseXML(String xml) throws ParserException, IOException, URISyntaxException, ParseException, InvalidDataException;
     
     
 

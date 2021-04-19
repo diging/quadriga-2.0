@@ -39,6 +39,7 @@ import edu.asu.diging.quadriga.elements.factory.ITermPartFactory;
 import edu.asu.diging.quadriga.elements.factory.ITermPartsFactory;
 import edu.asu.diging.quadriga.elements.factory.IVocabularyEntryFactory;
 import edu.asu.diging.quadriga.model.events.AppellationEvent;
+import edu.asu.diging.quadriga.model.events.CreationEvent;
 import edu.asu.diging.quadriga.model.events.RelationEvent;
 import edu.asu.diging.quadriga.events.factory.IAppellationEventFactory;
 import edu.asu.diging.quadriga.events.factory.IRelationEventFactory;
@@ -89,7 +90,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
      * @returns list of creation events present in the input string.
      */
 
-    public List<List<edu.asu.diging.quadriga.model.elements.Element>> parseXML(String xml)
+    public List<List<CreationEvent>> parseXML(String xml)
             throws ParserException, IOException, URISyntaxException, ParseException, InvalidDataException {
 
         SAXBuilder XMLbuilder = new SAXBuilder();
@@ -107,10 +108,10 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
         Namespace nameSpace = rootElement.getNamespace();
         List<Element> Children = rootElement.getChildren();
         Iterator<Element> childrenIterator = Children.iterator();
-        List<List<edu.asu.diging.quadriga.model.elements.Element>> listOfObjects = new ArrayList<List<edu.asu.diging.quadriga.model.elements.Element>>();
+        List<List<CreationEvent>> listOfObjects = new ArrayList<List<CreationEvent>>();
 
-        List<edu.asu.diging.quadriga.model.elements.Element> creationEventList = new ArrayList<edu.asu.diging.quadriga.model.elements.Element>();
-        List<edu.asu.diging.quadriga.model.elements.Element> referencedObjectList = new ArrayList<edu.asu.diging.quadriga.model.elements.Element>();
+        List<CreationEvent> creationEventList = new ArrayList<CreationEvent>();
+        List<CreationEvent> referencedObjectList = new ArrayList<CreationEvent>();
 
         do {
             Element childNode = childrenIterator.next();
@@ -148,7 +149,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
      */
 
     public RelationEvent getRelationEvent(Element relationEvent, Namespace nameSpace,
-            List<edu.asu.diging.quadriga.model.elements.Element> referencedObjectList)
+            List<CreationEvent> referencedObjectList)
             throws ParserException, IOException, URISyntaxException, ParseException, InvalidDataException {
 
         DateFormat formatter = new SimpleDateFormat(IXmlElements.DATE_FORMAT);
@@ -163,7 +164,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
     }
 
     private void createRelationEvent(RelationEvent relationEventObject, Element relationEvent, Namespace nameSpace,
-            List<edu.asu.diging.quadriga.model.elements.Element> referencedObjectList, DateFormat formatter)
+            List<CreationEvent> referencedObjectList, DateFormat formatter)
             throws ParseException, ParserException, IOException, URISyntaxException, InvalidDataException {
 
         relationEventObject.setId(checkForSpaces(relationEvent.getChildText(IXmlElements.ID, nameSpace)));
@@ -254,7 +255,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
         }
 
         if (relationObject.getRefId() != null) {
-            referencedObjectList.add(relationObject);
+          //  referencedObjectList.add(relationObject);
         }
 
         relationEventObject.setRelation(relationObject);
@@ -262,7 +263,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
     }
 
     private void createAppellationEvent(Element subjectChild, Relation relationObject, Namespace nameSpace,
-            List<edu.asu.diging.quadriga.model.elements.Element> referencedObjectList)
+            List<CreationEvent> referencedObjectList)
             throws ParserException, IOException, URISyntaxException, ParseException, InvalidDataException {
         List<Element> subject = subjectChild.getChildren();
         Iterator<Element> subjectIterator = subject.iterator();
@@ -293,7 +294,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
      */
 
     public AppellationEvent getAppellationEvent(Element appellationEvent, Namespace nameSpace,
-            List<edu.asu.diging.quadriga.model.elements.Element> referencedObjectList)
+            List<CreationEvent> referencedObjectList)
             throws ParserException, IOException, URISyntaxException, ParseException, InvalidDataException {
 
         DateFormat formatter;
@@ -344,7 +345,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
      * @throws InvalidDataException
      */
     public Term getTermObject(Element term, Namespace nameSpace,
-            List<edu.asu.diging.quadriga.model.elements.Element> referencedObjectList)
+            List<CreationEvent> referencedObjectList)
             throws ParseException, InvalidDataException {
         DateFormat formatter;
         formatter = new SimpleDateFormat(IXmlElements.DATE_FORMAT);
@@ -411,7 +412,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
         }
 
         if (termObject.getRefId() != null) {
-            referencedObjectList.add(termObject);
+           // referencedObjectList.add(termObject);
         }
         return termObject;
     }
@@ -426,7 +427,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
      * @return TermParts object.
      */
     public TermParts getTermPartsObject(Element printedRepresentation, Namespace nameSpace,
-            List<edu.asu.diging.quadriga.model.elements.Element> referencedObjectList) throws ParseException {
+            List<CreationEvent> referencedObjectList) throws ParseException {
         DateFormat formatter;
         formatter = new SimpleDateFormat(IXmlElements.DATE_FORMAT);
         TermParts termPartsObject = termPartsFactory.createTermParts();
@@ -452,7 +453,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
 
         termPartsObject.setTermParts(termPartList);
         if (checkForSpaces(termPartsObject.getRefId()) != null) {
-            referencedObjectList.add(termPartsObject);
+          //  referencedObjectList.add(termPartsObject);
         }
 
         return termPartsObject;
@@ -470,7 +471,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
      */
     @Override
     public Set<TermPart> getTermPartObject(Set<Element> TermPartNodes, Namespace nameSpace,
-            List<edu.asu.diging.quadriga.model.elements.Element> referencedObjectList) throws ParseException {
+            List<CreationEvent> referencedObjectList) throws ParseException {
         DateFormat formatter;
         formatter = new SimpleDateFormat(IXmlElements.DATE_FORMAT);
 
@@ -506,7 +507,7 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
             termPartObject.setFormattedPointer(
                     checkForSpaces(currentElement.getChildText(IXmlElements.FORMATTED_POINTER, nameSpace)));
             if (termPartObject.getRefId() != null) {
-                referencedObjectList.add(termPartObject);
+               // referencedObjectList.add(termPartObject);
             }
             termPartList.add(termPartObject);
 
