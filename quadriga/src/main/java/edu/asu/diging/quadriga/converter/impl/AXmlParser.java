@@ -17,7 +17,7 @@ import edu.asu.diging.quadriga.model.elements.TermParts;
 import edu.asu.diging.quadriga.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.model.events.CreationEvent;
 import edu.asu.diging.quadriga.model.events.RelationEvent;
-
+@Deprecated
 public abstract class AXmlParser {
 
     public String checkForSpaces(String value) {

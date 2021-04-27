@@ -6,5 +6,5 @@ import edu.asu.diging.quadriga.model.events.CreationEvent;
 
 public interface ICreationEventService {
 
-    public void saveElements(List<CreationEvent> elements);
+    public void saveCreationEvents(List<CreationEvent> elements);
 }

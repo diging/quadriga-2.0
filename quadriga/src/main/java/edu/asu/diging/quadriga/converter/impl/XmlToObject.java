@@ -45,7 +45,7 @@ import edu.asu.diging.quadriga.events.factory.IAppellationEventFactory;
 import edu.asu.diging.quadriga.events.factory.IRelationEventFactory;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
-
+@Deprecated
 @Service
 public class XmlToObject extends AXmlParser implements IXmltoObject {
 

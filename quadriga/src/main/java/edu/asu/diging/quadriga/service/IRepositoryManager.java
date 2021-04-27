@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
 
+@Deprecated
 @Service
 public interface IRepositoryManager {
 
     /**
-     * The method call parser to parse xml; call storagemanager to store
-     * relation and appellation event into the database and call converter to
-     * convert list of the objects into the database.
+     * The method call parser to parse xml; call storagemanager to store relation
+     * and appellation event into the database and call converter to convert list of
+     * the objects into the database.
      * 
      * @param xml
      * @param type

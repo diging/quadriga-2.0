@@ -18,6 +18,7 @@ import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
 import edu.asu.diging.quadriga.model.events.CreationEvent;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
+
 @Deprecated
 @Service
 public class RepositoryManager implements IRepositoryManager {
@@ -33,10 +34,11 @@ public class RepositoryManager implements IRepositoryManager {
             IOException, ParseException, JSONException, InvalidDataException {
 
         List<List<CreationEvent>> creationEventList = new ArrayList<List<CreationEvent>>();
-        
+
         creationEventList = xmlToObject.parseXML(xml);
-        List<CreationEvent> flattenedlist = creationEventList.stream().flatMap(List::stream).collect(Collectors.toList());
-        elementDao.saveElements(flattenedlist);
+        List<CreationEvent> flattenedlist = creationEventList.stream().flatMap(List::stream)
+                .collect(Collectors.toList());
+        elementDao.saveCreationEvents(flattenedlist);
 
         return creationEventList.stream().flatMap(Collection::stream).map(e -> e.getId()).collect(Collectors.toList());
 

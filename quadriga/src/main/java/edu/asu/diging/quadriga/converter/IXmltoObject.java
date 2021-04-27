@@ -8,7 +8,7 @@ import java.util.List;
 import edu.asu.diging.quadriga.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.exceptions.ParserException;
 import edu.asu.diging.quadriga.model.events.CreationEvent;
-
+@Deprecated
 public interface IXmltoObject {
 
     

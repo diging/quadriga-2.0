@@ -10,7 +10,6 @@ import edu.asu.diging.quadriga.core.mongo.ICreationEventService;
 import edu.asu.diging.quadriga.model.elements.Element;
 import edu.asu.diging.quadriga.model.events.CreationEvent;
 
-@Deprecated
 @Service
 public class CreationEventService implements ICreationEventService {
 
@@ -18,7 +17,7 @@ public class CreationEventService implements ICreationEventService {
     private MongoTemplate mongoTemplate;
 
     @Override
-    public void saveElements(List<CreationEvent> elements) {
+    public void saveCreationEvents(List<CreationEvent> elements) {
         for (Element element : elements) {
             mongoTemplate.insert(element);
         }

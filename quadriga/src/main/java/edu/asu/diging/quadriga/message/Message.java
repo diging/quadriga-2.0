@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
+@Deprecated
 public class Message {
     private static final String RETURN_JSON = "application/json";
 
