@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.quadriga.core.model.impl.App;
 import edu.asu.diging.quadriga.core.service.IAppManager;
 import edu.asu.diging.quadriga.web.forms.AppForm;
 
@@ -32,7 +31,7 @@ public class AddAppController {
     @RequestMapping(value = "/admin/apps/add", method = RequestMethod.POST)
     public String add(@ModelAttribute AppForm appForm, RedirectAttributes redirectAttrs) {
 
-        appManager.addApp(appForm, new App());
+        appManager.addApp(appForm);
         
         redirectAttrs.addFlashAttribute("alert_type", "success");
         redirectAttrs.addFlashAttribute("alert_msg", messageSource.getMessage("app.create.success", null, LocaleContextHolder.getLocale()));
