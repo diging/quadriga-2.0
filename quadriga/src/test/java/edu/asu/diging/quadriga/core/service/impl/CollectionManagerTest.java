@@ -21,16 +21,9 @@ public class CollectionManagerTest {
     @InjectMocks
     private CollectionManager managerToTest;
 
-    private Collection collection1;
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        collection1 = new Collection();
-        collection1.setName("name");
-        collection1.setDescription("testCollection");
-        Mockito.when(collectionRepo.save(collection1)).thenReturn(collection1);
-
     }
 
     @Test
