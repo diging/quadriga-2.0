@@ -9,14 +9,15 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.diging.quadriga.network.model.Network;
+import edu.asu.diging.quadriga.service.INetworkCreationService;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
 @Deprecated
 @Service
 public class RepositoryManager implements IRepositoryManager {
 
 
-    //@Autowired
-   // private ICreationEventService elementDao;
+    @Autowired
+   private INetworkCreationService elementDao;
 
     @Override
     public Network processJsonAndStoreInDb(String json) throws JsonMappingException, JsonProcessingException {
@@ -24,7 +25,7 @@ public class RepositoryManager implements IRepositoryManager {
         ObjectMapper mapper = new ObjectMapper();
         
         Network network = mapper.readValue(json, Network.class);
-       // elementDao.saveElements(network);
+        elementDao.saveElement(network);
 
         return network;
 

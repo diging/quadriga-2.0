@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import edu.asu.diging.quadriga.network.model.Network;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
 
 @Controller
@@ -52,8 +51,8 @@ public class AddNetworkController {
             return errorResponse;
         }
 
-
         try {
+            
             repositoryManager.processJsonAndStoreInDb(json);
         } catch (JsonMappingException e) {
             // TODO Auto-generated catch block
@@ -67,5 +66,7 @@ public class AddNetworkController {
         return new ArrayList<>();
 
     }
+    
+    
 
 }
