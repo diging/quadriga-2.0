@@ -24,10 +24,9 @@ public class AddNetworkController {
 
     private static final String JSON = "application/json";
 
-    
     @Autowired
     private IRepositoryManager repositoryManager;
-    
+
     /**
      * The method parse given Json from the post request body and add Network
      * instance to the database
@@ -41,7 +40,7 @@ public class AddNetworkController {
     @ResponseBody
     @RequestMapping(value = "/rest/add", method = RequestMethod.POST)
     public List<String> processJson(HttpServletRequest request, HttpServletResponse response, @RequestBody String json,
-            @RequestHeader("Accept") String accept) { 
+            @RequestHeader("Accept") String accept) {
 
         if (json.equals("")) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -52,13 +51,11 @@ public class AddNetworkController {
         }
 
         try {
-            
+
             repositoryManager.processJsonAndStoreInDb(json);
         } catch (JsonMappingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (JsonProcessingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         response.setStatus(HttpServletResponse.SC_OK);
@@ -66,7 +63,5 @@ public class AddNetworkController {
         return new ArrayList<>();
 
     }
-    
-    
 
 }
