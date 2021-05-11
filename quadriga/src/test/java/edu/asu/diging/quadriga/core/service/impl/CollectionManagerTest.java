@@ -24,6 +24,7 @@ public class CollectionManagerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        
     }
 
     @Test
@@ -31,12 +32,15 @@ public class CollectionManagerTest {
         CollectionForm collectionForm = new CollectionForm();
         String name = "name";
         String description = "testCollection";
+        Collection collection = new Collection();
+        collection.setName(name);
+        collection.setDescription(description);
         collectionForm.setName(name);
         collectionForm.setDescription(description);
-        Collection collection = managerToTest.addCollection(collectionForm);
-        Mockito.verify(collectionRepo).save(collection);
-        Assert.assertEquals(name, collection.getName());
-        Assert.assertEquals(description, collection.getDescription());
+        Collection outputCollection = managerToTest.addCollection(collectionForm);
+        Mockito.when(collectionRepo.save(collection)).thenReturn(collection);
+        Assert.assertEquals(name, outputCollection.getName());
+        Assert.assertEquals(description, outputCollection.getDescription());
     }
 
 }

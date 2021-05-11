@@ -28,8 +28,7 @@ public class CollectionManager implements ICollectionManager {
         Collection collection = new Collection();
         collection.setName(collectionForm.getName());
         collection.setDescription(collectionForm.getDescription());
-        collectionRepo.save(collection);
-        return collection;
+        return collectionRepo.save((Collection) collection);
     }
 
 }
