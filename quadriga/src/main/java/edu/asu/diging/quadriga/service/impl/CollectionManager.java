@@ -24,11 +24,8 @@ public class CollectionManager implements ICollectionManager {
      * @return Collection Instance that is saved in database
      * 
      **/
-    public Collection addCollection(CollectionForm collectionForm) {
-        Collection collection = new Collection();
-        collection.setName(collectionForm.getName());
-        collection.setDescription(collectionForm.getDescription());
-        return collectionRepo.save((Collection) collection);
+    public Collection addCollection(Collection collection) {
+        return collectionRepo.save(collection);
     }
 
 }

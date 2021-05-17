@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.quadriga.domain.elements.Collection;
 import edu.asu.diging.quadriga.service.ICollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
@@ -31,8 +32,10 @@ public class AddCollectionController {
         if (result.hasErrors()) {
             return "admin/user/addCollection";
         }
-
-        collectionManager.addCollection(collectionForm);
+        Collection collection=new Collection();
+        collection.setName(collectionForm.getName());
+        collection.setDescription(collection.getDescription());
+        collectionManager.addCollection(collection);
 
         redirectAttrs.addFlashAttribute("alert_type", "success");
         redirectAttrs.addFlashAttribute("alert_msg", "Collection has been added.");
