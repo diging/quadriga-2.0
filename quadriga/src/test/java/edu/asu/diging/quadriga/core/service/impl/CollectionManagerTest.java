@@ -14,28 +14,28 @@ import edu.asu.diging.quadriga.service.impl.CollectionManager;
 
 public class CollectionManagerTest {
 
-    @Mock
-    private CollectionRepository collectionRepo;
+	@Mock
+	private CollectionRepository collectionRepo;
 
-    @InjectMocks
-    private CollectionManager managerToTest;
-    
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-        
-    }
+	@InjectMocks
+	private CollectionManager managerToTest;
 
-    @Test
-    public void test_addCollection_success() {
-    	Collection collection1 = new Collection();
-        collection1.setName("name");
-        collection1.setDescription("testCollection");
-        Mockito.when(collectionRepo.save(collection1)).thenReturn(collection1);
-        Collection collection=managerToTest.addCollection(collection1);
-        Mockito.verify(collectionRepo).save(collection);
-        Assert.assertNotNull(collection);
-        
-    }
+	@Before
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+
+	}
+
+	@Test
+	public void test_addCollection_success() {
+		Collection collection1 = new Collection();
+		collection1.setName("name");
+		collection1.setDescription("testCollection");
+		Mockito.when(collectionRepo.save(collection1)).thenReturn(collection1);
+		Collection collection=managerToTest.addCollection(collection1);
+		Mockito.verify(collectionRepo).save(collection);
+		Assert.assertNotNull(collection);
+
+	}
 
 }

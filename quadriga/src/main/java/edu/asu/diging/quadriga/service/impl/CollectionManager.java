@@ -18,7 +18,7 @@ public class CollectionManager implements ICollectionManager {
     /**
      * Creates a new Collection instance and stores it in mongodb
      * 
-     * @param collectionForm   Form data that needs to be added to database
+     * @param collection   collection data from the Collection form needs to be added to database
      * 
      * 
      * @return Collection Instance that is saved in database
