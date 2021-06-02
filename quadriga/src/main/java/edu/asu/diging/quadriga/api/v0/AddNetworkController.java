@@ -23,6 +23,7 @@ import edu.asu.diging.quadriga.exceptions.ParserException;
 import edu.asu.diging.quadriga.message.Message;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
 
+@Deprecated
 @Controller
 public class AddNetworkController {
 
