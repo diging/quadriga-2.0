@@ -9,6 +9,7 @@ import edu.asu.diging.quadriga.model.elements.Concept;
  * @author Veena Borannagowda
  *
  */
+@Deprecated
 public interface IConceptFactory {
 
     Concept createConcept();

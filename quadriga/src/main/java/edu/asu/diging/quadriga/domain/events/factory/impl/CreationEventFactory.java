@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.quadriga.events.factory.ICreationEventFactory;
 import edu.asu.diging.quadriga.model.events.CreationEvent;
 
+@Deprecated
 @Service
 public class CreationEventFactory implements ICreationEventFactory {
 

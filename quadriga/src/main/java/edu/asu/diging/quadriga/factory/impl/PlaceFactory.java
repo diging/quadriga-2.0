@@ -12,7 +12,7 @@ import edu.asu.diging.quadriga.model.elements.Place;
  * @author Veena Borannagowda
  * 
  */
-@Deprecated
+
 @Service
 public class PlaceFactory implements IPlaceFactory {
     @Override

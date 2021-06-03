@@ -9,6 +9,7 @@ import edu.asu.diging.quadriga.model.elements.SourceReference;
  * @author Veena Borannagowda
  *
  */
+@Deprecated
 public interface ISourceReferenceFactory {
 
     SourceReference createSourceReference();

@@ -9,6 +9,7 @@ import edu.asu.diging.quadriga.model.elements.Relation;
  * @author Veena Borannagowda
  *
  */
+@Deprecated
 public interface IRelationFactory {
     public Relation createRelation();
 }

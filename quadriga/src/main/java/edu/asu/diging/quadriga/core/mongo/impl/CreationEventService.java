@@ -18,8 +18,8 @@ public class CreationEventService implements ICreationEventService {
 
     @Override
     public void saveCreationEvents(List<CreationEvent> elements) {
-        for (Element element : elements) {
-            mongoTemplate.insert(element);
+        for (CreationEvent event : elements) {
+            mongoTemplate.insert(event);
         }
     }
 }

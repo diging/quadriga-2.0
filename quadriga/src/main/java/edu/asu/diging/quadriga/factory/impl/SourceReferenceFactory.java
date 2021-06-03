@@ -12,7 +12,7 @@ import edu.asu.diging.quadriga.model.elements.SourceReference;
  * @author Veena Borannagowda
  *
  */
-@Deprecated
+
 @Service
 public class SourceReferenceFactory implements ISourceReferenceFactory {
     @Override

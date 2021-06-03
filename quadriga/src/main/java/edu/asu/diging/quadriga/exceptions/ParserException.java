@@ -6,6 +6,8 @@ package edu.asu.diging.quadriga.exceptions;
  */
 
 public class ParserException extends Exception {
+	
+    private static final long serialVersionUID = 2957019437292932505L;
 
     public ParserException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
@@ -19,7 +21,7 @@ public class ParserException extends Exception {
         super(cause);
     }
 
-    private static final long serialVersionUID = 2957019437292932505L;
+
 
     public ParserException() {
         super();
