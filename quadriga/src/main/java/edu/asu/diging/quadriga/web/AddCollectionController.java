@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.quadriga.core.mongo.CollectionRepository;
 import edu.asu.diging.quadriga.domain.elements.Collection;
 import edu.asu.diging.quadriga.service.ICollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
@@ -19,12 +20,23 @@ public class AddCollectionController {
 
     @Autowired
     private ICollectionManager collectionManager;
+    
+    @Autowired
+    private CollectionRepository collectionRepo;
 
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.GET)
     public String get(Model model) {
         model.addAttribute("collectionForm", new CollectionForm());
         return "admin/user/addCollection";
     }
+    
+	
+    @RequestMapping(value="/auth/collections/showcollection",method=RequestMethod.GET) 
+    public String showCollection(Model model) {
+    	model.addAttribute("collections",collectionRepo.findAll()); 
+    	return "showcollection"; 
+    }
+	 
 
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.POST)
     public String add(@Valid CollectionForm collectionForm, BindingResult result,
@@ -36,7 +48,7 @@ public class AddCollectionController {
         collection.setName(collectionForm.getName());
         collection.setDescription(collection.getDescription());
         collectionManager.addCollection(collection);
-
+        
         redirectAttrs.addFlashAttribute("alert_type", "success");
         redirectAttrs.addFlashAttribute("alert_msg", "Collection has been added.");
         return "redirect:/auth/collections/add";
