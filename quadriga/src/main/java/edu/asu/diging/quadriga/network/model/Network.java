@@ -1,75 +1,67 @@
 package edu.asu.diging.quadriga.network.model;
 
 public class Network {
-
-    private String creator;
-
-    private String creationDate;
-
-    private String creationPlace;
-
-    private String sourceReference;
+	
+	private long id;
+	
+	private Context context;
+	
+	private NodeData nodeData;
 
     private String interpretationCreator;
 
     private String relationCreator;
 
-    private NodeData defaultMapping;
+    private DefaultMapping defaultMapping;
 
-    public String getCreator() {
-        return creator;
-    }
+	public long getId() {
+		return id;
+	}
 
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public String getCreationDate() {
-        return creationDate;
-    }
+	public Context getContext() {
+		return context;
+	}
 
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
-    }
+	public void setContext(Context context) {
+		this.context = context;
+	}
 
-    public String getCreationPlace() {
-        return creationPlace;
-    }
+	public NodeData getNodeData() {
+		return nodeData;
+	}
 
-    public void setCreationPlace(String creationPlace) {
-        this.creationPlace = creationPlace;
-    }
+	public void setNodeData(NodeData nodeData) {
+		this.nodeData = nodeData;
+	}
 
-    public String getSourceReference() {
-        return sourceReference;
-    }
+	public String getInterpretationCreator() {
+		return interpretationCreator;
+	}
 
-    public void setSourceReference(String sourceReference) {
-        this.sourceReference = sourceReference;
-    }
+	public void setInterpretationCreator(String interpretationCreator) {
+		this.interpretationCreator = interpretationCreator;
+	}
 
-    public String getInterpretationCreator() {
-        return interpretationCreator;
-    }
+	public String getRelationCreator() {
+		return relationCreator;
+	}
 
-    public void setInterpretationCreator(String interpretationCreator) {
-        this.interpretationCreator = interpretationCreator;
-    }
+	public void setRelationCreator(String relationCreator) {
+		this.relationCreator = relationCreator;
+	}
 
-    public String getRelationCreator() {
-        return relationCreator;
-    }
+	public DefaultMapping getDefaultMapping() {
+		return defaultMapping;
+	}
 
-    public void setRelationCreator(String relationCreator) {
-        this.relationCreator = relationCreator;
-    }
+	public void setDefaultMapping(DefaultMapping defaultMapping) {
+		this.defaultMapping = defaultMapping;
+	}
 
-    public NodeData getDefaultMapping() {
-        return defaultMapping;
-    }
-
-    public void setDefaultMapping(NodeData defaultMapping) {
-        this.defaultMapping = defaultMapping;
-    }
+    
 
 }

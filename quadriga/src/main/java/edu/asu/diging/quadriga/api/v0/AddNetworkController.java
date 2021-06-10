@@ -38,7 +38,7 @@ public class AddNetworkController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/rest/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/network/add", method = RequestMethod.POST)
     public List<String> processJson(HttpServletRequest request, HttpServletResponse response, @RequestBody String json,
             @RequestHeader("Accept") String accept) {
 

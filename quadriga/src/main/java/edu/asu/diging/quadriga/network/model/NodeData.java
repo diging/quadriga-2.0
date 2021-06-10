@@ -1,35 +1,47 @@
 package edu.asu.diging.quadriga.network.model;
 
+import java.util.List;
+
 public class NodeData {
 
-    private String subjectId;
+    private String nodeName;
 
-    private String objectId;
+    private String interpretation;
 
-    private String predicateId;
+    private String term;
+    
+    private List<String> certainity;
 
-    public String getSubjectId() {
-        return subjectId;
-    }
+	public String getNodeName() {
+		return nodeName;
+	}
 
-    public void setSubjectId(String subjectId) {
-        this.subjectId = subjectId;
-    }
+	public void setNodeName(String nodeName) {
+		this.nodeName = nodeName;
+	}
 
-    public String getObjectId() {
-        return objectId;
-    }
+	public String getInterpretation() {
+		return interpretation;
+	}
 
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
+	public void setInterpretation(String interpretation) {
+		this.interpretation = interpretation;
+	}
 
-    public String getPredicateId() {
-        return predicateId;
-    }
+	public String getTerm() {
+		return term;
+	}
 
-    public void setPredicateId(String predicateId) {
-        this.predicateId = predicateId;
-    }
+	public void setTerm(String term) {
+		this.term = term;
+	}
+
+	public List<String> getCertainity() {
+		return certainity;
+	}
+
+	public void setCertainity(List<String> certainity) {
+		this.certainity = certainity;
+	}
 
 }

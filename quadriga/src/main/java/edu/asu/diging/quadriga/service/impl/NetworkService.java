@@ -4,17 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.quadriga.core.mongo.NetworkRepository;
 import edu.asu.diging.quadriga.network.model.Network;
-import edu.asu.diging.quadriga.service.INetworkCreationService;
+import edu.asu.diging.quadriga.service.INetworkService;
 
 @Service
-public class NetworkCreationService implements INetworkCreationService {
+public class NetworkService implements INetworkService {
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private NetworkRepository repo;
 
     @Override
     public Network saveElement(Network element) {
-        return mongoTemplate.insert(element);
+        return repo.insert(element);
     }
 }
