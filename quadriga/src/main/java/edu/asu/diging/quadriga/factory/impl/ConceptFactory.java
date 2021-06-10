@@ -12,6 +12,7 @@ import edu.asu.diging.quadriga.model.elements.Concept;
  * @author Veena Borannagowda
  *
  */
+@Deprecated
 @Service
 public class ConceptFactory implements IConceptFactory {
     @Override

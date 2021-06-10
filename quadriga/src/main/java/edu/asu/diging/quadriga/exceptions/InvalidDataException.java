@@ -5,6 +5,7 @@ package edu.asu.diging.quadriga.exceptions;
  * @author Veena Borannagowda
  *
  */
+@Deprecated
 public class InvalidDataException extends Exception {
 
     private static final long serialVersionUID = 1L;

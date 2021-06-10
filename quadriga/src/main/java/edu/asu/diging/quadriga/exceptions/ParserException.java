@@ -4,7 +4,7 @@ package edu.asu.diging.quadriga.exceptions;
  * @author Bhargav Desai This is exception class which is used to throw
  *         different parsing exception of XML provide by user.
  */
-
+@Deprecated
 public class ParserException extends Exception {
 	
     private static final long serialVersionUID = 2957019437292932505L;

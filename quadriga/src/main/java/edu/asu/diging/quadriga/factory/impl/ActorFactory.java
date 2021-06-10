@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.quadriga.elements.factory.IActorFactory;
 import edu.asu.diging.quadriga.model.elements.Actor;
 
-
+@Deprecated
 @Service
 public class ActorFactory implements IActorFactory {
     @Override

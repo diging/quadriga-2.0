@@ -12,6 +12,7 @@ import edu.asu.diging.quadriga.model.elements.VocabularyEntry;
  * @author Veena Borannagowda
  *
  */
+@Deprecated
 @Service
 public class VocabularyEntryFactory implements IVocabularyEntryFactory {
 

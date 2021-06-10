@@ -9,6 +9,7 @@ import edu.asu.diging.quadriga.model.elements.TermPart;
  * @author Veena Borannagowda
  *
  */
+@Deprecated
 public interface ITermPartFactory {
 
     TermPart createTermPart();

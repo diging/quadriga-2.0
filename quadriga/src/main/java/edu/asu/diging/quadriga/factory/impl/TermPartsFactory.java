@@ -12,6 +12,7 @@ import edu.asu.diging.quadriga.model.elements.TermParts;
  * @author Veena Borannagowda
  *
  */
+@Deprecated
 @Service
 public class TermPartsFactory implements ITermPartsFactory {
 
