@@ -31,10 +31,10 @@ public class AddCollectionController {
     }
     
 	
-    @RequestMapping(value="/auth/collections/showcollection",method=RequestMethod.GET) 
+    @RequestMapping(value="/auth/collections",method=RequestMethod.GET) 
     public String showCollection(Model model) {
     	model.addAttribute("collections",collectionRepo.findAll()); 
-    	return "showcollection"; 
+    	return "admin/user/showcollection"; 
     }
 	 
 
@@ -51,7 +51,7 @@ public class AddCollectionController {
         
         redirectAttrs.addFlashAttribute("alert_type", "success");
         redirectAttrs.addFlashAttribute("alert_msg", "Collection has been added.");
-        return "redirect:/auth/collections/add";
+        return "redirect:/auth/collections";
     }
 
 }

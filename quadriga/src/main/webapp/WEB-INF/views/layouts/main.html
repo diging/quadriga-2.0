@@ -51,11 +51,18 @@
 	          	</li>
 	          	
 	          	<li sec:authorize="hasRole('USER')" role="presentation">
-	          		<a th:href="@{/auth/collections/add}" >Add Collection</a>
-	          	</li>
+  					 <button type="button" class="btn btn-outline-info" data-toggle="dropdown">Collections
+    				 <span class="caret"></span>
+ 					 </button>
+	          		<ul class="dropdown-menu">
+	          			<li sec:authorize="hasRole('USER')" role="presentation">
+	          				<a th:href="@{/auth/collections/add}" >Add Collection</a>
+	          			</li>
 	          	
-	          	<li sec:authorize="hasRole('USER')" role="presentation">
-	          		<a th:href="@{/auth/collections/showcollection}" >Show Collections</a>
+	          			<li sec:authorize="hasRole('USER')" role="presentation">
+	          				<a th:href="@{/auth/collections}" >Show Collections</a>
+	          			</li>
+	          		</ul>
 	          	</li>
 	          	
 	          	<li sec:authorize="isAuthenticated()" role="presentation">
