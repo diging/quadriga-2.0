@@ -39,7 +39,7 @@ public class AddNetworkController {
      */
     @ResponseBody
     @RequestMapping(value = "/api/v1/network/add", method = RequestMethod.POST)
-    public List<String> processJson(HttpServletRequest request, HttpServletResponse response, @RequestBody String json,
+    public int processJson(HttpServletRequest request, HttpServletResponse response, @RequestBody String json,
             @RequestHeader("Accept") String accept) {
 
         if (json.equals("")) {
@@ -47,7 +47,7 @@ public class AddNetworkController {
             List<String> errorResponse = new ArrayList<>();
             // errorResponse.add(new Message("Please provide XML in body of the post
             // request.").toString(accept));
-            return errorResponse;
+            return response.getStatus();
         }
 
         try {
@@ -60,7 +60,7 @@ public class AddNetworkController {
         }
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType(accept);
-        return new ArrayList<>();
+        return response.getStatus();
 
     }
 
