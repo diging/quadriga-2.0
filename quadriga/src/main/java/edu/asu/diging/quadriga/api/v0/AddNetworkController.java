@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -21,8 +22,6 @@ import edu.asu.diging.quadriga.service.IRepositoryManager;
 
 @Controller
 public class AddNetworkController {
-
-    private static final String JSON = "application/json";
 
     @Autowired
     private IRepositoryManager repositoryManager;
@@ -39,15 +38,11 @@ public class AddNetworkController {
      */
     @ResponseBody
     @RequestMapping(value = "/api/v1/network/add", method = RequestMethod.POST)
-    public int processJson(HttpServletRequest request, HttpServletResponse response, @RequestBody String json,
-            @RequestHeader("Accept") String accept) {
+    public HttpStatus processJson(@RequestBody String json) {
 
+    	json.trim();
         if (json.equals("")) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            List<String> errorResponse = new ArrayList<>();
-            // errorResponse.add(new Message("Please provide XML in body of the post
-            // request.").toString(accept));
-            return response.getStatus();
+            return HttpStatus.NO_CONTENT;
         }
 
         try {
@@ -55,12 +50,12 @@ public class AddNetworkController {
             repositoryManager.processJsonAndStoreInDb(json);
         } catch (JsonMappingException e) {
             e.printStackTrace();
+            return HttpStatus.BAD_REQUEST;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return HttpStatus.BAD_REQUEST;
         }
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType(accept);
-        return response.getStatus();
+        return HttpStatus.ACCEPTED;
 
     }
 
