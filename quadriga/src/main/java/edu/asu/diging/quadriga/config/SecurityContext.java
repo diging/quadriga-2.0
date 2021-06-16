@@ -33,7 +33,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                     @Override
                     public boolean matches(HttpServletRequest arg0) {
                         // don't require CSRF for REST calls
-                        if (arg0.getRequestURI().indexOf("/rest/") > -1) {
+                        if (arg0.getRequestURI().indexOf("/api/") > -1) {
                             return false;
                         }
                         if (arg0.getMethod().equals("GET")) {
@@ -50,10 +50,10 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 // Anyone can access the urls
                 .antMatchers("/", "/resources/**", "/register", "/login", "/loginFailed", "/register", "/logout",
-                        "/reset/**", "/rest/**")
+                        "/reset/**")
                 .permitAll()
                 // The rest of the our application is protected.
-                .antMatchers("/users/**", "/admin/**").hasRole("ADMIN").antMatchers("/auth/**")
+                .antMatchers("/users/**", "/admin/**").hasRole("ADMIN").antMatchers("/auth/**","/api/**")
                 .hasAnyRole("USER", "ADMIN").antMatchers("/password/**")
                 .hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE).anyRequest().hasRole("USER");
     }
