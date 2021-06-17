@@ -1,6 +1,10 @@
 package edu.asu.diging.quadriga.web;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +19,20 @@ public class ShowCollectionController {
 	private CollectionRepository collectionRepo;
 
 	@RequestMapping(value="/auth/collections",method=RequestMethod.GET) 
-	public String showCollection(Model model) {
-		model.addAttribute("collections",collectionRepo.findAll()); 
+	public String showCollection(HttpServletRequest request,Model model) {
+
+		int page=0;
+		int size=20;
+
+		if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+			page = Integer.parseInt(request.getParameter("page")) - 1;
+		}
+
+		if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
+			size = Integer.parseInt(request.getParameter("size"));
+		}
+
+		model.addAttribute("collections",collectionRepo.findAll(PageRequest.of(page, size))); 
 		return "admin/user/showcollection"; 
 	}
 
