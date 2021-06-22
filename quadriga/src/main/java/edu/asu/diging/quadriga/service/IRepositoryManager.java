@@ -4,9 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import edu.asu.diging.quadriga.network.model.Network;
+import edu.asu.diging.quadriga.network.model.Quadruple;
 
 public interface IRepositoryManager {
 
-    Network processJsonAndStoreInDb(String json) throws JsonMappingException, JsonProcessingException;
+	Quadruple processJsonAndStoreInDb(Network json) throws JsonMappingException, JsonProcessingException;
 
 }

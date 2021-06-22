@@ -3,14 +3,14 @@ package edu.asu.diging.quadriga.network.model;
 import java.util.List;
 
 public class Network {
-	
+
 	private long id;
-	
+
 	private Context context;
-	
+
 	private List<NodeData> nodeData;
 
-    private DefaultMapping defaultMapping;
+	private DefaultMapping defaultMapping;
 
 	public long getId() {
 		return id;
@@ -44,6 +44,6 @@ public class Network {
 		this.defaultMapping = defaultMapping;
 	}
 
-    
+
 
 }

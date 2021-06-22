@@ -4,13 +4,13 @@ import java.util.List;
 
 public class NodeData {
 
-    private String nodeName;
+	private String nodeName;
 
-    private String interpretation;
+	private String interpretation;
 
-    private String term;
-    
-    private List<String> certainity;
+	private String term;
+
+	private List<String> certainity;
 
 	public String getNodeName() {
 		return nodeName;

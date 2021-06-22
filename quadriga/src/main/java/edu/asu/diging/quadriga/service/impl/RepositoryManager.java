@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.diging.quadriga.network.model.Network;
+import edu.asu.diging.quadriga.network.model.Quadruple;
 import edu.asu.diging.quadriga.service.INetworkService;
 import edu.asu.diging.quadriga.service.IRepositoryManager;
 
@@ -16,17 +17,19 @@ import edu.asu.diging.quadriga.service.IRepositoryManager;
 public class RepositoryManager implements IRepositoryManager {
 
 
-    @Autowired
-   private INetworkService networkService;
+	@Autowired
+	private INetworkService networkService;
 
-    @Override
-    public Network processJsonAndStoreInDb(String json) throws JsonMappingException, JsonProcessingException {
+	@Override
+	public Quadruple processJsonAndStoreInDb(Network json) {
 
-        ObjectMapper mapper = new ObjectMapper();
-        
-        Network network = mapper.readValue(json, Network.class);
-        return  networkService.saveElement(network);
+		Quadruple quadruple=new Quadruple();
+		quadruple.setSource(json.getDefaultMapping().getSource());
+		quadruple.setObject(json.getDefaultMapping().getObject());
+		quadruple.setPredicate(json.getDefaultMapping().getPredicate());
+		quadruple.setContext(json.getContext());
+		return  networkService.saveElement(quadruple);
 
-    }
+	}
 
 }

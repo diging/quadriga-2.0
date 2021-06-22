@@ -1,13 +1,13 @@
 package edu.asu.diging.quadriga.network.model;
 
 public class Context {
-	
+
 	private String creatorName;
-	
+
 	private String creationTime;
-	
+
 	private String creationPlace;
-	
+
 	private String sourceURI;
 
 	public String getCreatorName() {
@@ -41,6 +41,6 @@ public class Context {
 	public void setSourceURI(String sourceURI) {
 		this.sourceURI = sourceURI;
 	}
-	
+
 
 }
