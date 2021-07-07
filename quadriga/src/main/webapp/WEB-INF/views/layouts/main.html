@@ -56,11 +56,10 @@
 					<li sec:authorize="hasRole('ADMIN')" role="presentation"><a
 						th:href="@{/admin/user/list}">Users</a></li>
 
-					<li sec:authorize="hasRole('USER')" role="presentation">
-						<div class="dropdown">
-							<button type="button"
-								class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
-								aria-haspopup="true" aria-expanded="false">Collections</button>
+                    <li class="dropdown" sec:authorize="hasRole('USER')" role="presentation">
+							<a
+								class="dropdown-toggle" data-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false">Collections <span class="caret"></span></a>
 							<ul class="dropdown-menu">
 								<li sec:authorize="hasRole('USER')" role="presentation"><a
 									th:href="@{/auth/collections/add}">Add Collection</a></li>
@@ -68,7 +67,6 @@
 								<li sec:authorize="hasRole('USER')" role="presentation"><a
 									th:href="@{/auth/collections}">Show Collections</a></li>
 							</ul>
-						</div>
 					</li>
 
 					<li sec:authorize="isAuthenticated()" role="presentation">

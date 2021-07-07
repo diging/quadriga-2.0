@@ -4,22 +4,21 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.quadriga.core.mongo.CollectionRepository;
+import edu.asu.diging.quadriga.core.data.CollectionRepository;
 
 @Controller
-public class ShowCollectionController {
+public class ListCollectionController {
 
 	@Autowired
 	private CollectionRepository collectionRepo;
 
 	@RequestMapping(value="/auth/collections",method=RequestMethod.GET) 
-	public String showCollection(HttpServletRequest request,Model model) {
+	public String list(HttpServletRequest request,Model model) {
 
 		int page=0;
 		int size=20;
@@ -33,7 +32,7 @@ public class ShowCollectionController {
 		}
 
 		model.addAttribute("collections",collectionRepo.findAll(PageRequest.of(page, size))); 
-		return "admin/user/showcollection"; 
+		return "auth/showcollection"; 
 	}
 
 }

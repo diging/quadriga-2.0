@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.domain.elements;
+package edu.asu.diging.quadriga.core.model;
 
 public class Collection {
 

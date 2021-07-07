@@ -1,15 +1,14 @@
-package edu.asu.diging.quadriga.service.impl;
+package edu.asu.diging.quadriga.core.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.quadriga.core.mongo.CollectionRepository;
-import edu.asu.diging.quadriga.domain.elements.Collection;
-import edu.asu.diging.quadriga.service.ICollectionManager;
-import edu.asu.diging.quadriga.web.forms.CollectionForm;
+import edu.asu.diging.quadriga.core.data.CollectionRepository;
+import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
 
 @Service
-public class CollectionManager implements ICollectionManager {
+public class CollectionManagerImpl implements CollectionManager {
 
     @Autowired
     private CollectionRepository collectionRepo;
@@ -24,7 +23,10 @@ public class CollectionManager implements ICollectionManager {
      * @return Collection Instance that is saved in database
      * 
      **/
-    public Collection addCollection(Collection collection) {
+    public Collection addCollection(String name, String description) {
+        Collection collection=new Collection();
+        collection.setName(name);
+        collection.setDescription(description);
         return collectionRepo.save(collection);
     }
 
