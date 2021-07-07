@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.config;
+package edu.asu.diging.quadriga.legacy.converter;
 
 
 /**
@@ -7,6 +7,7 @@ package edu.asu.diging.quadriga.config;
  * @autor Veena Borannagowda ,  Bhargav Desai
  *
  */
+@Deprecated
 public class IXmlElements {
 
     public static String AND = "and";

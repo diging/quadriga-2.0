@@ -22,7 +22,6 @@ import org.jdom2.output.Format;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.quadriga.config.IXmlElements;
 import edu.asu.diging.quadriga.core.exceptions.InvalidDataException;
 import edu.asu.diging.quadriga.core.exceptions.ParserException;
 import edu.asu.diging.quadriga.core.model.elements.Concept;
@@ -33,6 +32,7 @@ import edu.asu.diging.quadriga.core.model.elements.TermParts;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
+import edu.asu.diging.quadriga.legacy.converter.IXmlElements;
 import edu.asu.diging.quadriga.legacy.converter.IXmltoObject;
 import edu.asu.diging.quadriga.legacy.factory.elements.IActorFactory;
 import edu.asu.diging.quadriga.legacy.factory.elements.IConceptFactory;
