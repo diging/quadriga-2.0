@@ -14,25 +14,25 @@ import edu.asu.diging.quadriga.core.data.CollectionRepository;
 @Controller
 public class ListCollectionController {
 
-	@Autowired
-	private CollectionRepository collectionRepo;
+    @Autowired
+    private CollectionRepository collectionRepo;
 
-	@RequestMapping(value="/auth/collections",method=RequestMethod.GET) 
-	public String list(HttpServletRequest request,Model model) {
+    @RequestMapping(value = "/auth/collections", method = RequestMethod.GET)
+    public String list(HttpServletRequest request, Model model) {
 
-		int page=0;
-		int size=20;
+        int page = 0;
+        int size = 20;
 
-		if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
-			page = Integer.parseInt(request.getParameter("page")) - 1;
-		}
+        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+            page = Integer.parseInt(request.getParameter("page")) - 1;
+        }
 
-		if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
-			size = Integer.parseInt(request.getParameter("size"));
-		}
+        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
+            size = Integer.parseInt(request.getParameter("size"));
+        }
 
-		model.addAttribute("collections",collectionRepo.findAll(PageRequest.of(page, size))); 
-		return "auth/showcollection"; 
-	}
+        model.addAttribute("collections", collectionRepo.findAll(PageRequest.of(page, size)));
+        return "auth/showcollection";
+    }
 
 }
