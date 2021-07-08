@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.network.model;
+package edu.asu.diging.quadriga.api.v1.model;
 
 public class Context {
 

@@ -1,0 +1,150 @@
+{
+	"graph":{
+	   "metadata": {
+    	   "default mapping":{
+                "subject": {
+                    "type": "REF",
+                    "reference": "0"
+                },
+                "predicate": {
+                    "uri": "http://www.digitalhps.org/concepts/WID-10295819-N-01-married",
+                    "label": "married"
+                },
+                "object": "Elsa Einstien"
+            },
+            "context":{
+                "creator": "John",
+                "creation time": "20210708",
+                "creation place": "phoenix",
+                "source uri": "http://handle.net/234"
+            }
+	   },
+	   "nodes":{
+			"0":{
+			     "label": "Albert Einstein",
+			     "metadata": {
+			          "type": "appellation_event",
+    			      "interpretation": "https://viaf.org/viaf/75121530/",
+    			      "term_parts": [
+    			           {
+    			             "position": 1,
+    			             "expression": "Albert Einstein",
+    			             "normalization": "",
+    			             "formatted_pointer": "",
+    			             "format": ""
+    			           }
+    			      ]
+			     }
+				
+			},
+			"1":{
+			     "label": "married",
+			     "metadata": {
+    			     "type": "appellation_event",
+                      "interpretation": "http://www.digitalhps.org/concepts/WID-10295819-N-01-married",
+                      "term_parts": [
+                           {
+                             "position": -1,
+                             "expression": "",
+                             "normalization": "",
+                             "formatted_pointer": "",
+                             "format": ""
+                           }
+                      ]
+                  }
+			},
+			"2":{
+				"label": "",
+                 "metadata": {
+                     "type": "relation_event"
+                  }
+			}, 
+			"3": {
+			     "label": "Elsa Einstein",
+                 "metadata": {
+                     "type": "appellation_event",
+                      "interpretation": "http://viaf.org/viaf/31600989",
+                      "term_parts": [
+                           {
+                             "position": 10,
+                             "expression": "E. Einstein",
+                             "normalization": "",
+                             "formatted_pointer": "",
+                             "format": ""
+                           }
+                      ]
+                  }
+			},
+			"4": {
+                 "label": "to be",
+                 "metadata": {
+                     "type": "appellation_event",
+                      "interpretation": "http://www.digitalhps.org/concepts/WID-02616386-V-01-be",
+                      "term_parts": [
+                           {
+                             "position": 5,
+                             "expression": "his",
+                             "normalization": "",
+                             "formatted_pointer": "",
+                             "format": ""
+                           }
+                      ]
+                  }
+            },
+            "5": {
+                 "label": "cousin",
+                 "metadata": {
+                     "type": "appellation_event",
+                      "interpretation": "http://www.digitalhps.org/concepts/WID-09972010-N-01-cousin",
+                      "term_parts": [
+                           {
+                             "position": 7,
+                             "expression": "cousin",
+                             "normalization": "",
+                             "formatted_pointer": "",
+                             "format": ""
+                           }
+                      ]
+                  }
+            },
+            "6":{
+                "label": "",
+                 "metadata": {
+                     "type": "relation_event"
+                  }
+            } 
+		},
+		"edges":[
+			{
+				"source": "2",
+				"relation": "subject",
+				"target": "0"
+			},
+			{
+                "source": "2",
+                "relation": "predicate",
+                "target": "1"
+            },
+            {
+                "source": "2",
+                "relation": "object",
+                "target": "6"
+            },
+            {
+                "source": "6",
+                "relation": "subject",
+                "target": "3"
+            },
+            {
+                "source": "6",
+                "relation": "predicate",
+                "target": "4"
+            },
+            {
+                "source": "6",
+                "relation": "object",
+                "target": "5"
+            }
+		]		
+    }
+}
