@@ -27,7 +27,7 @@ import com.mongodb.client.MongoClients;
 
 @Configuration
 @PropertySource({ "classpath:config.properties", "${appConfigFile:classpath:}/app.properties" })
-@EnableMongoRepositories({ "edu.asu.diging.quadriga.core.mongo" })
+@EnableMongoRepositories({ "edu.asu.diging.quadriga.core.data" })
 public class MongoConfig {
 
     @Value("${mongo.database.name}")

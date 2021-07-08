@@ -11,14 +11,15 @@ public class HomeController {
     public String home(Model model) {
         return "home";
     }
-    
-    @RequestMapping(value ="/login")
+
+    @RequestMapping(value = "/login")
     public String login() {
-      return "login";
+        return "login";
     }
-    @RequestMapping(value ="/loginFailed")
+
+    @RequestMapping(value = "/loginFailed")
     public String loginFailed(Model model) {
-      model.addAttribute("loginError", true);
-      return "login";
+        model.addAttribute("loginError", true);
+        return "login";
     }
 }

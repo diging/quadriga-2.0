@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
@@ -36,16 +37,22 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                         if (arg0.getRequestURI().indexOf("/api/") > -1) {
                             return false;
                         }
+                        if (arg0.getRequestURI().indexOf("/rest/") > -1) {
+                            return false;
+                        }
                         if (arg0.getMethod().equals("GET")) {
                             return false;
                         }
                         return true;
                     }
                 }).and().headers().frameOptions().sameOrigin();
-
-        config.and().formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate")
-                .failureUrl("/loginFailed").and().logout().deleteCookies("JSESSIONID").logoutUrl("/logout")
-                .logoutSuccessUrl("/login").and().exceptionHandling().accessDeniedPage("/403")
+         
+       config.and().formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed").and()
+                .logout()
+                .deleteCookies("JSESSIONID")
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .and().exceptionHandling().accessDeniedPage("/403")
                 // Configures url based authorization
                 .and().authorizeRequests()
                 // Anyone can access the urls
@@ -53,9 +60,21 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                         "/reset/**")
                 .permitAll()
                 // The rest of the our application is protected.
-                .antMatchers("/users/**", "/admin/**").hasRole("ADMIN").antMatchers("/auth/**","/api/**")
-                .hasAnyRole("USER", "ADMIN").antMatchers("/password/**")
-                .hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE).anyRequest().hasRole("USER");
+                .antMatchers("/users/**", "/admin/**").hasRole("ADMIN")
+                .antMatchers("/auth/**","/api/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE)
+                // remove the following once legacy api is discontinued
+                .antMatchers("/rest/add").authenticated()
+                .anyRequest().hasRole("USER")
+                // remove the following once legacy api is discontinued
+                .and().httpBasic().realmName("TestRealm").authenticationEntryPoint(authenticationEntryPoint());
+    }
+    
+    @Bean
+    public BasicAuthenticationEntryPoint authenticationEntryPoint() {
+        BasicAuthenticationEntryPoint point = new BasicAuthenticationEntryPoint();
+        point.setRealmName("TestRealm");
+        return point;
     }
 
     @Bean
