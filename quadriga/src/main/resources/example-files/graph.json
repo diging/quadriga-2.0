@@ -10,7 +10,10 @@
                     "uri": "http://www.digitalhps.org/concepts/WID-10295819-N-01-married",
                     "label": "married"
                 },
-                "object": "Elsa Einstien"
+                "object": {
+                    "type": "REF",
+                    "reference": "3"
+                }
             },
             "context":{
                 "creator": "John",
