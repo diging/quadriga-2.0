@@ -1,0 +1,24 @@
+<html layout:decorate="~{layouts/main}">
+<head>
+<title>Quadriga 2.0</title>
+</head>
+<body>
+	<div layout:fragment="content">
+	<span th:text="${alert_msg}"></span>
+		<h2>Add new Collection</h2>
+
+		<form action="#" th:action="@{/auth/collections/add}" method="POST"
+			th:object="${collectionForm}">
+				<label>Collection Name: </label> <input th:field="*{name}" class="form-control input-sm"></input>
+				<span th:if="${#fields.hasErrors('name')}" class = "error">Please enter a valid Collection name.</span>
+				<br>
+				<label>Description:</label> <input th:field="*{description}" class="form-control input-sm"></input>
+
+			<div style="padding-top: 20px;">
+				<button class="btn primary-btn">Add Collection</button>
+			</div>
+		</form>
+
+	</div>
+</body>
+</html>
