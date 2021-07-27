@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class TripleElement {
+    
+    public final static String TYPE_REF = "REF";
+    public final static String TYPE_URI = "URI";
 
     private String type;
     private String reference;
