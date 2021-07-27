@@ -173,10 +173,10 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
         relationEventObject.setCreator(
                 actorFactory.createActor(checkForSpaces(relationEvent.getChildText(IXmlElements.CREATOR, nameSpace))));
 
-        if (checkForSpaces(relationEvent.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
-            relationEventObject.setCreationDate((Date) formatter
-                    .parse(checkForSpaces(relationEvent.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
-        }
+//        if (checkForSpaces(relationEvent.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
+//            relationEventObject.setCreationDate((Date) formatter
+//                    .parse(checkForSpaces(relationEvent.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
+//        }
 
         relationEventObject.setCreationPlace(placeFactory
                 .createPlace(checkForSpaces(relationEvent.getChildText(IXmlElements.CREATION_PLACE, nameSpace))));
@@ -197,10 +197,10 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
 
         relationObject.setCreator(
                 actorFactory.createActor(checkForSpaces(relationChild.getChildText(IXmlElements.CREATOR, nameSpace))));
-        if (checkForSpaces(relationChild.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
-            relationObject.setCreationDate((Date) formatter
-                    .parse(checkForSpaces(relationChild.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
-        }
+//        if (checkForSpaces(relationChild.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
+//            relationObject.setCreationDate((Date) formatter
+//                    .parse(checkForSpaces(relationChild.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
+//        }
         relationObject.setCreationPlace(placeFactory
                 .createPlace(checkForSpaces(relationChild.getChildText(IXmlElements.CREATION_PLACE, nameSpace))));
         relationObject.setSourceReference(sourceReferenceFactory.createSourceReference(
@@ -306,11 +306,11 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
         appellationEventObject.setRefId(checkForSpaces(appellationEvent.getChildText(IXmlElements.REFID, nameSpace)));
         appellationEventObject.setCreator(actorFactory
                 .createActor(checkForSpaces(appellationEvent.getChildText(IXmlElements.CREATOR, nameSpace))));
-        if (checkForSpaces(appellationEvent.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
-
-            appellationEventObject.setCreationDate((Date) formatter
-                    .parse(checkForSpaces(appellationEvent.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
-        }
+//        if (checkForSpaces(appellationEvent.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
+//
+//            appellationEventObject.setCreationDate((Date) formatter
+//                    .parse(checkForSpaces(appellationEvent.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
+//        }
         appellationEventObject.setCreationPlace(placeFactory
                 .createPlace(checkForSpaces(appellationEvent.getChildText(IXmlElements.CREATION_PLACE, nameSpace))));
         appellationEventObject.setInterpretationCreator(actorFactory.createActor(
@@ -359,11 +359,11 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
         termObject.setCreationPlace(
                 placeFactory.createPlace(checkForSpaces(term.getChildText(IXmlElements.CREATION_PLACE, nameSpace))));
 
-        if (checkForSpaces(term.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
-
-            termObject.setCreationDate(
-                    (Date) formatter.parse(checkForSpaces(term.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
-        }
+//        if (checkForSpaces(term.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
+//
+//            termObject.setCreationDate(
+//                    (Date) formatter.parse(checkForSpaces(term.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
+//        }
 
         // set term with interpretation and datatype
         Element interpretationElement = term.getChild(IXmlElements.INTERPRETATION, nameSpace);
@@ -439,11 +439,11 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
         termPartsObject.setCreationPlace(placeFactory.createPlace(
                 checkForSpaces(printedRepresentation.getChildText(IXmlElements.CREATION_PLACE, nameSpace))));
 
-        if (checkForSpaces(printedRepresentation.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
+//        if (checkForSpaces(printedRepresentation.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
 
-            termPartsObject.setCreationDate((Date) formatter
-                    .parse(checkForSpaces(printedRepresentation.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
-        }
+//            termPartsObject.setCreationDate((Date) formatter
+//                    .parse(checkForSpaces(printedRepresentation.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
+//        }
         termPartsObject.setReferencedSource(sourceReferenceFactory.createSourceReference(
                 checkForSpaces(printedRepresentation.getChildText(IXmlElements.SOURCE_REFERENCE, nameSpace))));
 
@@ -488,11 +488,11 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
                     .createActor(checkForSpaces(currentElement.getChildText(IXmlElements.CREATOR, nameSpace))));
             termPartObject.setCreationPlace(placeFactory
                     .createPlace(checkForSpaces(currentElement.getChildText(IXmlElements.CREATION_PLACE, nameSpace))));
-            if (checkForSpaces(currentElement.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
-
-                termPartObject.setCreationDate((Date) formatter
-                        .parse(checkForSpaces(currentElement.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
-            }
+//            if (checkForSpaces(currentElement.getChildText(IXmlElements.CREATION_DATE, nameSpace)) != null) {
+//
+//                termPartObject.setCreationDate((Date) formatter
+//                        .parse(checkForSpaces(currentElement.getChildText(IXmlElements.CREATION_DATE, nameSpace))));
+//            }
             termPartObject.setSourceReference(sourceReferenceFactory.createSourceReference(
                     checkForSpaces(currentElement.getChildText(IXmlElements.SOURCE_REFERENCE, nameSpace))));
             termPartObject
@@ -500,9 +500,9 @@ public class XmlToObject extends AXmlParser implements IXmltoObject {
             termPartObject.setNormalization(vocabularyEntryFactory.createVocabularyEntry(
                     checkForSpaces(currentElement.getChildText(IXmlElements.NORMALIZATION, nameSpace))));
             String position = checkForSpaces(currentElement.getChildText(IXmlElements.POSITION, nameSpace));
-            if (position != null && !position.isEmpty()) {
-                termPartObject.setPosition(Integer.parseInt(position));
-            }
+//            if (position != null && !position.isEmpty()) {
+//                termPartObject.setPosition(Integer.parseInt(position));
+//            }
             termPartObject.setFormat(checkForSpaces(currentElement.getChildText(IXmlElements.FORMAT, nameSpace)));
             termPartObject.setFormattedPointer(
                     checkForSpaces(currentElement.getChildText(IXmlElements.FORMATTED_POINTER, nameSpace)));

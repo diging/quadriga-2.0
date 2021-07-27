@@ -8,6 +8,7 @@ public class EventGraph {
 
     private ObjectId _id;
     private CreationEvent  rootEvent;
+    private DefaultMapping defaultMapping;
     
     public EventGraph() {}
     
@@ -29,6 +30,14 @@ public class EventGraph {
 
     public void setRootEvent(CreationEvent rootEvent) {
         this.rootEvent = rootEvent;
+    }
+
+    public DefaultMapping getDefaultMapping() {
+        return defaultMapping;
+    }
+
+    public void setDefaultMapping(DefaultMapping defaultMapping) {
+        this.defaultMapping = defaultMapping;
     }
     
     

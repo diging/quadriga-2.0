@@ -1,12 +1,13 @@
 {
 	"graph":{
 	   "metadata": {
-    	   "default mapping":{
+    	   "defaultMapping":{
                 "subject": {
                     "type": "REF",
                     "reference": "0"
                 },
                 "predicate": {
+                    "type": "URI",
                     "uri": "http://www.digitalhps.org/concepts/WID-10295819-N-01-married",
                     "label": "married"
                 },
@@ -17,9 +18,9 @@
             },
             "context":{
                 "creator": "John",
-                "creation time": "20210708",
-                "creation place": "phoenix",
-                "source uri": "http://handle.net/234"
+                "creationTime": "2021-07-08",
+                "creationPlace": "phoenix",
+                "sourceUri": "http://handle.net/234"
             }
 	   },
 	   "nodes":{
@@ -28,16 +29,22 @@
 			     "metadata": {
 			          "type": "appellation_event",
     			      "interpretation": "https://viaf.org/viaf/75121530/",
-    			      "term_parts": [
+    			      "termParts": [
     			           {
     			             "position": 1,
     			             "expression": "Albert Einstein",
     			             "normalization": "",
-    			             "formatted_pointer": "",
+    			             "formattedPointer": "",
     			             "format": ""
     			           }
     			      ]
-			     }
+			     },
+			     "context":{
+                     "creator": "John",
+                     "creationTime": "2021-07-08",
+                     "creationPlace": "phoenix",
+                     "sourceUri": "http://handle.net/234"
+                 }
 				
 			},
 			"1":{
@@ -45,76 +52,112 @@
 			     "metadata": {
     			     "type": "appellation_event",
                       "interpretation": "http://www.digitalhps.org/concepts/WID-10295819-N-01-married",
-                      "term_parts": [
+                      "termParts": [
                            {
                              "position": -1,
                              "expression": "",
                              "normalization": "",
-                             "formatted_pointer": "",
+                             "formattedPointer": "",
                              "format": ""
                            }
                       ]
-                  }
+                  },
+                 "context":{
+                     "creator": "John",
+                     "creationTime": "2021-07-08",
+                     "creationPlace": "phoenix",
+                     "sourceUri": "http://handle.net/234"
+                 }
 			},
 			"2":{
 				"label": "",
                  "metadata": {
                      "type": "relation_event"
-                  }
+                  },
+                 "context":{
+                     "creator": "John",
+                     "creationTime": "2021-07-08",
+                     "creationPlace": "phoenix",
+                     "sourceUri": "http://handle.net/234"
+                 }
 			}, 
 			"3": {
 			     "label": "Elsa Einstein",
                  "metadata": {
                      "type": "appellation_event",
                       "interpretation": "http://viaf.org/viaf/31600989",
-                      "term_parts": [
+                      "termParts": [
                            {
                              "position": 10,
                              "expression": "E. Einstein",
                              "normalization": "",
-                             "formatted_pointer": "",
+                             "formattedPointer": "",
                              "format": ""
                            }
                       ]
-                  }
+                  },
+                 "context":{
+                     "creator": "John",
+                     "creationTime": "2021-07-08",
+                     "creationPlace": "phoenix",
+                     "sourceUri": "http://handle.net/234"
+                 }
 			},
 			"4": {
                  "label": "to be",
                  "metadata": {
                      "type": "appellation_event",
                       "interpretation": "http://www.digitalhps.org/concepts/WID-02616386-V-01-be",
-                      "term_parts": [
+                      "termParts": [
                            {
                              "position": 5,
                              "expression": "his",
                              "normalization": "",
-                             "formatted_pointer": "",
+                             "formattedPointer": "",
                              "format": ""
                            }
                       ]
-                  }
+                  },
+                 "context":{
+                     "creator": "John",
+                     "creationTime": "2021-07-08",
+                     "creationPlace": "phoenix",
+                     "sourceUri": "http://handle.net/234"
+                 }
             },
             "5": {
                  "label": "cousin",
                  "metadata": {
                      "type": "appellation_event",
                       "interpretation": "http://www.digitalhps.org/concepts/WID-09972010-N-01-cousin",
-                      "term_parts": [
+                      "termParts": [
                            {
                              "position": 7,
                              "expression": "cousin",
                              "normalization": "",
-                             "formatted_pointer": "",
+                             "formattedPointer": "",
                              "format": ""
                            }
                       ]
-                  }
+                  },
+                 "context":{
+                     "creator": "John",
+                     "creationTime": "2021-07-08",
+                     "creationPlace": "phoenix",
+                     "sourceUri": "http://handle.net/234"
+                 }
             },
             "6":{
                 "label": "",
                  "metadata": {
                      "type": "relation_event"
-                  }
+                  },
+                 "context":{
+                     "creator": "John",
+                     "creationTime": "2021-07-08",
+                     "creationPlace": "phoenix",
+                     "sourceUri": "http://handle.net/234"
+                 }
             } 
 		},
 		"edges":[

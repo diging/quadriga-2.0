@@ -2,45 +2,44 @@ package edu.asu.diging.quadriga.api.v1.model;
 
 public class Context {
 
-	private String creatorName;
+	private String creator;
 
 	private String creationTime;
 
 	private String creationPlace;
 
-	private String sourceURI;
+	private String sourceUri;
 
-	public String getCreatorName() {
-		return creatorName;
-	}
+    public String getCreator() {
+        return creator;
+    }
 
-	public void setCreatorName(String creatorName) {
-		this.creatorName = creatorName;
-	}
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
 
-	public String getCreationTime() {
-		return creationTime;
-	}
+    public String getCreationTime() {
+        return creationTime;
+    }
 
-	public void setCreationTime(String creationTime) {
-		this.creationTime = creationTime;
-	}
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
-	public String getCreationPlace() {
-		return creationPlace;
-	}
+    public String getCreationPlace() {
+        return creationPlace;
+    }
 
-	public void setCreationPlace(String creationPlace) {
-		this.creationPlace = creationPlace;
-	}
+    public void setCreationPlace(String creationPlace) {
+        this.creationPlace = creationPlace;
+    }
 
-	public String getSourceURI() {
-		return sourceURI;
-	}
+    public String getSourceUri() {
+        return sourceUri;
+    }
 
-	public void setSourceURI(String sourceURI) {
-		this.sourceURI = sourceURI;
-	}
-
+    public void setSourceUri(String sourceUri) {
+        this.sourceUri = sourceUri;
+    }
 
 }
