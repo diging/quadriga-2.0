@@ -1,7 +1,5 @@
 package edu.asu.diging.quadriga.core.model.elements;
 
-import java.util.Date;
-
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 
@@ -20,7 +18,7 @@ public class Element {
 
     private Actor creator;
 
-    private Date creation_date;
+    private String creation_date;
 
     private Place creation_place;
 
@@ -41,11 +39,10 @@ public class Element {
         return creator;
     }
 
-    public Date getCreationDate() {
+    public String getCreationDate() {
         return creation_date;
     }
 
-    @XmlElement(type = Place.class)
     public Place getCreationPlace() {
         return creation_place;
     }
@@ -58,7 +55,7 @@ public class Element {
         this.creator = actor;
     }
 
-    public void setCreationDate(Date date) {
+    public void setCreationDate(String date) {
         this.creation_date = date;
     }
 

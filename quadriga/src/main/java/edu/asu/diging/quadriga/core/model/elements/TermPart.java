@@ -6,13 +6,13 @@ public class TermPart extends Element {
     private String format;
     private String expression;
 
-    private Integer position;
+    private Long position;
 
     private VocabularyEntry normalization;
 
     private SourceReference source_reference;
 
-    public Integer getPosition() {
+    public Long getPosition() {
         return position;
     }
 
@@ -20,7 +20,7 @@ public class TermPart extends Element {
         return expression;
     }
 
-    public void setPosition(Integer position) {
+    public void setPosition(Long position) {
         this.position = position;
     }
 

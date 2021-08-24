@@ -38,6 +38,8 @@
         <mongo.database.password></mongo.database.password>
         <mongo.database.authdb>admin</mongo.database.authdb>
 
+        <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
+
         <log.level>info</log.level>
 
         <tomcat.deploy.path></tomcat.deploy.path>
@@ -119,6 +121,10 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-neo4j</artifactId>
+        </dependency>
 
         <!-- Spring AOP + AspectJ -->
         <dependency>
@@ -142,7 +148,7 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
         </dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -163,6 +169,12 @@
             <version>${mongo-version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-http-driver -->
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-ogm-http-driver</artifactId>
+            <version>3.2.11</version>
+        </dependency>
 
         <dependency>
             <groupId>edu.asu.diging</groupId>
@@ -271,7 +283,7 @@
             <artifactId>org.json</artifactId>
             <version>chargebee-1.0</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom2</artifactId>
