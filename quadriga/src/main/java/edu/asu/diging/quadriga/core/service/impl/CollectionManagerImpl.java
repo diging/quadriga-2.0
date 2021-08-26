@@ -1,5 +1,8 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.Optional;
+
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +16,6 @@ public class CollectionManagerImpl implements CollectionManager {
     @Autowired
     private CollectionRepository collectionRepo;
 
-    
     /**
      * Creates a new Collection instance and stores it in mongodb
      * 
@@ -28,6 +30,44 @@ public class CollectionManagerImpl implements CollectionManager {
         collection.setName(name);
         collection.setDescription(description);
         return collectionRepo.save(collection);
+    }
+
+    /**
+     * Finds a collection from mongodb collection table by _id
+     * 
+     * @param id used to look up the collection in mongodb
+     * 
+     * 
+     * @return Collection Instance that is found from the database
+     * 
+     **/
+    @Override
+    public Collection findCollection(String id) {
+        return collectionRepo.findBy_id(new ObjectId(id));
+    }
+
+    /**
+     * Edits an existing Collection and updates it in mongodb
+     * 
+     * @param _id of the collection that needs to be updated
+     * 
+     * 
+     * @return Collection Instance that is updated in database
+     * 
+     **/
+    @Override
+    public Collection editCollection(String id, Optional<String> name, Optional<String> description) {
+        Optional<Collection> collection = Optional.ofNullable(findCollection(id));
+        Collection updatedCollection = null;
+
+        if (collection.isPresent()) {
+            Collection currentCollection = collection.get();
+            name.ifPresent(updatedName -> currentCollection.setName(updatedName));
+            description.ifPresent(updatedDescription -> currentCollection.setDescription(updatedDescription));
+            updatedCollection = collectionRepo.save(currentCollection);
+        }
+
+        return updatedCollection;
     }
 
 }

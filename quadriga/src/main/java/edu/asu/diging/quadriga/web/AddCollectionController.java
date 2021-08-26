@@ -33,6 +33,7 @@ public class AddCollectionController {
 
         collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription());
 
+        redirectAttrs.addFlashAttribute("show_alert", true);
         redirectAttrs.addFlashAttribute("alert_type", "success");
         redirectAttrs.addFlashAttribute("alert_msg", "Collection has been added.");
         return "redirect:/auth/collections";
