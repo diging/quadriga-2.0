@@ -8,4 +8,5 @@ public interface CollectionManager {
     public Collection addCollection(String name, String description);
     public Collection findCollection(String id);
     public Collection editCollection(String id, String name, String description) throws CollectionNotFoundException;
+    public boolean deleteCollection(String id);
 }
