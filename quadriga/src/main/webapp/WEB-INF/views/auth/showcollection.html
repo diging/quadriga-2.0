@@ -10,7 +10,36 @@
 			<ul class="list-group">
 				<li th:each="collection: ${collections}"
 					class="list-group-item clearfix"><span
-					th:text="${collection.name}"></span></li>
+					th:text="${collection.name}"></span>
+					<div class="btn-link pull-right" sec:authorize="hasRole('USER')"
+						role="presentation" style="margin-left:15px">
+						<div class="modal modal-warning fade in" th:id="modal-warning+${collection.id }" style="color:black">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							 				<span aria-hidden="true">×</span>
+							 			</button>
+							 			<h5 class="modal-title">Deleting Collection - <b><span th:text="${collection.name}"></span></b></h5>
+							 		</div>
+							 		<div class="modal-body">
+							 			<h4>Are you sure want to delete this collection?</h4>
+							 		</div>
+							 		<div class="modal-footer">
+							 			<a th:href="@{/auth/collections/delete(id=${collection.id})}" class="btn btn-primary pull-left">
+							 				<i class="fa fa-check"></i>
+							 				Yes
+							 			</a>
+							 			<button type="button" class="btn btn-outline pull-left" data-dismiss="modal" style="margin-left:15px">Cancel</button>
+							 		</div>
+							 	</div>
+							 </div>
+						</div>
+						<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${collection.id }" style="cursor:pointer">
+							<span class="fas fa-trash"></span>
+						</a>
+					</div>
+				</li>
 			</ul>
 		</div>
 		<nav aria-label="Pagination" th:if="${collections.totalPages gt 0}">

@@ -1,5 +1,8 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.Optional;
+
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,37 @@ public class CollectionManagerImpl implements CollectionManager {
         collection.setName(name);
         collection.setDescription(description);
         return collectionRepo.save(collection);
+    }
+    
+    
+    /**
+     * Finds a collection from mongodb collection table by _id
+     * 
+     * @param id used to look up the collection in mongodb
+     * 
+     * 
+     * @return Collection Instance that is found from the database
+     * 
+     **/
+    @Override
+    public Collection findCollection(String id) {
+        return collectionRepo.findBy_id(new ObjectId(id));
+    }
+    
+    
+    /**
+     * Deleted a collection from mongodb collection table by _id
+     * 
+     * @param id used to look up the collection in mongodb
+     * 
+     */
+    public boolean deleteCollection(String id) {
+        Optional<Collection> collection = Optional.ofNullable(findCollection(id));
+        if(collection.isPresent()) {
+            collectionRepo.delete(collection.get());
+            return true;
+        }
+        return false;
     }
 
 }
