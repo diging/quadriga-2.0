@@ -1,7 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.Objects;
-import java.util.Optional;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,17 +69,19 @@ public class CollectionManagerImpl implements CollectionManager {
     }
     
     /**
-     * Deleted a collection from mongodb collection table by _id
+     * Deletes a collection from mongodb collection table by _id
      * 
      * @param id used to look up the collection in mongodb
      * 
      */
     public boolean deleteCollection(String id) {
-        Optional<Collection> collection = Optional.ofNullable(findCollection(id));
-        if(collection.isPresent()) {
-            collectionRepo.delete(collection.get());
+        Collection collection = findCollection(id);
+        
+        if(Objects.nonNull(collection)) {
+            collectionRepo.delete(collection);
             return true;
         }
+        
         return false;
     }
 

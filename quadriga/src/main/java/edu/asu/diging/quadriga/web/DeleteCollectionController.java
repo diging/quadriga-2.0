@@ -24,13 +24,11 @@ public class DeleteCollectionController {
             redirectAttributes.addFlashAttribute("alert_type", "success");
             redirectAttributes.addFlashAttribute("alert_msg", "Collection has been deleted.");
             redirectAttributes.addFlashAttribute("show_alert", true);
+            
+            return "redirect:/auth/collections";
         } else {
-            redirectAttributes.addFlashAttribute("alert_type", "danger");
-            redirectAttributes.addFlashAttribute("alert_msg", "Something went wrong while deleting collection, please try again!");
-            redirectAttributes.addFlashAttribute("show_alert", true);
+            return "errorPage";
         }
-        
-        return "redirect:/auth/collections";
     }
     
 }
