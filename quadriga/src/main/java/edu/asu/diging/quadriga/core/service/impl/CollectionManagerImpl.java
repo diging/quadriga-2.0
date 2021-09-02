@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -45,22 +46,24 @@ public class CollectionManagerImpl implements CollectionManager {
      **/
     @Override
     public Collection findCollection(String id) {
-        return collectionRepo.findBy_id(new ObjectId(id));
+        return collectionRepo.findById(new ObjectId(id)).orElse(null);
     }
     
     
     /**
-     * Deleted a collection from mongodb collection table by _id
+     * Deletes a collection from mongodb collection table by _id
      * 
      * @param id used to look up the collection in mongodb
      * 
      */
     public boolean deleteCollection(String id) {
-        Optional<Collection> collection = Optional.ofNullable(findCollection(id));
-        if(collection.isPresent()) {
-            collectionRepo.delete(collection.get());
+        Collection collection = findCollection(id);
+        
+        if(Objects.nonNull(collection)) {
+            collectionRepo.delete(collection);
             return true;
         }
+        
         return false;
     }
 
