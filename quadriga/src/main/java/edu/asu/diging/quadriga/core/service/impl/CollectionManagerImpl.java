@@ -1,7 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
-import java.util.Optional;
-
+import java.util.Objects;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,7 @@ public class CollectionManagerImpl implements CollectionManager {
      **/
     @Override
     public Collection findCollection(String id) {
-        return collectionRepo.findBy_id(new ObjectId(id));
+        return collectionRepo.findById(new ObjectId(id)).orElse(null);
     }
 
     /**
@@ -56,18 +55,17 @@ public class CollectionManagerImpl implements CollectionManager {
      * 
      **/
     @Override
-    public Collection editCollection(String id, Optional<String> name, Optional<String> description) {
-        Optional<Collection> collection = Optional.ofNullable(findCollection(id));
-        Collection updatedCollection = null;
+    public Collection editCollection(String id, String name, String description) throws Exception {
+        Collection collection = findCollection(id);
 
-        if (collection.isPresent()) {
-            Collection currentCollection = collection.get();
-            name.ifPresent(updatedName -> currentCollection.setName(updatedName));
-            description.ifPresent(updatedDescription -> currentCollection.setDescription(updatedDescription));
-            updatedCollection = collectionRepo.save(currentCollection);
+        if (Objects.nonNull(collection)) {
+            collection.setName(name);
+            collection.setDescription(description);
+            Collection updatedCollection = collectionRepo.save(collection);
+            return updatedCollection;
+        } else {
+            throw new Exception("Collection not found!");
         }
-
-        return updatedCollection;
     }
 
 }

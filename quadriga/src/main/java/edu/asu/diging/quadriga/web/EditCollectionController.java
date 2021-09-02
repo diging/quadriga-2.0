@@ -1,7 +1,6 @@
 package edu.asu.diging.quadriga.web;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -40,20 +39,19 @@ public class EditCollectionController {
      */
     @RequestMapping(value = "/auth/collections/edit", method = RequestMethod.GET)
     public String get(@RequestParam(value = "id", required = true) String id, Model model) {
-        Optional<Collection> collection = Optional.ofNullable(collectionManager.findCollection(id));
+        Collection collection = collectionManager.findCollection(id);
 
-        if (collection.isPresent()) {
-            Collection currentCollection = collection.get();
+        if (Objects.nonNull(collection)) {
             CollectionForm collectionForm = new CollectionForm();
             collectionForm.setId(id);
-            collectionForm.setName(currentCollection.getName());
-            collectionForm.setDescription(currentCollection.getDescription());
+            collectionForm.setName(collection.getName());
+            collectionForm.setDescription(collection.getDescription());
             model.addAttribute("collectionForm", collectionForm);
 
             return "auth/editCollection";
+        } else {
+            return "errorPage";
         }
-
-        return "redirect:/auth/collections";
     }
 
     /**
@@ -69,32 +67,20 @@ public class EditCollectionController {
     public String edit(@RequestParam(value = "id", required = true) String id, @Valid CollectionForm collectionForm,
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("alert_type", "danger");
-            redirectAttributes.addFlashAttribute("alert_msg",
-                    "Something went wrong while editing collections, please try again!");
-            redirectAttributes.addFlashAttribute("show_alert", true);
             return "auth/editCollection";
         }
 
-        Collection collection = null;
-
-        if (Objects.nonNull(collectionForm)) {
-            collection = collectionManager.editCollection(id, Optional.ofNullable(collectionForm.getName()),
-                    Optional.ofNullable(collectionForm.getDescription()));
-
-            if (Objects.nonNull(collection)) {
-                redirectAttributes.addFlashAttribute("alert_type", "success");
-                redirectAttributes.addFlashAttribute("alert_msg", "Collection has been edited.");
-                redirectAttributes.addFlashAttribute("show_alert", true);
-                return "redirect:/auth/collections";
-            }
+        try {
+            collectionManager.editCollection(id, collectionForm.getName(), collectionForm.getDescription());
+            
+            redirectAttributes.addFlashAttribute("alert_type", "success");
+            redirectAttributes.addFlashAttribute("alert_msg", "Collection has been edited.");
+            redirectAttributes.addFlashAttribute("show_alert", true);
+            return "redirect:/auth/collections";
+        } catch (Exception e) {
+            return "errorPage";
         }
-
-        redirectAttributes.addFlashAttribute("alert_type", "danger");
-        redirectAttributes.addFlashAttribute("alert_msg",
-                "Something went wrong while editing collections, please try again!");
-        redirectAttributes.addFlashAttribute("show_alert", true);
-        return "auth/editCollection";
+       
 
     }
 

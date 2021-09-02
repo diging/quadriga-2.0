@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -13,11 +14,16 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
-import edu.asu.diging.quadriga.core.literals.TestLiterals;
-import edu.asu.diging.quadriga.core.literals.TestLiterals.CollectionLiterals;
 import edu.asu.diging.quadriga.core.model.Collection;
 
 public class CollectionManagerImplTest {
+    
+    public static final String BLANK = "";
+    public static final String COLLECTION_NAME = "Collection name";
+    public static final String COLLECTION_DESC = "Collection description";
+    public static final String EDITED_NAME = "Edited name";
+    public static final String EDITED_DESC = "Edited description";
+    
 
     @Mock
     private CollectionRepository collectionRepo;
@@ -60,202 +66,207 @@ public class CollectionManagerImplTest {
         Collection collection = new Collection();
         ObjectId objectId = new ObjectId();
         collection.setId(objectId);
-        Mockito.when(collectionRepo.findBy_id(objectId)).thenReturn(collection);
+        Mockito.when(collectionRepo.findById(objectId)).thenReturn(Optional.of(collection));
         Collection foundCollection = managerToTest.findCollection(objectId.toString());
         Assert.assertEquals(collection.getId().toString(), foundCollection.getId().toString());
     }
 
     @Test
-    public void test_editCollection_success() {
+    public void test_editCollection_success() throws Exception {
 
-        String name = CollectionLiterals.COLLECTION_NAME;
-        String desc = CollectionLiterals.COLLECTION_DESC;
+        String name = COLLECTION_NAME;
+        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
         existingCollection.setName(name);
         existingCollection.setDescription(desc);
 
-        Mockito.when(managerToTest.findCollection(id.toString())).thenReturn(existingCollection);
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
-        Optional<String> editedName = Optional.of(CollectionLiterals.EDITED_NAME);
-        Optional<String> editedDescription = Optional.of(CollectionLiterals.EDITED_DESC);
+        String editedName = EDITED_NAME;
+        String editedDescription = EDITED_DESC;
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
-        editedCollection.setName(editedName.get());
-        editedCollection.setDescription(editedDescription.get());
+        editedCollection.setName(editedName);
+        editedCollection.setDescription(editedDescription);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
             public boolean matches(Collection arg0) {
-                return (arg0.getName().equals(editedName.get())
-                        && arg0.getDescription().equals(editedDescription.get()));
+                return (arg0.getName().equals(editedName) && arg0.getDescription().equals(editedDescription));
             }
 
         }))).thenReturn(editedCollection);
 
         Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
-        Assert.assertEquals(editedName.get(), updatedCollection.getName());
-        Assert.assertEquals(editedDescription.get(), updatedCollection.getDescription());
+        Assert.assertEquals(editedName, updatedCollection.getName());
+        Assert.assertEquals(editedDescription, updatedCollection.getDescription());
 
     }
 
     @Test
-    public void test_editCollection_nullName() {
+    public void test_editCollection_nullDescription() throws Exception {
 
-        String name = CollectionLiterals.COLLECTION_NAME;
-        String desc = CollectionLiterals.COLLECTION_DESC;
+        String name = COLLECTION_NAME;
+        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
         existingCollection.setName(name);
         existingCollection.setDescription(desc);
 
-        Mockito.when(managerToTest.findCollection(id.toString())).thenReturn(existingCollection);
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
-        Optional<String> editedName = Optional.ofNullable(CollectionLiterals.COLLECTION_NAME);
-        Optional<String> editedDescription = Optional.ofNullable(null);
+        String editedName = COLLECTION_NAME;
+        String editedDescription = null;
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
-        editedCollection.setName(editedName.get());
-        editedCollection.setDescription(desc);
+        editedCollection.setName(editedName);
+        editedCollection.setDescription(editedDescription);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
             public boolean matches(Collection arg0) {
-                return (arg0.getName().equals(editedName.get()) && arg0.getDescription().equals(desc));
+                return (arg0.getName().equals(editedName) && Objects.isNull(arg0.getDescription()));
             }
 
         }))).thenReturn(editedCollection);
 
         Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
-        Assert.assertEquals(editedName.get(), updatedCollection.getName());
-        Assert.assertEquals(desc, updatedCollection.getDescription());
+        Assert.assertEquals(editedName, updatedCollection.getName());
+        Assert.assertEquals(editedDescription, updatedCollection.getDescription());
 
     }
 
     @Test
-    public void test_editCollection_nullDescription() {
+    public void test_editCollection_nullName() throws Exception {
 
-        String name = CollectionLiterals.COLLECTION_NAME;
-        String desc = CollectionLiterals.COLLECTION_DESC;
+        String name = COLLECTION_NAME;
+        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
         existingCollection.setName(name);
         existingCollection.setDescription(desc);
 
-        Mockito.when(managerToTest.findCollection(id.toString())).thenReturn(existingCollection);
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
-        Optional<String> editedName = Optional.ofNullable(null);
-        Optional<String> editedDescription = Optional.ofNullable(CollectionLiterals.EDITED_DESC);
+        String editedName = null;
+        String editedDescription = EDITED_DESC;
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
-        editedCollection.setName(name);
-        editedCollection.setDescription(editedDescription.get());
+        editedCollection.setName(editedName);
+        editedCollection.setDescription(editedDescription);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
             public boolean matches(Collection arg0) {
-                return (arg0.getName().equals(name) && arg0.getDescription().equals(editedDescription.get()));
+                return (Objects.isNull(arg0.getName()) && arg0.getDescription().equals(editedDescription));
             }
 
         }))).thenReturn(editedCollection);
 
         Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
-        Assert.assertEquals(name, updatedCollection.getName());
-        Assert.assertEquals(editedDescription.get(), updatedCollection.getDescription());
+        Assert.assertEquals(editedName, updatedCollection.getName());
+        Assert.assertEquals(editedDescription, updatedCollection.getDescription());
 
     }
 
     @Test
-    public void test_editCollection_nullNameAndDescription() {
+    public void test_editCollection_nullNameAndDescription() throws Exception {
 
-        String name = CollectionLiterals.COLLECTION_NAME;
-        String desc = CollectionLiterals.COLLECTION_DESC;
+        String name = COLLECTION_NAME;
+        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
         existingCollection.setName(name);
         existingCollection.setDescription(desc);
 
-        Mockito.when(managerToTest.findCollection(id.toString())).thenReturn(existingCollection);
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
-        Optional<String> editedName = Optional.ofNullable(null);
-        Optional<String> editedDescription = Optional.ofNullable(null);
+        String editedName = null;
+        String editedDescription = null;
+
+        Collection updatedCollection = new Collection();
+        updatedCollection.setId(id);
+        updatedCollection.setName(editedName);
+        updatedCollection.setDescription(editedDescription);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
             public boolean matches(Collection arg0) {
-                return (arg0.getName().equals(name) && arg0.getDescription().equals(desc));
+                return (Objects.isNull(arg0.getName()) && Objects.isNull(arg0.getDescription()));
             }
 
-        }))).thenReturn(existingCollection);
+        }))).thenReturn(updatedCollection);
 
         Collection sameCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
-        Assert.assertEquals(id.toString(), sameCollection.getId().toString());
-        Assert.assertEquals(name, sameCollection.getName());
-        Assert.assertEquals(desc, sameCollection.getDescription());
+        Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
+        Assert.assertEquals(editedName, updatedCollection.getName());
+        Assert.assertEquals(editedDescription, updatedCollection.getDescription());
 
     }
 
     @Test
-    public void test_editCollection_blankNameAndDescription() {
+    public void test_editCollection_blankNameAndDescription() throws Exception {
 
-        String name = CollectionLiterals.COLLECTION_NAME;
-        String desc = CollectionLiterals.COLLECTION_DESC;
+        String name = COLLECTION_NAME;
+        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
         existingCollection.setName(name);
         existingCollection.setDescription(desc);
 
-        Mockito.when(managerToTest.findCollection(id.toString())).thenReturn(existingCollection);
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
-        Optional<String> editedName = Optional.ofNullable(TestLiterals.BLANK);
-        Optional<String> editedDescription = Optional.ofNullable(TestLiterals.BLANK);
+        String editedName = BLANK;
+        String editedDescription = BLANK;
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
-        editedCollection.setName(TestLiterals.BLANK);
-        editedCollection.setDescription(TestLiterals.BLANK);
+        editedCollection.setName(BLANK);
+        editedCollection.setDescription(BLANK);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
             public boolean matches(Collection arg0) {
-                return (arg0.getName().equals(TestLiterals.BLANK) && arg0.getDescription().equals(TestLiterals.BLANK));
+                return (arg0.getName().equals(BLANK) && arg0.getDescription().equals(BLANK));
             }
 
         }))).thenReturn(editedCollection);
 
         Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
-        Assert.assertEquals(editedName.get(), updatedCollection.getName());
-        Assert.assertEquals(editedDescription.get(), updatedCollection.getDescription());
+        Assert.assertEquals(editedName, updatedCollection.getName());
+        Assert.assertEquals(editedDescription, updatedCollection.getDescription());
 
     }
 
     @Test
-    public void test_editCollection_noCollectionFoundForId() {
+    public void test_editCollection_noCollectionFoundForId() throws Exception {
         ObjectId objectId = new ObjectId();
-        Mockito.when(managerToTest.findCollection(objectId.toString())).thenReturn(null);
+        Mockito.when(collectionRepo.findById(objectId)).thenReturn(Optional.ofNullable(null));
 
-        Optional<String> editedName = Optional.ofNullable(CollectionLiterals.EDITED_NAME);
-        Optional<String> editedDescription = Optional.ofNullable(CollectionLiterals.EDITED_DESC);
+        String editedName = EDITED_NAME;
+        String editedDescription = EDITED_DESC;
 
-        Collection updatedCollection = managerToTest.editCollection(objectId.toString(), editedName, editedDescription);
-        Assert.assertNull(updatedCollection);
+        Exception e = Assert.assertThrows(Exception.class,
+                ()  -> managerToTest.editCollection(objectId.toString(), editedName, editedDescription));
+        Assert.assertEquals("Collection not found!", e.getMessage());
 
     }
 
