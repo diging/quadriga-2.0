@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,20 @@ public class CollectionManagerImpl implements CollectionManager {
         collection.setName(name);
         collection.setDescription(description);
         return collectionRepo.save(collection);
+    }
+    
+    /**
+     * Finds a collection from mongodb collection table by _id
+     * 
+     * @param id used to look up the collection in mongodb
+     * 
+     * 
+     * @return Collection Instance that is found from the database
+     * 
+     **/
+    @Override
+    public Collection findCollection(String id) {
+        return collectionRepo.findById(new ObjectId(id)).orElse(null);
     }
 
 }
