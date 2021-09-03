@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.Objects;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class CollectionManagerImpl implements CollectionManager {
         collection.setDescription(description);
         return collectionRepo.save(collection);
     }
-
+    
     /**
      * Finds a collection from mongodb collection table by _id
      * 
