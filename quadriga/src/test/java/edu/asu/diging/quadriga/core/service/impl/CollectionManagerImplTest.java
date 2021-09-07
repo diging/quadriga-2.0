@@ -64,7 +64,7 @@ public class CollectionManagerImplTest {
     
     
     @Test
-    public void test_deleteCollection_success() {
+    public void test_deleteCollection_success() throws CollectionNotFoundException {
         
         String name = "name";
         String desc = "description";
@@ -83,13 +83,12 @@ public class CollectionManagerImplTest {
             }
         }));
         
-        boolean deleted = managerToTest.deleteCollection(id.toString());
-        Assert.assertTrue(deleted);
+        managerToTest.deleteCollection(id.toString());
     }
     
     
     @Test
-    public void test_deleteCollection_missingCollection() {
+    public void test_deleteCollection_missingCollection() throws CollectionNotFoundException {
         
         String name = "name";
         String desc = "description";
@@ -101,8 +100,8 @@ public class CollectionManagerImplTest {
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.ofNullable(null));
         
-        boolean deleted = managerToTest.deleteCollection(id.toString());
-        Assert.assertFalse(deleted);
+        Exception e = Assert.assertThrows(CollectionNotFoundException.class,
+                ()  -> managerToTest.deleteCollection(id.toString()));
     }
 
     @Test

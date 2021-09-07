@@ -74,15 +74,14 @@ public class CollectionManagerImpl implements CollectionManager {
      * @param id used to look up the collection in mongodb
      * 
      */
-    public boolean deleteCollection(String id) {
+    public void deleteCollection(String id) throws CollectionNotFoundException {
         Collection collection = findCollection(id);
         
         if(Objects.nonNull(collection)) {
             collectionRepo.delete(collection);
-            return true;
+        } else {
+            throw new CollectionNotFoundException();
         }
-        
-        return false;
     }
 
 }
