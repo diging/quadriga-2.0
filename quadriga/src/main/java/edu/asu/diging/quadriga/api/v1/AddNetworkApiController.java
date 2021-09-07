@@ -56,7 +56,7 @@ public class AddNetworkApiController {
         Collection collection = collectionManager.findCollection(collectionId);
         
         if(Objects.isNull(collection)) {
-            return HttpStatus.BAD_REQUEST;
+            return HttpStatus.NOT_ACCEPTABLE;
         }
 
         if (quadruple == null) {
@@ -66,7 +66,10 @@ public class AddNetworkApiController {
         // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
-        eventGraphs.forEach(e -> e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping()));
+        eventGraphs.forEach(e -> {
+            e.setCollectionId(collection.getId());
+            e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
+        });
         eventGraphService.saveEventGraphs(eventGraphs);
 
         try {
