@@ -17,6 +17,7 @@ import org.springframework.validation.MapBindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
@@ -27,7 +28,7 @@ public class EditCollectionControllerTest {
     public static final String COLLECTION_DESC = "Collection description";
     public static final String EDIT_COLLECTION = "auth/editCollection";
     public static final String REDIRECT_SHOW_COLLECTION = "redirect:/auth/collections";
-    public static final String ERROR_PAGE = "errorPage";
+    public static final String ERROR_PAGE = "error404Page";
 
     @Mock
     private CollectionManager collectionManager;
@@ -78,7 +79,7 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_editCollection_success() throws Exception {
+    public void test_editCollection_success() throws CollectionNotFoundException {
         ObjectId objectId = new ObjectId();
         CollectionForm collectionForm = new CollectionForm();
         collectionForm.setId(objectId.toString());
@@ -116,7 +117,7 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_editCollection_nullCollection() throws Exception {
+    public void test_editCollection_nullCollection() throws CollectionNotFoundException  {
         ObjectId objectId = new ObjectId();
         CollectionForm collectionForm = new CollectionForm();
         collectionForm.setId(objectId.toString());
@@ -125,7 +126,7 @@ public class EditCollectionControllerTest {
         RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
         BindingResult bindingResult = new MapBindingResult(new HashMap<String, String>(), null);
 
-        Mockito.when(collectionManager.editCollection(objectId.toString(), COLLECTION_NAME, COLLECTION_DESC)).thenThrow(new Exception("Collection not found!"));
+        Mockito.when(collectionManager.editCollection(objectId.toString(), COLLECTION_NAME, COLLECTION_DESC)).thenThrow(new CollectionNotFoundException("Collection not found!"));
 
         String view = editCollectionController.edit(objectId.toString(), collectionForm, bindingResult,
                 redirectAttributes);

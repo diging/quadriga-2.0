@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
@@ -50,7 +51,7 @@ public class EditCollectionController {
 
             return "auth/editCollection";
         } else {
-            return "errorPage";
+            return "error404Page";
         }
     }
 
@@ -77,8 +78,8 @@ public class EditCollectionController {
             redirectAttributes.addFlashAttribute("alert_msg", "Collection has been edited.");
             redirectAttributes.addFlashAttribute("show_alert", true);
             return "redirect:/auth/collections";
-        } catch (Exception e) {
-            return "errorPage";
+        } catch (CollectionNotFoundException e) {
+            return "error404Page";
         }
        
 

@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 
 public class CollectionManagerImplTest {
@@ -72,15 +73,13 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_success() throws Exception {
+    public void test_editCollection_success() throws CollectionNotFoundException {
 
-        String name = COLLECTION_NAME;
-        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
-        existingCollection.setName(name);
-        existingCollection.setDescription(desc);
+        existingCollection.setName(COLLECTION_NAME);
+        existingCollection.setDescription(COLLECTION_DESC);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
@@ -109,15 +108,13 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_nullDescription() throws Exception {
+    public void test_editCollection_nullDescription() throws CollectionNotFoundException {
 
-        String name = COLLECTION_NAME;
-        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
-        existingCollection.setName(name);
-        existingCollection.setDescription(desc);
+        existingCollection.setName(COLLECTION_NAME);
+        existingCollection.setDescription(COLLECTION_DESC);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
@@ -146,15 +143,13 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_nullName() throws Exception {
+    public void test_editCollection_nullName() throws CollectionNotFoundException {
 
-        String name = COLLECTION_NAME;
-        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
-        existingCollection.setName(name);
-        existingCollection.setDescription(desc);
+        existingCollection.setName(COLLECTION_NAME);
+        existingCollection.setDescription(COLLECTION_DESC);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
@@ -183,15 +178,13 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_nullNameAndDescription() throws Exception {
+    public void test_editCollection_nullNameAndDescription() throws CollectionNotFoundException {
 
-        String name = COLLECTION_NAME;
-        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
-        existingCollection.setName(name);
-        existingCollection.setDescription(desc);
+        existingCollection.setName(COLLECTION_NAME);
+        existingCollection.setDescription(COLLECTION_DESC);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
@@ -220,15 +213,13 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_blankNameAndDescription() throws Exception {
+    public void test_editCollection_blankNameAndDescription() throws CollectionNotFoundException {
 
-        String name = COLLECTION_NAME;
-        String desc = COLLECTION_DESC;
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
         existingCollection.setId(id);
-        existingCollection.setName(name);
-        existingCollection.setDescription(desc);
+        existingCollection.setName(COLLECTION_NAME);
+        existingCollection.setDescription(COLLECTION_DESC);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
@@ -237,8 +228,8 @@ public class CollectionManagerImplTest {
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
-        editedCollection.setName(BLANK);
-        editedCollection.setDescription(BLANK);
+        editedCollection.setName(editedName);
+        editedCollection.setDescription(editedDescription);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
@@ -257,16 +248,12 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_noCollectionFoundForId() throws Exception {
+    public void test_editCollection_noCollectionFoundForId() throws CollectionNotFoundException {
         ObjectId objectId = new ObjectId();
         Mockito.when(collectionRepo.findById(objectId)).thenReturn(Optional.ofNullable(null));
 
-        String editedName = EDITED_NAME;
-        String editedDescription = EDITED_DESC;
-
-        Exception e = Assert.assertThrows(Exception.class,
-                ()  -> managerToTest.editCollection(objectId.toString(), editedName, editedDescription));
-        Assert.assertEquals("Collection not found!", e.getMessage());
+        Exception e = Assert.assertThrows(CollectionNotFoundException.class,
+                ()  -> managerToTest.editCollection(objectId.toString(), EDITED_NAME, EDITED_DESC));
 
     }
 

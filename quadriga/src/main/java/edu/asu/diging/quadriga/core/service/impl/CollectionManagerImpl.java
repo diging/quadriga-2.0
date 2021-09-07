@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 
@@ -55,16 +56,15 @@ public class CollectionManagerImpl implements CollectionManager {
      * 
      **/
     @Override
-    public Collection editCollection(String id, String name, String description) throws Exception {
+    public Collection editCollection(String id, String name, String description) throws CollectionNotFoundException {
         Collection collection = findCollection(id);
 
         if (Objects.nonNull(collection)) {
             collection.setName(name);
             collection.setDescription(description);
-            Collection updatedCollection = collectionRepo.save(collection);
-            return updatedCollection;
+            return collectionRepo.save(collection);
         } else {
-            throw new Exception("Collection not found!");
+            throw new CollectionNotFoundException();
         }
     }
 
