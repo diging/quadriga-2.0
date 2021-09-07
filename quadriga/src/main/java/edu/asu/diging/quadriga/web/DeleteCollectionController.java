@@ -27,7 +27,7 @@ public class DeleteCollectionController {
             
             return "redirect:/auth/collections";
         } else {
-            return "errorPage";
+            return "error404Page";
         }
     }
     
