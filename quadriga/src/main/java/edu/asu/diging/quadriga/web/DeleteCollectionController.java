@@ -20,9 +20,9 @@ public class DeleteCollectionController {
     public String get(@RequestParam(value = "id", required = true) String id, RedirectAttributes redirectAttributes) {
         try {
             collectionManager.deleteCollection(id);
-        redirectAttributes.addFlashAttribute("alert_type", "success");
-        redirectAttributes.addFlashAttribute("alert_msg", "Collection has been deleted.");
-        redirectAttributes.addFlashAttribute("show_alert", true);
+            redirectAttributes.addFlashAttribute("alert_type", "success");
+            redirectAttributes.addFlashAttribute("alert_msg", "Collection has been deleted.");
+            redirectAttributes.addFlashAttribute("show_alert", true);
         
             return "redirect:/auth/collections";
         } catch (CollectionNotFoundException e) {
