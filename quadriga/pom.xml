@@ -13,6 +13,7 @@
         <org.springframework-version>5.2.9.RELEASE</org.springframework-version>
         <spring-security-version>5.4.1</spring-security-version>
         <spring-data.version>Neumann-SR4</spring-data.version>
+        <spring-social.version>1.1.6.RELEASE</spring-social.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <mongo-version>4.1.0</mongo-version>
         <simple-users-version>1.1</simple-users-version>
@@ -20,9 +21,9 @@
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.database.url>jdbc-url-to-db</db.database.url>
-        <db.user>db-user</db.user>
-        <db.password>db-password</db.password>
+        <db.database.url>jdbc:mysql://localhost:3306/wic</db.database.url>
+        <db.user>username</db.user>
+        <db.password>password</db.password>
 
         <email.user></email.user>
         <email.password></email.password>
@@ -39,6 +40,10 @@
         <mongo.database.authdb>admin</mongo.database.authdb>
 
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
+        
+        <citesphere.url>http://localhost:8080/citesphere/</citesphere.url>
+        <citesphere.client.key>OAUTHCLIENT5</citesphere.client.key>
+        <citesphere.client.secret>99db0c57-6d6a-43f3-90bc-d7c31a443bfa</citesphere.client.secret>
 
         <log.level>info</log.level>
 
@@ -114,6 +119,11 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-taglibs</artifactId>
             <version>${spring-security-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.social</groupId>
+            <artifactId>spring-social-core</artifactId>
+            <version>${spring-social.version}</version>
         </dependency>
 
         <!-- Spring Data -->
