@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.config.model;
+package edu.asu.diging.quadriga.api.v1.model;
 
 import java.util.List;
 
