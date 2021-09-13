@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.web.forms;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -9,6 +11,8 @@ public class CollectionForm {
     private String name;
 
     private String description;
+    
+    private List<String> apps;
 
     public String getName() {
         return name;
@@ -26,4 +30,12 @@ public class CollectionForm {
         this.description = description;
     }
 
+    public List<String> getApps() {
+        return apps;
+    }
+
+    public void setApps(List<String> apps) {
+        this.apps = apps;
+    }
+    
 }

@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.core.model;
 
+import java.util.List;
+
 import org.bson.types.ObjectId;
 
 public class Collection {
@@ -7,7 +9,8 @@ public class Collection {
     private ObjectId _id;
     private String name;
     private String description;
-    
+    private List<String> apps;
+
     public ObjectId getId() {
         return _id;
     }
@@ -30,6 +33,14 @@ public class Collection {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public List<String> getApps() {
+        return apps;
+    }
+
+    public void setApps(List<String> apps) {
+        this.apps = apps;
     }
 
 }
