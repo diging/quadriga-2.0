@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
+import edu.asu.diging.quadriga.core.exceptions.TokenInfoNotFoundException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
 import edu.asu.diging.quadriga.core.service.impl.TokenValidatorImpl;
-import edu.asu.diging.simpleusers.core.exceptions.TokenExpiredException;
 
 @Controller
 public class AddNetworkApiController {
@@ -63,7 +63,6 @@ public class AddNetworkApiController {
         if(!HttpStatus.ACCEPTED.equals(httpStatus)) {
             return httpStatus;
         }
-        
 
         // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
@@ -96,18 +95,21 @@ public class AddNetworkApiController {
         
         try {
             if(!tokenValidatorImpl.validateToken(token)) {
+                
                 // token has expired
                 return HttpStatus.UNAUTHORIZED;
             }
-        } catch (TokenExpiredException | OAuthException e) {
-            // token has either expired or citesphere sent an empty response
+        } catch (TokenInfoNotFoundException | OAuthException e) {
+            
+            // citesphere sent an empty response
             return HttpStatus.UNAUTHORIZED;
-        } catch (BadCredentialsException bce) {
-            // the server understood the request but refuses to authorize it.
+        } catch(BadCredentialsException e) {
+            
+            //Token is invalid
             return HttpStatus.FORBIDDEN;
         }
         
-        // token is active
+        // token is valid and active
         return HttpStatus.ACCEPTED;
     }
 
