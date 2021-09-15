@@ -13,7 +13,6 @@
         <org.springframework-version>5.2.9.RELEASE</org.springframework-version>
         <spring-security-version>5.4.1</spring-security-version>
         <spring-data.version>Neumann-SR4</spring-data.version>
-        <spring-social.version>1.1.6.RELEASE</spring-social.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <mongo-version>4.1.0</mongo-version>
         <simple-users-version>1.1</simple-users-version>
@@ -120,11 +119,6 @@
             <artifactId>spring-security-taglibs</artifactId>
             <version>${spring-security-version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.social</groupId>
-            <artifactId>spring-social-core</artifactId>
-            <version>${spring-social.version}</version>
-        </dependency>
 
         <!-- Spring Data -->
         <dependency>
@@ -184,6 +178,20 @@
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-ogm-http-driver</artifactId>
             <version>3.2.11</version>
+        </dependency>
+        
+        <!-- OpenId Connect -->
+        <!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>4.26.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.nimbusds/oauth2-oidc-sdk -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>5.17.1</version>
         </dependency>
 
         <dependency>

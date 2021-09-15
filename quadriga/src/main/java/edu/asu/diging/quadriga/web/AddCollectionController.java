@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector;
 import edu.asu.diging.quadriga.core.service.ICollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
@@ -18,10 +19,14 @@ public class AddCollectionController {
 
     @Autowired
     private ICollectionManager collectionManager;
+    
+    @Autowired
+    private ICitesphereConnector citesphereConnector;
 
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.GET)
     public String get(Model model) {
         model.addAttribute("collectionForm", new CollectionForm());
+        model.addAttribute("citesphereApps", citesphereConnector.getCitesphereApps());
         return "auth/addCollection";
     }
 

@@ -19,7 +19,7 @@ public class CollectionManagerImplTest {
     private CollectionRepository collectionRepo;
 
     @InjectMocks
-    private CollectionManagerImpl managerToTest;
+    private CollectionManager managerToTest;
 
     @Before
     public void setUp() {
