@@ -70,7 +70,6 @@ public class TokenValidatorImpl implements TokenValidator {
         
 
         String checkTokenUrl = citesphereBaseURL + citesphereCheckTokenEndpoint + "?token=" + token;
-        System.out.println(checkTokenUrl);
         TokenInfo tokenInfo = null;
         
         try {
@@ -91,10 +90,11 @@ public class TokenValidatorImpl implements TokenValidator {
                         throw new OAuthException();
                     }
                 }
-            }
+            } else {
             
-            // If it is some other kind of exception, we throw a BadCredentialsException
-            throw new BadCredentialsException("Token is invalid for app.", e1);
+                // If it is some other kind of exception, we throw a BadCredentialsException
+                throw new BadCredentialsException("Token is invalid for app.", e1);
+            }
         }
 
         if (Objects.nonNull(tokenInfo)) {
