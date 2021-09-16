@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
@@ -38,8 +38,8 @@ public class EditCollectionController {
      *              description
      * @return the editCollection view
      */
-    @RequestMapping(value = "/auth/collections/edit", method = RequestMethod.GET)
-    public String get(@RequestParam(value = "id", required = true) String id, Model model) {
+    @RequestMapping(value = "/auth/collections/edit/{id}", method = RequestMethod.GET)
+    public String get(@PathVariable String id, Model model) {
         Collection collection = collectionManager.findCollection(id);
 
         if (Objects.nonNull(collection)) {
@@ -64,8 +64,8 @@ public class EditCollectionController {
      * @param redirectAttributes used for adding flash attributes after redirecting
      * @return
      */
-    @RequestMapping(value = "/auth/collections/edit", method = RequestMethod.POST)
-    public String edit(@RequestParam(value = "id", required = true) String id, @Valid CollectionForm collectionForm,
+    @RequestMapping(value = "/auth/collections/edit/{id}", method = RequestMethod.POST)
+    public String edit(@PathVariable String id, @Valid CollectionForm collectionForm,
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "auth/editCollection";

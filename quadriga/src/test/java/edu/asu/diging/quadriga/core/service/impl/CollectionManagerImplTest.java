@@ -205,7 +205,7 @@ public class CollectionManagerImplTest {
 
         }))).thenReturn(updatedCollection);
 
-        Collection sameCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
+        managerToTest.editCollection(id.toString(), editedName, editedDescription);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
@@ -252,7 +252,7 @@ public class CollectionManagerImplTest {
         ObjectId objectId = new ObjectId();
         Mockito.when(collectionRepo.findById(objectId)).thenReturn(Optional.ofNullable(null));
 
-        Exception e = Assert.assertThrows(CollectionNotFoundException.class,
+        Assert.assertThrows(CollectionNotFoundException.class,
                 ()  -> managerToTest.editCollection(objectId.toString(), EDITED_NAME, EDITED_DESC));
 
     }
