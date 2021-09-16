@@ -89,6 +89,7 @@ public class TokenValidatorImpl implements TokenValidator {
                     if (e1.getStatusCode() == HttpStatus.UNAUTHORIZED) {
                         throw new OAuthException();
                     }
+                    throw new BadCredentialsException("Token is invalid for app.", e1);
                 }
             } else {
             

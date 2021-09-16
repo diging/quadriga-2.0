@@ -9,12 +9,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -27,6 +29,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.token.Tokens;
 
 import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.exceptions.TokenInfoNotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,7 +54,7 @@ public class TokenValidatorImplTest {
         checkTokenUrl = "http://diging.asu.edu/citesphere/api/oauth/check_token?token=SAMPLE_TOKEN";
         citesphereClientId = "SAMPLE_CLIENT_ID";
         citesphereClientSecret = "SAMPLE_CLIENT_SECRET";
-        
+
         ReflectionTestUtils.setField(tokenValidatorImpl, "accessToken", accessToken);
         ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereBaseURL", "http://diging.asu.edu/citesphere");
         ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereCheckTokenEndpoint", "/api/oauth/check_token");
@@ -59,7 +62,7 @@ public class TokenValidatorImplTest {
         ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereClientId", citesphereClientId);
         ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereClientSecret", citesphereClientSecret);
         ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereScopes", "read");
-        
+
         MockitoAnnotations.openMocks(this);
     }
 
@@ -81,31 +84,119 @@ public class TokenValidatorImplTest {
     }
 
     @Test
-    public void test_validateToken_unauth1_auth2_success() throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
+    public void test_validateToken_unauth1_auth2_success()
+            throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
         String newAccessToken = "NEW_" + accessToken;
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setActive(true);
         HttpHeaders headers = new HttpHeaders();
-        
+
         // First we will throw unauth error representing expired access token
         headers.set("Authorization", "Bearer " + accessToken);
         HttpEntity<String> entity1 = new HttpEntity<String>(headers);
-        
+
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity1, TokenInfo.class, new Object[] {}))
-        .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
-        
-        
+                .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+
         // Then we will receive valid token response using newly generated access token
 
-        AccessTokenResponse accessTokenResponse = new AccessTokenResponse(new Tokens(new BearerAccessToken(newAccessToken), null));
-        Mockito.mockStatic(TokenResponse.class).when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class))).thenReturn(accessTokenResponse);
+        AccessTokenResponse accessTokenResponse = new AccessTokenResponse(
+                new Tokens(new BearerAccessToken(newAccessToken), null));
         
+        MockedStatic<TokenResponse> tokenResponse = Mockito.mockStatic(TokenResponse.class);
+        tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class))).thenReturn(accessTokenResponse);
+
         headers.set("Authorization", "Bearer " + newAccessToken);
         HttpEntity<String> entity2 = new HttpEntity<String>(headers);
-        
-        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {})).thenReturn(tokenInfo);
-        
+
+        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
+                .thenReturn(tokenInfo);
+
         Assert.assertTrue(tokenValidatorImpl.validateToken(token));
+        tokenResponse.close();
+    }
+
+    @Test
+    public void test_validateToken_unauth_bad_credentials()
+            throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
+        HttpHeaders headers = new HttpHeaders();
+
+        // First we will throw unauth error representing expired access token
+        headers.set("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> entity1 = new HttpEntity<String>(headers);
+
+        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity1, TokenInfo.class, new Object[] {}))
+                .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
+
+        Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.validateToken(token));
+    }
+
+    @Test
+    public void test_validateToken_unauth1_unauth2()
+            throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
+        String newAccessToken = "NEW_" + accessToken;
+        TokenInfo tokenInfo = new TokenInfo();
+        tokenInfo.setActive(true);
+        HttpHeaders headers = new HttpHeaders();
+
+        // First we will throw unauth error representing expired access token
+        headers.set("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> entity1 = new HttpEntity<String>(headers);
+
+        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity1, TokenInfo.class, new Object[] {}))
+                .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+
+        // Even after token re-generation, we get unauth exception
+
+        AccessTokenResponse accessTokenResponse = new AccessTokenResponse(
+                new Tokens(new BearerAccessToken(newAccessToken), null));
+        MockedStatic<TokenResponse> tokenResponse = Mockito.mockStatic(TokenResponse.class);
+        
+        tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class)))
+                .thenReturn(accessTokenResponse);
+
+        headers.set("Authorization", "Bearer " + newAccessToken);
+        HttpEntity<String> entity2 = new HttpEntity<String>(headers);
+
+        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
+                .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+
+        Assert.assertThrows(OAuthException.class, () -> tokenValidatorImpl.validateToken(token));
+        tokenResponse.close();
+    }
+    
+    @Test
+    public void test_validateToken_unauth1_forbidden2()
+            throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
+        String newAccessToken = "NEW_" + accessToken;
+        TokenInfo tokenInfo = new TokenInfo();
+        tokenInfo.setActive(true);
+        HttpHeaders headers = new HttpHeaders();
+
+        // First we will throw unauth error representing expired access token
+        headers.set("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> entity1 = new HttpEntity<String>(headers);
+
+        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity1, TokenInfo.class, new Object[] {}))
+                .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+
+        // After token re-generation, we get forbidden exception
+
+        AccessTokenResponse accessTokenResponse = new AccessTokenResponse(
+                new Tokens(new BearerAccessToken(newAccessToken), null));
+        MockedStatic<TokenResponse> tokenResponse = Mockito.mockStatic(TokenResponse.class);
+        
+        tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class)))
+                .thenReturn(accessTokenResponse);
+
+        headers.set("Authorization", "Bearer " + newAccessToken);
+        HttpEntity<String> entity2 = new HttpEntity<String>(headers);
+
+        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
+                .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
+
+        Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.validateToken(token));
+        tokenResponse.close();
     }
 
 }

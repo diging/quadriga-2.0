@@ -83,12 +83,12 @@ public class AddNetworkApiController {
     private HttpStatus checkTokenValidity(String authHeader) {
         String token = null;
         
-        if(Objects.isNull(authHeader) || authHeader.isBlank()) {
+        if(Objects.isNull(authHeader) || authHeader.trim().isEmpty()) {
             return HttpStatus.BAD_REQUEST;
         } else {
             // Trims the string "Bearer " to extract the exact token from the Authorization Header
             token = authHeader.substring(7);
-            if(Objects.isNull(token) || token.isBlank()) {
+            if(Objects.isNull(token) || token.trim().isEmpty()) {
                 return HttpStatus.BAD_REQUEST;
             }
         }
