@@ -26,7 +26,7 @@
 							 			<h4>Are you sure want to delete this collection?</h4>
 							 		</div>
 							 		<div class="modal-footer">
-							 			<a th:href="@{/auth/collections/delete(id=${collection.id})}" class="btn btn-primary pull-left">
+							 			<a th:href="@{/auth/collections/delete/{id}(id=${collection.id})}" class="btn btn-primary pull-left">
 							 				Yes
 							 			</a>
 							 			<button type="button" class="btn btn-outline pull-left" data-dismiss="modal" style="margin-left:15px">Cancel</button>
