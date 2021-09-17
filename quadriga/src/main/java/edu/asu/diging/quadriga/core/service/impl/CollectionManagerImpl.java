@@ -17,7 +17,7 @@ public class CollectionManagerImpl implements CollectionManager {
     private CollectionRepository collectionRepo;
 
     /**
-     * Creates a new Collection instance and stores it in mongodb
+     * Creates a new Collection instance and stores it in the db
      * 
      * @param collection   collection data from the Collection form needs to be added to database
      * 
@@ -33,7 +33,7 @@ public class CollectionManagerImpl implements CollectionManager {
     }
 
     /**
-     * Finds a collection from mongodb collection table by _id
+     * Finds a collection from the collection table by id
      * 
      * @param id used to look up the collection in mongodb
      * 
@@ -48,7 +48,7 @@ public class CollectionManagerImpl implements CollectionManager {
 
     /**
      * 
-     * Edits an existing Collection and updates it in mongodb
+     * Edits an existing Collection and updates it in the db
      * 
      * @param id of the collection that needs to be updated
      * @param name will be the updated name value
@@ -70,7 +70,7 @@ public class CollectionManagerImpl implements CollectionManager {
     }
     
     /**
-     * Deletes a collection from mongodb collection table by _id
+     * Deletes a collection from collection table by id
      * 
      * @param id used to look up the collection in mongodb
      * 
@@ -79,6 +79,9 @@ public class CollectionManagerImpl implements CollectionManager {
         Collection collection = findCollection(id);
         
         if(Objects.nonNull(collection)) {
+            
+            // TODO: once networks are linked with collections, only empty collections will be deleted
+            // If it is linked to a network, we will archive the collection.
             collectionRepo.delete(collection);
         } else {
             throw new CollectionNotFoundException();

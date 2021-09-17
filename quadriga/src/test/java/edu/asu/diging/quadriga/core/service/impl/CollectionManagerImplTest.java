@@ -100,7 +100,7 @@ public class CollectionManagerImplTest {
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.ofNullable(null));
         
-        Exception e = Assert.assertThrows(CollectionNotFoundException.class,
+        Assert.assertThrows(CollectionNotFoundException.class,
                 ()  -> managerToTest.deleteCollection(id.toString()));
     }
 
