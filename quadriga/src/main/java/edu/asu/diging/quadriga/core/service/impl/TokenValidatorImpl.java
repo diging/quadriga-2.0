@@ -34,7 +34,7 @@ import edu.asu.diging.quadriga.core.exceptions.TokenInfoNotFoundException;
 import edu.asu.diging.quadriga.core.service.TokenValidator;
 
 @Service
-@PropertySource({ "${appConfigFile:classpath:}/app.properties" })
+@PropertySource({ "classpath:config.properties" })
 public class TokenValidatorImpl implements TokenValidator {
 
     @Value("${citesphere_base_url}")
@@ -65,8 +65,23 @@ public class TokenValidatorImpl implements TokenValidator {
         restTemplate = new RestTemplate();
     }
 
+    
+    /**
+     * This method accepts a token from Vogon and sends it to Citesphere's "check_token"
+     * end point for token validation using an access token
+     * This access token is used by quadriga to talk to citesphere
+     * 
+     * If Citesphere responds with unauthorized HTTP exception, we try to re-generate
+     * the access token, in case it is expired.
+     * 
+     * @param token is the one we receive from Vogon to check the validity
+     * @return whether the token is active or not
+     * @throws BadCredentialsException if token/access token is invalid
+     * @throws OAuthException if request is unauthorized because of the token/access token
+     * @throws TokenInfoNotFoundException in case citesphere sends a null response
+     */
     @Override
-    public boolean validateToken(String token) throws TokenInfoNotFoundException {
+    public boolean validateToken(String token) throws BadCredentialsException, OAuthException, TokenInfoNotFoundException {
         
 
         String checkTokenUrl = citesphereBaseURL + citesphereCheckTokenEndpoint + "?token=" + token;
@@ -86,7 +101,7 @@ public class TokenValidatorImpl implements TokenValidator {
                 }  catch(HttpClientErrorException e2) {
 
                     //  If we again get an unauthorized exception, we will just throw an OAuthException
-                    if (e1.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                    if (e2.getStatusCode() == HttpStatus.UNAUTHORIZED) {
                         throw new OAuthException();
                     }
                     throw new BadCredentialsException("Token is invalid for app.", e1);
@@ -105,6 +120,13 @@ public class TokenValidatorImpl implements TokenValidator {
         }
     }
     
+    
+    /**
+     * Here we generate an HTTP entity based on the accessToken
+     * If accessToken is absent, we ask the getAccessToken method to generate one
+     * 
+     * @return an HTTP Entity
+     */
     private HttpEntity<String> generateCheckTokenEntity() {
         if (Objects.isNull(accessToken)) {
             accessToken = getAccessToken();
@@ -116,6 +138,13 @@ public class TokenValidatorImpl implements TokenValidator {
         return new HttpEntity<String>(headers);
     }
 
+    
+    /**
+     * This method is used to generate an access token using the ClientId and ClientSecret
+     * that is registered with Citesphere
+     * 
+     * @return the generated access token
+     */
     private String getAccessToken() {
 
         AuthorizationGrant clientGrant = new ClientCredentialsGrant();

@@ -47,6 +47,7 @@ public class TokenValidatorImplTest {
     private String citesphereClientId;
     private String citesphereClientSecret;
 
+    
     @Before
     public void setUp() throws NoSuchFieldException, SecurityException {
         accessToken = "SAMPLE_ACCESS_TOKEN";
@@ -66,6 +67,7 @@ public class TokenValidatorImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    
     @Test
     public void test_validateToken_success() throws TokenInfoNotFoundException {
         TokenInfo tokenInfo = new TokenInfo();
@@ -83,6 +85,7 @@ public class TokenValidatorImplTest {
         Assert.assertTrue(isTokenActive);
     }
 
+    
     @Test
     public void test_validateToken_unauth1_auth2_success()
             throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
@@ -99,10 +102,9 @@ public class TokenValidatorImplTest {
                 .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
         // Then we will receive valid token response using newly generated access token
-
         AccessTokenResponse accessTokenResponse = new AccessTokenResponse(
                 new Tokens(new BearerAccessToken(newAccessToken), null));
-        
+
         MockedStatic<TokenResponse> tokenResponse = Mockito.mockStatic(TokenResponse.class);
         tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class))).thenReturn(accessTokenResponse);
 
@@ -116,12 +118,13 @@ public class TokenValidatorImplTest {
         tokenResponse.close();
     }
 
+    
     @Test
-    public void test_validateToken_unauth_bad_credentials()
+    public void test_validateToken_bad_credentials()
             throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
         HttpHeaders headers = new HttpHeaders();
 
-        // First we will throw unauth error representing expired access token
+        // We get an exception while validating token but it is not an unauth exception
         headers.set("Authorization", "Bearer " + accessToken);
         HttpEntity<String> entity1 = new HttpEntity<String>(headers);
 
@@ -131,6 +134,7 @@ public class TokenValidatorImplTest {
         Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.validateToken(token));
     }
 
+    
     @Test
     public void test_validateToken_unauth1_unauth2()
             throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
@@ -147,13 +151,11 @@ public class TokenValidatorImplTest {
                 .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
         // Even after token re-generation, we get unauth exception
-
         AccessTokenResponse accessTokenResponse = new AccessTokenResponse(
                 new Tokens(new BearerAccessToken(newAccessToken), null));
         MockedStatic<TokenResponse> tokenResponse = Mockito.mockStatic(TokenResponse.class);
-        
-        tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class)))
-                .thenReturn(accessTokenResponse);
+
+        tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class))).thenReturn(accessTokenResponse);
 
         headers.set("Authorization", "Bearer " + newAccessToken);
         HttpEntity<String> entity2 = new HttpEntity<String>(headers);
@@ -164,9 +166,10 @@ public class TokenValidatorImplTest {
         Assert.assertThrows(OAuthException.class, () -> tokenValidatorImpl.validateToken(token));
         tokenResponse.close();
     }
+
     
     @Test
-    public void test_validateToken_unauth1_forbidden2()
+    public void test_validateToken_unauth1_bad_credentials()
             throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
         String newAccessToken = "NEW_" + accessToken;
         TokenInfo tokenInfo = new TokenInfo();
@@ -180,14 +183,13 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity1, TokenInfo.class, new Object[] {}))
                 .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
-        // After token re-generation, we get forbidden exception
-
+        // After token re-generation, we get another exception that is not an unauth
+        // exception
         AccessTokenResponse accessTokenResponse = new AccessTokenResponse(
                 new Tokens(new BearerAccessToken(newAccessToken), null));
         MockedStatic<TokenResponse> tokenResponse = Mockito.mockStatic(TokenResponse.class);
-        
-        tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class)))
-                .thenReturn(accessTokenResponse);
+
+        tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class))).thenReturn(accessTokenResponse);
 
         headers.set("Authorization", "Bearer " + newAccessToken);
         HttpEntity<String> entity2 = new HttpEntity<String>(headers);
@@ -197,6 +199,20 @@ public class TokenValidatorImplTest {
 
         Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.validateToken(token));
         tokenResponse.close();
+    }
+
+    
+    @Test
+    public void test_validateToken_nullTokenInfo() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+        HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+        // We received a null response from citesphere
+        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity, TokenInfo.class, new Object[] {}))
+                .thenReturn(null);
+        
+        Assert.assertThrows(TokenInfoNotFoundException.class, () -> tokenValidatorImpl.validateToken(token));
     }
 
 }

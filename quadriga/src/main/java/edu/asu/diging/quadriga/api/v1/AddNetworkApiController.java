@@ -80,6 +80,14 @@ public class AddNetworkApiController {
 
     }
     
+    
+    /**
+     * This method will use {@link edu.asu.diging.quadriga.core.service.impl.TokenValidatorImpl} to
+     * check the validity of the token received from Vogon
+     * 
+     * @param authHeader is where the token would be present as 'Bearer {token}'
+     * @return the HTTP Status as per the response by the validateToken method
+     */
     private HttpStatus checkTokenValidity(String authHeader) {
         String token = null;
         
@@ -101,7 +109,7 @@ public class AddNetworkApiController {
             }
         } catch (TokenInfoNotFoundException | OAuthException e) {
             
-            // citesphere sent an empty response
+            // citesphere sent an empty response or we got unath twice (using existing access token and re-generated one)
             return HttpStatus.UNAUTHORIZED;
         } catch(BadCredentialsException e) {
             
