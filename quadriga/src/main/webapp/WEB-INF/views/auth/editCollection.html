@@ -9,7 +9,7 @@
 			Edit Collection - <span th:text="*{name}"></span>
 		</h2>
 
-		<form action="#" th:action="@{/auth/collections/edit/{id}(id=*{id})}"
+		<form action="#" th:action="@{/auth/collections/{id}/edit(id=*{id})}"
 			method="POST" th:object="${collectionForm}">
 			<label>Collection Name: </label> <input th:field="*{name}"
 				class="form-control input-sm"></input> <span

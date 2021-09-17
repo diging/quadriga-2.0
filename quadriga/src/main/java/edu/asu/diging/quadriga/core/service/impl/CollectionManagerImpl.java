@@ -47,14 +47,15 @@ public class CollectionManagerImpl implements CollectionManager {
     }
 
     /**
+     * 
      * Edits an existing Collection and updates it in mongodb
      * 
-     * @param _id of the collection that needs to be updated
-     * 
-     * 
+     * @param id of the collection that needs to be updated
+     * @param name will be the updated name value
+     * @param description will be the updated description value
      * @return Collection Instance that is updated in database
-     * 
-     **/
+     * @throws CollectionNotFoundException in case the collection for the given id is missing
+     */
     @Override
     public Collection editCollection(String id, String name, String description) throws CollectionNotFoundException {
         Collection collection = findCollection(id);

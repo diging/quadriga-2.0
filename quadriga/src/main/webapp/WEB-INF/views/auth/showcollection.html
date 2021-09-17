@@ -12,7 +12,7 @@
 					class="list-group-item clearfix"><span
 					th:text="${collection.name}"></span>
 					<div class="btn-link pull-right" sec:authorize="hasRole('USER')" role="presentation">
-						<a th:href="@{/auth/collections/edit/{id}(id=${collection.id})}">
+						<a th:href="@{/auth/collections/{id}/edit(id=${collection.id})}">
 							<i class="fas fa-edit" aria-hidden="true"></i>
 						</a>
 					</div>
