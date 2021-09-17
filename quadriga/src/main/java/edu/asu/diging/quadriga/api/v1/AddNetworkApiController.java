@@ -1,7 +1,6 @@
 package edu.asu.diging.quadriga.api.v1;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,7 @@ public class AddNetworkApiController {
         
         Collection collection = collectionManager.findCollection(collectionId);
         
-        if(Objects.isNull(collection)) {
+        if(collection == null) {
             return HttpStatus.NOT_ACCEPTABLE;
         }
 
