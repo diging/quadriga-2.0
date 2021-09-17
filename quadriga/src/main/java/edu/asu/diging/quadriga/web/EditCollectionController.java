@@ -38,7 +38,7 @@ public class EditCollectionController {
      *              description
      * @return the editCollection view
      */
-    @RequestMapping(value = "/auth/collections/edit/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/collections/{id}/edit", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
         Collection collection = collectionManager.findCollection(id);
 
@@ -64,7 +64,7 @@ public class EditCollectionController {
      * @param redirectAttributes used for adding flash attributes after redirecting
      * @return
      */
-    @RequestMapping(value = "/auth/collections/edit/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/auth/collections/{id}/edit", method = RequestMethod.POST)
     public String edit(@PathVariable String id, @Valid CollectionForm collectionForm,
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {

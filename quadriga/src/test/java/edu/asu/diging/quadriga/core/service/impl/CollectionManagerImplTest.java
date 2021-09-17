@@ -113,6 +113,14 @@ public class CollectionManagerImplTest {
         Collection foundCollection = managerToTest.findCollection(objectId.toString());
         Assert.assertEquals(collection.getId().toString(), foundCollection.getId().toString());
     }
+    
+    @Test
+    public void test_findCollection_missingCollection() {
+        ObjectId objectId = new ObjectId();
+        Mockito.when(collectionRepo.findById(objectId)).thenReturn(Optional.ofNullable(null));
+        Collection foundCollection = managerToTest.findCollection(objectId.toString());
+        Assert.assertNull(foundCollection);
+    }
 
     @Test
     public void test_editCollection_success() throws CollectionNotFoundException {

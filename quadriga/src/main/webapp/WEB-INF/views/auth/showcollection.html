@@ -39,7 +39,7 @@
 						</a>
 					</div>
 					<div class="btn-link pull-right" sec:authorize="hasRole('USER')" role="presentation" style="margin-right:10px">
-						<a th:href="@{/auth/collections/edit/{id}(id=${collection.id})}">
+						<a th:href="@{/auth/collections/{id}/edit(id=${collection.id})}">
 							<i class="fas fa-edit" aria-hidden="true"></i>
 						</a>
 					</div>
