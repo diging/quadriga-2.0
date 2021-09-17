@@ -1,7 +1,6 @@
 package edu.asu.diging.quadriga.api.v1;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +95,7 @@ public class AddNetworkApiController {
         } else {
             // Trims the string "Bearer " to extract the exact token from the Authorization Header
             token = authHeader.substring(7);
-            if(Objects.isNull(token) || token.trim().isEmpty()) {
+            if(token == null || token.trim().isEmpty()) {
                 return HttpStatus.BAD_REQUEST;
             }
         }

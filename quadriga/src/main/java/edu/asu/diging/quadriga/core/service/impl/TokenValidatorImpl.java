@@ -3,7 +3,6 @@ package edu.asu.diging.quadriga.core.service.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +112,7 @@ public class TokenValidatorImpl implements TokenValidator {
             }
         }
 
-        if (Objects.nonNull(tokenInfo)) {
+        if (tokenInfo != null) {
             return tokenInfo.isActive();
         } else {
             throw new TokenInfoNotFoundException();
@@ -128,7 +127,7 @@ public class TokenValidatorImpl implements TokenValidator {
      * @return an HTTP Entity
      */
     private HttpEntity<String> generateCheckTokenEntity() {
-        if (Objects.isNull(accessToken)) {
+        if (accessToken == null) {
             accessToken = getAccessToken();
         }
 
