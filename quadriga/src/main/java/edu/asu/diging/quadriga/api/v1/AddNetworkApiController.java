@@ -53,7 +53,7 @@ public class AddNetworkApiController {
      */
     @ResponseBody
     @RequestMapping(value = "/api/v1/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpStatus processJson(@RequestBody Quadruple quadruple, @RequestHeader(name = "Authorization") String authHeader) {
+    public HttpStatus processJson(@RequestBody Quadruple quadruple, @RequestHeader(name = "Authorization",  required = true) String authHeader) {
 
         if (quadruple == null) {
             return HttpStatus.NO_CONTENT;
@@ -91,7 +91,7 @@ public class AddNetworkApiController {
     private HttpStatus checkTokenValidity(String authHeader) {
         String token = null;
         
-        if(Objects.isNull(authHeader) || authHeader.trim().isEmpty()) {
+        if(authHeader.trim().isEmpty()) {
             return HttpStatus.BAD_REQUEST;
         } else {
             // Trims the string "Bearer " to extract the exact token from the Authorization Header
