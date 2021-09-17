@@ -16,7 +16,7 @@ public class DeleteCollectionController {
     @Autowired
     private CollectionManager collectionManager;
     
-    @RequestMapping(value = "/auth/collections/delete/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/collections/{id}/delete", method = RequestMethod.GET)
     public String get(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
             collectionManager.deleteCollection(id);
