@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.Arrays;
+
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +26,6 @@ public class CollectionManagerImplTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-
     }
 
     @Test
@@ -32,11 +33,13 @@ public class CollectionManagerImplTest {
         
         String name = "name";
         String desc = "description";
+        String[] apps = {"app1", "app2"};
         Collection savedCollection = new Collection();
         ObjectId id = new ObjectId();
         savedCollection.setId(id);
         savedCollection.setName(name);
         savedCollection.setDescription(desc);
+        savedCollection.setApps(Arrays.asList(apps));
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
@@ -45,10 +48,13 @@ public class CollectionManagerImplTest {
             }
         }))).thenReturn(savedCollection);
         
-        Collection collection = managerToTest.addCollection(name, desc);
+        Collection collection = managerToTest.addCollection(name, desc, Arrays.asList(apps));
         Assert.assertEquals(id, collection.getId());
         Assert.assertEquals(name, collection.getName());
         Assert.assertEquals(desc, collection.getDescription());
+        for(String app : apps) {
+            Assert.assertTrue(collection.getApps().contains(app));
+        }
     }
 
 }
