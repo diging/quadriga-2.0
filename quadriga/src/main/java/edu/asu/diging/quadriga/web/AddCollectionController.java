@@ -19,7 +19,7 @@ public class AddCollectionController {
 
     @Autowired
     private ICollectionManager collectionManager;
-    
+
     @Autowired
     private ICitesphereConnector citesphereConnector;
 
@@ -35,8 +35,8 @@ public class AddCollectionController {
         if (result.hasErrors()) {
             return "auth/addCollection";
         }
-
-        collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription(), collectionForm.getApps());
+        collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription(),
+                collectionForm.getApps());
 
         redirectAttrs.addFlashAttribute("alert_type", "success");
         redirectAttrs.addFlashAttribute("alert_msg", "Collection has been added.");

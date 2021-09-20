@@ -69,6 +69,9 @@ public class CitesphereConnector implements ICitesphereConnector {
         restTemplate = new RestTemplate();
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector#getCitesphereApps()
+     */
     @Override
     public List<CitesphereAppInfo> getCitesphereApps() throws HttpClientErrorException {
         if (currentAccessToken == null) {
@@ -83,13 +86,15 @@ public class CitesphereConnector implements ICitesphereConnector {
 
         try {
             return restTemplate.exchange(appUrl, HttpMethod.GET, entity,
-                    new ParameterizedTypeReference<List<CitesphereAppInfo>>() {}).getBody();
+                    new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
+                    }).getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() == HttpStatus.UNAUTHORIZED) {
                 currentAccessToken = getAccessToken();
                 headers.set("Authorization", "Bearer " + currentAccessToken);
                 return restTemplate.exchange(appUrl, HttpMethod.GET, entity,
-                        new ParameterizedTypeReference<List<CitesphereAppInfo>>() {}).getBody();
+                        new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
+                        }).getBody();
             }
             throw ex;
         }
@@ -126,5 +131,5 @@ public class CitesphereConnector implements ICitesphereConnector {
         AccessToken accessTokenResponse = ((AccessTokenResponse) response).getTokens().getAccessToken();
         return accessTokenResponse.getValue();
     }
-    
+
 }

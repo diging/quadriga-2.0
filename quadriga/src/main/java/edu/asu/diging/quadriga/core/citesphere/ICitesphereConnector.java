@@ -7,11 +7,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 
 public interface ICitesphereConnector {
-
-//    boolean hasAccess(String documentId, String username);
-
-//    <T> T sendRequest(String endpoint, Map<String, String> parameters,
-//            Class<T> responseType) throws HttpClientErrorException;
-
+    
+    /**
+     * Fetches the list of Citesphere applications
+     * @return the list of apps
+     */
     List<CitesphereAppInfo> getCitesphereApps() throws HttpClientErrorException;
 }

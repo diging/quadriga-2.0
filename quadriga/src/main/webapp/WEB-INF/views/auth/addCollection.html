@@ -2,12 +2,6 @@
 <head>
 <title>Quadriga 2.0</title>
 <style> 
-
-.textAndCheckMark {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-}
 .textOfSub {
     width:95%
 }
@@ -22,7 +16,21 @@
 }
 </style>
 <script th:inline="javascript">
-
+    $(function() {
+        $("#addCollectionButton").click(function() {
+            var index = 0;
+            $(".app").each(function() {
+                if($(this).find('.checkbox').is(':checked')) {
+                    var appClientId = $("<input>");
+                    appClientId.attr("type", "hidden");
+                    appClientId.attr("name", "apps[" + index + "]");
+                    appClientId.attr("value", $(this).attr("data-client-id"));
+                    $("#applications").append(appClientId);
+                    index++;
+                }
+            });
+        });
+    });
 </script>
 </head>
 <body>
@@ -36,23 +44,21 @@
 				<span th:if="${#fields.hasErrors('name')}" class = "error">Please enter a valid Collection name.</span>
 				<br>
 				<label>Description:</label> <input th:field="*{description}" class="form-control input-sm"></input></br>
-				<label>Applications:</label> <input id="applications" type="hidden" th:field=*{apps}></input>
+				<label>Applications:</label> <div id="applications" type="hidden"></div>
 				<div id="applicationList" class="list-group">
                     <div th:each="entry,loop : ${citesphereApps}">
-                        <a href="#" class="list-group-item">
+                        <div href="#" class="list-group-item app" th:data-client-id="${entry.clientId}">
                             <strong>[[${entry.name}]]</strong><input title="Select" type="checkbox" class="checkbox pull-right"/><br>
                             <small class=textOfSub>[[${entry.description}]]</small>
-                        </a>
+                        </div>
                     </div>
                 </div>
                 
                 
 			<div style="padding-top: 20px;">
-				<button class="btn primary-btn">Add Collection</button>
+				<button id="addCollectionButton" class="btn primary-btn">Add Collection</button>
 			</div>
 		</form>
-
-	</div>
-    
+    </div>
 </body>
 </html>

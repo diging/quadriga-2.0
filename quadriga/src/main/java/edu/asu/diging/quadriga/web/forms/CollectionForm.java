@@ -5,16 +5,14 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
-
 public class CollectionForm {
     @NotNull
-    @Size(min=1)
+    @Size(min = 1)
     private String name;
 
     private String description;
-    
-    private List<CitesphereAppInfo> apps;
+
+    private List<String> apps;
 
     public String getName() {
         return name;
@@ -32,12 +30,12 @@ public class CollectionForm {
         this.description = description;
     }
 
-    public List<CitesphereAppInfo> getApps() {
+    public List<String> getApps() {
         return apps;
     }
 
-    public void setApps(List<CitesphereAppInfo> apps) {
+    public void setApps(List<String> apps) {
         this.apps = apps;
     }
-    
+
 }

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.ICollectionManager;
 
 @Service
@@ -19,7 +18,7 @@ public class CollectionManager implements ICollectionManager {
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
      */
-    public Collection addCollection(String name, String description, List<CitesphereAppInfo> apps) {
+    public Collection addCollection(String name, String description, List<String> apps) {
         Collection collection=new Collection();
         collection.setName(name);
         collection.setDescription(description);

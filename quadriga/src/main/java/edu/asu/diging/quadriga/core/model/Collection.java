@@ -4,14 +4,12 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
-
 public class Collection {
 
     private ObjectId _id;
     private String name;
     private String description;
-    private List<CitesphereAppInfo> apps;
+    private List<String> apps;
 
     public ObjectId getId() {
         return _id;
@@ -37,11 +35,11 @@ public class Collection {
         this.description = description;
     }
     
-    public List<CitesphereAppInfo> getApps() {
+    public List<String> getApps() {
         return apps;
     }
 
-    public void setApps(List<CitesphereAppInfo> apps) {
+    public void setApps(List<String> apps) {
         this.apps = apps;
     }
 
