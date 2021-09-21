@@ -9,8 +9,11 @@
 		<div action="#" th:action="@{/auth/collections}" method="GET">
 			<ul class="list-group">
 				<li th:each="collection: ${collections}"
-					class="list-group-item clearfix"><span
-					th:text="${collection.name}"></span></li>
+					class="list-group-item clearfix">
+					<a th:href="@{/auth/collections/{id}(id=${collection.id})}" style="cursor:pointer;color:black">
+						<span th:text="${collection.name}"></span>
+					</a>
+				</li>
 			</ul>
 		</div>
 		<nav aria-label="Pagination" th:if="${collections.totalPages gt 0}">

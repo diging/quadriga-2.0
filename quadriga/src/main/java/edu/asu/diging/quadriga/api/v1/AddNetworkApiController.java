@@ -10,12 +10,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
+import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
@@ -31,6 +34,9 @@ public class AddNetworkApiController {
 
     @Autowired
     private MappedTripleService mappedTripleService;
+    
+    @Autowired
+    private CollectionManager collectionManager;
 
     /**
      * The method parse given Json from the post request body and add Network
@@ -44,7 +50,13 @@ public class AddNetworkApiController {
      */
     @ResponseBody
     @RequestMapping(value = "/api/v1/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpStatus processJson(@RequestBody Quadruple quadruple) {
+    public HttpStatus processJson(@RequestBody Quadruple quadruple, @RequestParam(value = "collectionid", required = true) String collectionId) {
+        
+        Collection collection = collectionManager.findCollection(collectionId);
+
+        if(collection == null) {
+            return HttpStatus.NOT_ACCEPTABLE;
+        }
 
         if (quadruple == null) {
             return HttpStatus.NO_CONTENT;
@@ -53,7 +65,10 @@ public class AddNetworkApiController {
         // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
-        eventGraphs.forEach(e -> e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping()));
+        eventGraphs.forEach(e -> {
+            e.setCollectionId(collection.getId());
+            e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
+        });
         eventGraphService.saveEventGraphs(eventGraphs);
 
         try {

@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,5 +21,10 @@ public class EventGraphServiceImpl implements EventGraphService {
         for (EventGraph event : events) {
             repo.save(event);
         }
+    }
+
+    @Override
+    public List<EventGraph> findAllEventGraphsByCollectionId(String collectionId) {
+        return repo.findByCollectionId(new ObjectId(collectionId)).orElse(null);
     }
 }

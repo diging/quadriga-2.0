@@ -7,4 +7,5 @@ import edu.asu.diging.quadriga.core.model.EventGraph;
 public interface EventGraphService {
 
     public void saveEventGraphs(List<EventGraph> graphs);
+    public List<EventGraph> findAllEventGraphsByCollectionId(String collectionId);
 }

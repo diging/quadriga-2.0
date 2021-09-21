@@ -1,0 +1,11 @@
+<html layout:decorate="~{layouts/main}">
+<head>
+<title>Quadriga 2.0</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h2><span th:text="${collection.name}"></span></h2>
+		<p>Creation time: <span th:text="${#temporals.format(collection.creationTime, 'dd-MM-yyyy hh:mm a')}"></span></p>
+		<p>Number of networks: <span th:text="${#lists.size(networks)}"></span></p>
+	</div>
+</body>
