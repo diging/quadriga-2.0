@@ -1,7 +1,5 @@
 package edu.asu.diging.quadriga.core.model;
-
 import java.time.LocalDateTime;
-
 import javax.persistence.Id;
 
 import org.bson.types.ObjectId;
