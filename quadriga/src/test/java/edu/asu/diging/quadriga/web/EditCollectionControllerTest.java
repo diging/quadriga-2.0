@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
 import java.util.HashMap;
+
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -125,6 +126,7 @@ public class EditCollectionControllerTest {
         collectionForm.setDescription(COLLECTION_DESC);
         RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
         BindingResult bindingResult = new MapBindingResult(new HashMap<String, String>(), null);
+        
         Mockito.when(collectionManager.editCollection(objectId.toString(), COLLECTION_NAME, COLLECTION_DESC))
             .thenThrow(new CollectionNotFoundException("Collection not found!"));
 
