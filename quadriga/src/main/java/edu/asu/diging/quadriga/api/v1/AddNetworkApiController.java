@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
@@ -49,13 +49,17 @@ public class AddNetworkApiController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/api/v1/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpStatus processJson(@RequestBody Quadruple quadruple, @RequestParam(value = "collectionid", required = true) String collectionId) {
+    @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId) {
+        
+        if(collectionId == null || collectionId.trim().isEmpty()) {
+            return HttpStatus.NOT_FOUND;
+        }
         
         Collection collection = collectionManager.findCollection(collectionId);
         
         if(collection == null) {
-            return HttpStatus.NOT_ACCEPTABLE;
+            return HttpStatus.NOT_FOUND;
         }
 
         if (quadruple == null) {

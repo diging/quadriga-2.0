@@ -44,7 +44,11 @@ public class CollectionManagerImpl implements CollectionManager {
      **/
     @Override
     public Collection findCollection(String id) {
-        return collectionRepo.findById(new ObjectId(id)).orElse(null);
+        try {
+            return collectionRepo.findById(new ObjectId(id)).orElse(null);
+        } catch(IllegalArgumentException e) {
+            return null;
+        }
     }
 
     /**
