@@ -7,5 +7,7 @@
 		<h2><span th:text="${collection.name}"></span></h2>
 		<p>Creation time: <span th:text="${#temporals.format(collection.creationTime, 'dd-MM-yyyy hh:mm a')}"></span></p>
 		<p>Number of networks: <span th:text="${#lists.size(networks)}"></span></p>
+		<p>Last submitted network info:</p>
+		<p>Last submission time: </p>
 	</div>
 </body>
