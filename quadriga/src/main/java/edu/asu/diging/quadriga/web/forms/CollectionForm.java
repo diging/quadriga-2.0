@@ -1,11 +1,11 @@
 package edu.asu.diging.quadriga.web.forms;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 public class CollectionForm {
     @NotNull
-    @Size(min=1)
+    @NotBlank
     private String name;
 
     private String description;

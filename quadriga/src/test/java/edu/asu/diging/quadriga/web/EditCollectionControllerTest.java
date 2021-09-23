@@ -96,7 +96,7 @@ public class EditCollectionControllerTest {
         Assert.assertEquals(REDIRECT_SHOW_COLLECTION, view);
         Assert.assertEquals("success", redirectAttributes.getFlashAttributes().get("alert_type"));
         Assert.assertEquals("Collection has been edited.", redirectAttributes.getFlashAttributes().get("alert_msg"));
-        Assert.assertTrue((boolean) redirectAttributes.getFlashAttributes().get("show_alert"));
+        Assert.assertTrue((Boolean) redirectAttributes.getFlashAttributes().get("show_alert"));
 
     }
 
@@ -125,8 +125,8 @@ public class EditCollectionControllerTest {
         collectionForm.setDescription(COLLECTION_DESC);
         RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
         BindingResult bindingResult = new MapBindingResult(new HashMap<String, String>(), null);
-
-        Mockito.when(collectionManager.editCollection(objectId.toString(), COLLECTION_NAME, COLLECTION_DESC)).thenThrow(new CollectionNotFoundException("Collection not found!"));
+        Mockito.when(collectionManager.editCollection(objectId.toString(), COLLECTION_NAME, COLLECTION_DESC))
+            .thenThrow(new CollectionNotFoundException("Collection not found!"));
 
         String view = editCollectionController.edit(objectId.toString(), collectionForm, bindingResult,
                 redirectAttributes);

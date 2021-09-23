@@ -14,5 +14,13 @@ public class CollectionNotFoundException extends Exception {
     public CollectionNotFoundException(String exception) {
         super(exception);
     }
+    
+    public CollectionNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+    
+    public CollectionNotFoundException(Throwable cause) {
+        super(cause);
+    }
 
 }
