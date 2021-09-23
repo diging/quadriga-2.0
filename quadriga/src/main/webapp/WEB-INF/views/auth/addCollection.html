@@ -9,8 +9,9 @@
 
 		<form action="#" th:action="@{/auth/collections/add}" method="POST"
 			th:object="${collectionForm}">
-				<label>Collection Name: </label> <input th:field="*{name}" class="form-control input-sm"></input>
-				<span th:if="${#fields.hasErrors('name')}" class = "error">Please enter a valid Collection name.</span>
+				<label>Collection Name: </label>
+				<input th:field="*{name}" class="form-control input-sm"></input>
+				<span th:if="${#fields.hasErrors('name')}" class = "error" th:errors=*{name}></span>
 				<br>
 				<label>Description:</label> <input th:field="*{description}" class="form-control input-sm"></input>
 
