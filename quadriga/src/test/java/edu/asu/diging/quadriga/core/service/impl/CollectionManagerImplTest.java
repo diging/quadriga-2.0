@@ -61,6 +61,48 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(name, collection.getName());
         Assert.assertEquals(desc, collection.getDescription());
     }
+    
+    
+    @Test
+    public void test_deleteCollection_success() throws CollectionNotFoundException {
+        
+        String name = "name";
+        String desc = "description";
+        Collection collection = new Collection();
+        ObjectId id = new ObjectId();
+        collection.setId(id);
+        collection.setName(name);
+        collection.setDescription(desc);
+        
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
+        Mockito.doNothing().when(collectionRepo).delete(Mockito.argThat(new ArgumentMatcher<Collection>() {
+
+            @Override
+            public boolean matches(Collection arg0) {
+                return (arg0.getName().equals(name) && arg0.getDescription().equals(desc));
+            }
+        }));
+        
+        managerToTest.deleteCollection(id.toString());
+    }
+    
+    
+    @Test
+    public void test_deleteCollection_missingCollection() throws CollectionNotFoundException {
+        
+        String name = "name";
+        String desc = "description";
+        Collection collection = new Collection();
+        ObjectId id = new ObjectId();
+        collection.setId(id);
+        collection.setName(name);
+        collection.setDescription(desc);
+        
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.ofNullable(null));
+        
+        Assert.assertThrows(CollectionNotFoundException.class,
+                ()  -> managerToTest.deleteCollection(id.toString()));
+    }
 
     @Test
     public void test_findCollection_success() {
