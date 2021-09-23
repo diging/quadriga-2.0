@@ -5,9 +5,9 @@
 <body>
 	<div layout:fragment="content">
 		<h2><span th:text="${collection.name}"></span></h2>
-		<p>Creation time: <span th:text="${#temporals.format(collection.creationTime, 'dd-MM-yyyy hh:mm a')}"></span></p>
+		<p>Creation time: <span th:text="${#temporals.format(collection.creationTime, 'MM/dd/yyyy hh:mm a')}"></span></p>
 		<p>Number of submitted networks: <span th:text="${numberOfSubmittedNetworks}"></span></p>
-		<p>Last network submitted time: <span th:text=${lastNetworkSubmittedAt}></span></p>
+		<p>Last network submitted time: <span th:text="${#temporals.format(lastNetworkSubmittedAt, 'MM/dd/yyyy hh:mm a')}"></span></p>
 		<!--
 			
 		TODO: We need to get info about just one app from citesphere using OAuth token.
