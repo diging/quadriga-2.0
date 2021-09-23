@@ -1,10 +1,14 @@
 package edu.asu.diging.quadriga.core.model;
 
+import javax.persistence.Id;
+
 import org.bson.types.ObjectId;
 
 public class Collection {
 
+    @Id
     private ObjectId _id;
+    
     private String name;
     private String description;
     

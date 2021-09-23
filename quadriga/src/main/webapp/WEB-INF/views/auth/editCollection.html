@@ -4,19 +4,21 @@
 </head>
 <body>
 	<div layout:fragment="content">
-	<span th:text="${alert_msg}"></span>
-		<h2>Add new Collection</h2>
+		<span th:text="${alert_msg}"></span>
+		<h2 th:object="${collectionForm}">
+			Edit Collection - <span th:text="*{name}"></span>
+		</h2>
 
-		<form action="#" th:action="@{/auth/collections/add}" method="POST"
-			th:object="${collectionForm}">
+		<form action="#" th:action="@{/auth/collections/{id}/edit(id=*{id})}"
+			method="POST" th:object="${collectionForm}">
 			<label>Collection Name: </label>
 			<input th:field="*{name}" class="form-control input-sm"></input>
-			<span th:if="${#fields.hasErrors('name')}" class = "error" th:errors=*{name}></span>
+			<span th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></span>
 			<br>
 			<label>Description:</label>
 			<input th:field="*{description}" class="form-control input-sm"></input>
 			<div style="padding-top: 20px;">
-				<button class="btn primary-btn">Add Collection</button>
+				<button class="btn primary-btn">Edit Collection</button>
 			</div>
 		</form>
 
