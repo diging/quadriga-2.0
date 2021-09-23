@@ -52,10 +52,6 @@ public class AddNetworkApiController {
     @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId) {
         
-        if(collectionId == null || collectionId.trim().isEmpty()) {
-            return HttpStatus.NOT_FOUND;
-        }
-        
         Collection collection = collectionManager.findCollection(collectionId);
         
         if(collection == null) {
