@@ -6,8 +6,17 @@
 	<div layout:fragment="content">
 		<h2><span th:text="${collection.name}"></span></h2>
 		<p>Creation time: <span th:text="${#temporals.format(collection.creationTime, 'dd-MM-yyyy hh:mm a')}"></span></p>
-		<p>Number of networks: <span th:text="${#lists.size(networks)}"></span></p>
-		<p>Last submitted network info:</p>
-		<p>Last submission time: </p>
+		<p>Number of submitted networks: <span th:text="${numberOfSubmittedNetworks}"></span></p>
+		<p>Last network submitted time: <span th:text=${lastNetworkSubmittedAt}></span></p>
+		<!--
+			
+		TODO: We need to get info about just one app from citesphere using OAuth token.
+		Once that story is done, we should add "submittedBy" in DisplayCollectionController
+		This submittedBy value will have the name of the app that has submitted the last network
+		
+		<p>Last network submitted by: <span th:text="${submittedBy}"></span></p>
+		
+		-->
+		
 	</div>
 </body>

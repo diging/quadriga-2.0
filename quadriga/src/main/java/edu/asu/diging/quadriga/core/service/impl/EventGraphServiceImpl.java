@@ -25,6 +25,6 @@ public class EventGraphServiceImpl implements EventGraphService {
 
     @Override
     public List<EventGraph> findAllEventGraphsByCollectionId(String collectionId) {
-        return repo.findByCollectionId(new ObjectId(collectionId)).orElse(null);
+        return repo.findByCollectionIdOrderByCreationTimeDesc(new ObjectId(collectionId)).orElse(null);
     }
 }

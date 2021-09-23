@@ -33,7 +33,8 @@ public class DisplayCollectionController {
         List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(id);
         
         model.addAttribute("collection", collection);
-        model.addAttribute("networks", eventGraphs);
+        model.addAttribute("numberOfSubmittedNetworks", eventGraphs.size());
+        model.addAttribute("lastNetworkSubmittedAt", eventGraphs.get(0).getCreationTime());
         return "auth/displayCollection";
     }
     

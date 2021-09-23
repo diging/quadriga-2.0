@@ -10,6 +10,6 @@ import edu.asu.diging.quadriga.core.model.EventGraph;
 
 public interface EventGraphRepository extends MongoRepository<EventGraph, ObjectId> {
     
-    public Optional<List<EventGraph>> findByCollectionId(ObjectId collectionId);
+    public Optional<List<EventGraph>> findByCollectionIdOrderByCreationTimeDesc(ObjectId collectionId);
 
 }
