@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 
 @Controller
@@ -25,7 +26,7 @@ public class DeleteCollectionController {
             redirectAttributes.addFlashAttribute("show_alert", true);
         
             return "redirect:/auth/collections";
-        } catch (CollectionNotFoundException e) {
+        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
             return "error404Page";
         }
     }

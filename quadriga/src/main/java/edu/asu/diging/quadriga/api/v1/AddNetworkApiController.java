@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
-import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
+import edu.asu.diging.quadriga.core.model.MappedCollection;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
-import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
+import edu.asu.diging.quadriga.core.service.MappedCollectionService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
 
@@ -36,7 +38,7 @@ public class AddNetworkApiController {
     private MappedTripleService mappedTripleService;
     
     @Autowired
-    private CollectionManager collectionManager;
+    private MappedCollectionService mappedCollectionService;
 
     /**
      * The method parse given Json from the post request body and add Network
@@ -52,9 +54,13 @@ public class AddNetworkApiController {
     @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId) {
         
-        Collection collection = collectionManager.findCollection(collectionId);
-        
-        if(collection == null) {
+        MappedCollection mappedCollection;
+        try {
+            mappedCollection = mappedCollectionService.findOrAddMappedCollectionByCollectionId(collectionId);
+            if(mappedCollection == null) {
+                return HttpStatus.NOT_FOUND;
+            }
+        } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
             return HttpStatus.NOT_FOUND;
         }
 
@@ -66,7 +72,7 @@ public class AddNetworkApiController {
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
         eventGraphs.forEach(e -> {
-            e.setCollectionId(collection.getId());
+            e.setCollectionId(mappedCollection.getCollectionId());
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
         });
         eventGraphService.saveEventGraphs(eventGraphs);
