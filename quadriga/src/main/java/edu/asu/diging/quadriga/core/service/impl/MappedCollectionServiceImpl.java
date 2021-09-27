@@ -151,7 +151,7 @@ public class MappedCollectionServiceImpl implements MappedCollectionService {
         MappedCollection mappedCollection = findMappedCollectionByCollectionId(collectionId);
 
         // In case this is a new collection and a network is being submitted to this
-        // collection for the first time
+        // collection for the first time, we create a new MappedCollection entry
         if (mappedCollection == null) {
             mappedCollection = addMappedCollection(collectionId);
         }

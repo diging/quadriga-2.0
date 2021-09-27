@@ -6,6 +6,6 @@ import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 
 public interface MappedTripleService {
 
-    Predicate storeMappedGraph(Graph graph) throws NodeNotFoundException;
+    Predicate storeMappedGraph(Graph graph, String mappedCollectionId) throws NodeNotFoundException;
 
 }

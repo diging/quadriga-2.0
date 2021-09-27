@@ -78,7 +78,7 @@ public class AddNetworkApiController {
         eventGraphService.saveEventGraphs(eventGraphs);
 
         try {
-            mappedTripleService.storeMappedGraph(quadruple.getGraph());
+            mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedCollection.get_id().toString());
         } catch (NodeNotFoundException e1) {
             return HttpStatus.BAD_REQUEST;
         }

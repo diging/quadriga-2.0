@@ -29,24 +29,24 @@ public class MappedTripleServiceImpl implements MappedTripleService {
      * @see edu.asu.diging.quadriga.core.service.impl.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph)
      */
     @Override
-    public Predicate storeMappedGraph(Graph graph) throws NodeNotFoundException {
+    public Predicate storeMappedGraph(Graph graph, String mappedCollectionId) throws NodeNotFoundException {
         DefaultMapping mapping = graph.getMetadata().getDefaultMapping();
         if (mapping == null) {
             return null;
         }
 
         Map<String, NodeData> nodes = graph.getNodes();
-        Concept subject = createConcept(mapping.getSubject(), nodes);
+        Concept subject = createConcept(mapping.getSubject(), nodes, mappedCollectionId);
         subject = conceptRepo.save(subject);
-        Concept object = createConcept(mapping.getObject(), nodes);
+        Concept object = createConcept(mapping.getObject(), nodes, mappedCollectionId);
         object = conceptRepo.save(object);
-        Predicate predicate = createPredicate(mapping.getPredicate(), nodes, subject, object);
+        Predicate predicate = createPredicate(mapping.getPredicate(), nodes, subject, object, mappedCollectionId);
         predicateRepo.save(predicate);
         
         return predicate;
     }
 
-    private Concept createConcept(TripleElement element, Map<String, NodeData> nodes) throws NodeNotFoundException {
+    private Concept createConcept(TripleElement element, Map<String, NodeData> nodes, String mappedCollectionId) throws NodeNotFoundException {
         Concept concept = new Concept();
         if (element.getType().equals(TripleElement.TYPE_URI)) {
             concept.setLabel(element.getLabel());
@@ -62,10 +62,11 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         
         concept.setLabel(data.getLabel());
         concept.setUri(data.getMetadata().getInterpretation());
+        concept.setMappedCollectionId(mappedCollectionId);
         return concept;
     }
 
-    private Predicate createPredicate(TripleElement element, Map<String, NodeData> nodes, Concept subject, Concept object) throws NodeNotFoundException {
+    private Predicate createPredicate(TripleElement element, Map<String, NodeData> nodes, Concept subject, Concept object, String mappedCollectionId) throws NodeNotFoundException {
         Predicate predicate = new Predicate();
         
         if (element.getType().equals(TripleElement.TYPE_URI)) {
@@ -82,6 +83,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         
         predicate.setSource(subject);
         predicate.setTarget(object);
+        predicate.setMappedCollectionId(mappedCollectionId);
         return predicate;
     }
 }
