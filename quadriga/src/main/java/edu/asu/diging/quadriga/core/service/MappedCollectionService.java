@@ -23,7 +23,7 @@ public interface MappedCollectionService {
 
     public MappedCollection findMappedCollectionById(String mappedCollectionId) throws InvalidObjectIdException;
 
-    public MappedCollection updateMappedCollectionNameByCollectionId(String mappedCollectionId, String name)
+    public MappedCollection updateMappedCollectionNameById(String mappedCollectionId, String name)
             throws InvalidObjectIdException, MappedCollectionNotFoundException;
 
     public MappedCollection findOrAddMappedCollectionByCollectionId(String collectionId)

@@ -38,7 +38,7 @@ public class MappedCollectionServiceImpl implements MappedCollectionService {
      * @throws CollectionNotFoundException if collection with given collectionId
      *                                     does't exist
      */
-    private Collection checkCollection(String collectionId)
+    private Collection checkAndGetCollection(String collectionId)
             throws InvalidObjectIdException, CollectionNotFoundException {
         Collection collection = collectionManager.findCollection(collectionId);
         if (collection == null) {
@@ -63,7 +63,7 @@ public class MappedCollectionServiceImpl implements MappedCollectionService {
     public MappedCollection addMappedCollection(String collectionId)
             throws InvalidObjectIdException, CollectionNotFoundException {
         MappedCollection mappedCollection = new MappedCollection();
-        mappedCollection.setCollectionId(checkCollection(collectionId).getId());
+        mappedCollection.setCollectionId(checkAndGetCollection(collectionId).getId());
         return mappedCollectionRepository.save(mappedCollection);
     }
 
@@ -84,7 +84,7 @@ public class MappedCollectionServiceImpl implements MappedCollectionService {
     @Override
     public MappedCollection findMappedCollectionByCollectionId(String collectionId)
             throws InvalidObjectIdException, CollectionNotFoundException {
-        return mappedCollectionRepository.findByCollectionId(checkCollection(collectionId).getId()).orElse(null);
+        return mappedCollectionRepository.findByCollectionId(checkAndGetCollection(collectionId).getId()).orElse(null);
     }
 
     /**
@@ -122,7 +122,7 @@ public class MappedCollectionServiceImpl implements MappedCollectionService {
      *                                           collectionId doesn't exist
      */
     @Override
-    public MappedCollection updateMappedCollectionNameByCollectionId(String mappedCollectionId, String name)
+    public MappedCollection updateMappedCollectionNameById(String mappedCollectionId, String name)
             throws InvalidObjectIdException, MappedCollectionNotFoundException {
         MappedCollection mappedCollection = findMappedCollectionById(mappedCollectionId);
         if (mappedCollection != null) {
