@@ -11,6 +11,7 @@ import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
+import edu.asu.diging.quadriga.core.model.MappedCollection;
 import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.mapped.Concept;
 import edu.asu.diging.quadriga.core.model.mapped.Predicate;
@@ -29,12 +30,13 @@ public class MappedTripleServiceImpl implements MappedTripleService {
      * @see edu.asu.diging.quadriga.core.service.impl.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph)
      */
     @Override
-    public Predicate storeMappedGraph(Graph graph, String mappedCollectionId) throws NodeNotFoundException {
+    public Predicate storeMappedGraph(Graph graph, MappedCollection mappedCollection) throws NodeNotFoundException {
         DefaultMapping mapping = graph.getMetadata().getDefaultMapping();
         if (mapping == null) {
             return null;
         }
 
+        String mappedCollectionId = mappedCollection.get_id().toString();
         Map<String, NodeData> nodes = graph.getNodes();
         Concept subject = createConcept(mapping.getSubject(), nodes, mappedCollectionId);
         subject = conceptRepo.save(subject);
