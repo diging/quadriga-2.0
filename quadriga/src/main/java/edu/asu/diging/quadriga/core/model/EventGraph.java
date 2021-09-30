@@ -9,7 +9,7 @@ public class EventGraph {
     private ObjectId _id;
     private CreationEvent  rootEvent;
     private DefaultMapping defaultMapping;
-    private ObjectId collectionId;
+    private ObjectId mappedCollectionId;
 
     public EventGraph() {}
     
@@ -41,12 +41,12 @@ public class EventGraph {
         this.defaultMapping = defaultMapping;
     }
     
-    public ObjectId getCollectionId() {
-        return collectionId;
+    public ObjectId getMappedCollectionId() {
+        return mappedCollectionId;
     }
 
-    public void setCollectionId(ObjectId collectionId) {
-        this.collectionId = collectionId;
+    public void setMappedCollectionId(ObjectId collectionId) {
+        this.mappedCollectionId = collectionId;
     }
     
     

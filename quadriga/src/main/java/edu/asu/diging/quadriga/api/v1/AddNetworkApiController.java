@@ -72,7 +72,7 @@ public class AddNetworkApiController {
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
         eventGraphs.forEach(e -> {
-            e.setCollectionId(mappedCollection.getCollectionId());
+            e.setMappedCollectionId(mappedCollection.get_id());
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
         });
         eventGraphService.saveEventGraphs(eventGraphs);
