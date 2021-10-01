@@ -29,7 +29,6 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
-import edu.asu.diging.quadriga.core.exceptions.TokenInfoNotFoundException;
 import edu.asu.diging.quadriga.core.service.TokenValidator;
 
 @Service
@@ -74,13 +73,12 @@ public class TokenValidatorImpl implements TokenValidator {
      * the access token, in case it is expired.
      * 
      * @param token is the one we receive from Vogon to check the validity
-     * @return whether the token is active or not
+     * @return the token response received from citesphere
      * @throws BadCredentialsException if token/access token is invalid
      * @throws OAuthException if request is unauthorized because of the token/access token
-     * @throws TokenInfoNotFoundException in case citesphere sends a null response
      */
     @Override
-    public boolean validateToken(String token) throws BadCredentialsException, OAuthException, TokenInfoNotFoundException {
+    public TokenInfo getTokenInfo(String token) throws BadCredentialsException, OAuthException {
         
 
         String checkTokenUrl = citesphereBaseURL + citesphereCheckTokenEndpoint + "?token=" + token;
@@ -112,11 +110,7 @@ public class TokenValidatorImpl implements TokenValidator {
             }
         }
 
-        if (tokenInfo != null) {
-            return tokenInfo.isActive();
-        } else {
-            throw new TokenInfoNotFoundException();
-        }
+        return tokenInfo;
     }
     
     

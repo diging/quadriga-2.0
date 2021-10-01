@@ -30,7 +30,6 @@ import com.nimbusds.oauth2.sdk.token.Tokens;
 
 import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
-import edu.asu.diging.quadriga.core.exceptions.TokenInfoNotFoundException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TokenValidatorImplTest {
@@ -69,7 +68,7 @@ public class TokenValidatorImplTest {
 
     
     @Test
-    public void test_validateToken_success() throws TokenInfoNotFoundException {
+    public void test_validateToken_success() {
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setActive(true);
 
@@ -80,15 +79,15 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity, TokenInfo.class, new Object[] {}))
                 .thenReturn(tokenInfo);
 
-        boolean isTokenActive = tokenValidatorImpl.validateToken(token);
+        TokenInfo receivedTokenInfo = tokenValidatorImpl.getTokenInfo(token);
 
-        Assert.assertTrue(isTokenActive);
+        Assert.assertTrue(receivedTokenInfo.isActive());
     }
 
     
     @Test
     public void test_validateToken_unauth1_auth2_success()
-            throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
+            throws URISyntaxException, ParseException, IOException {
         String newAccessToken = "NEW_" + accessToken;
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setActive(true);
@@ -114,14 +113,15 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
                 .thenReturn(tokenInfo);
 
-        Assert.assertTrue(tokenValidatorImpl.validateToken(token));
+        TokenInfo receivedTokenInfo = tokenValidatorImpl.getTokenInfo(token);
+        Assert.assertTrue(receivedTokenInfo.isActive());
         tokenResponse.close();
     }
 
     
     @Test
     public void test_validateToken_bad_credentials()
-            throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
+            throws URISyntaxException, ParseException, IOException {
         HttpHeaders headers = new HttpHeaders();
 
         // We get an exception while validating token but it is not an unauth exception
@@ -131,13 +131,13 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity1, TokenInfo.class, new Object[] {}))
                 .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
 
-        Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.validateToken(token));
+        Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.getTokenInfo(token));
     }
 
     
     @Test
     public void test_validateToken_unauth1_unauth2()
-            throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
+            throws URISyntaxException, ParseException, IOException {
         String newAccessToken = "NEW_" + accessToken;
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setActive(true);
@@ -163,14 +163,14 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
                 .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
-        Assert.assertThrows(OAuthException.class, () -> tokenValidatorImpl.validateToken(token));
+        Assert.assertThrows(OAuthException.class, () -> tokenValidatorImpl.getTokenInfo(token));
         tokenResponse.close();
     }
 
     
     @Test
     public void test_validateToken_unauth1_bad_credentials()
-            throws TokenInfoNotFoundException, URISyntaxException, ParseException, IOException {
+            throws URISyntaxException, ParseException, IOException {
         String newAccessToken = "NEW_" + accessToken;
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setActive(true);
@@ -197,22 +197,8 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
                 .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
 
-        Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.validateToken(token));
+        Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.getTokenInfo(token));
         tokenResponse.close();
-    }
-
-    
-    @Test
-    public void test_validateToken_nullTokenInfo() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-        // We received a null response from citesphere
-        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity, TokenInfo.class, new Object[] {}))
-                .thenReturn(null);
-        
-        Assert.assertThrows(TokenInfoNotFoundException.class, () -> tokenValidatorImpl.validateToken(token));
     }
 
 }
