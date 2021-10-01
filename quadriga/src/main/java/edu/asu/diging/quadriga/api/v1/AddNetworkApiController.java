@@ -6,9 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +19,8 @@ import edu.asu.diging.quadriga.api.v1.model.Quadruple;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.OAuthException;
+import edu.asu.diging.quadriga.core.exceptions.TokenInfoNotFoundException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedCollection;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
@@ -24,6 +28,7 @@ import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedCollectionService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
+import edu.asu.diging.quadriga.core.service.impl.TokenValidatorImpl;
 
 @Controller
 public class AddNetworkApiController {
@@ -40,6 +45,9 @@ public class AddNetworkApiController {
     @Autowired
     private MappedCollectionService mappedCollectionService;
 
+    @Autowired
+    private TokenValidatorImpl tokenValidatorImpl;
+
     /**
      * The method parse given Json from the post request body and add Network
      * instance to the database
@@ -52,7 +60,7 @@ public class AddNetworkApiController {
      */
     @ResponseBody
     @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId) {
+    public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId, @RequestHeader(name = "Authorization",  required = true) String authHeader) {
         
         MappedCollection mappedCollection;
         try {
@@ -66,6 +74,11 @@ public class AddNetworkApiController {
 
         if (quadruple == null) {
             return HttpStatus.NO_CONTENT;
+        }
+        
+        HttpStatus httpStatus = checkTokenValidity(authHeader);
+        if(!HttpStatus.ACCEPTED.equals(httpStatus)) {
+            return httpStatus;
         }
 
         // save network
@@ -85,6 +98,47 @@ public class AddNetworkApiController {
 
         return HttpStatus.ACCEPTED;
 
+    }
+    
+    
+    /**
+     * This method will use {@link edu.asu.diging.quadriga.core.service.impl.TokenValidatorImpl} to
+     * check the validity of the token received from Vogon
+     * 
+     * @param authHeader is where the token would be present as 'Bearer {token}'
+     * @return the HTTP Status as per the response by the validateToken method
+     */
+    private HttpStatus checkTokenValidity(String authHeader) {
+        String token = null;
+        
+        if(authHeader.trim().isEmpty()) {
+            return HttpStatus.BAD_REQUEST;
+        } else {
+            // Trims the string "Bearer " to extract the exact token from the Authorization Header
+            token = authHeader.substring(7);
+            if(token == null || token.trim().isEmpty()) {
+                return HttpStatus.BAD_REQUEST;
+            }
+        }
+        
+        try {
+            if(!tokenValidatorImpl.validateToken(token)) {
+                
+                // token has expired
+                return HttpStatus.UNAUTHORIZED;
+            }
+        } catch (TokenInfoNotFoundException | OAuthException e) {
+            
+            // citesphere sent an empty response or we got unath twice (using existing access token and re-generated one)
+            return HttpStatus.UNAUTHORIZED;
+        } catch(BadCredentialsException e) {
+            
+            //Token is invalid
+            return HttpStatus.FORBIDDEN;
+        }
+        
+        // token is valid and active
+        return HttpStatus.ACCEPTED;
     }
 
 }
