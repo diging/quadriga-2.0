@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
@@ -26,8 +27,13 @@ public class DisplayCollectionController {
     
     @RequestMapping(value = "/auth/collections/{id}", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
-        Collection collection = collectionManager.findCollection(id);
-        if(collection == null) {
+        Collection collection;
+        try {
+            collection = collectionManager.findCollection(id);
+            if(collection == null) {
+                return "error404Page";
+            }
+        } catch (InvalidObjectIdException e) {
             return "error404Page";
         }
         List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(id);
