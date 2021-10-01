@@ -1,6 +1,23 @@
 <html layout:decorate="~{layouts/main}">
 <head>
 <title>Quadriga 2.0</title>
+<script type="text/javascript">
+$(function() {
+    $("#editCollectionButton").click(function() {
+        var index = 0;
+        $(".app").each(function() {
+            if($(this).find('.checkbox').is(':checked')) {
+                var appClientId = $("<input>");
+                appClientId.attr("type", "hidden");
+                appClientId.attr("name", "apps[" + index + "]");
+                appClientId.attr("value", $(this).attr("data-client-id"));
+                $("#applications").append(appClientId);
+                index++;
+            }
+        });
+    });
+});
+</script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -17,8 +34,18 @@
 			<br>
 			<label>Description:</label>
 			<input th:field="*{description}" class="form-control input-sm"></input>
+			<br>
+			<label>Applications:</label> <div id="applications" type="hidden"></div>
+			<div id="applicationList" class="list-group">
+			    <div th:each="entry,loop : ${citesphereApps}">
+			        <div href="#" class="list-group-item app" th:data-client-id="${entry.clientId}">
+			            <strong>[[${entry.name}]]</strong><input title="Select" type="checkbox" class="checkbox pull-right" th:checked="${collectionForm.getApps() != null && collectionForm.getApps().contains(entry.clientId)}"/><br>
+			            <small class=textOfSub>[[${entry.description}]]</small>
+			        </div>
+			    </div>
+			</div>
 			<div style="padding-top: 20px;">
-				<button class="btn primary-btn">Edit Collection</button>
+				<button id="editCollectionButton" class="btn primary-btn">Edit Collection</button>
 			</div>
 		</form>
 

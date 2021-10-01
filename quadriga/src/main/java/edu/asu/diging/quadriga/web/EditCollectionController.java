@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.ICollectionManager;
@@ -29,6 +30,9 @@ public class EditCollectionController {
 
     @Autowired
     private ICollectionManager collectionManager;
+    
+    @Autowired
+    private ICitesphereConnector citesphereConnector;
 
     /**
      * Request handler for getting the "Edit collections" view
@@ -48,8 +52,9 @@ public class EditCollectionController {
             collectionForm.setName(collection.getName());
             collectionForm.setDescription(collection.getDescription());
             collectionForm.setApps(collection.getApps());
+            
+            model.addAttribute("citesphereApps", citesphereConnector.getCitesphereApps());
             model.addAttribute("collectionForm", collectionForm);
-
             return "auth/editCollection";
         } else {
             return "error404Page";
