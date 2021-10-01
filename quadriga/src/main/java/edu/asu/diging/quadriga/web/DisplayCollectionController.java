@@ -37,10 +37,12 @@ public class DisplayCollectionController {
             return "error404Page";
         }
         List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(id);
+        EventGraph lastNetwork = eventGraphs.get(0);
         
         model.addAttribute("collection", collection);
         model.addAttribute("numberOfSubmittedNetworks", eventGraphs.size());
-        model.addAttribute("lastNetworkSubmittedAt", eventGraphs.get(0).getCreationTime());
+        model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime());
+        model.addAttribute("lastSubmittedBy", lastNetwork.getAppName());
         return "auth/displayCollection";
     }
     
