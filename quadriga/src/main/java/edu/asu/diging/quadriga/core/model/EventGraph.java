@@ -13,6 +13,7 @@ public class EventGraph {
     private DefaultMapping defaultMapping;
     private LocalDateTime creationTime;
     private ObjectId collectionId;
+    private String appName;
     
     public EventGraph() {
         this.creationTime = LocalDateTime.now();
@@ -57,6 +58,13 @@ public class EventGraph {
     public void setCollectionId(ObjectId collectionId) {
         this.collectionId = collectionId;
     }
-    
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
     
 }
