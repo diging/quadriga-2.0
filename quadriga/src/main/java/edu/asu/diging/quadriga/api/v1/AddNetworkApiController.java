@@ -111,14 +111,14 @@ public class AddNetworkApiController {
      * @return
      */
     private String getTokenFromHeader(String authHeader) {
-        String token = null;
+        String token;
         
-        if(authHeader.trim().isEmpty()) {
-            return token;
+        if(authHeader == null || authHeader.trim().isEmpty()) {
+            return null;
         } else {
             // Trims the string "Bearer " to extract the exact token from the Authorization Header
             token = authHeader.substring(7);
-            if(token.trim().isEmpty()) {
+            if(token == null || token.trim().isEmpty()) {
                 return null;
             }
         }
