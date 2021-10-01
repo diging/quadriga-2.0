@@ -23,7 +23,7 @@ import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
-import edu.asu.diging.quadriga.core.service.impl.TokenValidatorImpl;
+import edu.asu.diging.quadriga.core.service.TokenValidator;
 
 @Controller
 public class AddNetworkApiController {
@@ -38,7 +38,7 @@ public class AddNetworkApiController {
     private MappedTripleService mappedTripleService;
     
     @Autowired
-    private TokenValidatorImpl tokenValidatorImpl;
+    private TokenValidator tokenValidator;
 
     /**
      * The method parse given Json from the post request body and add Network
@@ -101,7 +101,7 @@ public class AddNetworkApiController {
         }
         
         try {
-            if(!tokenValidatorImpl.validateToken(token)) {
+            if(!tokenValidator.validateToken(token)) {
                 
                 // token has expired
                 return HttpStatus.UNAUTHORIZED;
