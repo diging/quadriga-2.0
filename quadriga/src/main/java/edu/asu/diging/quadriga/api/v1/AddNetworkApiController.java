@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
+import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
-import edu.asu.diging.quadriga.core.exceptions.TokenInfoNotFoundException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedCollection;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
@@ -28,7 +28,7 @@ import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedCollectionService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
-import edu.asu.diging.quadriga.core.service.impl.TokenValidatorImpl;
+import edu.asu.diging.quadriga.core.service.TokenValidator;
 
 @Controller
 public class AddNetworkApiController {
@@ -46,7 +46,7 @@ public class AddNetworkApiController {
     private MappedCollectionService mappedCollectionService;
 
     @Autowired
-    private TokenValidatorImpl tokenValidatorImpl;
+    private TokenValidator tokenValidator;
 
     /**
      * The method parse given Json from the post request body and add Network
@@ -76,10 +76,31 @@ public class AddNetworkApiController {
             return HttpStatus.NO_CONTENT;
         }
         
-        HttpStatus httpStatus = checkTokenValidity(authHeader);
-        if(!HttpStatus.ACCEPTED.equals(httpStatus)) {
-            return httpStatus;
+        String token = getTokenFromHeader(authHeader);
+        if(token == null) {
+            return HttpStatus.NOT_FOUND;
         }
+        
+        TokenInfo tokenInfo;
+        try {
+            tokenInfo = tokenValidator.getTokenInfo(token);
+            
+            // either token info wasn't returned by citesphere or the token has expired
+            if(tokenInfo == null || !tokenInfo.isActive()) {
+                return HttpStatus.UNAUTHORIZED;
+            }
+            
+        } catch (OAuthException e) {
+            
+            // we got unauth twice (using existing access token and re-generated one)
+            return HttpStatus.UNAUTHORIZED;
+        } catch(BadCredentialsException e) {
+            
+            //Token is invalid
+            return HttpStatus.FORBIDDEN;
+        }
+        
+        // the flow will reach  here  only when token is present, valid  and active
 
         // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
@@ -102,43 +123,27 @@ public class AddNetworkApiController {
     
     
     /**
-     * This method will use {@link edu.asu.diging.quadriga.core.service.impl.TokenValidatorImpl} to
-     * check the validity of the token received from Vogon
+     * This method will check and get a token that should be present in the
+     * Authorization Header of the add network request
      * 
-     * @param authHeader is where the token would be present as 'Bearer {token}'
-     * @return the HTTP Status as per the response by the validateToken method
+     * The token will be in the form of "Bearer xxxxxxx"
+     * 
+     * @param authHeader is the header to be checked
+     * @return
      */
-    private HttpStatus checkTokenValidity(String authHeader) {
+    private String getTokenFromHeader(String authHeader) {
         String token = null;
         
         if(authHeader.trim().isEmpty()) {
-            return HttpStatus.BAD_REQUEST;
+            return token;
         } else {
             // Trims the string "Bearer " to extract the exact token from the Authorization Header
             token = authHeader.substring(7);
-            if(token == null || token.trim().isEmpty()) {
-                return HttpStatus.BAD_REQUEST;
+            if(token.trim().isEmpty()) {
+                return null;
             }
         }
-        
-        try {
-            if(!tokenValidatorImpl.validateToken(token)) {
-                
-                // token has expired
-                return HttpStatus.UNAUTHORIZED;
-            }
-        } catch (TokenInfoNotFoundException | OAuthException e) {
-            
-            // citesphere sent an empty response or we got unath twice (using existing access token and re-generated one)
-            return HttpStatus.UNAUTHORIZED;
-        } catch(BadCredentialsException e) {
-            
-            //Token is invalid
-            return HttpStatus.FORBIDDEN;
-        }
-        
-        // token is valid and active
-        return HttpStatus.ACCEPTED;
+        return token;
     }
 
 }
