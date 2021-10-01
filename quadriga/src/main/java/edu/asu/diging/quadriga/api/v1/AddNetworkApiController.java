@@ -102,11 +102,13 @@ public class AddNetworkApiController {
     
     
     /**
-     * This method will use {@link edu.asu.diging.quadriga.core.service.impl.TokenValidatorImpl} to
-     * check the validity of the token received from Vogon
+     * This method will check and get a token that should be present in the
+     * Authorization Header of the add network request
      * 
-     * @param authHeader is where the token would be present as 'Bearer {token}'
-     * @return the HTTP Status as per the response by the validateToken method
+     * The token will be in the form of "Bearer xxxxxxx"
+     * 
+     * @param authHeader is the header to be checked
+     * @return
      */
     private String getTokenFromHeader(String authHeader) {
         String token = null;
