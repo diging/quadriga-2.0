@@ -1,6 +1,17 @@
 <html layout:decorate="~{layouts/main}">
 <head>
 <title>Quadriga 2.0</title>
+<style> 
+.textOfSub {
+    width:95%
+}
+#applicationList {
+    max-height:250px;
+}
+.list-group {
+    overflow: auto;
+}
+</style>
 <script type="text/javascript">
 $(function() {
     $("#editCollectionButton").click(function() {
@@ -15,6 +26,11 @@ $(function() {
                 index++;
             }
         });
+    });
+    
+    $(".list-group-item").click(function() {
+    	var checkbox = $(this).find(".checkbox");
+    	checkbox.prop("checked", !checkbox.prop("checked"))
     });
 });
 </script>

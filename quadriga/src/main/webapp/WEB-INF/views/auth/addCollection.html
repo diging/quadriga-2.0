@@ -5,9 +5,6 @@
 .textOfSub {
     width:95%
 }
-.CodeMirror-scroll {
-    max-height: 300px;
-}
 #applicationList {
     max-height:250px;
 }
@@ -29,6 +26,11 @@
                     index++;
                 }
             });
+        });
+        
+        $(".list-group-item").click(function() {
+        	var checkbox = $(this).find(".checkbox");
+        	checkbox.prop("checked", !checkbox.prop("checked"))
         });
     });
 </script>

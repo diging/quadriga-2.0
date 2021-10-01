@@ -41,9 +41,9 @@
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
         <neo4j.database>quadriga</neo4j.database>
         
-        <citesphere.url>http://localhost:8080/citesphere/</citesphere.url>
-        <citesphere.client.key>OAUTHCLIENT5</citesphere.client.key>
-        <citesphere.client.secret>99db0c57-6d6a-43f3-90bc-d7c31a443bfa</citesphere.client.secret>
+        <citesphere.base.url></citesphere.base.url>
+        <citesphere.client.id></citesphere.client.id>
+        <citesphere.client.secret></citesphere.client.secret>
 
         <log.level>info</log.level>
 
