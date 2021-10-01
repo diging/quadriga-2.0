@@ -12,7 +12,7 @@ public class EventGraph {
     private CreationEvent  rootEvent;
     private DefaultMapping defaultMapping;
     private LocalDateTime creationTime;
-    private ObjectId mappedCollectionId;
+    private ObjectId collectionId;
     
     public EventGraph() {
         this.creationTime = LocalDateTime.now();
@@ -46,16 +46,16 @@ public class EventGraph {
     public void setDefaultMapping(DefaultMapping defaultMapping) {
         this.defaultMapping = defaultMapping;
     }
-
+    
     public LocalDateTime getCreationTime() {
         return creationTime;
     }
-    public ObjectId getMappedCollectionId() {
-        return mappedCollectionId;
+    public ObjectId getCollectionId() {
+        return collectionId;
     }
 
-    public void setMappedCollectionId(ObjectId mappedCollectionId) {
-        this.mappedCollectionId = mappedCollectionId;
+    public void setCollectionId(ObjectId collectionId) {
+        this.collectionId = collectionId;
     }
     
     
