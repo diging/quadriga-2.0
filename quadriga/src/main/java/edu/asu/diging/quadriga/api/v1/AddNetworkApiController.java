@@ -112,9 +112,11 @@ public class AddNetworkApiController {
             e.setCollectionId(mappedCollection.getCollectionId());
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
 
-            // This is a temporary solution
-            // We need to get info about just one app from citesphere using OAuth token.
-            // This app's name should be stored in eventGraph.
+            /**
+             * This is a temporary solution as per the comment on story Q20-18
+             * A new story will later be created to get info about just one app from citesphere using OAuth token.
+             * This app's name should be stored in eventGraph instead of the client id
+             */
             e.setAppName(tokenInfo.getClient_id());
         });
         eventGraphService.saveEventGraphs(eventGraphs);

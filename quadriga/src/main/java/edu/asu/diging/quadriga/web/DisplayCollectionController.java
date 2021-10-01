@@ -27,6 +27,7 @@ public class DisplayCollectionController {
     
     @RequestMapping(value = "/auth/collections/{id}", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
+        
         Collection collection;
         try {
             collection = collectionManager.findCollection(id);
@@ -36,15 +37,19 @@ public class DisplayCollectionController {
         } catch (InvalidObjectIdException e) {
             return "error404Page";
         }
+        
         List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(id);
-        EventGraph lastNetwork = eventGraphs.get(0);
+        
+        if(!eventGraphs.isEmpty()) {
+            EventGraph lastNetwork = eventGraphs.get(0);
+            model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime());
+            model.addAttribute("lastNetworkSubmittedBy", lastNetwork.getAppName());
+        }
         
         model.addAttribute("collection", collection);
         model.addAttribute("numberOfSubmittedNetworks", eventGraphs.size());
-        model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime());
-        model.addAttribute("lastSubmittedBy", lastNetwork.getAppName());
+        
         return "auth/displayCollection";
     }
-    
 
 }
