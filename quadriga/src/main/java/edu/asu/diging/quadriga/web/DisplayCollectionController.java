@@ -45,7 +45,7 @@ public class DisplayCollectionController {
             return "error404Page";
         }
         
-        List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(id);
+        List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(collection.getId());
         Map<ObjectId, Integer> triplesMap =  new HashMap<>(); 
         
         if(!eventGraphs.isEmpty()) {
@@ -59,7 +59,7 @@ public class DisplayCollectionController {
                 } catch (TriplesNotFoundException e) {
                     logger.error("Could not find triples for network with EventGraph ID: " + eventGraph.getId().toString());
                 }
-                triplesMap.put(eventGraph.getId(), numberOfTriples);   
+                triplesMap.put(eventGraph.getId(), numberOfTriples);
             }
         }
         
@@ -69,6 +69,7 @@ public class DisplayCollectionController {
         model.addAttribute("triplesMap", triplesMap);
         
         return "auth/displayCollection";
+        
     }
 
 }

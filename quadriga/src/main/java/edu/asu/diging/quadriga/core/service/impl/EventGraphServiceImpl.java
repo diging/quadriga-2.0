@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ import edu.asu.diging.quadriga.core.service.EventGraphService;
 
 @Service
 public class EventGraphServiceImpl implements EventGraphService {
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private EventGraphRepository repo;
@@ -29,8 +33,8 @@ public class EventGraphServiceImpl implements EventGraphService {
     }
 
     @Override
-    public List<EventGraph> findAllEventGraphsByCollectionId(String collectionId) {
-        return repo.findByCollectionIdOrderByCreationTimeDesc(new ObjectId(collectionId)).orElse(null);
+    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId) {
+        return repo.findByCollectionIdOrderByCreationTimeDesc(collectionId).orElse(null);
     }
 
     @Override
@@ -39,17 +43,29 @@ public class EventGraphServiceImpl implements EventGraphService {
         
         if(optionalEventGraph.isPresent()) {
             CreationEvent creationEvent = optionalEventGraph.get().getRootEvent();
+            
             if(creationEvent != null && creationEvent instanceof RelationEvent) {
-                return getNumberOfTriples(((RelationEvent) optionalEventGraph.get().getRootEvent()).getRelation(), 1);
+                
+                Relation relation = ((RelationEvent) optionalEventGraph.get().getRootEvent()).getRelation();
+                
+                // Here, we first make sure that there is a root relation and that this root has a triple
+                if(relation != null && relation.getSubject() != null && relation.getObject() != null && relation.getPredicate() != null) {
+                    return getNumberOfTriples(relation, 0);
+                } else {
+                    logger.error("No relation or triple found in the root RelationEvent of EventGraph with id: " + id.toString());
+                }
+            } else {
+                logger.error("No RelationEvent found in the rootEvent of EventGraph with id: " + id.toString());
             }
+        } else {
+            logger.error("No EventGraph found for id: " + id.toString());
         }
         
-        // If no eventGraph was found for the given Id or in the EventGraph, there are no triples present
         throw new TriplesNotFoundException();
     }
     
     /**
-     * This method will recursively find triples in "subject" and "object" type of RelationEvents
+     * This method will recursively find triples in "subject" and "object" RelationEvents
      * E.g. if a relation with subject-predicate-object triple has another nested relation
      * inside object of this triple, then the outer and inner triple will count as 2 triples and
      * 2 will be returned
@@ -71,7 +87,7 @@ public class EventGraphServiceImpl implements EventGraphService {
                 return getNumberOfTriples(objectRelation, ++triples);
             }
         }
-        return triples;
+        return ++triples;
     }
     
 }
