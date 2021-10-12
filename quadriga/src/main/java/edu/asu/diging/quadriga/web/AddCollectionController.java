@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector;
-import edu.asu.diging.quadriga.core.service.ICollectionManager;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
 @Controller
 public class AddCollectionController {
 
     @Autowired
-    private ICollectionManager collectionManager;
+    private CollectionManager collectionManager;
 
     @Autowired
     private ICitesphereConnector citesphereConnector;

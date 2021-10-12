@@ -5,7 +5,7 @@ import java.util.List;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 
-public interface ICollectionManager {
+public interface CollectionManager {
 
     /**
      * Saves a collection in database with the given details

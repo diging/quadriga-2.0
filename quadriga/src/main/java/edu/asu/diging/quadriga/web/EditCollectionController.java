@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.quadriga.core.service.ICollectionManager;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
 /**
@@ -29,7 +29,7 @@ import edu.asu.diging.quadriga.web.forms.CollectionForm;
 public class EditCollectionController {
 
     @Autowired
-    private ICollectionManager collectionManager;
+    private CollectionManager collectionManager;
     
     @Autowired
     private ICitesphereConnector citesphereConnector;

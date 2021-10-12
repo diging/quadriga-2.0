@@ -24,7 +24,7 @@ import edu.asu.diging.quadriga.core.citesphere.impl.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
-import edu.asu.diging.quadriga.core.service.impl.CollectionManager;
+import edu.asu.diging.quadriga.core.service.impl.CollectionManagerImpl;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
 public class EditCollectionControllerTest {
@@ -38,7 +38,7 @@ public class EditCollectionControllerTest {
     public static final List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
 
     @Mock
-    private CollectionManager collectionManager;
+    private CollectionManagerImpl collectionManager;
     
     @Mock
     private CitesphereConnector citesphereConnector;

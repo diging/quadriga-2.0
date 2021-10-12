@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
-import edu.asu.diging.quadriga.core.service.ICollectionManager;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
 
 @Controller
 public class DeleteCollectionController {
     
     @Autowired
-    private ICollectionManager collectionManager;
+    private CollectionManager collectionManager;
     
     @RequestMapping(value = "/auth/collections/{id}/delete", method = RequestMethod.GET)
     public String get(@PathVariable String id, RedirectAttributes redirectAttributes) {

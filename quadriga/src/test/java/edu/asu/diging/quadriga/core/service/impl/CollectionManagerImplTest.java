@@ -32,7 +32,7 @@ public class CollectionManagerImplTest {
     private CollectionRepository collectionRepo;
 
     @InjectMocks
-    private CollectionManager managerToTest;
+    private CollectionManagerImpl managerToTest;
 
     @Before
     public void setUp() {
