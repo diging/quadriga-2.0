@@ -99,12 +99,15 @@ public class TokenValidatorImpl implements TokenValidator {
 
                     //  If we again get an unauthorized exception, we will just throw an OAuthException
                     if (e2.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                        logger.error("Could not get token info from citesphere, even after re-generating access token for token: " + token);
                         throw new OAuthException();
                     }
+                    logger.error("Token " + token + " is invalid for app");
                     throw new BadCredentialsException("Token is invalid for app.", e1);
                 }
             } else {
             
+                logger.error("Token " + token + " is invalid for app");
                 // If it is some other kind of exception, we throw a BadCredentialsException
                 throw new BadCredentialsException("Token is invalid for app.", e1);
             }
