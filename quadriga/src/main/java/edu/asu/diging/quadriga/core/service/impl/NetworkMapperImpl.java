@@ -1,12 +1,5 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +16,8 @@ import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.NetworkConstants;
 import edu.asu.diging.quadriga.api.v1.model.NodeData;
 import edu.asu.diging.quadriga.api.v1.model.NodeMetadata;
+import edu.asu.diging.quadriga.core.model.DefaultMapping;
+import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.elements.Actor;
 import edu.asu.diging.quadriga.core.model.elements.Concept;
 import edu.asu.diging.quadriga.core.model.elements.Place;
@@ -62,7 +57,20 @@ public class NetworkMapperImpl implements NetworkMapper {
             events.add(createEvent(node.getKey(), node.getValue(), graph));
         }
         
+        addLabelsToDefaultMappping(graph.getMetadata().getDefaultMapping(), graph.getNodes());
+        
         return events;
+    }
+
+    private void addLabelsToDefaultMappping(DefaultMapping defaultMapping, Map<String, NodeData> nodes) {
+        TripleElement subject = defaultMapping.getSubject();
+        TripleElement object = defaultMapping.getObject();
+        
+        String subjectLabel = nodes.get(subject.getReference()).getLabel();
+        String objectLabel = nodes.get(object.getReference()).getLabel();
+        
+        subject.setLabel(subjectLabel);
+        object.setLabel(objectLabel);
     }
 
     private CreationEvent createEvent(String nodeId, NodeData node, Graph graph) {

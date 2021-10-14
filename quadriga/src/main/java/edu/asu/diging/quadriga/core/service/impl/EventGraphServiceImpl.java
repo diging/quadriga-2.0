@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,8 +19,6 @@ import edu.asu.diging.quadriga.core.service.EventGraphService;
 
 @Service
 public class EventGraphServiceImpl implements EventGraphService {
-    
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private EventGraphRepository repo;
@@ -61,16 +57,14 @@ public class EventGraphServiceImpl implements EventGraphService {
                 if(relation != null && relation.getSubject() != null && relation.getObject() != null && relation.getPredicate() != null) {
                     return getNumberOfTriples(relation, 0);
                 } else {
-                    logger.error("No relation or triple found in the root RelationEvent of EventGraph with id: " + id.toString());
+                    throw new TriplesNotFoundException("No relation or triple found in the root RelationEvent of EventGraph with id: " + id.toString());
                 }
             } else {
-                logger.error("No RelationEvent found in the rootEvent of EventGraph with id: " + id.toString());
+                throw new TriplesNotFoundException("No RelationEvent found in the rootEvent of EventGraph with id: " + id.toString());
             }
         } else {
-            logger.error("No EventGraph found for id: " + id.toString());
+            throw new TriplesNotFoundException("No EventGraph found for id: " + id.toString());
         }
-        
-        throw new TriplesNotFoundException();
     }
     
     /**
@@ -87,13 +81,13 @@ public class EventGraphServiceImpl implements EventGraphService {
         if(relation.getSubject() != null && relation.getSubject() instanceof RelationEvent) {
             Relation subjectRelation = ((RelationEvent) relation.getSubject()).getRelation();
             if(subjectRelation != null) {
-                return getNumberOfTriples(subjectRelation, ++triples);
+                triples = getNumberOfTriples(subjectRelation, triples);
             }
         }
         if(relation.getObject() != null && relation.getObject() instanceof RelationEvent) {
             Relation objectRelation = ((RelationEvent) relation.getObject()).getRelation();
             if(objectRelation != null) {
-                return getNumberOfTriples(objectRelation, ++triples);
+                triples = getNumberOfTriples(objectRelation, triples);
             }
         }
         return ++triples;

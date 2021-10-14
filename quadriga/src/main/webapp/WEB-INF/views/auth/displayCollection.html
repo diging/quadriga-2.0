@@ -27,9 +27,9 @@
 		    <tr>
 		    	<th scope="col">#</th>
 				<th scope="col">Name</th>
+				<th scope="col">Default Mapping</th>
 				<th scope="col">Date and Time</th>
 		      	<th scope="col">Triples</th>
-		      	<th scope="col">Action</th>
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -41,9 +41,13 @@
 						from <span th:text="${network.appName}"></span>
 					</span>
 				</td>
+				<td scope="col">
+					<span th:text="${network.defaultMapping.subject.label + ' '
+						+ network.defaultMapping.predicate.label + ' '
+						+ network.defaultMapping.object.label}"></span>
+				</td>
 				<td><span th:text="${#temporals.format(network.creationTime, 'MM/dd/yyyy hh:mm a')}"></span></td>
 				<td th:text="${triplesMap.get(network.id)}"></td>
-				<td>Visualize</td>
 			</tr>
 		  </tbody>
 		</table>

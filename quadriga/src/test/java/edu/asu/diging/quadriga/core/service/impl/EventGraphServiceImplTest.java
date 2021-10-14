@@ -241,6 +241,53 @@ public class EventGraphServiceImplTest {
     }
     
     @Test
+    public void test_findAllTriplesInEventGraph_threeTriples_nestedInSubjectAndObject() throws TriplesNotFoundException {
+        ObjectId eventGraphId = new ObjectId();
+        EventGraph eventGraph = new EventGraph();
+        eventGraph.setId(eventGraphId);
+        
+        Mockito.when(eventGraphRepository.findById(eventGraphId)).thenReturn(Optional.of(eventGraph));
+        
+        // Relation nested in object
+        Relation nestedObjectRelation = new Relation();
+        AppellationEvent nestedSubject1 = new AppellationEvent();
+        AppellationEvent nestedPredicate1 = new AppellationEvent();
+        AppellationEvent nestedObject1 = new AppellationEvent();
+        nestedObjectRelation.setSubject(nestedSubject1);
+        nestedObjectRelation.setPredicate(nestedPredicate1);
+        nestedObjectRelation.setObject(nestedObject1);
+        
+        RelationEvent object = new RelationEvent();
+        object.setRelation(nestedObjectRelation);
+        
+        // Relation nested in subject
+        Relation nestedSubjectRelation = new Relation();
+        AppellationEvent nestedSubject2 = new AppellationEvent();
+        AppellationEvent nestedPredicate2 = new AppellationEvent();
+        AppellationEvent nestedObject2 = new AppellationEvent();
+        nestedSubjectRelation.setSubject(nestedSubject2);
+        nestedSubjectRelation.setPredicate(nestedPredicate2);
+        nestedSubjectRelation.setObject(nestedObject2);
+        
+        RelationEvent subject = new RelationEvent();
+        subject.setRelation(nestedSubjectRelation);
+        
+        // Root relation whose subject has a triple and object has a triple
+        Relation rootRelation = new Relation();
+        AppellationEvent predicate = new AppellationEvent();
+        rootRelation.setSubject(subject);
+        rootRelation.setPredicate(predicate);
+        rootRelation.setObject(object);
+        
+        RelationEvent relationEvent = new RelationEvent();
+        relationEvent.setRelation(rootRelation);
+        
+        eventGraph.setRootEvent(relationEvent);
+        
+        Assert.assertEquals(3, eventGraphServiceImpl.findAllTriplesInEventGraph(eventGraphId));
+    }
+    
+    @Test
     public void test_findAllTriplesInEventGraph_threeTriples_twoNestedLevelsInSubject() throws TriplesNotFoundException {
         ObjectId eventGraphId = new ObjectId();
         EventGraph eventGraph = new EventGraph();

@@ -70,7 +70,7 @@ public class DisplayCollectionController {
                 try {
                     numberOfTriples = eventGraphService.findAllTriplesInEventGraph(eventGraph.getId());
                 } catch (TriplesNotFoundException e) {
-                    logger.error("Could not find triples for network with EventGraph ID: " + eventGraph.getId().toString());
+                    logger.error(e.getMessage());
                 }
                 triplesMap.put(eventGraph.getId(), numberOfTriples);
             }
