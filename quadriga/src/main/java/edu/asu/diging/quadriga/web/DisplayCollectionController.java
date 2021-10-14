@@ -1,13 +1,15 @@
 package edu.asu.diging.quadriga.web;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,12 +34,12 @@ public class DisplayCollectionController {
     @Autowired
     private EventGraphService eventGraphService;
 
-    @RequestMapping(value = "/auth/collections/{id}", method = RequestMethod.GET)
-    public String get(@PathVariable String id, Model model) {
+    @RequestMapping(value = "/auth/collections/{collectionId}", method = RequestMethod.GET)
+    public String get(HttpServletRequest request, @PathVariable String collectionId, Model model) {
         
         Collection collection;
         try {
-            collection = collectionManager.findCollection(id);
+            collection = collectionManager.findCollection(collectionId);
             if(collection == null) {
                 return "error404Page";
             }
@@ -45,11 +47,22 @@ public class DisplayCollectionController {
             return "error404Page";
         }
         
-        List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(collection.getId());
-        Map<ObjectId, Integer> triplesMap =  new HashMap<>(); 
+        int page = 0;
+        int size = 10;
+
+        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+            page = Integer.parseInt(request.getParameter("page")) - 1;
+        }
+
+        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
+            size = Integer.parseInt(request.getParameter("size"));
+        }
+        
+        Page<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), PageRequest.of(page, size));
+        Map<ObjectId, Integer> triplesMap =  new HashMap<>();
         
         if(!eventGraphs.isEmpty()) {
-            EventGraph lastNetwork = eventGraphs.get(0);
+            EventGraph lastNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
             model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime());
             model.addAttribute("lastNetworkSubmittedBy", lastNetwork.getAppName());
             for(EventGraph eventGraph: eventGraphs) {
@@ -64,9 +77,10 @@ public class DisplayCollectionController {
         }
         
         model.addAttribute("collection", collection);
-        model.addAttribute("numberOfSubmittedNetworks", eventGraphs.size());
+        model.addAttribute("numberOfSubmittedNetworks", eventGraphs.getTotalElements());
         model.addAttribute("networks", eventGraphs);
         model.addAttribute("triplesMap", triplesMap);
+        model.addAttribute("size", size);
         
         return "auth/displayCollection";
         

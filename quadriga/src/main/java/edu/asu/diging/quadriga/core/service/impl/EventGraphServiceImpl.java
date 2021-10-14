@@ -7,6 +7,8 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
@@ -33,10 +35,17 @@ public class EventGraphServiceImpl implements EventGraphService {
     }
 
     @Override
-    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId) {
-        return repo.findByCollectionIdOrderByCreationTimeDesc(collectionId).orElse(null);
+    public Page<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable) {
+        return repo.findByCollectionIdOrderByCreationTimeDesc(collectionId, pageable).orElse(null);
     }
 
+    @Override
+    public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId) {
+        return repo.findByCollectionIdOrderByCreationTimeDesc(collectionId)
+                .map(eventGraphs -> eventGraphs.get(0))
+                .orElse(null);
+    }
+    
     @Override
     public int findAllTriplesInEventGraph(ObjectId id) throws TriplesNotFoundException {
         Optional<EventGraph> optionalEventGraph = repo.findById(id);

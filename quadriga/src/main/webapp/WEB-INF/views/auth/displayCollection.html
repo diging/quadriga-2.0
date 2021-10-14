@@ -34,7 +34,7 @@
 		  </thead>
 		  <tbody>
 		    <tr th:each="network, stat: ${networks}">
-		    	<th scope="row" th:text="${stat.count}"></th>
+		    	<th scope="row" th:text="${stat.count + networks.number * size}"></th>
 		    	<td>
 		    		<span>
 						Graph for text submitted by <span  th:text="${network.rootEvent.creator.sourceURI}"></span>
@@ -47,5 +47,36 @@
 			</tr>
 		  </tbody>
 		</table>
+		
+		<nav aria-label="Pagination" th:if="${networks.totalPages gt 0}">
+			<ul class="pagination justify-content-center font-weight-bold">
+				<li class="page-item" th:classappend="${networks.number eq 0} ? 'disabled'">
+					<a class="page-link"
+						th:href="@{/auth/collections/{collectionId}?page={id}&size={size}
+						(id=${networks.number lt 2 ? 1 : networks.number}, collectionId=${collection.id}, size=${size})}"
+						aria-label="Previous" title="Previous Page" data-toggle="tooltip"
+						th:onclick="${networks.number eq 0} ? 'return false;'">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+				<li class="page-item" th:classappend="${i eq networks.number + 1} ? 'active'" th:each="i : ${#numbers.sequence(1, networks.totalPages, 1)}">
+					<a class="page-link"
+						th:href="@{/auth/collections/{collectionId}?page={id}&size={size}
+						(id=${i}, collectionId=${collection.id}, size=${size})}" th:text="${i}"
+						th:title="${'Page '+ i}" data-toggle="tooltip">
+					</a>
+				</li>
+				<li class="page-item" th:classappend="${networks.number + 1 eq networks.totalPages} ? 'disabled'">
+					<a class="page-link"
+						th:href="@{/auth/collections/{collectionId}?page={id}&size={size}
+						(id=${networks.number + 2}, collectionId=${collection.id}, size=${size})}"
+						aria-label="Next" title="Next Page" data-toggle="tooltip"
+						th:onclick="${networks.number + 1 eq networks.totalPages} ? 'return false;'">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+			</ul>
+		</nav>
+		
 	</div>
 </body>

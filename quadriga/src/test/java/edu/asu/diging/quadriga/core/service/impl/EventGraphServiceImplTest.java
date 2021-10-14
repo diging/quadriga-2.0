@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
 import edu.asu.diging.quadriga.core.exceptions.TriplesNotFoundException;
@@ -54,10 +56,14 @@ public class EventGraphServiceImplTest {
         eventGraphs.add(eventGraph2);
         eventGraphs.add(eventGraph1);
 
-        Mockito.when(eventGraphRepository.findByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
-                .thenReturn(Optional.of(eventGraphs));
-        
-        List<EventGraph> foundEventGraphs = eventGraphServiceImpl.findAllEventGraphsByCollectionId(collectionObjectId);
+        Mockito.when(eventGraphRepository.findByCollectionIdOrderByCreationTimeDesc(collectionObjectId, PageRequest.of(0, 10)))
+                .thenReturn(Optional.of(new PageImpl<EventGraph>(eventGraphs)));
+
+        List<EventGraph> foundEventGraphs = new ArrayList<>();
+        eventGraphServiceImpl.findAllEventGraphsByCollectionId(collectionObjectId, PageRequest.of(0, 10))
+                            .forEach(eventGraph -> {
+                                foundEventGraphs.add(eventGraph);
+                            });
         
         // The latest, i.e. EventGraph2, will be the 1st one on the list
         Assert.assertEquals(eventGraphObjectId2, foundEventGraphs.get(0).getId());
