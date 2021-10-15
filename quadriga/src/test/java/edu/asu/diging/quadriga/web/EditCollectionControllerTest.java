@@ -20,7 +20,7 @@ import org.springframework.validation.MapBindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
-import edu.asu.diging.quadriga.core.citesphere.impl.CitesphereConnector;
+import edu.asu.diging.quadriga.core.citesphere.impl.CitesphereConnectorImpl;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
@@ -41,7 +41,7 @@ public class EditCollectionControllerTest {
     private CollectionManagerImpl collectionManager;
     
     @Mock
-    private CitesphereConnector citesphereConnector;
+    private CitesphereConnectorImpl citesphereConnector;
 
     @InjectMocks
     private EditCollectionController editCollectionController;

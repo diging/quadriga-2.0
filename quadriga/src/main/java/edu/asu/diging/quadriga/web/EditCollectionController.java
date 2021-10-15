@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector;
+import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
@@ -32,7 +32,7 @@ public class EditCollectionController {
     private CollectionManager collectionManager;
     
     @Autowired
-    private ICitesphereConnector citesphereConnector;
+    private CitesphereConnector citesphereConnector;
 
     /**
      * Request handler for getting the "Edit collections" view

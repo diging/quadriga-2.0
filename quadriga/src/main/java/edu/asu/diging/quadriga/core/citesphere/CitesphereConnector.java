@@ -6,7 +6,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 
-public interface ICitesphereConnector {
+public interface CitesphereConnector {
     
     /**
      * Fetches the list of Citesphere applications

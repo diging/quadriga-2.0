@@ -31,12 +31,12 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 
-import edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector;
+import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 
 @Service
 @PropertySource("classpath:/config.properties")
-public class CitesphereConnector implements ICitesphereConnector {
+public class CitesphereConnectorImpl implements CitesphereConnector {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -65,7 +65,7 @@ public class CitesphereConnector implements ICitesphereConnector {
 
     private String currentAccessToken;
 
-    public CitesphereConnector() {
+    public CitesphereConnectorImpl() {
         restTemplate = new RestTemplate();
     }
 
