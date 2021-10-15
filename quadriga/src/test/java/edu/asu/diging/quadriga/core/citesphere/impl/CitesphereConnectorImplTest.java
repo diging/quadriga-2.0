@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.core.service.impl;
+package edu.asu.diging.quadriga.core.citesphere.impl;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -32,20 +32,19 @@ import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TokenValidatorImplTest {
-
+public class CitesphereConnectorImplTest {
+    
     @Mock
     private RestTemplate restTemplate;
-
+    
     @InjectMocks
-    private TokenValidatorImpl tokenValidatorImpl;
-
+    private CitesphereConnectorImpl citesphereConnectorImpl;
+    
     private String accessToken;
     private String token;
     private String checkTokenUrl;
     private String citesphereClientId;
     private String citesphereClientSecret;
-
     
     @Before
     public void setUp() throws NoSuchFieldException, SecurityException {
@@ -55,13 +54,13 @@ public class TokenValidatorImplTest {
         citesphereClientId = "SAMPLE_CLIENT_ID";
         citesphereClientSecret = "SAMPLE_CLIENT_SECRET";
 
-        ReflectionTestUtils.setField(tokenValidatorImpl, "accessToken", accessToken);
-        ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereBaseURL", "http://diging.asu.edu/citesphere");
-        ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereCheckTokenEndpoint", "/api/oauth/check_token");
-        ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereTokenEndpoint", "/api/oauth/token");
-        ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereClientId", citesphereClientId);
-        ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereClientSecret", citesphereClientSecret);
-        ReflectionTestUtils.setField(tokenValidatorImpl, "citesphereScopes", "read");
+        ReflectionTestUtils.setField(citesphereConnectorImpl, "currentAccessToken", accessToken);
+        ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereBaseUrl", "http://diging.asu.edu/citesphere");
+        ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereCheckTokenEndpoint", "/api/oauth/check_token");
+        ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereTokenEndpoint", "/api/oauth/token");
+        ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereClientId", citesphereClientId);
+        ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereSecret", citesphereClientSecret);
+        ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereScopes", "read");
 
         MockitoAnnotations.openMocks(this);
     }
@@ -79,7 +78,7 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity, TokenInfo.class, new Object[] {}))
                 .thenReturn(tokenInfo);
 
-        TokenInfo receivedTokenInfo = tokenValidatorImpl.getTokenInfo(token);
+        TokenInfo receivedTokenInfo = citesphereConnectorImpl.getTokenInfo(token);
 
         Assert.assertTrue(receivedTokenInfo.isActive());
     }
@@ -113,7 +112,7 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
                 .thenReturn(tokenInfo);
 
-        TokenInfo receivedTokenInfo = tokenValidatorImpl.getTokenInfo(token);
+        TokenInfo receivedTokenInfo = citesphereConnectorImpl.getTokenInfo(token);
         Assert.assertTrue(receivedTokenInfo.isActive());
         tokenResponse.close();
     }
@@ -131,7 +130,7 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity1, TokenInfo.class, new Object[] {}))
                 .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
 
-        Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.getTokenInfo(token));
+        Assert.assertThrows(BadCredentialsException.class, () -> citesphereConnectorImpl.getTokenInfo(token));
     }
 
     
@@ -163,7 +162,7 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
                 .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
-        Assert.assertThrows(OAuthException.class, () -> tokenValidatorImpl.getTokenInfo(token));
+        Assert.assertThrows(OAuthException.class, () -> citesphereConnectorImpl.getTokenInfo(token));
         tokenResponse.close();
     }
 
@@ -197,7 +196,7 @@ public class TokenValidatorImplTest {
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
                 .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
 
-        Assert.assertThrows(BadCredentialsException.class, () -> tokenValidatorImpl.getTokenInfo(token));
+        Assert.assertThrows(BadCredentialsException.class, () -> citesphereConnectorImpl.getTokenInfo(token));
         tokenResponse.close();
     }
 

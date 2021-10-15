@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -31,7 +32,9 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 
+import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
+import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 
 @Service
@@ -74,30 +77,88 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
      */
     @Override
     public List<CitesphereAppInfo> getCitesphereApps() throws HttpClientErrorException {
+        String appUrl = citesphereBaseUrl + citesphereAppsEndpoint;
+
+        try {
+            return restTemplate.exchange(appUrl, HttpMethod.GET, generateCheckTokenEntity(),
+                    new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
+                    }).getBody();
+        } catch (HttpClientErrorException ex) {
+            if (ex.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                currentAccessToken = getAccessToken();
+                return restTemplate.exchange(appUrl, HttpMethod.GET, generateCheckTokenEntity(),
+                        new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
+                        }).getBody();
+            }
+            throw ex;
+        }
+    }
+    
+    /**
+     * This method accepts a token from Vogon and sends it to Citesphere's "check_token"
+     * end point for token validation using an access token
+     * This access token is used by quadriga to talk to citesphere
+     * 
+     * If Citesphere responds with unauthorized HTTP exception, we try to re-generate
+     * the access token, in case it is expired.
+     * 
+     * @param token is the one we receive from Vogon to check the validity
+     * @return the token response received from citesphere
+     * @throws BadCredentialsException if token/access token is invalid
+     * @throws OAuthException if request is unauthorized because of the token/access token
+     */
+    @Override
+    public TokenInfo getTokenInfo(String token) throws BadCredentialsException, OAuthException {
+        
+
+        String checkTokenUrl = citesphereBaseUrl + citesphereCheckTokenEndpoint + "?token=" + token;
+        TokenInfo tokenInfo = null;
+        
+        try {
+            tokenInfo = restTemplate.postForObject(checkTokenUrl, generateCheckTokenEntity(), TokenInfo.class, new Object[] {});
+        } catch (HttpClientErrorException e1) {
+            
+            if (e1.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                
+                // If we get an unauthorized exception, the accessToken could be expired
+                // so we generate a new access token and we again try to call checkToken URL
+                currentAccessToken = getAccessToken();
+                try {
+                    tokenInfo = restTemplate.postForObject(checkTokenUrl, generateCheckTokenEntity(), TokenInfo.class, new Object[] {});
+                }  catch(HttpClientErrorException e2) {
+
+                    //  If we again get an unauthorized exception, we will just throw an OAuthException
+                    if (e2.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                        throw new OAuthException();
+                    }
+                    throw new BadCredentialsException("Token is invalid for app.", e1);
+                }
+            } else {
+            
+                // If it is some other kind of exception, we throw a BadCredentialsException
+                throw new BadCredentialsException("Token is invalid for app.", e1);
+            }
+        }
+
+        return tokenInfo;
+    }
+    
+    
+    /**
+     * Here we generate an HTTP entity based on the accessToken
+     * If accessToken is absent, we ask the getAccessToken method to generate one
+     * 
+     * @return an HTTP Entity
+     */
+    private HttpEntity<String> generateCheckTokenEntity() {
         if (currentAccessToken == null) {
             currentAccessToken = getAccessToken();
         }
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + currentAccessToken);
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
 
-        String appUrl = citesphereBaseUrl + citesphereAppsEndpoint;
-
-        try {
-            return restTemplate.exchange(appUrl, HttpMethod.GET, entity,
-                    new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
-                    }).getBody();
-        } catch (HttpClientErrorException ex) {
-            if (ex.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-                currentAccessToken = getAccessToken();
-                headers.set("Authorization", "Bearer " + currentAccessToken);
-                return restTemplate.exchange(appUrl, HttpMethod.GET, entity,
-                        new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
-                        }).getBody();
-            }
-            throw ex;
-        }
+        return new HttpEntity<String>(headers);
     }
 
     private String getAccessToken() {
