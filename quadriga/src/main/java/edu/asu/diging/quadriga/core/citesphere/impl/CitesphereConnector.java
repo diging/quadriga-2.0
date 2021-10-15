@@ -100,11 +100,7 @@ public class CitesphereConnector implements ICitesphereConnector {
         }
     }
 
-    /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector#getAccessToken()
-     */
-    @Override
-    public String getAccessToken() {
+    private String getAccessToken() {
         AuthorizationGrant clientGrant = new ClientCredentialsGrant();
         ClientID clientID = new ClientID(citesphereClientId);
         Secret clientSecret = new Secret(citesphereSecret);

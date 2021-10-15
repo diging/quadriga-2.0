@@ -13,10 +13,5 @@ public interface ICitesphereConnector {
      * @return the list of apps
      */
     List<CitesphereAppInfo> getCitesphereApps() throws HttpClientErrorException;
-    
-    /**
-     * Gets a new access token for connecting with Citesphere
-     * @return the access token
-     */
-    String getAccessToken();
+
 }
