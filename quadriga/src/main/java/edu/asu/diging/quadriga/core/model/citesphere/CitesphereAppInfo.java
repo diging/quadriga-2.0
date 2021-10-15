@@ -2,6 +2,11 @@ package edu.asu.diging.quadriga.core.model.citesphere;
 
 import java.util.Set;
 
+/**
+ * Holds the citesphere application information
+ * @author Maulik Limbadiya
+ *
+ */
 public class CitesphereAppInfo {
     private String clientId;
     private String name;
