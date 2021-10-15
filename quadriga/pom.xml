@@ -40,6 +40,10 @@
 
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
         <neo4j.database>quadriga</neo4j.database>
+        
+        <citesphere.base.url></citesphere.base.url>
+        <citesphere.client.id></citesphere.client.id>
+        <citesphere.client.secret></citesphere.client.secret>
 
         <log.level>info</log.level>
 
@@ -188,6 +192,20 @@
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-ogm-http-driver</artifactId>
             <version>3.2.11</version>
+        </dependency>
+        
+        <!-- OpenId Connect -->
+        <!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <version>4.26.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.nimbusds/oauth2-oidc-sdk -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>5.17.1</version>
         </dependency>
 
         <dependency>

@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -22,10 +24,10 @@ public class CollectionManagerImplTest {
     public static final String BLANK = "";
     public static final String COLLECTION_NAME = "Collection name";
     public static final String COLLECTION_DESC = "Collection description";
+    public static final List<String> COLLECTION_APPS = new ArrayList<>();
     public static final String EDITED_NAME = "Edited name";
     public static final String EDITED_DESC = "Edited description";
-    
-
+    public static final List<String> EDITED_APPS = new ArrayList<>();
     @Mock
     private CollectionRepository collectionRepo;
 
@@ -35,7 +37,12 @@ public class CollectionManagerImplTest {
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-
+        
+        COLLECTION_APPS.add("app1");
+        COLLECTION_APPS.add("app2");
+        
+        EDITED_APPS.add("app1");
+        EDITED_APPS.add("app3");
     }
 
     @Test
@@ -48,6 +55,7 @@ public class CollectionManagerImplTest {
         savedCollection.setId(id);
         savedCollection.setName(name);
         savedCollection.setDescription(desc);
+        savedCollection.setApps(COLLECTION_APPS);
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
@@ -55,11 +63,13 @@ public class CollectionManagerImplTest {
                 return (arg0.getName().equals(name) && arg0.getDescription().equals(desc));
             }
         }))).thenReturn(savedCollection);
-
-        Collection collection = managerToTest.addCollection(name, desc);
+        Collection collection = managerToTest.addCollection(name, desc, COLLECTION_APPS);
         Assert.assertEquals(id, collection.getId());
         Assert.assertEquals(name, collection.getName());
         Assert.assertEquals(desc, collection.getDescription());
+        for(String app : COLLECTION_APPS) {
+            Assert.assertTrue(collection.getApps().contains(app));
+        }
     }
     
     
@@ -130,16 +140,19 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
+        existingCollection.setApps(COLLECTION_APPS);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = EDITED_NAME;
         String editedDescription = EDITED_DESC;
+        List<String> editedApps = new ArrayList<>(EDITED_APPS);
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
         editedCollection.setName(editedName);
         editedCollection.setDescription(editedDescription);
+        editedCollection.setApps(editedApps);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
@@ -150,11 +163,13 @@ public class CollectionManagerImplTest {
 
         }))).thenReturn(editedCollection);
 
-        Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
+        Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription, editedApps);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
-
+        for(String app : updatedCollection.getApps()) {
+            Assert.assertTrue(EDITED_APPS.contains(app));
+        }
     }
 
     @Test
@@ -165,16 +180,19 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
+        existingCollection.setApps(COLLECTION_APPS);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = COLLECTION_NAME;
         String editedDescription = null;
+        List<String> editedApps = new ArrayList<>(EDITED_APPS);
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
         editedCollection.setName(editedName);
         editedCollection.setDescription(editedDescription);
+        editedCollection.setApps(editedApps);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
@@ -185,11 +203,13 @@ public class CollectionManagerImplTest {
 
         }))).thenReturn(editedCollection);
 
-        Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
+        Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription, editedApps);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
-
+        for(String app : updatedCollection.getApps()) {
+            Assert.assertTrue(EDITED_APPS.contains(app));
+        }
     }
 
     @Test
@@ -200,16 +220,19 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
+        existingCollection.setApps(COLLECTION_APPS);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = null;
         String editedDescription = EDITED_DESC;
+        List<String> editedApps = new ArrayList<>(EDITED_APPS);
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
         editedCollection.setName(editedName);
         editedCollection.setDescription(editedDescription);
+        editedCollection.setApps(editedApps);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
@@ -220,11 +243,13 @@ public class CollectionManagerImplTest {
 
         }))).thenReturn(editedCollection);
 
-        Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
+        Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription, editedApps);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
-
+        for(String app : updatedCollection.getApps()) {
+            Assert.assertTrue(EDITED_APPS.contains(app));
+        }
     }
 
     @Test
@@ -235,16 +260,19 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
+        existingCollection.setApps(COLLECTION_APPS);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = null;
         String editedDescription = null;
+        List<String> editedApps = new ArrayList<>(EDITED_APPS);
 
         Collection updatedCollection = new Collection();
         updatedCollection.setId(id);
         updatedCollection.setName(editedName);
         updatedCollection.setDescription(editedDescription);
+        updatedCollection.setApps(editedApps);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
@@ -255,11 +283,13 @@ public class CollectionManagerImplTest {
 
         }))).thenReturn(updatedCollection);
 
-        managerToTest.editCollection(id.toString(), editedName, editedDescription);
+        updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription, editedApps);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
-
+        for(String app : updatedCollection.getApps()) {
+            Assert.assertTrue(EDITED_APPS.contains(app));
+        }
     }
 
     @Test
@@ -270,16 +300,19 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
+        existingCollection.setApps(COLLECTION_APPS);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = BLANK;
         String editedDescription = BLANK;
+        List<String> editedApps = new ArrayList<>(EDITED_APPS);
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
         editedCollection.setName(editedName);
         editedCollection.setDescription(editedDescription);
+        editedCollection.setApps(editedApps);
 
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
@@ -290,11 +323,13 @@ public class CollectionManagerImplTest {
 
         }))).thenReturn(editedCollection);
 
-        Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription);
+        Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription, editedApps);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
-
+        for(String app : updatedCollection.getApps()) {
+            Assert.assertTrue(EDITED_APPS.contains(app));
+        }
     }
 
     @Test
@@ -303,7 +338,7 @@ public class CollectionManagerImplTest {
         Mockito.when(collectionRepo.findById(objectId)).thenReturn(Optional.ofNullable(null));
 
         Assert.assertThrows(CollectionNotFoundException.class,
-                ()  -> managerToTest.editCollection(objectId.toString(), EDITED_NAME, EDITED_DESC));
+                ()  -> managerToTest.editCollection(objectId.toString(), EDITED_NAME, EDITED_DESC, EDITED_APPS));
 
     }
 
