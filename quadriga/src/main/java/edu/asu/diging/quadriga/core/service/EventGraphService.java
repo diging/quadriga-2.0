@@ -35,13 +35,4 @@ public interface EventGraphService {
      * @throws InvalidObjectIdException if the collectionId contains non-hexadecimal characters
      */
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId);
-    
-    /**
-     * Finds the number of triples in a particular eventGraph using the ObjectId of an EventGraph
-     * 
-     * @param id used to find all triples
-     * @return the number of triples
-     * @throws TriplesNotFoundException if an EventGraph has zero triples
-     */
-    public int findAllTriplesInEventGraph(ObjectId id) throws TriplesNotFoundException;
 }

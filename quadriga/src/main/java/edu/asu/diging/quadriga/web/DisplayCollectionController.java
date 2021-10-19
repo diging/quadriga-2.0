@@ -1,13 +1,11 @@
 package edu.asu.diging.quadriga.web;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,21 +45,23 @@ public class DisplayCollectionController {
 
         if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
             page = Integer.parseInt(request.getParameter("page")) - 1;
+            page = page < 0 ? 0 : page;
         }
 
         if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
             size = Integer.parseInt(request.getParameter("size"));
+            size = size < 1 ? 10 : size;
         }
         
-        Page<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), PageRequest.of(page, size));
-        Map<ObjectId, Integer> triplesMap =  new HashMap<>();
+        Page<EventGraph> pagedEventGraphs = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), PageRequest.of(page, size));
+        Page<EventGraph> unpagedEventGraphs = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), Pageable.unpaged());
         int defaultMappings = 0;
         
-        if(!eventGraphs.isEmpty()) {
+        if(!pagedEventGraphs.isEmpty()) {
             EventGraph lastNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
             model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime());
             model.addAttribute("lastNetworkSubmittedBy", lastNetwork.getAppName());
-            for(EventGraph eventGraph: eventGraphs) {
+            for(EventGraph eventGraph: unpagedEventGraphs.getContent()) {
                 if(eventGraph.getDefaultMapping() != null) {
                     defaultMappings++;
                 }
@@ -69,9 +69,8 @@ public class DisplayCollectionController {
         }
         
         model.addAttribute("collection", collection);
-        model.addAttribute("numberOfSubmittedNetworks", eventGraphs.getTotalElements());
-        model.addAttribute("networks", eventGraphs);
-        model.addAttribute("triplesMap", triplesMap);
+        model.addAttribute("numberOfSubmittedNetworks", pagedEventGraphs.getTotalElements());
+        model.addAttribute("networks", pagedEventGraphs);
         model.addAttribute("size", size);
         model.addAttribute("defaultMappings", defaultMappings);
         
