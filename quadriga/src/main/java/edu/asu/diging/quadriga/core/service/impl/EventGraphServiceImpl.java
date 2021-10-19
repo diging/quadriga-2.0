@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
-import edu.asu.diging.quadriga.core.exceptions.TriplesNotFoundException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.elements.Relation;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;

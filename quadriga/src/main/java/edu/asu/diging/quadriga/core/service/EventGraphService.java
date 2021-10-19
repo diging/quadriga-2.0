@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
-import edu.asu.diging.quadriga.core.exceptions.TriplesNotFoundException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 
 public interface EventGraphService {
