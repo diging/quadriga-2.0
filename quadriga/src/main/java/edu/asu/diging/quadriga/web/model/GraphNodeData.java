@@ -1,17 +1,10 @@
 package edu.asu.diging.quadriga.web.model;
 
-public class GraphNodeData {
+public class GraphNodeData extends GraphData {
     
-    private String id;
     private int group;
     private String label;
     
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
     public int getGroup() {
         return group;
     }
