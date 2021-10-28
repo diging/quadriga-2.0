@@ -57,20 +57,7 @@ public class NetworkMapperImpl implements NetworkMapper {
             events.add(createEvent(node.getKey(), node.getValue(), graph));
         }
         
-        addLabelsToDefaultMappping(graph.getMetadata().getDefaultMapping(), graph.getNodes());
-        
         return events;
-    }
-
-    private void addLabelsToDefaultMappping(DefaultMapping defaultMapping, Map<String, NodeData> nodes) {
-        TripleElement subject = defaultMapping.getSubject();
-        TripleElement object = defaultMapping.getObject();
-        
-        String subjectLabel = nodes.get(subject.getReference()).getLabel();
-        String objectLabel = nodes.get(object.getReference()).getLabel();
-        
-        subject.setLabel(subjectLabel);
-        object.setLabel(objectLabel);
     }
 
     private CreationEvent createEvent(String nodeId, NodeData node, Graph graph) {

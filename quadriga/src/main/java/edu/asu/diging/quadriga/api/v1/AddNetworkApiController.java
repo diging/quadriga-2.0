@@ -111,6 +111,7 @@ public class AddNetworkApiController {
         eventGraphs.forEach(e -> {
             e.setCollectionId(mappedCollection.getCollectionId());
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
+            e.setContext(quadruple.getGraph().getMetadata().getContext());
 
             /**
              * This is a temporary solution as per the comment on story Q20-18
@@ -122,7 +123,8 @@ public class AddNetworkApiController {
         eventGraphService.saveEventGraphs(eventGraphs);
 
         try {
-            mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedCollection);
+            // If there are n EventGraphs created for one network, all of them will have same default mapping, so link the triple with any one of them
+            mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedCollection, eventGraphs.get(0).getId().toString());
         } catch (NodeNotFoundException e1) {
             return HttpStatus.BAD_REQUEST;
         }
