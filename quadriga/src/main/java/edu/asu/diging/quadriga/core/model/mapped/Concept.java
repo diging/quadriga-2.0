@@ -18,6 +18,8 @@ public class Concept {
     private String label;
     
     private String mappedCollectionId;
+    private String linkedEventGraphId;
+    private String mappingType;
     
     @Relationship(type = "PREDICATE")
     private List<Concept> relatedConcepts;
@@ -60,6 +62,22 @@ public class Concept {
 
     public void setMappedCollectionId(String mappedCollectionId) {
         this.mappedCollectionId = mappedCollectionId;
+    }
+
+    public String getLinkedEventGraphId() {
+        return linkedEventGraphId;
+    }
+
+    public void setLinkedEventGraphId(String linkedEventGraphId) {
+        this.linkedEventGraphId = linkedEventGraphId;
+    }
+
+    public String getMappingType() {
+        return mappingType;
+    }
+
+    public void setMappingType(String mappingType) {
+        this.mappingType = mappingType;
     }
     
 }

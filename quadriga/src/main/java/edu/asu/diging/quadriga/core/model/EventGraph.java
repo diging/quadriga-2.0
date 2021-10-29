@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.bson.types.ObjectId;
 
+import edu.asu.diging.quadriga.api.v1.model.Context;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 
 public class EventGraph {
@@ -14,6 +15,7 @@ public class EventGraph {
     private LocalDateTime creationTime;
     private ObjectId collectionId;
     private String appName;
+    private Context context;
     
     public EventGraph() {
         this.creationTime = LocalDateTime.now();
@@ -65,6 +67,14 @@ public class EventGraph {
 
     public void setAppName(String appName) {
         this.appName = appName;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
     
 }
