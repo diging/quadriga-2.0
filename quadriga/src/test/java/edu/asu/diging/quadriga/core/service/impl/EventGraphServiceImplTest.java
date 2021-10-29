@@ -12,9 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 
@@ -52,11 +49,11 @@ public class EventGraphServiceImplTest {
         eventGraphs.add(eventGraph2);
         eventGraphs.add(eventGraph1);
 
-        Mockito.when(eventGraphRepository.findByCollectionIdOrderByCreationTimeDesc(collectionObjectId, PageRequest.of(0, 10)))
-                .thenReturn(Optional.of(new PageImpl<EventGraph>(eventGraphs)));
+        Mockito.when(eventGraphRepository.findByCollectionId(collectionObjectId))
+                .thenReturn(Optional.of(new ArrayList<EventGraph>(eventGraphs)));
 
         List<EventGraph> foundEventGraphs = new ArrayList<>();
-        eventGraphServiceImpl.findAllEventGraphsByCollectionId(collectionObjectId, PageRequest.of(0, 10))
+        eventGraphServiceImpl.findAllEventGraphsByCollectionId(collectionObjectId)
                             .forEach(eventGraph -> {
                                 foundEventGraphs.add(eventGraph);
                             });

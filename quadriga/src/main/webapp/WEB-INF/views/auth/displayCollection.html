@@ -48,17 +48,17 @@
 		<table th:if="${numberOfSubmittedNetworks gt 0}" id="dtBasicExample" class="table table-responsive table-striped table-sm">
 		  <thead>
 		    <tr>
-		    	<th scope="col">#</th>
+		    	<!-- <th scope="col">#</th> -->
 				<th scope="col">Name</th>
 				<th scope="col">Date and Time</th>
 		    </tr>
 		  </thead>
 		  <tbody>
 		    <tr th:each="network, stat: ${networks}">
-		    	<th scope="row" th:text="${stat.count + networks.number * size}"></th>
+		    	<th scope="row" th:text="${stat.count + pageNumber * size}"></th>
 		    	<td>
-		    		<a th:href="@{/auth/collections/{collectionid}/network/{networkid}(collectionid=${collection.id}, networkid=${network.id})}" style="cursor:pointer;color:black">
-						Graph for text submitted by <span  th:text="${network.rootEvent.creator.sourceURI}"></span>
+		    		<a th:href="@{/auth/collections/{collectionid}/network/(collectionid=${collection.id}, sourceURI=${network.sourceURI})}" style="cursor:pointer;color:black">
+						Graph for text submitted by <span  th:text="${network.creator}"></span>
 						from <span th:text="${network.appName}"></span>
 					</a>
 				</td>
@@ -67,30 +67,30 @@
 		  </tbody>
 		 </table>
 		
-		<nav aria-label="Pagination" th:if="${networks.totalPages gt 0}">
+		<nav aria-label="Pagination" th:if="${totalPages gt 0}">
 			<ul class="pagination justify-content-center font-weight-bold">
-				<li class="page-item" th:classappend="${networks.number eq 0} ? 'disabled'">
+				<li class="page-item" th:classappend="${pageNumber eq 0} ? 'disabled'">
 					<a class="page-link"
 						th:href="@{/auth/collections/{collectionId}?page={id}&size={size}
-						(id=${networks.number lt 2 ? 1 : networks.number}, collectionId=${collection.id}, size=${size})}"
+						(id=${pageNumber lt 2 ? 1 : pageNumber}, collectionId=${collection.id}, size=${size})}"
 						aria-label="Previous" title="Previous Page" data-toggle="tooltip"
-						th:onclick="${networks.number eq 0} ? 'return false;'">
+						th:onclick="${pageNumber eq 0} ? 'return false;'">
 						<span aria-hidden="true">&laquo;</span>
 					</a>
 				</li>
-				<li class="page-item" th:classappend="${i eq networks.number + 1} ? 'active'" th:each="i : ${#numbers.sequence(1, networks.totalPages, 1)}">
+				<li class="page-item" th:classappend="${i eq pageNumber + 1} ? 'active'" th:each="i : ${#numbers.sequence(1, totalPages, 1)}">
 					<a class="page-link"
 						th:href="@{/auth/collections/{collectionId}?page={id}&size={size}
 						(id=${i}, collectionId=${collection.id}, size=${size})}" th:text="${i}"
 						th:title="${'Page '+ i}" data-toggle="tooltip">
 					</a>
 				</li>
-				<li class="page-item" th:classappend="${networks.number + 1 eq networks.totalPages} ? 'disabled'">
+				<li class="page-item" th:classappend="${pageNumber + 1 eq totalPages} ? 'disabled'">
 					<a class="page-link"
 						th:href="@{/auth/collections/{collectionId}?page={id}&size={size}
-						(id=${networks.number + 2}, collectionId=${collection.id}, size=${size})}"
+						(id=${pageNumber + 2}, collectionId=${collection.id}, size=${size})}"
 						aria-label="Next" title="Next Page" data-toggle="tooltip"
-						th:onclick="${networks.number + 1 eq networks.totalPages} ? 'return false;'">
+						th:onclick="${pageNumber + 1 eq totalPages} ? 'return false;'">
 						<span aria-hidden="true">&raquo;</span>
 					</a>
 				</li>

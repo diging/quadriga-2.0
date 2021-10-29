@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
@@ -24,23 +25,25 @@ public class NetworkController {
     
     private Logger logger = LoggerFactory.getLogger(getClass());
     
-    @RequestMapping(value = "/auth/collections/{collectionId}/network/{networkId}")
-    public String get(@PathVariable String collectionId, @PathVariable String networkId, Model model) {
+    @RequestMapping(value = "/auth/collections/{collectionId}/network/")
+    public String get(@PathVariable String collectionId, @RequestParam(value = "sourceURI", required = true) String sourceURI, Model model) {
         
-        EventGraph eventGraph;
-        try {
-            eventGraph = eventGraphService.findEventGraphById(networkId);
-        } catch (InvalidObjectIdException e) {
-            logger.error(e.getMessage());
-            return "error404Page";
-        }
+        System.out.println(sourceURI);
         
-        if(eventGraph == null) {
-            logger.error("No eventGraph found for eventGraphId: " + networkId);
-            return "error404Page";
-        }
+//        EventGraph eventGraph;
+//        try {
+//            eventGraph = eventGraphService.findEventGraphById(networkId);
+//        } catch (InvalidObjectIdException e) {
+//            logger.error(e.getMessage());
+//            return "error404Page";
+//        }
+//        
+//        if(eventGraph == null) {
+//            logger.error("No eventGraph found for eventGraphId: " + networkId);
+//            return "error404Page";
+//        }
         
-        model.addAttribute("elements", graphCreationService.createGraph(eventGraph));
+//        model.addAttribute("elements", graphCreationService.createGraph(eventGraph));
         return "auth/displayNetwork";
     }
     

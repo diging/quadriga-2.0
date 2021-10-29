@@ -3,8 +3,6 @@ package edu.asu.diging.quadriga.core.service.impl;
 import java.util.List;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
@@ -37,8 +35,8 @@ public class EventGraphServiceImpl implements EventGraphService {
     }
 
     @Override
-    public Page<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable) {
-        return repo.findByCollectionIdOrderByCreationTimeDesc(collectionId, pageable).orElse(null);
+    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId) {
+        return repo.findByCollectionId(collectionId).orElse(null);
     }
 
     @Override
@@ -46,6 +44,18 @@ public class EventGraphServiceImpl implements EventGraphService {
         return repo.findByCollectionIdOrderByCreationTimeDesc(collectionId)
                 .map(eventGraphs -> eventGraphs.get(0))
                 .orElse(null);
+    }
+    
+    @Override
+    public EventGraph findEventGraphBySourceURI(String sourceURI) throws InvalidObjectIdException {
+        // Ned to implement this method to get list of EventGraphs as per provided sourceURI
+        ObjectId eventGraphObjectId;
+        try {
+            eventGraphObjectId = new ObjectId(sourceURI);
+            return repo.findById(eventGraphObjectId).orElse(null);
+        } catch(IllegalArgumentException e) {
+            throw new InvalidObjectIdException("EventGraphId " + sourceURI + " is not a valid ObjectId");
+        }
     }
     
 }
