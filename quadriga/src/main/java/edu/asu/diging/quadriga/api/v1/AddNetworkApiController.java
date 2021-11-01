@@ -108,7 +108,7 @@ public class AddNetworkApiController {
             return HttpStatus.NOT_FOUND;
         }
 
-        // the flow will reach here only when token is present, valid and active
+        // the flow will reach here only when token is either present, valid and active or not required
 
         // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
