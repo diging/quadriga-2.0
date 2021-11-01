@@ -66,7 +66,7 @@ public class AddNetworkApiController {
     @ResponseBody
     @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId,
-            @RequestHeader(name = "Authorization", required = true) String authHeader) {
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
 
         MappedCollection mappedCollection;
         try {
@@ -83,17 +83,15 @@ public class AddNetworkApiController {
         }
 
         String token = getTokenFromHeader(authHeader);
-        if (token == null) {
-            return HttpStatus.NOT_FOUND;
-        }
-
-        TokenInfo tokenInfo;
+        TokenInfo tokenInfo = null;
         try {
-            tokenInfo = citesphereConnectorImpl.getTokenInfo(token);
+            if (token != null) {
+                tokenInfo = citesphereConnectorImpl.getTokenInfo(token);
+            }
             Collection collection = collectionManager.findCollection(collectionId);
             // either token info wasn't returned by citesphere or the token has expired
-            if (tokenInfo == null || !tokenInfo.isActive()
-                    || (!collection.getApps().isEmpty() && !collection.getApps().contains(tokenInfo.getClient_id()))) {
+            if (collection.getApps() != null && !collection.getApps().isEmpty() && (tokenInfo == null
+                    || !tokenInfo.isActive() || !collection.getApps().contains(tokenInfo.getClient_id()))) {
                 return HttpStatus.UNAUTHORIZED;
             }
 
