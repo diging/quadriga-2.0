@@ -17,6 +17,8 @@ public class Concept {
     private String uri;
     private String label;
     
+    private String mappedCollectionId;
+    
     @Relationship(type = "PREDICATE")
     private List<Concept> relatedConcepts;
 
@@ -50,6 +52,14 @@ public class Concept {
 
     public void setRelatedConcepts(List<Concept> relatedConcepts) {
         this.relatedConcepts = relatedConcepts;
+    }
+
+    public String getMappedCollectionId() {
+        return mappedCollectionId;
+    }
+
+    public void setMappedCollectionId(String mappedCollectionId) {
+        this.mappedCollectionId = mappedCollectionId;
     }
     
 }

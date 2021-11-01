@@ -6,8 +6,6 @@ import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.RelationshipEntity;
 import org.neo4j.ogm.annotation.StartNode;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-
 @RelationshipEntity(type = "PREDICATE")
 public class Predicate {
     
@@ -17,6 +15,8 @@ public class Predicate {
 
     private String relationship;
     private String label;
+    
+    private String mappedCollectionId;
     
     @StartNode
     private Concept source;
@@ -55,4 +55,13 @@ public class Predicate {
     public void setTarget(Concept target) {
         this.target = target;
     }
+
+    public String getMappedCollectionId() {
+        return mappedCollectionId;
+    }
+
+    public void setMappedCollectionId(String mappedCollectionId) {
+        this.mappedCollectionId = mappedCollectionId;
+    }
+    
 }
