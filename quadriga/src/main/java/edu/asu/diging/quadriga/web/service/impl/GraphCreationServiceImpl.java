@@ -1,7 +1,9 @@
 package edu.asu.diging.quadriga.web.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -28,49 +30,41 @@ public class GraphCreationServiceImpl implements GraphCreationService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public GraphElements createGraph(EventGraph eventGraph) {
-        CreationEvent rootEvent = eventGraph.getRootEvent();
-        // This means that there are zero subject-object-predicate triples in the EventGraph
-        if(!(rootEvent instanceof RelationEvent)) {
-            return null;
-        }
+    public GraphElements createGraph(List<EventGraph> eventGraphs) {
         
         List<GraphData> graphEdges = new ArrayList<>();
         List<GraphData> graphNodes = new ArrayList<>();
+        Map<String, GraphNodeData> uniqueNodes = new HashMap<String, GraphNodeData>();
         
-        addNodesAndEdges((RelationEvent)rootEvent, graphNodes, graphEdges, eventGraph.getId().toString());
+        for(EventGraph eventGraph: eventGraphs) {
+            CreationEvent rootEvent = eventGraph.getRootEvent();
+            if(rootEvent instanceof RelationEvent) {
+                addNodesAndEdges((RelationEvent)rootEvent, graphNodes, graphEdges, uniqueNodes, eventGraph.getId().toString());
+            }
+        }
 
         GraphElements graphElements = new GraphElements();
-        graphElements.setNodes(wrapInGraphElement(graphNodes));
-        graphElements.setEdges(wrapInGraphElement(graphEdges));
+        graphElements.setNodes(wrapInGraphElements(graphNodes));
+        graphElements.setEdges(wrapInGraphElements(graphEdges));
+        
         return graphElements;
     }
-    
-    private List<GraphElement> wrapInGraphElement(List<GraphData> dataList) {
-        List<GraphElement> elements = new ArrayList<>();
-        dataList.forEach(data -> {
-            GraphElement element = new GraphElement();
-            element.setData(data);
-            elements.add(element);
-        });
-        return elements;
-    }
 
-    public ObjectId addNodesAndEdges(RelationEvent event, List<GraphData> graphNodes, List<GraphData> graphEdges, String eventGraphId) {
+    public String addNodesAndEdges(RelationEvent event, List<GraphData> graphNodes, List<GraphData> graphEdges, Map<String, GraphNodeData> uniqueNodes, String eventGraphId) {
         Relation relation = event.getRelation();
-        ObjectId predicateNodeId = null, subjectNodeId = null, objectNodeId = null;
+        String predicateNodeId = null, subjectNodeId = null, objectNodeId = null;
         
         if(relation.getPredicate() != null) {
-            predicateNodeId = createNode(graphNodes, relation.getPredicate(), GraphNodeType.PREDICATE);
+            predicateNodeId = createPredicateNode(graphNodes, relation.getPredicate());
         } else {
             logger.error("A predicate is missing in one of the relations for EventGraph: " + eventGraphId);
         }
         
         if(relation.getSubject() != null) {
             if(relation.getSubject() instanceof RelationEvent) {
-                subjectNodeId = addNodesAndEdges((RelationEvent) relation.getSubject(), graphNodes, graphEdges, eventGraphId);
+                subjectNodeId = addNodesAndEdges((RelationEvent) relation.getSubject(), graphNodes, graphEdges, uniqueNodes, eventGraphId);
             } else {
-                subjectNodeId = createNode(graphNodes, (AppellationEvent)relation.getSubject(), GraphNodeType.SUBJECT);
+                subjectNodeId = createSubjectOrObjectNode(graphNodes, (AppellationEvent)relation.getSubject(), uniqueNodes, GraphNodeType.SUBJECT);
             }
         } else {
             logger.error("A subject is missing in one of the relations for EventGraph: " + eventGraphId);
@@ -78,9 +72,9 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         
         if(relation.getObject() != null) {
             if(relation.getObject() instanceof RelationEvent) {
-                objectNodeId = addNodesAndEdges((RelationEvent) relation.getObject(), graphNodes, graphEdges, eventGraphId);
+                objectNodeId = addNodesAndEdges((RelationEvent) relation.getObject(), graphNodes, graphEdges, uniqueNodes, eventGraphId);
             } else {
-                objectNodeId = createNode(graphNodes, (AppellationEvent)relation.getObject(), GraphNodeType.OBJECT);
+                objectNodeId = createSubjectOrObjectNode(graphNodes, (AppellationEvent)relation.getObject(), uniqueNodes, GraphNodeType.OBJECT);
             }
         } else {
             logger.error("An object is missing in one of the relations for EventGraph: " + eventGraphId);
@@ -91,27 +85,57 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         
         return predicateNodeId;
     }
-    
+
     @Override
-    public ObjectId createNode(List<GraphData> graphNodes, AppellationEvent event, GraphNodeType graphNodeType) {
+    public String createPredicateNode(List<GraphData> graphNodes, AppellationEvent event) {
+        GraphNodeData predicateNode = createNode(event, GraphNodeType.PREDICATE);
+        graphNodes.add(predicateNode);
+        return predicateNode.getId();
+    }
+
+    @Override
+    public String createSubjectOrObjectNode(List<GraphData> graphNodes, AppellationEvent event, Map<String, GraphNodeData> uniqueNodes, GraphNodeType graphNodeType) {
+        String sourceUri = event.getTerm().getInterpretation().getSourceURI();
+        
+        if(sourceUri != null && uniqueNodes.containsKey(sourceUri)) {
+            return uniqueNodes.get(sourceUri).getId();
+        }
+        
+        GraphNodeData node = createNode(event, graphNodeType);
+        graphNodes.add(node);
+        uniqueNodes.put(sourceUri, node);
+        return node.getId();
+    }
+
+    @Override
+    public GraphNodeData createNode(AppellationEvent event, GraphNodeType graphNodeType) {
+        
         ObjectId objectId = new ObjectId();
         GraphNodeData node = new GraphNodeData();
         node.setId(objectId.toString());
         node.setGroup(graphNodeType.getGroupId());
         // TODO: Update below to get label from ConceptPower using sourceURI
         node.setLabel(event.getTerm().getPrintedRepresentation().getTermParts().toArray(new TermPart[0])[0].getExpression());
-        graphNodes.add(node);
-        
-        return objectId;
+        return node;
     }
     
     @Override
-    public void createEdge(List<GraphData> graphEdges, ObjectId sourceId, ObjectId targetId) {
+    public void createEdge(List<GraphData> graphEdges, String sourceId, String targetId) {
         GraphEdgeData edgeSubject = new GraphEdgeData();
         edgeSubject.setId(new ObjectId().toString());
-        edgeSubject.setSource(sourceId.toString());
-        edgeSubject.setTarget(targetId.toString());
+        edgeSubject.setSource(sourceId);
+        edgeSubject.setTarget(targetId);
         graphEdges.add(edgeSubject);
+    }
+    
+    private List<GraphElement> wrapInGraphElements(List<GraphData> dataList) {
+        List<GraphElement> elements = new ArrayList<>();
+        dataList.forEach(data -> {
+            GraphElement element = new GraphElement();
+            element.setData(data);
+            elements.add(element);
+        });
+        return elements;
     }
 
 }

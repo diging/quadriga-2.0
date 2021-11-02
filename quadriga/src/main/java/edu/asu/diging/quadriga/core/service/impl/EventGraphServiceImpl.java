@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
-import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 
@@ -24,17 +23,6 @@ public class EventGraphServiceImpl implements EventGraphService {
     }
 
     @Override
-    public EventGraph findEventGraphById(String eventGraphId) throws InvalidObjectIdException {
-        ObjectId eventGraphObjectId;
-        try {
-            eventGraphObjectId = new ObjectId(eventGraphId);
-            return repo.findById(eventGraphObjectId).orElse(null);
-        } catch(IllegalArgumentException e) {
-            throw new InvalidObjectIdException("EventGraphId " + eventGraphId + " is not a valid ObjectId");
-        }
-    }
-
-    @Override
     public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId) {
         return repo.findByCollectionId(collectionId).orElse(null);
     }
@@ -47,15 +35,8 @@ public class EventGraphServiceImpl implements EventGraphService {
     }
     
     @Override
-    public EventGraph findEventGraphBySourceURI(String sourceURI) throws InvalidObjectIdException {
-        // Ned to implement this method to get list of EventGraphs as per provided sourceURI
-        ObjectId eventGraphObjectId;
-        try {
-            eventGraphObjectId = new ObjectId(sourceURI);
-            return repo.findById(eventGraphObjectId).orElse(null);
-        } catch(IllegalArgumentException e) {
-            throw new InvalidObjectIdException("EventGraphId " + sourceURI + " is not a valid ObjectId");
-        }
+    public List<EventGraph> findEventGraphsBySourceURI(String sourceURI) {
+        return repo.findByContextSourceUri(sourceURI).orElse(null);
     }
     
 }

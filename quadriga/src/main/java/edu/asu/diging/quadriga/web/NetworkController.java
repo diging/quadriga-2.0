@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.web.service.GraphCreationService;
@@ -28,22 +29,14 @@ public class NetworkController {
     @RequestMapping(value = "/auth/collections/{collectionId}/network/")
     public String get(@PathVariable String collectionId, @RequestParam(value = "sourceURI", required = true) String sourceURI, Model model) {
         
-        System.out.println(sourceURI);
+        List<EventGraph> eventGraphs = eventGraphService.findEventGraphsBySourceURI(sourceURI);
         
-//        EventGraph eventGraph;
-//        try {
-//            eventGraph = eventGraphService.findEventGraphById(networkId);
-//        } catch (InvalidObjectIdException e) {
-//            logger.error(e.getMessage());
-//            return "error404Page";
-//        }
-//        
-//        if(eventGraph == null) {
-//            logger.error("No eventGraph found for eventGraphId: " + networkId);
-//            return "error404Page";
-//        }
+        if(eventGraphs == null) {
+            logger.error("No network found for sourceUri: " + sourceURI);
+            return "error404Page";
+        }
         
-//        model.addAttribute("elements", graphCreationService.createGraph(eventGraph));
+        model.addAttribute("elements", graphCreationService.createGraph(eventGraphs));
         return "auth/displayNetwork";
     }
     

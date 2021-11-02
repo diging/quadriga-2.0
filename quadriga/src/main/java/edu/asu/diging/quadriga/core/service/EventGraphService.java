@@ -16,13 +16,6 @@ public interface EventGraphService {
     public void saveEventGraphs(List<EventGraph> graphs);
     
     /**
-     * Finds event graph by provided eventGraphId
-     * 
-     * @param eventGraphId used for searrching eventGraph
-     */
-    public EventGraph findEventGraphById(String eventGraphId) throws InvalidObjectIdException;
-    
-    /**
      * Finds all eventGraphs mapped to a collection in the descending order of creation time
      * 
      * @param collectionId is the id used to finds all eventGraphs
@@ -45,5 +38,5 @@ public interface EventGraphService {
      * 
      * @param sourceURI used for searrching eventGraph
      */
-    public EventGraph findEventGraphBySourceURI(String sourceURI) throws InvalidObjectIdException;
+    public List<EventGraph> findEventGraphsBySourceURI(String sourceURI);
 }
