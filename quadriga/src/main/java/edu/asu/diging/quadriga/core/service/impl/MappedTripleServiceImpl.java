@@ -1,6 +1,8 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.MappedCollection;
+import edu.asu.diging.quadriga.core.model.Triple;
 import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.mapped.Concept;
 import edu.asu.diging.quadriga.core.model.mapped.Predicate;
@@ -22,12 +25,15 @@ public class MappedTripleServiceImpl implements MappedTripleService {
 
     @Autowired
     private ConceptRepository conceptRepo;
-    
+
     @Autowired
     private PredicateRepository predicateRepo;
 
-    /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.impl.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.quadriga.core.service.impl.MappedTripleService#
+     * storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph)
      */
     @Override
     public Predicate storeMappedGraph(Graph graph, MappedCollection mappedCollection) throws NodeNotFoundException {
@@ -44,11 +50,12 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         object = conceptRepo.save(object);
         Predicate predicate = createPredicate(mapping.getPredicate(), nodes, subject, object, mappedCollectionId);
         predicateRepo.save(predicate);
-        
+
         return predicate;
     }
 
-    private Concept createConcept(TripleElement element, Map<String, NodeData> nodes, String mappedCollectionId) throws NodeNotFoundException {
+    private Concept createConcept(TripleElement element, Map<String, NodeData> nodes, String mappedCollectionId)
+            throws NodeNotFoundException {
         Concept concept = new Concept();
         if (element.getType().equals(TripleElement.TYPE_URI)) {
             concept.setLabel(element.getLabel());
@@ -57,20 +64,21 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         }
 
         NodeData data = nodes.get(element.getReference());
-        
+
         if (data == null) {
             throw new NodeNotFoundException("Can't find node with id " + element.getReference());
         }
-        
+
         concept.setLabel(data.getLabel());
         concept.setUri(data.getMetadata().getInterpretation());
         concept.setMappedCollectionId(mappedCollectionId);
         return concept;
     }
 
-    private Predicate createPredicate(TripleElement element, Map<String, NodeData> nodes, Concept subject, Concept object, String mappedCollectionId) throws NodeNotFoundException {
+    private Predicate createPredicate(TripleElement element, Map<String, NodeData> nodes, Concept subject,
+            Concept object, String mappedCollectionId) throws NodeNotFoundException {
         Predicate predicate = new Predicate();
-        
+
         if (element.getType().equals(TripleElement.TYPE_URI)) {
             predicate.setLabel(element.getLabel());
             predicate.setRelationship(element.getUri());
@@ -82,10 +90,42 @@ public class MappedTripleServiceImpl implements MappedTripleService {
             predicate.setLabel(data.getLabel());
             predicate.setRelationship(data.getMetadata().getInterpretation());
         }
-        
+
         predicate.setSource(subject);
         predicate.setTarget(object);
         predicate.setMappedCollectionId(mappedCollectionId);
         return predicate;
+    }
+
+    @Override
+    public List<Triple> getMappedTriples(String collectionId) {
+        List<Predicate> predicates = predicateRepo.findByMappedCollectionId(collectionId);
+        return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
+    }
+
+    private Triple toTriple(Predicate predicate) {
+        if (predicate == null) {
+            return null;
+        }
+
+        Triple triple = new Triple();
+        triple.setSubject(toTripleElement(predicate.getSource()));
+        triple.setObject(toTripleElement(predicate.getTarget()));
+        triple.setPredicate(toTripleElement(predicate));
+        return triple;
+    }
+
+    private TripleElement toTripleElement(Concept concept) {
+        TripleElement tripleElement = new TripleElement();
+        tripleElement.setLabel(concept.getLabel());
+        tripleElement.setUri(concept.getUri());
+        return tripleElement;
+    }
+
+    private TripleElement toTripleElement(Predicate predicate) {
+        TripleElement tripleElement = new TripleElement();
+        tripleElement.setLabel(predicate.getLabel());
+        tripleElement.setUri(predicate.getRelationship());
+        return tripleElement;
     }
 }
