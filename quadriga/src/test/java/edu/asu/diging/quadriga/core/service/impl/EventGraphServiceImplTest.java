@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +62,55 @@ public class EventGraphServiceImplTest {
         // The latest, i.e. EventGraph2, will be the 1st one on the list
         Assert.assertEquals(eventGraphObjectId2, foundEventGraphs.get(0).getId());
         Assert.assertEquals(eventGraphObjectId1, foundEventGraphs.get(1).getId());
+    }
+    
+    @Test
+    public void test_findLatestEventGraphByCollectionId_sucess() {
+        ObjectId collectionObjectId = new ObjectId();
+
+        EventGraph eventGraph = new EventGraph();
+        ObjectId eventGraphObjectId1 = new ObjectId();
+
+        eventGraph.setId(eventGraphObjectId1);
+        eventGraph.setCollectionId(collectionObjectId);
+
+        Mockito.when(eventGraphRepository.findByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
+                .thenReturn(Optional.of(Collections.singletonList(eventGraph)));
+
+        EventGraph latestEventGraph = eventGraphServiceImpl.findLatestEventGraphByCollectionId(collectionObjectId);
+
+        Assert.assertEquals(eventGraphObjectId1, latestEventGraph.getId());
+    }
+    
+    @Test
+    public void test_findLatestEventGraphByCollectionId_failure() {
+        ObjectId collectionObjectId = new ObjectId();
+
+        Mockito.when(eventGraphRepository.findByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
+                .thenReturn(Optional.ofNullable(null));
+
+        Assert.assertNull(eventGraphServiceImpl.findLatestEventGraphByCollectionId(collectionObjectId));
+    }
+    
+    @Test
+    public void test_findEventGraphsBySourceURI_success() {
+        ObjectId collectionObjectId = new ObjectId();
+
+        EventGraph eventGraph = new EventGraph();
+        ObjectId eventGraphObjectId1 = new ObjectId();
+
+        eventGraph.setId(eventGraphObjectId1);
+        eventGraph.setCollectionId(collectionObjectId);
+        
+        String sourceURI = "http://handle.net/234";
+        
+        List<EventGraph> eventGraphs = new ArrayList<>();
+        eventGraphs.add(eventGraph);
+        
+        Mockito.when(eventGraphRepository.findByContextSourceUri(sourceURI)).thenReturn(Optional.of(eventGraphs));
+        
+        List<EventGraph> foundEventGraphs = eventGraphServiceImpl.findEventGraphsBySourceURI(sourceURI);
+        Assert.assertEquals(eventGraphs.get(0).getId(), foundEventGraphs.get(0).getId());
     }
     
 
