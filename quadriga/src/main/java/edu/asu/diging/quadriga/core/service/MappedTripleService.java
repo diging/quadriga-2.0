@@ -12,6 +12,11 @@ public interface MappedTripleService {
 
     Predicate storeMappedGraph(Graph graph, MappedCollection mappedCollection) throws NodeNotFoundException;
     
+    /**
+     * Retrieves the mapped triples for the given collection id
+     * @param collectionId Collection Id for which the triples are to be fetched
+     * @return the retrieved Triples
+     */
     List<Triple> getMappedTriples(String collectionId);
 
 }

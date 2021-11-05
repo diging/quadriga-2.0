@@ -97,6 +97,9 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         return predicate;
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getMappedTriples(java.lang.String)
+     */
     @Override
     public List<Triple> getMappedTriples(String collectionId) {
         List<Predicate> predicates = predicateRepo.findByMappedCollectionId(collectionId);

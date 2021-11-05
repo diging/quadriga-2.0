@@ -1,7 +1,7 @@
 package edu.asu.diging.quadriga.api.v1;
 
-import java.util.List;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
@@ -19,13 +23,14 @@ import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.MappedCollection;
-import edu.asu.diging.quadriga.core.model.Triple;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.MappedCollectionService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 
 @Controller
 public class GetCollectionTriplesApiController {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CitesphereConnector citesphereConnector;
@@ -40,52 +45,50 @@ public class GetCollectionTriplesApiController {
     private MappedCollectionService mappedCollectionService;
 
     @GetMapping(value = "/api/v1/collection/{collectionId}/triples", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Triple>> getTriples(@PathVariable("collectionId") String collectionId,
+    public ResponseEntity<String> getTriples(@PathVariable("collectionId") String collectionId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
-
-        String token = getTokenFromHeader(authHeader);
-        TokenInfo tokenInfo = null;
         try {
-            if (token != null) {
-                tokenInfo = citesphereConnector.getTokenInfo(token);
-            }
+
             Collection collection = collectionManager.findCollection(collectionId);
-            // either token info wasn't returned by citesphere or the token has expired
-            if (collection.getApps() != null && !collection.getApps().isEmpty() && (tokenInfo == null
-                    || !tokenInfo.isActive() || !collection.getApps().contains(tokenInfo.getClient_id()))) {
-                return new ResponseEntity<List<Triple>>(HttpStatus.UNAUTHORIZED);
+            MappedCollection mappedCollection;
+
+            if (collection.getApps() != null && !collection.getApps().isEmpty()) {
+
+                TokenInfo tokenInfo = citesphereConnector.getTokenInfo(getTokenFromHeader(authHeader));
+
+                // either token info wasn't returned by citesphere or the token has expired
+                if (tokenInfo == null || !tokenInfo.isActive()
+                        || !collection.getApps().contains(tokenInfo.getClient_id())) {
+                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                }
             }
+
+            mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId);
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setSerializationInclusion(Include.NON_NULL);
+
+            return new ResponseEntity<>(mapper.writeValueAsString(
+                    mappedTripleService.getMappedTriples(mappedCollection.get_id().toString())), HttpStatus.OK);
 
         } catch (OAuthException e) {
             // we got unauth twice (using existing access token and re-generated one)
-            return new ResponseEntity<List<Triple>>(HttpStatus.UNAUTHORIZED);
+            logger.error("Unable to verify the authorization token");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (BadCredentialsException e) {
             // Token is invalid
-            return new ResponseEntity<List<Triple>>(HttpStatus.FORBIDDEN);
-        } catch (InvalidObjectIdException e) {
-            // No such collection found
-            return new ResponseEntity<List<Triple>>(HttpStatus.NOT_FOUND);
-        }
-
-        MappedCollection mappedCollection;
-        try {
-            mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId);
+            logger.error("Invalid token");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            return new ResponseEntity<List<Triple>>(HttpStatus.NOT_FOUND);
+            // No such collection found
+            logger.error("No collection found for id {}", collectionId);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (JsonProcessingException e) {
+            logger.error("Error while converting the response to JSON");
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<List<Triple>>(
-                mappedTripleService.getMappedTriples(mappedCollection.get_id().toString()), HttpStatus.OK);
     }
 
-    /**
-     * This method will check and get a token that should be present in the
-     * Authorization Header of the add network request
-     * 
-     * The token will be in the form of "Bearer xxxxxxx"
-     * 
-     * @param authHeader is the header to be checked
-     * @return
-     */
     private String getTokenFromHeader(String authHeader) {
         String token;
 
