@@ -24,7 +24,11 @@ import com.zaxxer.hikari.HikariDataSource;
 @Configuration
 @PropertySource("classpath:config.properties")
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = { "edu.asu.diging.quadriga.core.data", "edu.asu.diging.simpleusers.core.data" })
+@EnableJpaRepositories(basePackages = {
+        "edu.asu.diging.quadriga.core.data",
+        "edu.asu.diging.quadriga.conceptpower.data",
+        "edu.asu.diging.simpleusers.core.data"
+})
 public class PersistenceConfig {
 
     @Autowired
