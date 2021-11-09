@@ -11,6 +11,14 @@ import edu.asu.diging.quadriga.web.model.GraphElements;
 import edu.asu.diging.quadriga.web.model.GraphNodeData;
 import edu.asu.diging.quadriga.web.model.GraphNodeType;
 
+/**
+ * This class is used as a service to create a network graph for the Cytoscape JS
+ * library. Any class that wants to have a custom implementation of graph creation
+ * for CytoscapeJS should implement this service.
+ * 
+ * @author poojakulkarni
+ *
+ */
 public interface GraphCreationService {
     
     /**

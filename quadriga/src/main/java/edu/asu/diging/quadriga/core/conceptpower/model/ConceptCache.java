@@ -1,5 +1,6 @@
-package edu.asu.diging.quadriga.conceptpower.model;
+package edu.asu.diging.quadriga.core.conceptpower.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,8 +13,13 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name =  "conceptpower_concept_entry")
-public class ConceptEntry {
+@Table(name =  "conceptpower_concept_cache")
+public class ConceptCache implements Serializable {
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6260562492095202271L;
     
     @Id
     private String uri;

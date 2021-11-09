@@ -1,9 +1,9 @@
-package edu.asu.diging.quadriga.conceptpower.data;
+package edu.asu.diging.quadriga.core.conceptpower.data;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.asu.diging.quadriga.conceptpower.model.ConceptEntry;
+import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 
 /**
  * 
@@ -14,6 +14,6 @@ import edu.asu.diging.quadriga.conceptpower.model.ConceptEntry;
  *
  */
 @Repository
-public interface ConceptEntryRepository extends PagingAndSortingRepository<ConceptEntry, String> {
+public interface ConceptCacheRepository extends PagingAndSortingRepository<ConceptCache, String> {
 
 }

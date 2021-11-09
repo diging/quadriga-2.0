@@ -1,4 +1,6 @@
-package edu.asu.diging.quadriga.conceptpower.model;
+package edu.asu.diging.quadriga.core.conceptpower.model;
+
+import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -6,8 +8,13 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "conceptpower_concept_type")
-public class ConceptType {
+@Table(name = "conceptpower_concept_type_cache")
+public class ConceptType implements Serializable {
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4228339422371096758L;
     
     @Id
     private String id;
