@@ -25,7 +25,7 @@
 	$(function() {
 		var cy = cytoscape({
 			container : document.getElementById('cy'),
-			elements : /*[[${elements}]]*/{},
+			elements : /*[[${elements}]]*/ {},
 			layout : {
 				name : 'cose',
 				idealEdgeLength : 5,
@@ -44,7 +44,7 @@
 							'label' : 'data(label)',
 							'width' : 'mapData(group, 0, 1, 40, 55)',
 							"height" : "mapData(group, 0, 1, 40, 55)",
-							'text-valign' : 'center',
+							'text-valign' : 'center'
 						}
 
 					}, {
@@ -56,7 +56,39 @@
 						}
 					} ]
 		});
+		
+		cy.on('tap', 'node', function(event) {
+			var node = event.target;
+			document.getElementById('concept-title').innerHTML = `Concept: ${node.data('label')} `;
+			document.getElementById('concept-description').innerHTML = node.data('description')
+		});
+		
+		cy.on('mouseover', 'node', function(event) {
+			var currentNode = event.target
+			const currentEventGraphIds = currentNode.data('eventGraphIds')
+			
+			cy.filter('nodes')
+			.filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length == 0)
+			.forEach(filteredNode => filteredNode.style('opacity', 0.3));
+			
+			cy.filter('edges')
+			.filter(edge => !currentEventGraphIds.includes(edge.data('eventGraphId')))
+			.forEach(filteredEdge => filteredEdge.style('opacity', 0.3));
+		});
+		
+		cy.on('mouseout', 'node', function(event) {
+			
+			cy.filter('nodes')
+			.filter(node => node.style('opacity') != '1')
+			.forEach(filteredNode => filteredNode.style('opacity', '1'));
+			
+			cy.filter('edges')
+			.filter(edge => edge.style('opacity') != '1')
+			.forEach(filteredEdge => filteredEdge.style('opacity', '1'));
+		});
+		
 	});
+	
 	/*]]>*/
 </script>
 </head>
@@ -90,13 +122,13 @@
 						<div class="panel-heading">
 							<h4 class="panel-title">
 								<a data-toggle="collapse" href="#collapse2">
-									Concept details <i class="fas fa-sort-down"></i>
+									<span><span id="concept-title">Concept details </span><i class="fas fa-sort-down"></i></span>
 								</a>
 							</h4>
 						</div>
 						<div id="collapse2" class="panel-collapse collapse in">
 							<div class="panel-body">
-								<span>Select a node to view concept inforrmation</span>
+								<span id="concept-description">Select a node to view concept inforrmation</span>
 							</div>
 						</div>
 					</div>

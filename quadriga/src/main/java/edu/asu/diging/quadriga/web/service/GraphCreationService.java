@@ -77,7 +77,7 @@ public interface GraphCreationService {
      * @param event is an appellation event that contains data to be set to the node
      * @return the id of the created predicate node
      */
-    public String createPredicateNode(List<GraphData> graphNodes, AppellationEvent event);
+    public String createPredicateNode(List<GraphData> graphNodes, AppellationEvent event, String eventGraphId);
     
     /**
      * Checks if the unique nodes map contains the same sourceURI as the node to be created
@@ -92,7 +92,7 @@ public interface GraphCreationService {
      * @return the id of an existing node from unique nodes or the newly created node
      */
     
-    public String createSubjectOrObjectNode(List<GraphData> graphNodes, AppellationEvent event, Map<String, GraphNodeData> uniqueNodes, GraphNodeType graphNodeType);
+    public String createSubjectOrObjectNode(List<GraphData> graphNodes, AppellationEvent event, Map<String, GraphNodeData> uniqueNodes, GraphNodeType graphNodeType, String eventGraphId);
     
     /**
      * Creates a GraphNodeData object and sets details such as id, label, group
@@ -101,7 +101,7 @@ public interface GraphCreationService {
      * @param graphNodeType used to set group id
      * @return the created GraphNodeData object
      */
-    public GraphNodeData createNode(AppellationEvent event, GraphNodeType graphNodeType);
+    public GraphNodeData createNode(AppellationEvent event, GraphNodeType graphNodeType, String eventGraphId);
     
     /**
      * Creates that edge that links the provided source and target using their IDs and it to
@@ -111,7 +111,7 @@ public interface GraphCreationService {
      * @param sourceId is the source node's id to be linked to the target
      * @param targetId is the target node's id to be linked to the source
      */
-    public void createEdge(List<GraphData> graphEdges, String sourceId, String targetId);
+    public void createEdge(List<GraphData> graphEdges, String sourceId, String targetId, String eventGraphId);
     
 
 }
