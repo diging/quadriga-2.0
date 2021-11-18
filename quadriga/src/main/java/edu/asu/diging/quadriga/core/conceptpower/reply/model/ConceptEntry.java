@@ -6,6 +6,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+/**
+ * 
+ * This class represents the JSON response received from ConceptPower, with key 'conceptPowerEntry' under conceptPowerReply
+ * 
+ * @author poojakulkarni
+ *
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "id",
@@ -13,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "pos",
     "description",
     "conceptList",
+    "type",
     "deleted",
     "concept_uri",
     "creator_id",
@@ -35,6 +43,8 @@ public class ConceptEntry {
     private String description;
     @JsonProperty("conceptList")
     private String conceptList;
+    @JsonProperty("type")
+    private Type type;
     @JsonProperty("deleted")
     private Boolean deleted;
     @JsonProperty("concept_uri")
@@ -97,6 +107,16 @@ public class ConceptEntry {
     @JsonProperty("conceptList")
     public String getConceptList() {
         return conceptList;
+    }
+    
+    @JsonProperty("type")
+    public Type getType() {
+        return type;
+    }
+
+    @JsonProperty("type")
+    public void setType(Type type) {
+        this.type = type;
     }
 
     @JsonProperty("conceptList")

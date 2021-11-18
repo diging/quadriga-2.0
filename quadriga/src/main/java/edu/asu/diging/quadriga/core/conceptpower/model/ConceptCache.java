@@ -12,6 +12,13 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+/**
+ * This class represents the 'conceptpower_concept_cache' table present in the
+ * database that stores cached concept data
+ * 
+ * @author poojakulkarni
+ *
+ */
 @Entity
 @Table(name =  "conceptpower_concept_cache")
 public class ConceptCache implements Serializable {
@@ -25,12 +32,14 @@ public class ConceptCache implements Serializable {
     private String uri;
     private String id;
     private String word;
+    private String pos;
     
     @Lob
     private String description;
     
     private String conceptList;
     private String typeId;
+    private boolean deleted;
     private LocalDateTime lastUpdated;
     
     @ElementCollection
@@ -73,6 +82,14 @@ public class ConceptCache implements Serializable {
     public void setWord(String word) {
         this.word = word;
     }
+    
+    public String getPos() {
+		return pos;
+	}
+
+	public void setPos(String pos) {
+		this.pos = pos;
+	}
 
     public String getDescription() {
         return description;
@@ -97,6 +114,14 @@ public class ConceptCache implements Serializable {
     public void setTypeId(String typeId) {
         this.typeId = typeId;
     }
+    
+    public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
     public LocalDateTime getLastUpdated() {
         return lastUpdated;

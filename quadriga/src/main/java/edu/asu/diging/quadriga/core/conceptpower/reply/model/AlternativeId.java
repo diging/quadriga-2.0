@@ -1,4 +1,3 @@
-
 package edu.asu.diging.quadriga.core.conceptpower.reply.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;

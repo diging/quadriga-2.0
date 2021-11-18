@@ -2,8 +2,6 @@ package edu.asu.diging.quadriga.core.conceptpower.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 
 /**
@@ -12,14 +10,13 @@ import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
  * @author poojakulkarni
  *
  */
-@Service
-public interface ConceptPowerCacheService {
+public interface ConceptCacheService {
     
     public ConceptCache getConceptByUri(String uri);
     
     public List<ConceptCache> getConceptsByAlternativeUri(String uri);
     
-    public ConceptCache saveConceptCache(String uri);
+    public void saveConceptCache(ConceptCache conceptCache);
     
     public ConceptCache updateConceptCache(String uri);
 

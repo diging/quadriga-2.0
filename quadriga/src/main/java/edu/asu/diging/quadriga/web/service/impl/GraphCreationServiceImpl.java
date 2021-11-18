@@ -12,9 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptEntry;
-import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
-import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerConnectorService;
+import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
+import edu.asu.diging.quadriga.core.conceptpower.service.impl.ConceptPowerServiceImpl;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.elements.Relation;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
@@ -29,9 +28,9 @@ import edu.asu.diging.quadriga.web.service.GraphCreationService;
 
 @Service
 public class GraphCreationServiceImpl implements GraphCreationService {
-    
-    @Autowired
-    private ConceptPowerConnectorService conceptPowerConnectorService;
+	
+	@Autowired
+	private ConceptPowerServiceImpl conceptPowerServiceImpl;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -130,20 +129,11 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         
         String sourceURI = event.getTerm().getInterpretation().getSourceURI();
         
-        // TODO: Need to get data from cache instead of always making a REST call
         if(sourceURI != null && sourceURI.contains("www.digitalhps.org")) {
-            ConceptPowerReply conceptPowerReply = conceptPowerConnectorService.getConceptPowerReply(sourceURI);
-            
-            if(conceptPowerReply != null) {
-                List<ConceptEntry> conceptEntries = conceptPowerReply.getConceptEntries();
-                
-                if(!conceptEntries.isEmpty()) {
-                    ConceptEntry conceptEntry = conceptPowerReply.getConceptEntries().get(0);
-                    node.setLabel(conceptEntry.getLemma());
-                    node.setDescription(conceptEntry.getDescription());
-                } else {
-                    logger.error("No concept entries present in ConceptPower reply for sourceURI: " + sourceURI);
-                }
+            ConceptCache conceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
+            if(conceptCache != null) {
+                node.setLabel(conceptCache.getWord());
+                node.setDescription(conceptCache.getDescription());
             }
         } else {
             // TODO: Need to get data from viaf if viaf URL is present
