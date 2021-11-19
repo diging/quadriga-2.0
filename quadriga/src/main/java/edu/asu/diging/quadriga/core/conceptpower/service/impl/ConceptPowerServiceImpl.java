@@ -1,10 +1,14 @@
 package edu.asu.diging.quadriga.core.conceptpower.service.impl;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,52 +33,74 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
 	
 	@Autowired
 	private ConceptPowerConnectorService conceptPowerConnectorService;
+	
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
+	
 	@Override
 	public ConceptCache getConceptByUri(String uri) {
-		// Step 1. Check if Concept is present in DB (Done)
-		// Step 2: If concept is present in DB & updated within last 2 days return concept
-		// Step 3: If concept is present in DB & not updated within last 2 days:
-		//			1. Call ConceptPower
-		//			2. Update DB
-		//			3. Return concept
-		// Step 3: If concept is not present in DB (Done)
-		//			1. Call ConceptPower
-		//			2. Create entry in DB
-		//			3. Return concept
-		ConceptCache conceptCache = getConceptCacheEntry(uri);
-		if(conceptCache == null) {
-			ConceptPowerReply conceptPowerReply = conceptPowerConnectorService.getConceptPowerReply(uri);
-			System.out.println("ConceptPower reply requested");
-			conceptCache = mapConceptPowerReplyToConceptCache(conceptPowerReply);
-			if(conceptCache != null) {
-				conceptCacheService.saveConceptCache(conceptCache);
-			}
-			if(conceptCache.getConceptType() != null) {
-				ConceptType conceptType = conceptCache.getConceptType();
-				if(conceptType != null) {
-					conceptTypeService.saveConceptType(conceptType);
-				}
-			}
+		
+		ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
+		
+		System.out.println("Concept: " + conceptCache.getWord() + ", last updated: " + conceptCache.getLastUpdated());
+		
+		// TODO: Check why lastUpdated for all concepts is changing if lastUpdated for one has changed
+
+		if(conceptCache == null || ChronoUnit.DAYS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= 2) {
+			saveConceptCacheFromConceptPowerReply(conceptPowerConnectorService.getConceptPowerReply(uri), uri);
 		}
 		return conceptCache;
 	}
 	
 	/**
-	 * This method gets a ConceptCache entry from the database
-	 * If it is not present, it checks the alternative URIs to get a conceptCache entry
+	 * This method first saves the ConceptCache entry in the database which is mapped from ConceptPowerReply
 	 * 
-	 * @param uri used to check in alternativeUris
-	 * @return a conceptCache entry
+	 * Then it saves the corresponding ConceptType entry in the database, if one exists
+	 * 
+	 * After that, it checks if there are any concepts in the database which have the same URI as this
+	 * concept's alternativeURIs. If such concepts exist, they will be deleted
+	 * 
+	 * E.g.: Consider => Concepts => {AlternativeURIs}
+	 * 
+	 * Existing Concepts in the database:
+	 * 		C2 => {C2, C4}, C3 => {C3, C5}
+	 * 
+	 * New Concept to be added to the database:
+	 * 		C1 => {C1, C2, C3, C5}
+	 * 
+	 * In this case, delete C2 and C3 from the database as C1 has listed C2 and C3 as alternatives
+	 * If in the future, the concepts C2 or C3 are searched in the database, C1 will be returned
+	 * 
+	 * @param conceptPowerReply is the object used to generate a ConceptCache object
+	 * @param uri to be used for logging in case no ConceptCache entry was generated
 	 */
-	private ConceptCache getConceptCacheEntry(String uri) {
-		ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
-		if(conceptCache == null) {
+	private void saveConceptCacheFromConceptPowerReply(ConceptPowerReply conceptPowerReply, String uri) {
+		ConceptCache conceptCache = mapConceptPowerReplyToConceptCache(conceptPowerReply);
+		
+		if(conceptCache != null) {
+			conceptCacheService.saveConceptCache(conceptCache);
 			
+			ConceptType conceptType = conceptCache.getConceptType();
+			if(conceptType != null) {
+				conceptTypeService.saveConceptType(conceptType);
+			}
+			
+			conceptCache.getAlternativeUris()
+				.stream()
+				.filter(alternativeUri -> alternativeUri != null && !alternativeUri.equals(conceptCache.getUri()))
+				.forEach(alternativeUriValue -> conceptCacheService.deleteConceptCacheByUri(alternativeUriValue));
+		} else {
+			logger.error("ConceptPower did not return any concept entries for uri: " + uri);
 		}
-		return conceptCache;
 	}
 
+	/**
+	 * This method maps the ConceptPowerReply object returned from ConceptPower to a ConceptCache
+	 * object that would be stored in the database
+	 * 
+	 * @param conceptPowerReply is the object used to generate a ConceptCache object
+	 * @return the generated ConceptCache object
+	 */
 	private ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
 		// If we get multiple ConceptPower entries in the reply, we use the first one
 		List<ConceptEntry> conceptEntries = conceptPowerReply.getConceptEntries();

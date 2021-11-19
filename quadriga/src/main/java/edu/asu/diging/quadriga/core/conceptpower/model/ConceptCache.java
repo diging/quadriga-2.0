@@ -58,6 +58,10 @@ public class ConceptCache implements Serializable {
     
     @Transient
     private ConceptType conceptType;
+    
+    public ConceptCache() {
+    	this.lastUpdated = LocalDateTime.now();
+    }
 
     public String getUri() {
         return uri;

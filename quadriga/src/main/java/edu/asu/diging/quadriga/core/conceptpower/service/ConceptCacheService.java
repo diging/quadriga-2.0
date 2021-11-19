@@ -1,7 +1,5 @@
 package edu.asu.diging.quadriga.core.conceptpower.service;
 
-import java.util.List;
-
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 
 /**
@@ -12,12 +10,37 @@ import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
  */
 public interface ConceptCacheService {
     
+	/**
+	 * This method gets a ConceptCache entry from the database
+	 * If it is not present, it checks the alternative URIs to get a conceptCache entry
+	 * 
+	 * @param uri used to check in alternativeUris
+	 * @return a conceptCache entry
+	 */
     public ConceptCache getConceptByUri(String uri);
     
-    public List<ConceptCache> getConceptsByAlternativeUri(String uri);
+    /**
+     * This method checks the AlternativeURIs ElementCollection of ConceptCache
+     * The Concept which has listed the provided URI as an alternativeURI
+     * would be returned
+     * 
+     * @param uri to be checked as an alternativeURI
+     * @return a ConceptCache object from ConceptCache table
+     */
+    public ConceptCache getConceptByAlternativeUri(String uri);
     
+    /**
+     * This method saves the provided ConceptCache entity in the database
+     * 
+     * @param conceptCache is the entity to be saved
+     */
     public void saveConceptCache(ConceptCache conceptCache);
     
-    public ConceptCache updateConceptCache(String uri);
+    /**
+     * This method deleted the ConceptCache entry that matches the provided URI
+     * 
+     * @param uri used to delete the ConceptCache entry
+     */
+    public void deleteConceptCacheByUri(String uri);
 
 }

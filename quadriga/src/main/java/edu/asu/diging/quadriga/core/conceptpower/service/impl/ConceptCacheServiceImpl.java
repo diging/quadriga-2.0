@@ -17,12 +17,19 @@ public class ConceptCacheServiceImpl implements ConceptCacheService {
 
 	@Override
 	public ConceptCache getConceptByUri(String uri) {
-		return conceptCacheRepository.findById(uri).orElse(null);
+		ConceptCache conceptCache = conceptCacheRepository.findById(uri).orElse(null);
+		if(conceptCache == null) {
+			conceptCache = getConceptByAlternativeUri(uri);
+		}
+		return conceptCache;
 	}
 
 	@Override
-	public List<ConceptCache> getConceptsByAlternativeUri(String uri) {
-		// TODO Auto-generated method stub
+	public ConceptCache getConceptByAlternativeUri(String uri) {
+		List<ConceptCache> conceptCacheList = conceptCacheRepository.findConceptByAlternativeURI(uri);
+		if(conceptCacheList != null && !conceptCacheList.isEmpty()) {
+			return conceptCacheList.get(0);
+		}
 		return null;
 	}
 
@@ -32,9 +39,10 @@ public class ConceptCacheServiceImpl implements ConceptCacheService {
 	}
 
 	@Override
-	public ConceptCache updateConceptCache(String uri) {
-		// TODO Auto-generated method stub
-		return null;
+	public void deleteConceptCacheByUri(String uri) {
+		if(uri != null && !uri.isBlank()) {
+			conceptCacheRepository.deleteById(uri);
+		}
 	}
 
 }

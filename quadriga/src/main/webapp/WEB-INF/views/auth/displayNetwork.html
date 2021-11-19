@@ -43,7 +43,7 @@
 							'color' : 'mapData(group, 0, 1, #666, #333)',
 							'label' : 'data(label)',
 							'width' : 'mapData(group, 0, 1, 40, 55)',
-							"height" : "mapData(group, 0, 1, 40, 55)",
+							'height' : "mapData(group, 0, 1, 40, 55)",
 							'text-valign' : 'center'
 						}
 
@@ -67,22 +67,48 @@
 			var currentNode = event.target
 			const currentEventGraphIds = currentNode.data('eventGraphIds')
 			
-			cy.filter('nodes')
+			cy.filter('node')
 			.filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length == 0)
 			.forEach(filteredNode => filteredNode.style('opacity', 0.3));
 			
-			cy.filter('edges')
+			cy.filter('node')
+			.filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
+			.forEach(filteredNode => {
+				if(filteredNode.data('group') == 0) {
+					filteredNode.style('width', 50);
+					filteredNode.style('height', 50);
+				} else if(filteredNode.data('group') == 1) {
+					filteredNode.style('width', 65);
+					filteredNode.style('height', 65);
+				}
+			});
+			
+			cy.filter('edge')
 			.filter(edge => !currentEventGraphIds.includes(edge.data('eventGraphId')))
 			.forEach(filteredEdge => filteredEdge.style('opacity', 0.3));
 		});
 		
 		cy.on('mouseout', 'node', function(event) {
+			var currentNode = event.target
+			const currentEventGraphIds = currentNode.data('eventGraphIds')
 			
-			cy.filter('nodes')
+			cy.filter('node')
 			.filter(node => node.style('opacity') != '1')
-			.forEach(filteredNode => filteredNode.style('opacity', '1'));
+			.forEach(filteredNode => filteredNode.style('opacity', 1));
 			
-			cy.filter('edges')
+			cy.filter('node')
+			.filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
+			.forEach(filteredNode => {
+				if(filteredNode.data('group') == 0) {
+					filteredNode.style('width', 40);
+					filteredNode.style('height', 40);
+				} else if(filteredNode.data('group') == 1) {
+					filteredNode.style('width', 55);
+					filteredNode.style('height', 55);
+				}
+			});
+			
+			cy.filter('edge')
 			.filter(edge => edge.style('opacity') != '1')
 			.forEach(filteredEdge => filteredEdge.style('opacity', '1'));
 		});

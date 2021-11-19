@@ -1,5 +1,8 @@
 package edu.asu.diging.quadriga.core.conceptpower.data;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +18,8 @@ import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
  */
 @Repository
 public interface ConceptCacheRepository extends PagingAndSortingRepository<ConceptCache, String> {
-
+	
+	@Query("select c from ConceptCache c where c.alternativeUris = ?1")
+	public List<ConceptCache> findConceptByAlternativeURI(String uri);
+	
 }
