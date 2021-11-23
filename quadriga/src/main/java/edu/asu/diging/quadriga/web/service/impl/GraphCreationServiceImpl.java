@@ -41,8 +41,9 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         List<GraphData> graphNodes = new ArrayList<>();
         Map<String, GraphNodeData> uniqueNodes = new HashMap<String, GraphNodeData>();
 
-        eventGraphs.stream().filter(eventGraph -> eventGraph.getRootEvent() instanceof RelationEvent)
-                .forEach(validEventGraph -> createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()),
+        eventGraphs.stream()
+        .filter(eventGraph -> eventGraph.getRootEvent() instanceof RelationEvent)
+        .forEach(validEventGraph -> createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()),
                         graphNodes, graphEdges, uniqueNodes, validEventGraph.getId().toString()));
 
         GraphElements graphElements = new GraphElements();
@@ -88,8 +89,13 @@ public class GraphCreationServiceImpl implements GraphCreationService {
             logger.error("An object is missing in one of the relations for EventGraph: " + eventGraphId);
         }
 
-        createEdge(graphEdges, subjectNodeId, predicateNodeId, eventGraphId);
-        createEdge(graphEdges, objectNodeId, predicateNodeId, eventGraphId);
+        if(subjectNodeId != null && predicateNodeId != null) {
+            createEdge(graphEdges, subjectNodeId, predicateNodeId, eventGraphId);
+        }
+        
+        if(objectNodeId != null && predicateNodeId != null) {
+            createEdge(graphEdges, objectNodeId, predicateNodeId, eventGraphId);
+        }
 
         return predicateNodeId;
     }
@@ -105,8 +111,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
     public String createSubjectOrObjectNode(List<GraphData> graphNodes, AppellationEvent event,
             Map<String, GraphNodeData> uniqueNodes, GraphNodeType graphNodeType, String eventGraphId) {
         String sourceUri = event.getTerm().getInterpretation().getSourceURI();
-
         GraphNodeData node;
+        
         if (sourceUri != null && uniqueNodes.containsKey(sourceUri)) {
             node = uniqueNodes.get(sourceUri);
             node.getEventGraphIds().add(eventGraphId);
@@ -116,25 +122,36 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         node = createNode(event, graphNodeType, eventGraphId);
         graphNodes.add(node);
         uniqueNodes.put(sourceUri, node);
+        
+        if(sourceUri != null && !sourceUri.equals("") && node.getAlternativeUris() != null) {
+            node.getAlternativeUris()
+            .stream()
+            .filter(alternativeUri -> alternativeUri != null && !alternativeUri.equals("") && !alternativeUri.equals(sourceUri))
+            .forEach(alternativeUriValue -> uniqueNodes.put(alternativeUriValue, node));
+        }
+        
         return node.getId();
     }
 
     @Override
     public GraphNodeData createNode(AppellationEvent event, GraphNodeType graphNodeType, String eventGraphId) {
+        
         GraphNodeData node = new GraphNodeData();
         node.setId(new ObjectId().toString());
         node.setGroup(graphNodeType.getGroupId());
-        node.setEventGraphId(new ArrayList<String>(Collections.singletonList(eventGraphId)));
+        node.setEventGraphIds(new ArrayList<String>(Collections.singletonList(eventGraphId)));
 
         String sourceURI = event.getTerm().getInterpretation().getSourceURI();
 
         if (sourceURI != null && sourceURI.contains("www.digitalhps.org")) {
 
+            node.setUri(sourceURI);
             ConceptCache conceptCache = conceptPowerService.getConceptByUri(sourceURI);
 
             if (conceptCache != null) {
                 node.setLabel(conceptCache.getWord());
                 node.setDescription(conceptCache.getDescription());
+                node.setAlternativeUris(conceptCache.getAlternativeUris());
             }
         } else {
             // TODO: Need to get data from viaf if viaf URL is present

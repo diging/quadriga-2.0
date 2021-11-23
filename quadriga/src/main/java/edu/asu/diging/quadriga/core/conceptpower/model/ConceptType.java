@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "conceptpower_concept_type_cache")
-public class ConceptType implements Serializable {
+public class ConceptType implements Serializable, Comparable<ConceptType> {
 
     /**
      * 
@@ -54,6 +54,26 @@ public class ConceptType implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public int compareTo(ConceptType type) {
+        if (type == null) {
+            return -1;
+        }
+        if (!this.getId().equals(type.getId())) {
+            return -1;
+        }
+        if (!this.getDescription().equals(type.getDescription())) {
+            return -1;
+        }
+        if (!this.getName().equals(type.getName())) {
+            return -1;
+        }
+        if (!this.getUri().equals(type.getUri())) {
+            return -1;
+        }
+        return 0;
     }
 
 }

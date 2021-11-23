@@ -24,7 +24,5 @@ public class GraphEdgeData extends GraphData {
     public void setEventGraphId(String eventGraphId) {
         this.eventGraphId = eventGraphId;
     }
-    
-    
 
 }

@@ -42,7 +42,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
 
         if (conceptCache == null || ChronoUnit.DAYS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= 2) {
-            saveConceptCacheFromConceptPowerReply(conceptPowerConnectorService.getConceptPowerReply(uri), uri);
+            saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
         }
         return conceptCache;
     }
@@ -72,14 +72,16 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
      * @param uri               to be used for logging in case no ConceptCache entry
      *                          was generated
      */
-    private void saveConceptCacheFromConceptPowerReply(ConceptPowerReply conceptPowerReply, String uri) {
+    private void saveConceptCacheFromConceptPowerReply(ConceptCache conceptCacheOld, ConceptPowerReply conceptPowerReply, String uri) {
         ConceptCache conceptCache = mapConceptPowerReplyToConceptCache(conceptPowerReply);
 
-        if (conceptCache != null) {
+        if (conceptCache != null || (conceptCacheOld != null && conceptCacheOld.compareTo(conceptCache) == 0)) {
             conceptCacheService.saveConceptCache(conceptCache);
 
+            ConceptType conceptTypeOld = conceptCacheOld.getConceptType();
             ConceptType conceptType = conceptCache.getConceptType();
-            if (conceptType != null) {
+            
+            if (conceptType != null || (conceptTypeOld != null && conceptTypeOld.compareTo(conceptType) == 0)) {
                 conceptTypeService.saveConceptType(conceptType);
             }
 

@@ -11,5 +11,5 @@ public class GraphData {
     public void setId(String id) {
         this.id = id;
     }
-
+    
 }

@@ -7,7 +7,9 @@ public class GraphNodeData extends GraphData {
     private int group;
     private String label;
     private String description;
+    private String uri;
     private List<String> eventGraphIds;
+    private List<String> alternativeUris;
     
     public int getGroup() {
         return group;
@@ -27,11 +29,23 @@ public class GraphNodeData extends GraphData {
     public void setDescription(String description) {
         this.description = description;
     }
+    public String getUri() {
+        return uri;
+    }
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
     public List<String> getEventGraphIds() {
         return eventGraphIds;
     }
-    public void setEventGraphId(List<String> eventGraphIds) {
+    public void setEventGraphIds(List<String> eventGraphIds) {
         this.eventGraphIds = eventGraphIds;
+    }
+    public List<String> getAlternativeUris() {
+        return alternativeUris;
+    }
+    public void setAlternativeUris(List<String> alternativeUris) {
+        this.alternativeUris = alternativeUris;
     }
 
 }

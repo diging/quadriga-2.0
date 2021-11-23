@@ -12,6 +12,9 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 /**
  * This class represents the 'conceptpower_concept_cache' table present in the
  * database that stores cached concept data
@@ -21,7 +24,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "conceptpower_concept_cache")
-public class ConceptCache implements Serializable {
+public class ConceptCache implements Serializable, Comparable<ConceptCache> {
 
     /**
      * 
@@ -43,14 +46,17 @@ public class ConceptCache implements Serializable {
     private LocalDateTime lastUpdated;
 
     @ElementCollection
+    @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "conceptpower_alternative_uris")
     private List<String> alternativeUris;
 
     @ElementCollection
+    @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "conceptpower_equal_to")
     private List<String> equalTo;
 
     @ElementCollection
+    @LazyCollection(LazyCollectionOption.FALSE)
     @CollectionTable(name = "conceptpower_wordnetids")
     private List<String> wordNetIds;
 
@@ -173,6 +179,44 @@ public class ConceptCache implements Serializable {
 
     public void setConceptType(ConceptType conceptType) {
         this.conceptType = conceptType;
+    }
+
+    @Override
+    public int compareTo(ConceptCache conceptCache) {
+        if (!this.getAlternativeUris().equals(conceptCache.getAlternativeUris())) {
+            return -1;
+        }
+        if (!this.getConceptList().equals(conceptCache.getConceptList())) {
+            return -1;
+        }
+        if (!this.getCreatorId().equals(conceptCache.getCreatorId())) {
+            return -1;
+        }
+        if (!this.getDescription().equals(conceptCache.getDescription())) {
+            return -1;
+        }
+        if (!this.getEqualTo().equals(conceptCache.getEqualTo())) {
+            return -1;
+        }
+        if (!this.getId().equals(conceptCache.getId())) {
+            return -1;
+        }
+        if (!this.getPos().equals(conceptCache.getPos())) {
+            return -1;
+        }
+        if (!this.getTypeId().equals(conceptCache.getTypeId())) {
+            return -1;
+        }
+        if (!this.getUri().equals(conceptCache.getUri())) {
+            return -1;
+        }
+        if (!this.getWord().equals(conceptCache.getWord())) {
+            return -1;
+        }
+        if (!this.getWordNetIds().equals(conceptCache.getWordNetIds())) {
+            return -1;
+        }
+        return 0;
     }
 
 }
