@@ -75,13 +75,13 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
     private void saveConceptCacheFromConceptPowerReply(ConceptCache conceptCacheOld, ConceptPowerReply conceptPowerReply, String uri) {
         ConceptCache conceptCache = mapConceptPowerReplyToConceptCache(conceptPowerReply);
 
-        if (conceptCache != null || (conceptCacheOld != null && conceptCacheOld.compareTo(conceptCache) == 0)) {
+        if (conceptCache != null || (conceptCacheOld != null && conceptCacheOld.compareTo(conceptCache) != 0)) {
             conceptCacheService.saveConceptCache(conceptCache);
 
             ConceptType conceptTypeOld = conceptCacheOld.getConceptType();
             ConceptType conceptType = conceptCache.getConceptType();
             
-            if (conceptType != null || (conceptTypeOld != null && conceptTypeOld.compareTo(conceptType) == 0)) {
+            if (conceptType != null || (conceptTypeOld != null && conceptTypeOld.compareTo(conceptType) != 0)) {
                 conceptTypeService.saveConceptType(conceptType);
             }
 
