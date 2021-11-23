@@ -10,17 +10,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "conceptpower_concept_type_cache")
 public class ConceptType implements Serializable {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 4228339422371096758L;
-    
+
     @Id
     private String id;
     private String name;
     private String uri;
-    
+
     @Lob
     private String description;
 
@@ -55,5 +55,5 @@ public class ConceptType implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
 }

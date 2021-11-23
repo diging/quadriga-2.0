@@ -135,12 +135,22 @@
 						</div>
 						<div id="collapse1" class="panel-collapse collapse in">
 							<div class="panel-body">
-								<p><b>Source URI: </b></p>
+								<p>
+									<b>Source URI: </b>
+								</p>
 								<p th:text="${sourceURI}"></p>
-								<p><b>Network name: </b></p>
-								<p> Graph submitted by <span th:text="${creator}"></span> from <span th:text="${appName}"></span></p>
-								<p><b>Submitted on: </b></p>
-								<p th:text="${#temporals.format(creationTime, 'MM/dd/yyyy hh:mm a')}"></p>
+								<p>
+									<b>Network name: </b>
+								</p>
+								<p>
+									Graph submitted by <span th:text="${creator}"></span> from <span
+										th:text="${appName}"></span>
+								</p>
+								<p>
+									<b>Submitted on: </b>
+								</p>
+								<p
+									th:text="${#temporals.format(creationTime, 'MM/dd/yyyy hh:mm a')}"></p>
 							</div>
 						</div>
 					</div>
@@ -148,13 +158,18 @@
 						<div class="panel-heading">
 							<h4 class="panel-title">
 								<a data-toggle="collapse" href="#collapse2">
-									<span><span id="concept-title">Concept details </span><i class="fas fa-sort-down"></i></span>
+									<span>
+										<span id="concept-title">Concept details </span>
+										<i class="fas fa-sort-down"></i>
+									</span>
 								</a>
 							</h4>
 						</div>
 						<div id="collapse2" class="panel-collapse collapse in">
 							<div class="panel-body">
-								<span id="concept-description">Select a node to view concept inforrmation</span>
+								<span id="concept-description">
+									Select a node to view concept inforrmation
+								</span>
 							</div>
 						</div>
 					</div>

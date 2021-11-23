@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "concept_id",
-    "concept_uri"
-})
+@JsonPropertyOrder({ "concept_id", "concept_uri" })
 public class AlternativeId {
 
     @JsonProperty("concept_id")

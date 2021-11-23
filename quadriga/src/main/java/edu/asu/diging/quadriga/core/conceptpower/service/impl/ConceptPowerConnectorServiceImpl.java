@@ -23,17 +23,17 @@ import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerConnectorSe
 @Service
 @PropertySource({ "classpath:config.properties" })
 public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorService {
-    
+
     @Value("${conceptpower_base_url}")
     private String conceptPowerBaseURL;
-    
+
     @Value("${conceptpower_id_url}")
     private String conceptPowerIdURL;
-    
+
     private RestTemplate restTemplate;
-    
+
     private Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     public ConceptPowerConnectorServiceImpl() {
         restTemplate = new RestTemplate();
     }
@@ -42,30 +42,31 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
     public ConceptPowerReply getConceptPowerReply(String conceptURI) {
         Map<String, String> pathVariables = new HashMap<>();
         pathVariables.put("concept_uri", conceptURI);
-        
+
         String conceptPowerURL = conceptPowerBaseURL + conceptPowerIdURL;
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-        
+
         try {
-            ResponseEntity<ConceptPowerReply> response = restTemplate.exchange(conceptPowerURL, HttpMethod.GET, httpEntity, ConceptPowerReply.class, pathVariables);
-            if(response != null) {
+            ResponseEntity<ConceptPowerReply> response = restTemplate.exchange(conceptPowerURL, HttpMethod.GET,
+                    httpEntity, ConceptPowerReply.class, pathVariables);
+            if (response != null) {
                 return response.getBody();
             } else {
                 logger.error("No response returned from ConceptPower for URI: " + conceptURI);
-                if(conceptPowerURL == null || conceptPowerURL.equals("")) {
+                if (conceptPowerURL == null || conceptPowerURL.equals("")) {
                     logger.error("ConceptPowerURL was found to be blank or null");
                 }
             }
-        } catch(RestClientException e) {
+        } catch (RestClientException e) {
             logger.error(e.getMessage());
             logger.error("Could not get concept for URI: " + conceptURI);
-            if(conceptPowerURL == null || conceptPowerURL.equals("")) {
+            if (conceptPowerURL == null || conceptPowerURL.equals("")) {
                 logger.error("ConceptPowerURL was found to be blank or null");
             }
         }
-        
+
         return null;
     }
 

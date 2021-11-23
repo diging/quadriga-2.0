@@ -9,13 +9,13 @@ import edu.asu.diging.quadriga.core.conceptpower.service.ConceptTypeService;
 
 @Service
 public class ConceptTypeServiceImpl implements ConceptTypeService {
-	
-	@Autowired
-	private ConceptTypeRepository conceptTypeRepository;
 
-	@Override
-	public void saveConceptType(ConceptType conceptType) {
-		conceptTypeRepository.save(conceptType);
-	}
+    @Autowired
+    private ConceptTypeRepository conceptTypeRepository;
+
+    @Override
+    public void saveConceptType(ConceptType conceptType) {
+        conceptTypeRepository.save(conceptType);
+    }
 
 }

@@ -8,11 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "type_id",
-    "type_uri",
-    "type_name"
-})
+@JsonPropertyOrder({ "type_id", "type_uri", "type_name" })
 public class Type {
 
     @JsonProperty("type_id")

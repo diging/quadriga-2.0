@@ -20,47 +20,47 @@ import javax.persistence.Transient;
  *
  */
 @Entity
-@Table(name =  "conceptpower_concept_cache")
+@Table(name = "conceptpower_concept_cache")
 public class ConceptCache implements Serializable {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 6260562492095202271L;
-    
+
     @Id
     private String uri;
     private String id;
     private String word;
     private String pos;
-    
+
     @Lob
     private String description;
-    
+
     private String conceptList;
     private String typeId;
     private boolean deleted;
     private LocalDateTime lastUpdated;
-    
+
     @ElementCollection
     @CollectionTable(name = "conceptpower_alternative_uris")
     private List<String> alternativeUris;
-    
+
     @ElementCollection
     @CollectionTable(name = "conceptpower_equal_to")
     private List<String> equalTo;
-    
+
     @ElementCollection
     @CollectionTable(name = "conceptpower_wordnetids")
     private List<String> wordNetIds;
-    
+
     private String creatorId;
-    
+
     @Transient
     private ConceptType conceptType;
-    
+
     public ConceptCache() {
-    	this.lastUpdated = LocalDateTime.now();
+        this.lastUpdated = LocalDateTime.now();
     }
 
     public String getUri() {
@@ -86,14 +86,14 @@ public class ConceptCache implements Serializable {
     public void setWord(String word) {
         this.word = word;
     }
-    
-    public String getPos() {
-		return pos;
-	}
 
-	public void setPos(String pos) {
-		this.pos = pos;
-	}
+    public String getPos() {
+        return pos;
+    }
+
+    public void setPos(String pos) {
+        this.pos = pos;
+    }
 
     public String getDescription() {
         return description;
@@ -118,14 +118,14 @@ public class ConceptCache implements Serializable {
     public void setTypeId(String typeId) {
         this.typeId = typeId;
     }
-    
-    public boolean isDeleted() {
-		return deleted;
-	}
 
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public LocalDateTime getLastUpdated() {
         return lastUpdated;

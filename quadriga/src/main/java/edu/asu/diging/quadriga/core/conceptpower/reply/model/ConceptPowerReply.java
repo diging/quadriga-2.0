@@ -8,16 +8,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * 
- * This class represents the JSON response received from ConceptPower, with key 'conceptPowerReply'
+ * This class represents the JSON response received from ConceptPower, with key
+ * 'conceptPowerReply'
  * 
  * @author poojakulkarni
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "conceptEntries",
-    "pagination"
-})
+@JsonPropertyOrder({ "conceptEntries", "pagination" })
 public class ConceptPowerReply {
 
     @JsonProperty("conceptEntries")

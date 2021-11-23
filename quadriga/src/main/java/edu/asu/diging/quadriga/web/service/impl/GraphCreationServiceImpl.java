@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
-import edu.asu.diging.quadriga.core.conceptpower.service.impl.ConceptPowerServiceImpl;
+import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerService;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.elements.Relation;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
@@ -28,9 +28,9 @@ import edu.asu.diging.quadriga.web.service.GraphCreationService;
 
 @Service
 public class GraphCreationServiceImpl implements GraphCreationService {
-	
-	@Autowired
-	private ConceptPowerServiceImpl conceptPowerServiceImpl;
+
+    @Autowired
+    private ConceptPowerService conceptPowerService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -41,10 +41,9 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         List<GraphData> graphNodes = new ArrayList<>();
         Map<String, GraphNodeData> uniqueNodes = new HashMap<String, GraphNodeData>();
 
-        eventGraphs.stream()
-                .filter(eventGraph -> eventGraph.getRootEvent() instanceof RelationEvent)
-                .forEach(validEventGraph -> createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()), graphNodes, graphEdges,
-                        uniqueNodes, validEventGraph.getId().toString()));
+        eventGraphs.stream().filter(eventGraph -> eventGraph.getRootEvent() instanceof RelationEvent)
+                .forEach(validEventGraph -> createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()),
+                        graphNodes, graphEdges, uniqueNodes, validEventGraph.getId().toString()));
 
         GraphElements graphElements = new GraphElements();
         graphElements.setNodes(wrapInGraphElements(graphNodes));
@@ -126,12 +125,14 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         node.setId(new ObjectId().toString());
         node.setGroup(graphNodeType.getGroupId());
         node.setEventGraphId(new ArrayList<String>(Collections.singletonList(eventGraphId)));
-        
+
         String sourceURI = event.getTerm().getInterpretation().getSourceURI();
-        
-        if(sourceURI != null && sourceURI.contains("www.digitalhps.org")) {
-            ConceptCache conceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
-            if(conceptCache != null) {
+
+        if (sourceURI != null && sourceURI.contains("www.digitalhps.org")) {
+
+            ConceptCache conceptCache = conceptPowerService.getConceptByUri(sourceURI);
+
+            if (conceptCache != null) {
                 node.setLabel(conceptCache.getWord());
                 node.setDescription(conceptCache.getDescription());
             }
@@ -139,7 +140,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
             // TODO: Need to get data from viaf if viaf URL is present
             node.setLabel(event.getTerm().getPrintedRepresentation().getTermParts().iterator().next().getExpression());
         }
-        
+
         return node;
     }
 

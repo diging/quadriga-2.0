@@ -11,38 +11,38 @@ import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 
 @Service
 public class ConceptCacheServiceImpl implements ConceptCacheService {
-	
-	@Autowired
-	private ConceptCacheRepository conceptCacheRepository;
 
-	@Override
-	public ConceptCache getConceptByUri(String uri) {
-		ConceptCache conceptCache = conceptCacheRepository.findById(uri).orElse(null);
-		if(conceptCache == null) {
-			conceptCache = getConceptByAlternativeUri(uri);
-		}
-		return conceptCache;
-	}
+    @Autowired
+    private ConceptCacheRepository conceptCacheRepository;
 
-	@Override
-	public ConceptCache getConceptByAlternativeUri(String uri) {
-		List<ConceptCache> conceptCacheList = conceptCacheRepository.findConceptByAlternativeURI(uri);
-		if(conceptCacheList != null && !conceptCacheList.isEmpty()) {
-			return conceptCacheList.get(0);
-		}
-		return null;
-	}
+    @Override
+    public ConceptCache getConceptByUri(String uri) {
+        ConceptCache conceptCache = conceptCacheRepository.findById(uri).orElse(null);
+        if (conceptCache == null) {
+            conceptCache = getConceptByAlternativeUri(uri);
+        }
+        return conceptCache;
+    }
 
-	@Override
-	public void saveConceptCache(ConceptCache conceptCache) {
-		conceptCacheRepository.save(conceptCache);
-	}
+    @Override
+    public ConceptCache getConceptByAlternativeUri(String uri) {
+        List<ConceptCache> conceptCacheList = conceptCacheRepository.findConceptByAlternativeURI(uri);
+        if (conceptCacheList != null && !conceptCacheList.isEmpty()) {
+            return conceptCacheList.get(0);
+        }
+        return null;
+    }
 
-	@Override
-	public void deleteConceptCacheByUri(String uri) {
-		if(uri != null && !uri.isBlank()) {
-			conceptCacheRepository.deleteById(uri);
-		}
-	}
+    @Override
+    public void saveConceptCache(ConceptCache conceptCache) {
+        conceptCacheRepository.save(conceptCache);
+    }
+
+    @Override
+    public void deleteConceptCacheByUri(String uri) {
+        if (uri != null && !uri.isBlank()) {
+            conceptCacheRepository.deleteById(uri);
+        }
+    }
 
 }

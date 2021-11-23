@@ -8,29 +8,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
  * 
- * This class represents the JSON response received from ConceptPower, with key 'conceptPowerEntry' under conceptPowerReply
+ * This class represents the JSON response received from ConceptPower, with key
+ * 'conceptPowerEntry' under conceptPowerReply
  * 
  * @author poojakulkarni
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-    "id",
-    "lemma",
-    "pos",
-    "description",
-    "conceptList",
-    "type",
-    "deleted",
-    "concept_uri",
-    "creator_id",
-    "equal_to",
-    "modified_by",
-    "similar_to",
-    "synonym_ids",
-    "wordnet_id",
-    "alternativeIds"
-})
+@JsonPropertyOrder({ "id", "lemma", "pos", "description", "conceptList", "type", "deleted", "concept_uri", "creator_id",
+        "equal_to", "modified_by", "similar_to", "synonym_ids", "wordnet_id", "alternativeIds" })
 public class ConceptEntry {
 
     @JsonProperty("id")
@@ -108,7 +94,7 @@ public class ConceptEntry {
     public String getConceptList() {
         return conceptList;
     }
-    
+
     @JsonProperty("type")
     public Type getType() {
         return type;

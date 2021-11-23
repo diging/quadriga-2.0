@@ -10,16 +10,16 @@ import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 
 /**
  * 
- * An interface used to retrieve data from conceptpower_concept_entry table that stores data
- * extracted from ConceptPower
+ * An interface used to retrieve data from conceptpower_concept_entry table that
+ * stores data extracted from ConceptPower
  * 
  * @author poojakulkarni
  *
  */
 @Repository
 public interface ConceptCacheRepository extends PagingAndSortingRepository<ConceptCache, String> {
-	
-	@Query("select c from ConceptCache c where c.alternativeUris = ?1")
-	public List<ConceptCache> findConceptByAlternativeURI(String uri);
-	
+
+    @Query("select c from ConceptCache c where ?1 in elements(c.alternativeUris)")
+    public List<ConceptCache> findConceptByAlternativeURI(String uri);
+
 }
