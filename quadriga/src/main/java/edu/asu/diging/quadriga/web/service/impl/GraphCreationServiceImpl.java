@@ -126,7 +126,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         if(sourceUri != null && !sourceUri.equals("") && node.getAlternativeUris() != null) {
             node.getAlternativeUris()
             .stream()
-            .filter(alternativeUri -> alternativeUri != null && !alternativeUri.equals("") && !alternativeUri.equals(sourceUri))
+            .filter(nullableAltUri -> nullableAltUri != null)
+            .filter(alternativeUri -> !alternativeUri.equals("") && !alternativeUri.equals(sourceUri))
             .forEach(alternativeUriValue -> uniqueNodes.put(alternativeUriValue, node));
         }
         
