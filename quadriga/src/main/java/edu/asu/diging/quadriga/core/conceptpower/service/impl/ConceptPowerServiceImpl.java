@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
 
         if (conceptCache == null || ChronoUnit.DAYS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= 2) {
-            saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
+            conceptCache = saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
         }
         return conceptCache;
     }
@@ -72,25 +73,39 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
      * @param uri               to be used for logging in case no ConceptCache entry
      *                          was generated
      */
-    private void saveConceptCacheFromConceptPowerReply(ConceptCache conceptCacheOld, ConceptPowerReply conceptPowerReply, String uri) {
+    private ConceptCache saveConceptCacheFromConceptPowerReply(ConceptCache conceptCacheOld, ConceptPowerReply conceptPowerReply, String uri) {
         ConceptCache conceptCache = mapConceptPowerReplyToConceptCache(conceptPowerReply);
 
-        if (conceptCache != null || (conceptCacheOld != null && conceptCacheOld.compareTo(conceptCache) != 0)) {
-            conceptCacheService.saveConceptCache(conceptCache);
-
-            ConceptType conceptTypeOld = conceptCacheOld.getConceptType();
-            ConceptType conceptType = conceptCache.getConceptType();
+        // ConceptPower returned a concept and either no conceptCache entry exists in the DB
+        // or if one exists, it is different from the current conceptCache entry
+        if (conceptCache != null && (conceptCacheOld == null || conceptCacheOld.compareTo(conceptCache) != 0)) {
             
-            if (conceptType != null || (conceptTypeOld != null && conceptTypeOld.compareTo(conceptType) != 0)) {
+            conceptCacheService.saveConceptCache(conceptCache);
+            
+            Optional.ofNullable(conceptCache.getAlternativeUris())
+                    .ifPresent(nonNullAlternativeUris -> nonNullAlternativeUris
+                            .stream()
+                            .filter(alternativeUri -> alternativeUri != null)
+                            .filter(nonNullAlternativeUri -> !nonNullAlternativeUri.equals(conceptCache.getUri()))
+                            .forEach(alternativeUriValue -> conceptCacheService.deleteConceptCacheByUri(alternativeUriValue)));                    
+            
+            ConceptType conceptType = conceptCache.getConceptType();
+            ConceptType conceptTypeOld = null;
+            
+            if(conceptCacheOld != null) {
+                conceptTypeOld = conceptCacheOld.getConceptType();
+            }
+            
+            // ConceptPower returned a concept type and either no conceptType entry exists in the DB
+            // or if one exists, it is different from the current conceptType entry
+            if (conceptType != null && (conceptTypeOld == null || conceptTypeOld.compareTo(conceptType) != 0)) {
                 conceptTypeService.saveConceptType(conceptType);
             }
-
-            conceptCache.getAlternativeUris().stream()
-                    .filter(alternativeUri -> alternativeUri != null && !alternativeUri.equals(conceptCache.getUri()))
-                    .forEach(alternativeUriValue -> conceptCacheService.deleteConceptCacheByUri(alternativeUriValue));
+            
         } else {
             logger.error("ConceptPower did not return any concept entries for uri: " + uri);
         }
+        return conceptCache;
     }
 
     /**
@@ -113,13 +128,10 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
             conceptCache.setDescription(conceptEntry.getDescription());
             conceptCache.setPos(conceptEntry.getPos());
 
-            String typeId = "";
             if (conceptEntry.getType() != null) {
-                if (conceptEntry.getType().getTypeUri() != null) {
-                    typeId = conceptEntry.getType().getTypeUri();
-                }
+                conceptCache.setTypeId(conceptEntry.getType().getTypeUri());
             }
-            conceptCache.setTypeId(typeId);
+            
             conceptCache.setDeleted(conceptEntry.getDeleted());
 
             // get last part of URI = id
@@ -144,7 +156,8 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
 
             conceptCache.setAlternativeUris(
                     conceptEntry.getAlternativeIds().stream().map(alternativeId -> alternativeId.getConceptUri())
-                            .filter(alternativeUri -> alternativeUri != null && !alternativeUri.equals(""))
+                            .filter(nullableAltUri -> nullableAltUri != null)
+                            .filter(alternativeUri -> !alternativeUri.equals(""))
                             .collect(Collectors.toList()));
 
             if (conceptEntry.getType() != null) {
