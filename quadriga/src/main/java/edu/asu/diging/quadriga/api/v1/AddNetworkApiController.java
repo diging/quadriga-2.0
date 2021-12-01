@@ -19,18 +19,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
 import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.core.citesphere.impl.CitesphereConnectorImpl;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
+import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedCollection;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedCollectionService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
-import edu.asu.diging.quadriga.core.service.TokenValidator;
 
 @Controller
 public class AddNetworkApiController {
@@ -45,12 +47,15 @@ public class AddNetworkApiController {
 
     @Autowired
     private MappedTripleService mappedTripleService;
-    
-    @Autowired
-    private MappedCollectionService mappedCollectionService;
 
     @Autowired
-    private TokenValidator tokenValidator;
+    private CitesphereConnectorImpl citesphereConnectorImpl;
+
+    @Autowired
+    private CollectionManager collectionManager;
+
+    @Autowired
+    private MappedCollectionService mappedCollectionService;
 
     /**
      * The method parse given Json from the post request body and add Network
@@ -64,7 +69,18 @@ public class AddNetworkApiController {
      */
     @ResponseBody
     @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId, @RequestHeader(name = "Authorization",  required = true) String authHeader) {
+    public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+
+        MappedCollection mappedCollection;
+        try {
+            mappedCollection = mappedCollectionService.findOrAddMappedCollectionByCollectionId(collectionId);
+            if (mappedCollection == null) {
+                return HttpStatus.NOT_FOUND;
+            }
+        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+            return HttpStatus.NOT_FOUND;
+        }
 
         // First we check whether a quadruple is present in request body
         if (quadruple == null) {
@@ -72,43 +88,38 @@ public class AddNetworkApiController {
             return HttpStatus.NO_CONTENT;
         }
 
-        // Next, we check validity of token received from Vogon
         String token = getTokenFromHeader(authHeader);
-        if(token == null) {
-            logger.error("Token not present in AuthorizationHeader for collectionId: " + collectionId);
+        TokenInfo tokenInfo = null;
+        try {
+            if (token != null) {
+                tokenInfo = citesphereConnectorImpl.getTokenInfo(token);
+            }
+            Collection collection = collectionManager.findCollection(collectionId);
+            // either token info wasn't returned by citesphere or the token has expired
+            if (collection.getApps() != null && !collection.getApps().isEmpty() && (tokenInfo == null
+                    || !tokenInfo.isActive() || !collection.getApps().contains(tokenInfo.getClient_id()))) {
+                return HttpStatus.UNAUTHORIZED;
+            }
+
+        } catch (OAuthException e) {
+
+            // we got unauth twice (using existing access token and re-generated one)
+            return HttpStatus.UNAUTHORIZED;
+        } catch (BadCredentialsException e) {
+
+            // Token is invalid
+            return HttpStatus.FORBIDDEN;
+        } catch (InvalidObjectIdException e) {
+            // No such collection found
             return HttpStatus.NOT_FOUND;
         }
 
-        TokenInfo tokenInfo;
-        try {
-            tokenInfo = tokenValidator.getTokenInfo(token);
-        } catch (OAuthException e) {
-            // we got unauth twice (using existing access token and re-generated one)
-            return HttpStatus.UNAUTHORIZED;
-        } catch(BadCredentialsException e) {
-            //Token is invalid
-            return HttpStatus.FORBIDDEN;
-        }
-        if(tokenInfo == null || !tokenInfo.isActive()) {
-            return HttpStatus.UNAUTHORIZED;
-        }
-        
-        // the flow will reach  here  only when token is present, valid  and active
-        // Next, we check whether a collection and mappedCollection is present
-        MappedCollection mappedCollection;
-        try {
-            mappedCollection = mappedCollectionService.findOrAddMappedCollectionByCollectionId(collectionId);
-            if(mappedCollection == null) {
-                return HttpStatus.NOT_FOUND;
-            }
-        } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
-            return HttpStatus.NOT_FOUND;
-        }
+        // the flow will reach here only when token is either present, valid and active or not required
 
         // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
-        eventGraphs.forEach(e -> {
+        for (EventGraph e : eventGraphs) {
             e.setCollectionId(mappedCollection.getCollectionId());
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
             e.setContext(quadruple.getGraph().getMetadata().getContext());
@@ -119,7 +130,8 @@ public class AddNetworkApiController {
              * This app's name should be stored in eventGraph instead of the client id
              */
             e.setAppName(tokenInfo.getClient_id());
-        });
+        }
+        
         eventGraphService.saveEventGraphs(eventGraphs);
 
         try {
@@ -132,8 +144,7 @@ public class AddNetworkApiController {
         return HttpStatus.ACCEPTED;
 
     }
-    
-    
+
     /**
      * This method will check and get a token that should be present in the
      * Authorization Header of the add network request
@@ -145,13 +156,14 @@ public class AddNetworkApiController {
      */
     private String getTokenFromHeader(String authHeader) {
         String token;
-        
-        if(authHeader == null || authHeader.trim().isEmpty()) {
+
+        if (authHeader == null || authHeader.trim().isEmpty()) {
             return null;
         } else {
-            // Trims the string "Bearer " to extract the exact token from the Authorization Header
+            // Trims the string "Bearer " to extract the exact token from the Authorization
+            // Header
             token = authHeader.substring(7);
-            if(token == null || token.trim().isEmpty()) {
+            if (token == null || token.trim().isEmpty()) {
                 return null;
             }
         }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
@@ -30,6 +31,9 @@ public class EditCollectionController {
 
     @Autowired
     private CollectionManager collectionManager;
+    
+    @Autowired
+    private CitesphereConnector citesphereConnector;
 
     /**
      * Request handler for getting the "Edit collections" view
@@ -49,6 +53,9 @@ public class EditCollectionController {
                 collectionForm.setId(id);
                 collectionForm.setName(collection.getName());
                 collectionForm.setDescription(collection.getDescription());
+                collectionForm.setApps(collection.getApps());
+                
+                model.addAttribute("citesphereApps", citesphereConnector.getCitesphereApps());
                 model.addAttribute("collectionForm", collectionForm);
                 return "auth/editCollection";
             } else {
@@ -76,7 +83,7 @@ public class EditCollectionController {
         }
 
         try {
-            collectionManager.editCollection(id, collectionForm.getName(), collectionForm.getDescription());
+            collectionManager.editCollection(id, collectionForm.getName(), collectionForm.getDescription(), collectionForm.getApps());
             
             redirectAttributes.addFlashAttribute("alert_type", "success");
             redirectAttributes.addFlashAttribute("alert_msg", "Collection has been edited.");

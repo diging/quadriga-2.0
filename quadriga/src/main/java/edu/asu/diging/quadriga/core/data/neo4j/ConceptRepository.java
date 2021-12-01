@@ -11,4 +11,5 @@ public interface ConceptRepository extends Neo4jRepository<Concept, Long> {
     
     public Optional<List<Concept>> findByMappingTypeAndMappedCollectionId(String mappingType, String mappedCollectionId);
 
+    public Optional<List<Concept>> findByMappingTypeAndMappedCollectionIdAndUri(String mappingType, String mappedCollectionId, String uri);
 }
