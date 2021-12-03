@@ -108,14 +108,9 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         return conceptCache;
     }
 
-    /**
-     * This method maps the ConceptPowerReply object returned from ConceptPower to a
-     * ConceptCache object that would be stored in the database
-     * 
-     * @param conceptPowerReply is the object used to generate a ConceptCache object
-     * @return the generated ConceptCache object
-     */
-    private ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
+    
+    @Override
+    public ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
         // If we get multiple ConceptPower entries in the reply, we use the first one
         List<ConceptEntry> conceptEntries = conceptPowerReply.getConceptEntries();
         ConceptCache conceptCache = null;
@@ -127,20 +122,17 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
             conceptCache.setConceptList(conceptEntry.getConceptList());
             conceptCache.setDescription(conceptEntry.getDescription());
             conceptCache.setPos(conceptEntry.getPos());
-
-            if (conceptEntry.getType() != null) {
-                conceptCache.setTypeId(conceptEntry.getType().getTypeUri());
-            }
-            
-            conceptCache.setDeleted(conceptEntry.getDeleted());
-
-            // get last part of URI = id
-            int index = conceptEntry.getConceptUri().lastIndexOf("/");
-            if (index != -1) {
-                conceptCache.setId(conceptEntry.getConceptUri().substring(index + 1));
-            }
+            conceptCache.setDeleted(conceptEntry.getDeleted() == null ? false : conceptEntry.getDeleted());
             conceptCache.setCreatorId(conceptEntry.getCreatorId());
             conceptCache.setWord(conceptEntry.getLemma());
+
+            if(conceptEntry.getConceptUri() != null) {
+                // get last part of URI = id
+                int index = conceptEntry.getConceptUri().lastIndexOf("/");
+                if (index != -1) {
+                    conceptCache.setId(conceptEntry.getConceptUri().substring(index + 1));
+                }
+            }
 
             if (conceptEntry.getWordnetId() != null && !conceptEntry.getWordnetId().trim().equals("")) {
                 conceptCache.setWordNetIds(Arrays.asList(conceptEntry.getWordnetId().split(",")));
@@ -154,11 +146,15 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
                 conceptCache.setEqualTo(new ArrayList<>());
             }
 
-            conceptCache.setAlternativeUris(
-                    conceptEntry.getAlternativeIds().stream().map(alternativeId -> alternativeId.getConceptUri())
-                            .filter(nullableAltUri -> nullableAltUri != null)
-                            .filter(alternativeUri -> !alternativeUri.equals(""))
-                            .collect(Collectors.toList()));
+            if(conceptEntry.getAlternativeIds() != null && !conceptEntry.getAlternativeIds().isEmpty()) {
+                conceptCache.setAlternativeUris(
+                        conceptEntry.getAlternativeIds()
+                        .stream()
+                        .map(alternativeId -> alternativeId.getConceptUri())
+                        .filter(nullableAltUri -> nullableAltUri != null)
+                        .filter(alternativeUri -> !alternativeUri.equals(""))
+                        .collect(Collectors.toList()));
+            }
 
             if (conceptEntry.getType() != null) {
                 Type type = conceptEntry.getType();
@@ -168,6 +164,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
                 conceptType.setName(type.getTypeName());
                 conceptType.setDescription("");
                 conceptCache.setConceptType(conceptType);
+                conceptCache.setTypeId(conceptEntry.getType().getTypeUri());
             }
         }
         return conceptCache;
