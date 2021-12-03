@@ -8,11 +8,18 @@ public class TripleElement {
     public final static String TYPE_REF = "REF";
     public final static String TYPE_URI = "URI";
 
+    private Long id;
     private String type;
     private String reference;
     private String uri;
     private String label;
     
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getType() {
         return type;
     }
