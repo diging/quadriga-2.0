@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.core.conceptpower.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
@@ -382,6 +384,159 @@ public class ConceptPowerServiceImplTest {
         Assert.assertEquals(id, conceptCache.getConceptType().getId());
         Assert.assertEquals(name, conceptCache.getConceptType().getName());
         Assert.assertEquals(expectedDescription, conceptCache.getConceptType().getDescription());
+    }
+    
+    @Test
+    public void test_getConceptByUri_noConceptInDB() {
+        String sourceURI = "URI-1";
+        
+        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        conceptEntry.setConceptUri(sourceURI);
+        conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
+        
+        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(null);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
+        Mockito.doNothing().when(conceptCacheService).saveConceptCache(Mockito.any(ConceptCache.class));
+        
+        ConceptCache conceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
+        Assert.assertEquals(sourceURI, conceptCache.getUri());
+    }
+    
+    @Test
+    public void test_getConceptByUri_conceptPresentInDB() {
+        String sourceURI = "URI-1";
+        ConceptCache conceptCache = new ConceptCache();
+        conceptCache.setUri(sourceURI);
+        
+        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        
+        ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
+        Assert.assertEquals(sourceURI, foundConceptCache.getUri());
+    }
+    
+    @Test
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdatedToday() {
+        String sourceURI = "URI-1";
+        ConceptCache conceptCache = new ConceptCache();
+        conceptCache.setUri(sourceURI);
+        conceptCache.setLastUpdated(LocalDateTime.now());
+        
+        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        
+        ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
+        Assert.assertEquals(sourceURI, foundConceptCache.getUri());
+    }
+    
+    @Test
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_noDiff() {
+        String sourceURI = "URI-1";
+        ConceptCache conceptCache = new ConceptCache();
+        conceptCache.setUri(sourceURI);
+        conceptCache.setLastUpdated(LocalDateTime.now());
+        
+        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        conceptEntry.setConceptUri(sourceURI);
+        conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
+        
+        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
+        
+        ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
+        Assert.assertEquals(sourceURI, foundConceptCache.getUri());
+    }
+    
+    @Test
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_posDiff() {
+        String sourceURI = "URI-1";
+        String posOld = "NOUN";
+        String posNew = "VERB";
+        ConceptCache conceptCache = new ConceptCache();
+        conceptCache.setUri(sourceURI);
+        conceptCache.setLastUpdated(LocalDateTime.now().minusDays(3));
+        conceptCache.setPos(posOld);
+        
+        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        conceptEntry.setConceptUri(sourceURI);
+        conceptEntry.setPos(posNew);
+        conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
+        
+        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
+        Mockito.doNothing().when(conceptCacheService).saveConceptCache(Mockito.any(ConceptCache.class));
+        
+        ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
+        Assert.assertEquals(sourceURI, foundConceptCache.getUri());
+        Assert.assertEquals(posNew, foundConceptCache.getPos());
+    }
+    
+    @Test
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_altUrisNoDiff() {
+        String sourceURI = "URI-1";
+        String altURI = "ALT-URI-1";
+        
+        ConceptCache conceptCache = new ConceptCache();
+        conceptCache.setUri(sourceURI);
+        conceptCache.setLastUpdated(LocalDateTime.now().minusDays(3));
+        conceptCache.setAlternativeUris(Arrays.asList(sourceURI, altURI));
+        
+        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        
+        AlternativeId altURI1 = new AlternativeId();
+        AlternativeId altURI2 = new AlternativeId();
+        
+        altURI1.setConceptUri(sourceURI);
+        altURI2.setConceptUri(altURI);
+        
+        conceptEntry.setConceptUri(sourceURI);
+        conceptEntry.setAlternativeIds(Arrays.asList(altURI1, altURI2));
+        
+        conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
+        
+        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
+        
+        ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
+        Assert.assertEquals(sourceURI, foundConceptCache.getUri());
+        Assert.assertEquals(sourceURI, foundConceptCache.getAlternativeUris().get(0));
+        Assert.assertEquals(altURI, foundConceptCache.getAlternativeUris().get(1));
+    }
+    
+    // Run this test, it should work
+    @Test
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_altUrisDiffOrder() {
+        String sourceURI = "URI-1";
+        String altURI = "ALT-URI-1";
+        
+        ConceptCache conceptCache = new ConceptCache();
+        conceptCache.setUri(sourceURI);
+        conceptCache.setLastUpdated(LocalDateTime.now().minusDays(3));
+        conceptCache.setAlternativeUris(Arrays.asList(sourceURI, altURI));
+        
+        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        
+        AlternativeId altURI1 = new AlternativeId();
+        AlternativeId altURI2 = new AlternativeId();
+        
+        altURI1.setConceptUri(sourceURI);
+        altURI2.setConceptUri(altURI);
+        
+        conceptEntry.setConceptUri(sourceURI);
+        conceptEntry.setAlternativeIds(Arrays.asList(altURI2, altURI1));
+        
+        conceptPowerReply.setConceptEntries(Collections.singletonList(conceptEntry));
+        
+        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
+        
+        ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
+        Assert.assertEquals(sourceURI, foundConceptCache.getUri());
+        Assert.assertEquals(sourceURI, foundConceptCache.getAlternativeUris().get(0));
+        Assert.assertEquals(altURI, foundConceptCache.getAlternativeUris().get(1));
     }
     
 }

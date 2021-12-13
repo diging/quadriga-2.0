@@ -183,37 +183,45 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
 
     @Override
     public int compareTo(ConceptCache conceptCache) {
-        if (!this.getAlternativeUris().equals(conceptCache.getAlternativeUris())) {
+        if (this.getAlternativeUris() == null) {
+            return -1;
+        } else {
+            if(this.getAlternativeUris().size() != conceptCache.getAlternativeUris().size()) return -1;
+            for(String alternativeUri: this.getAlternativeUris()) {
+                if(!conceptCache.getAlternativeUris().contains(alternativeUri)) {
+                    return -1;
+                }
+            }
+        }
+        // Figure this out
+        if (this.getConceptList() == null && conceptCache.getConceptList() != null) {
             return -1;
         }
-        if (!this.getConceptList().equals(conceptCache.getConceptList())) {
+        if (this.getCreatorId() == null || !this.getCreatorId().equals(conceptCache.getCreatorId())) {
             return -1;
         }
-        if (!this.getCreatorId().equals(conceptCache.getCreatorId())) {
+        if (this.getDescription() == null || !this.getDescription().equals(conceptCache.getDescription())) {
             return -1;
         }
-        if (!this.getDescription().equals(conceptCache.getDescription())) {
+        if (this.getEqualTo() == null || !this.getEqualTo().equals(conceptCache.getEqualTo())) {
             return -1;
         }
-        if (!this.getEqualTo().equals(conceptCache.getEqualTo())) {
+        if (this.getId() == null || !this.getId().equals(conceptCache.getId())) {
             return -1;
         }
-        if (!this.getId().equals(conceptCache.getId())) {
+        if (this.getPos() == null || !this.getPos().equals(conceptCache.getPos())) {
             return -1;
         }
-        if (!this.getPos().equals(conceptCache.getPos())) {
+        if (this.getTypeId() == null || !this.getTypeId().equals(conceptCache.getTypeId())) {
             return -1;
         }
-        if (!this.getTypeId().equals(conceptCache.getTypeId())) {
+        if (this.getUri() == null || !this.getUri().equals(conceptCache.getUri())) {
             return -1;
         }
-        if (!this.getUri().equals(conceptCache.getUri())) {
+        if (this.getWord() == null || !this.getWord().equals(conceptCache.getWord())) {
             return -1;
         }
-        if (!this.getWord().equals(conceptCache.getWord())) {
-            return -1;
-        }
-        if (!this.getWordNetIds().equals(conceptCache.getWordNetIds())) {
+        if (this.getWordNetIds() == null || !this.getWordNetIds().equals(conceptCache.getWordNetIds())) {
             return -1;
         }
         return 0;
