@@ -17,7 +17,7 @@ public interface MappedTripleService {
      * @param collectionId Collection Id for which the triples are to be fetched
      * @return the retrieved Triples
      */
-    List<Triple> getMappedTriples(String collectionId);
+    List<Triple> getMappedTriples(String mappedCollectionId);
 
-    List<Triple> getTriplesByUri(String collectionId, String uri);
+    List<Triple> getTriplesByUri(String mappedCollectionId, String uri);
 }

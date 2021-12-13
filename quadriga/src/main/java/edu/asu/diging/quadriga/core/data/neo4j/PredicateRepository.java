@@ -10,6 +10,7 @@ public interface PredicateRepository extends Neo4jRepository<Predicate, Long> {
 
     List<Predicate> findByMappedCollectionId(String mappedCollectionId);
     
-    List<Predicate> findBySourceUriOrTargetUriAndMappedCollectionId(String uri, String mappedCollectionId);
+    List<Predicate> findBySourceUriOrTargetUri_MappedCollectionId(String sourceUri, String targetUri, String mappedCollectionId);
     
+    List<Predicate> findBySourceUriAndMappedCollectionId(String sourceUri, String mappedCollectionId);
 }

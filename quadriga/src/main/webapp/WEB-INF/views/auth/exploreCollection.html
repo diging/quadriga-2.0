@@ -1,0 +1,129 @@
+<html layout:decorate="~{layouts/main}">
+<head>
+<title>Quadriga 2.0</title>
+<style>
+.cy-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cy {
+    height: 500px;
+    flex: 3.5
+}
+
+.cy-accordion {
+    margin-left: 10px;
+    flex: 1.5
+}
+</style>
+<script src="https://code.jquery.com/jquery-2.1.3.js"></script>
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    $(function() {
+        var cy = cytoscape({
+            container : document.getElementById('cy'),
+            elements : [[${elements}]],
+            layout : {
+                name : 'cose',
+                idealEdgeLength : 5,
+            },
+            style : [
+                    {
+                        selector : 'node',
+                        css : {
+                            'background-color' : 'mapData(group, 0, 1, #E1CE7A, #FDD692)',
+                            'border-color' : '#B98F88',
+                            'border-width' : 1,
+                            'font-family' : 'Raleway, sans-serif',
+                            'font-size' : '12px',
+                            'font-weight' : 'bold',
+                            'color' : 'mapData(group, 0, 1, #666, #333)',
+                            'label' : 'data(label)',
+                            'width' : 'mapData(group, 0, 1, 40, 55)',
+                            'height' : "mapData(group, 0, 1, 40, 55)",
+                            'text-valign' : 'center'
+                        }
+
+                    }, {
+                        selector : 'edge',
+                        css : {
+                            'width' : 1,
+                            'line-color' : '#754F44',
+                            'target-arrow-shape' : 'none'
+                        }
+                    } ]
+        });
+        
+        cy.on('tap', 'node', function(event) {
+            var node = event.target;
+//             document.getElementById('concept-title').innerHTML = `Concept: ${node.data('label')} `;
+//             document.getElementById('concept-description').innerHTML = node.data('description')
+        });
+        
+        cy.on('dbclick', 'node', function(event) {
+            var currentNode = event.target;
+            
+//             const currentEventGraphIds = currentNode.data('eventGraphIds')
+            
+//             cy.filter('node')
+//             .filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length == 0)
+//             .forEach(filteredNode => filteredNode.style('opacity', 0.3));
+            
+//             cy.filter('node')
+//             .filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
+//             .forEach(filteredNode => {
+//                 if(filteredNode.data('group') == 0) {
+//                     filteredNode.style('width', 50);
+//                     filteredNode.style('height', 50);
+//                 } else if(filteredNode.data('group') == 1) {
+//                     filteredNode.style('width', 65);
+//                     filteredNode.style('height', 65);
+//                 }
+//             });
+            
+//             cy.filter('edge')
+//             .filter(edge => !currentEventGraphIds.includes(edge.data('eventGraphId')))
+//             .forEach(filteredEdge => filteredEdge.style('opacity', 0.3));
+        });
+        
+        cy.on('mouseout', 'node', function(event) {
+            var currentNode = event.target
+//             const currentEventGraphIds = currentNode.data('eventGraphIds')
+            
+//             cy.filter('node')
+//             .filter(node => node.style('opacity') != '1')
+//             .forEach(filteredNode => filteredNode.style('opacity', 1));
+            
+//             cy.filter('node')
+//             .filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
+//             .forEach(filteredNode => {
+//                 if(filteredNode.data('group') == 0) {
+//                     filteredNode.style('width', 40);
+//                     filteredNode.style('height', 40);
+//                 } else if(filteredNode.data('group') == 1) {
+//                     filteredNode.style('width', 55);
+//                     filteredNode.style('height', 55);
+//                 }
+//             });
+            
+//             cy.filter('edge')
+//             .filter(edge => edge.style('opacity') != '1')
+//             .forEach(filteredEdge => filteredEdge.style('opacity', '1'));
+        });
+        
+    });
+    
+    /*]]>*/
+</script>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h1>Collection page</h1>
+        <div class="cy-container">
+            <div id="cy" class="cy"></div>
+        </div>
+</body>
+</html>
