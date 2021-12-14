@@ -155,7 +155,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
                 node.setAlternativeUris(conceptCache.getAlternativeUris());
             }
         } else {
-            // TODO: Need to get data from viaf if viaf URL is present
+            // Need to get data from viaf if viaf URL is present, but doesn't seem to be part of story Q20-19
             node.setLabel(event.getTerm().getPrintedRepresentation().getTermParts().iterator().next().getExpression());
         }
 
