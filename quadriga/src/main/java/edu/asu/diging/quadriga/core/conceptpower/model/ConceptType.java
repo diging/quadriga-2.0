@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
+
 @Entity
 @Table(name = "conceptpower_concept_type_cache")
 public class ConceptType implements Serializable, Comparable<ConceptType> {
@@ -58,19 +60,28 @@ public class ConceptType implements Serializable, Comparable<ConceptType> {
 
     @Override
     public int compareTo(ConceptType type) {
-        if (type == null) {
+        // If both old and new types are null/blank, nothing has changed
+        // If old value is null/blank, new value is not null/blank, difference present
+        // If old value is not null/blank, new value is null/blank, difference present
+        // If both are not null/blank, we need to check difference
+        
+        if (type == null ) {
             return -1;
         }
-        if (!this.getId().equals(type.getId())) {
+        if (!(StringUtils.isEmpty(type.getId()) && StringUtils.isEmpty(this.getId())) 
+                && (StringUtils.isEmpty(type.getId()) || !type.getId().equals(this.getId()))) {
             return -1;
         }
-        if (!this.getDescription().equals(type.getDescription())) {
+        if (!(StringUtils.isEmpty(type.getDescription()) && StringUtils.isEmpty(this.getDescription())) 
+                && (StringUtils.isEmpty(type.getDescription()) || !type.getDescription().equals(this.getDescription()))) {
             return -1;
         }
-        if (!this.getName().equals(type.getName())) {
+        if (!(StringUtils.isEmpty(type.getName()) && StringUtils.isEmpty(this.getName())) 
+                && (StringUtils.isEmpty(type.getName()) || !type.getName().equals(this.getName()))) {
             return -1;
         }
-        if (!this.getUri().equals(type.getUri())) {
+        if (!(StringUtils.isEmpty(type.getUri()) && StringUtils.isEmpty(this.getUri())) 
+                && (StringUtils.isEmpty(type.getUri()) || !type.getName().equals(this.getUri()))) {
             return -1;
         }
         return 0;

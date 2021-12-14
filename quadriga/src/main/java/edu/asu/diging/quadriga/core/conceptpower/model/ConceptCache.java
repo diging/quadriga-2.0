@@ -12,6 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -183,48 +184,63 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
 
     @Override
     public int compareTo(ConceptCache conceptCache) {
-        if (this.getAlternativeUris() == null) {
-            return -1;
-        } else {
-            if(this.getAlternativeUris().size() != conceptCache.getAlternativeUris().size()) return -1;
-            for(String alternativeUri: this.getAlternativeUris()) {
-                if(!conceptCache.getAlternativeUris().contains(alternativeUri)) {
-                    return -1;
-                }
-            }
-        }
-        // Figure this out
-        if (this.getConceptList() == null && conceptCache.getConceptList() != null) {
+        // If both old and new cache are null, nothing has changed
+        // If old value is null/blank/empty, new value is not null/blank/empty, difference present
+        // If old value is not null/blank/empty, new value is null/blank/empty, difference present
+        // If both are not null/blank/empty, we need to check difference
+        
+        if(conceptCache == null) {
             return -1;
         }
-        if (this.getCreatorId() == null || !this.getCreatorId().equals(conceptCache.getCreatorId())) {
+        if (!(isNullOrEmpty(conceptCache.getAlternativeUris()) && isNullOrEmpty(this.getAlternativeUris())) 
+                && (isNullOrEmpty(conceptCache.getAlternativeUris()) || !conceptCache.getAlternativeUris().equals(this.getAlternativeUris()))) {
             return -1;
         }
-        if (this.getDescription() == null || !this.getDescription().equals(conceptCache.getDescription())) {
+        if (!(StringUtils.isEmpty(conceptCache.getConceptList()) && StringUtils.isEmpty(this.getConceptList())) 
+                && (StringUtils.isEmpty(conceptCache.getConceptList()) || !conceptCache.getConceptList().equals(this.getConceptList()))) {
             return -1;
         }
-        if (this.getEqualTo() == null || !this.getEqualTo().equals(conceptCache.getEqualTo())) {
+        if (!(StringUtils.isEmpty(conceptCache.getCreatorId()) && StringUtils.isEmpty(this.getCreatorId())) 
+                && (StringUtils.isEmpty(conceptCache.getCreatorId()) || !conceptCache.getCreatorId().equals(this.getCreatorId()))) {
             return -1;
         }
-        if (this.getId() == null || !this.getId().equals(conceptCache.getId())) {
+        if (!(StringUtils.isEmpty(conceptCache.getDescription()) && StringUtils.isEmpty(this.getDescription())) 
+                && (StringUtils.isEmpty(conceptCache.getDescription()) || !conceptCache.getDescription().equals(this.getDescription()))) {
             return -1;
         }
-        if (this.getPos() == null || !this.getPos().equals(conceptCache.getPos())) {
+        if (!(isNullOrEmpty(conceptCache.getEqualTo()) && isNullOrEmpty(this.getEqualTo())) 
+                && (isNullOrEmpty(conceptCache.getEqualTo()) || !conceptCache.getEqualTo().equals(this.getEqualTo()))) {
             return -1;
         }
-        if (this.getTypeId() == null || !this.getTypeId().equals(conceptCache.getTypeId())) {
+        if (!(StringUtils.isEmpty(conceptCache.getId()) && StringUtils.isEmpty(this.getId())) 
+                && (StringUtils.isEmpty(conceptCache.getId()) || !conceptCache.getId().equals(this.getId()))) {
             return -1;
         }
-        if (this.getUri() == null || !this.getUri().equals(conceptCache.getUri())) {
+        if (!(StringUtils.isEmpty(conceptCache.getPos()) && StringUtils.isEmpty(this.getPos())) 
+                && (StringUtils.isEmpty(conceptCache.getPos()) || !conceptCache.getPos().equals(this.getPos())))  {
             return -1;
         }
-        if (this.getWord() == null || !this.getWord().equals(conceptCache.getWord())) {
+        if (!(StringUtils.isEmpty(conceptCache.getTypeId()) && StringUtils.isEmpty(this.getTypeId())) 
+                && (StringUtils.isEmpty(conceptCache.getTypeId()) || !conceptCache.getTypeId().equals(this.getTypeId()))) {
             return -1;
         }
-        if (this.getWordNetIds() == null || !this.getWordNetIds().equals(conceptCache.getWordNetIds())) {
+        if (!(StringUtils.isEmpty(conceptCache.getUri()) && StringUtils.isEmpty(this.getUri())) 
+                && (StringUtils.isEmpty(conceptCache.getUri()) || !conceptCache.getUri().equals(this.getUri()))) {
+            return -1;
+        }
+        if (!(StringUtils.isEmpty(conceptCache.getWord()) && StringUtils.isEmpty(this.getWord())) 
+                && (StringUtils.isEmpty(conceptCache.getWord()) || !conceptCache.getWord().equals(this.getWord()))) {
+            return -1;
+        }
+        if (!(isNullOrEmpty(conceptCache.getWordNetIds()) && isNullOrEmpty(this.getWordNetIds())) 
+                && (isNullOrEmpty(conceptCache.getWordNetIds()) || !conceptCache.getWordNetIds().equals(this.getWordNetIds()))) {
             return -1;
         }
         return 0;
+    }
+    
+    private static boolean isNullOrEmpty(List<String> list) {
+        return list == null || list.isEmpty();
     }
 
 }
