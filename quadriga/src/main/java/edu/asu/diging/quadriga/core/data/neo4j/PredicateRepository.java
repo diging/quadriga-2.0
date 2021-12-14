@@ -2,15 +2,24 @@ package edu.asu.diging.quadriga.core.data.neo4j;
 
 import java.util.List;
 
+import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 
+@Repository
 public interface PredicateRepository extends Neo4jRepository<Predicate, Long> {
 
     List<Predicate> findByMappedCollectionId(String mappedCollectionId);
-    
-    List<Predicate> findBySourceUriOrTargetUri_MappedCollectionId(String sourceUri, String targetUri, String mappedCollectionId);
-    
-    List<Predicate> findBySourceUriAndMappedCollectionId(String sourceUri, String mappedCollectionId);
+
+    @Query("MATCH (p1:Concept)-[r]->(p2:Concept)"
+            + "WHERE r.mappedCollectionId = $mappedCollectionId AND (p1.uri=$uri OR p2.uri=$uri)"
+            + "RETURN r")
+    List<Predicate> findBySourceUriOrTargetUriAndMappedCollectionId(@Param("uri") String uri,
+            @Param("mappedCollectionId") String mappedCollectionId);
+
+    List<Predicate> findBySourceUriAndMappedCollectionIdOrTargetUriAndMappedCollectionId(String sourceUri,
+            String mappedCollectionId1, String targetUri, String mappedCollectionId2);
 }
