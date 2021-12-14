@@ -1,5 +1,8 @@
 package edu.asu.diging.quadriga.core.model;
+
 import java.time.LocalDateTime;
+
+import java.util.List;
 import javax.persistence.Id;
 
 import org.bson.types.ObjectId;
@@ -14,6 +17,8 @@ public class Collection {
 
     // Time will be stored in UTC
     private LocalDateTime creationTime;
+    
+    private List<String> apps;
     
     public Collection() {
         this.creationTime = LocalDateTime.now();
@@ -45,6 +50,14 @@ public class Collection {
     
     public LocalDateTime getCreationTime() {
         return creationTime;
+    }
+    
+    public List<String> getApps() {
+        return apps;
+    }
+
+    public void setApps(List<String> apps) {
+        this.apps = apps;
     }
 
 }

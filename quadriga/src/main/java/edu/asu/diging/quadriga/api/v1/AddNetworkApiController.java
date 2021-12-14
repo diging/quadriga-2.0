@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
 import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.core.citesphere.impl.CitesphereConnectorImpl;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
@@ -30,7 +31,6 @@ import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedCollectionService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
-import edu.asu.diging.quadriga.core.service.TokenValidator;
 
 @Controller
 public class AddNetworkApiController {
@@ -50,7 +50,7 @@ public class AddNetworkApiController {
     private MappedCollectionService mappedCollectionService;
 
     @Autowired
-    private TokenValidator tokenValidator;
+    private CitesphereConnectorImpl citesphereConnectorImpl;
 
     /**
      * The method parse given Json from the post request body and add Network
@@ -81,7 +81,12 @@ public class AddNetworkApiController {
 
         TokenInfo tokenInfo;
         try {
-            tokenInfo = tokenValidator.getTokenInfo(token);
+            tokenInfo = citesphereConnectorImpl.getTokenInfo(token);
+            
+            // either token info wasn't returned by citesphere or the token has expired
+            if(tokenInfo == null || !tokenInfo.isActive()) {
+                return HttpStatus.UNAUTHORIZED;
+            }
         } catch (OAuthException e) {
             // we got unauth twice (using existing access token and re-generated one)
             return HttpStatus.UNAUTHORIZED;
