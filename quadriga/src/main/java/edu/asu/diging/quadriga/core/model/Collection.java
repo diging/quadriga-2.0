@@ -14,11 +14,11 @@ public class Collection {
     
     private String name;
     private String description;
-    
-    private List<String> apps;
 
     // Time will be stored in UTC
     private LocalDateTime creationTime;
+    
+    private List<String> apps;
     
     public Collection() {
         this.creationTime = LocalDateTime.now();
@@ -48,17 +48,16 @@ public class Collection {
         this.description = description;
     }
     
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
+    
     public List<String> getApps() {
         return apps;
     }
 
     public void setApps(List<String> apps) {
         this.apps = apps;
-
-    }
-    
-    public LocalDateTime getCreationTime() {
-        return creationTime;
     }
 
 }

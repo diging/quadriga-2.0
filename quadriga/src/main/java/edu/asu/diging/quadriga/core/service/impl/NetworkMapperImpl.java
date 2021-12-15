@@ -16,8 +16,6 @@ import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.NetworkConstants;
 import edu.asu.diging.quadriga.api.v1.model.NodeData;
 import edu.asu.diging.quadriga.api.v1.model.NodeMetadata;
-import edu.asu.diging.quadriga.core.model.DefaultMapping;
-import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.elements.Actor;
 import edu.asu.diging.quadriga.core.model.elements.Concept;
 import edu.asu.diging.quadriga.core.model.elements.Place;

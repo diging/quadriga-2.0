@@ -47,13 +47,11 @@ public class CollectionManagerImpl implements CollectionManager {
         }
     }
 
-
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#editCollection(java.lang.String, java.lang.String, java.lang.String, java.util.List)
      */
     @Override
     public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, InvalidObjectIdException {
-
         Collection collection = findCollection(id);
 
         if (Objects.nonNull(collection)) {
