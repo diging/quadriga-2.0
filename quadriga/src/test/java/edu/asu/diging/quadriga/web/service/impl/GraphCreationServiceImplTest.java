@@ -107,15 +107,15 @@ public class GraphCreationServiceImplTest {
 
         Assert.assertArrayEquals(
                 new String[] { "http://www.digitalhps.org/concepts/albert-einstein",
-                        "http://www.digitalhps.org/concepts/albert-einstein-alt" },
+                    "http://www.digitalhps.org/concepts/albert-einstein-alt" },
                 subjectNode.getAlternativeUris().toArray());
         Assert.assertArrayEquals(
                 new String[] { "http://www.digitalhps.org/concepts/WID-10295819-N-01-married",
-                        "http://www.digitalhps.org/concepts/WID-10295819-N-02-married" },
+                    "http://www.digitalhps.org/concepts/WID-10295819-N-02-married" },
                 predicateNode.getAlternativeUris().toArray());
         Assert.assertArrayEquals(
                 new String[] { "http://www.digitalhps.org/concepts/elsa-einstein",
-                        "http://www.digitalhps.org/concepts/elsa-einstein-alt" },
+                    "http://www.digitalhps.org/concepts/elsa-einstein-alt" },
                 objectNode.getAlternativeUris().toArray());
     }
 
@@ -189,20 +189,20 @@ public class GraphCreationServiceImplTest {
 
         Assert.assertArrayEquals(
                 new String[] { "http://www.digitalhps.org/concepts/albert-einstein",
-                        "http://www.digitalhps.org/concepts/albert-einstein-alt" },
+                    "http://www.digitalhps.org/concepts/albert-einstein-alt" },
                 subjectNode.getAlternativeUris().toArray());
         Assert.assertArrayEquals(
                 new String[] { "http://www.digitalhps.org/concepts/WID-10295819-N-01-married",
-                        "http://www.digitalhps.org/concepts/WID-10295819-N-02-married" },
+                    "http://www.digitalhps.org/concepts/WID-10295819-N-02-married" },
                 predicateNode.getAlternativeUris().toArray());
         Assert.assertArrayEquals(new String[] { "http://www.digitalhps.org/concepts/cousin",
-                "http://www.digitalhps.org/concepts/cousin-2" }, subjectNode2.getAlternativeUris().toArray());
+                    "http://www.digitalhps.org/concepts/cousin-2" }, subjectNode2.getAlternativeUris().toArray());
         Assert.assertArrayEquals(
                 new String[] { "http://www.digitalhps.org/concepts/be", "http://www.digitalhps.org/concepts/be-2" },
                 predicateNode2.getAlternativeUris().toArray());
         Assert.assertArrayEquals(
                 new String[] { "http://www.digitalhps.org/concepts/elsa-einstein",
-                        "http://www.digitalhps.org/concepts/elsa-einstein-alt" },
+                    "http://www.digitalhps.org/concepts/elsa-einstein-alt" },
                 objectNode.getAlternativeUris().toArray());
     }
 

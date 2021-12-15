@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "id", "lemma", "pos", "description", "conceptList", "type", "deleted", "concept_uri", "creator_id",
-        "equal_to", "modified_by", "similar_to", "synonym_ids", "wordnet_id", "alternativeIds" })
+    "equal_to", "modified_by", "similar_to", "synonym_ids", "wordnet_id", "alternativeIds" })
 public class ConceptEntry {
 
     @JsonProperty("id")
