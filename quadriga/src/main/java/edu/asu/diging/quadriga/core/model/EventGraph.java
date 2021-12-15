@@ -1,7 +1,10 @@
 package edu.asu.diging.quadriga.core.model;
 
+import java.time.LocalDateTime;
+
 import org.bson.types.ObjectId;
 
+import edu.asu.diging.quadriga.api.v1.model.Context;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 
 public class EventGraph {
@@ -9,12 +12,18 @@ public class EventGraph {
     private ObjectId _id;
     private CreationEvent  rootEvent;
     private DefaultMapping defaultMapping;
+    private LocalDateTime creationTime;
     private ObjectId collectionId;
-
-    public EventGraph() {}
+    private String appName;
+    private Context context;
+    
+    public EventGraph() {
+        this.creationTime = LocalDateTime.now();
+    }
     
     public EventGraph(CreationEvent root) {
         this.rootEvent = root;
+        this.creationTime = LocalDateTime.now();
     }
     
     public ObjectId getId() {
@@ -41,6 +50,9 @@ public class EventGraph {
         this.defaultMapping = defaultMapping;
     }
     
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
     public ObjectId getCollectionId() {
         return collectionId;
     }
@@ -48,6 +60,21 @@ public class EventGraph {
     public void setCollectionId(ObjectId collectionId) {
         this.collectionId = collectionId;
     }
-    
+
+    public String getAppName() {
+        return appName;
+    }
+
+    public void setAppName(String appName) {
+        this.appName = appName;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
     
 }
