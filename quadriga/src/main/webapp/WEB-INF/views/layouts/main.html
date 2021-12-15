@@ -48,48 +48,49 @@
 
 <body style="padding-bottom: 20px;">
 	<div class="container">
-		<div class="page-header">
-			<nav>
-				<ul class="nav nav-pills pull-right">
-					<li role="presentation"><a th:href="@{/}">Home</a></li>
-
-					<li sec:authorize="hasRole('ADMIN')" role="presentation"><a
-						th:href="@{/admin/user/list}">Users</a></li>
-
-                    <li class="dropdown" sec:authorize="hasRole('USER')" role="presentation">
-							<a
-								class="dropdown-toggle" data-toggle="dropdown"
-								aria-haspopup="true" aria-expanded="false">Collections <span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li sec:authorize="hasRole('USER')" role="presentation"><a
-									th:href="@{/auth/collections/add}">Add Collection</a></li>
-
-								<li sec:authorize="hasRole('USER')" role="presentation"><a
-									th:href="@{/auth/collections}">Show Collections</a></li>
-							</ul>
-					</li>
-
-					<li sec:authorize="isAuthenticated()" role="presentation">
-						<form th:action="@{/logout}" method="POST">
-							<input type="hidden" name="${_csrf.parameterName}"
-								value="${_csrf.token}" />
-							<button class="btn-link" type="submit" title="Logout">
-								<i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-							</button>
-						</form>
-					</li>
-
-					<li sec:authorize="isAnonymous()" role="presentation"><a
-						title="Login" th:href="@{/login}"><i
-							class="fas fa-sign-in-alt"></i></a></li>
-				</ul>
-
+		<div class="page-header" style="margin-bottom: 50px">
+			<nav class = "navbar navbar-default navbar-fixed-top" role="navigation" style="box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.15);">
+				<div class = "container">
+					<div class="navbar-header">
+						<a class="navbar-brand" href="/quadriga" style="padding:0">
+							<img th:src="@{/resources/static/images/logo.png}" alt="Quadriga logo" style="height: 52px">
+						</a>
+				    </div>
+					<ul class="nav navbar-nav navbar-right">
+						<li role="presentation"><a th:href="@{/}">Home</a></li>
+	
+						<li sec:authorize="hasRole('ADMIN')" role="presentation"><a
+							th:href="@{/admin/user/list}">Users</a></li>
+	
+	                    <li class="dropdown" sec:authorize="hasRole('USER')" role="presentation">
+								<a
+									class="dropdown-toggle" data-toggle="dropdown"
+									aria-haspopup="true" aria-expanded="false">Collections <span class="caret"></span></a>
+								<ul class="dropdown-menu">
+									<li sec:authorize="hasRole('USER')" role="presentation"><a
+										th:href="@{/auth/collections/add}">Add Collection</a></li>
+	
+									<li sec:authorize="hasRole('USER')" role="presentation"><a
+										th:href="@{/auth/collections}">Show Collections</a></li>
+								</ul>
+						</li>
+	
+						<li sec:authorize="isAuthenticated()" role="presentation">
+							<form th:action="@{/logout}" method="POST">
+								<input type="hidden" name="${_csrf.parameterName}"
+									value="${_csrf.token}" />
+								<button class="btn-link" type="submit" title="Logout">
+									<i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+								</button>
+							</form>
+						</li>
+	
+						<li sec:authorize="isAnonymous()" role="presentation"><a
+							title="Login" th:href="@{/login}"><i
+								class="fas fa-sign-in-alt"></i></a></li>
+					</ul>
+					</div>
 			</nav>
-
-			<h1>
-				<a class="appName" href="/">Quadriga 2.0</a>
-			</h1>
-			<p class="lead">So many networks</p>
 		</div>
 
 
