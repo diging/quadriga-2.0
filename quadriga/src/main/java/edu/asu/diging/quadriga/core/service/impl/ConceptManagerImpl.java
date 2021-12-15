@@ -11,13 +11,13 @@ import edu.asu.diging.quadriga.core.service.ConceptManager;
 
 @Service
 public class ConceptManagerImpl implements ConceptManager {
-    
+
     @Autowired
     private ConceptRepository conceptRepository;
 
     @Override
     public List<Concept> findConceptsByMappingTypeAndMappedCollectionId(String mappingType, String mappedCollectionId) {
-       return conceptRepository.findByMappingTypeAndMappedCollectionId(mappingType, mappedCollectionId).orElse(null);
+        return conceptRepository.findByMappingTypeAndMappedCollectionId(mappingType, mappedCollectionId).orElse(null);
     }
 
 }
