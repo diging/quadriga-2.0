@@ -189,9 +189,9 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
         // If old value is not null/blank/empty, new value is null/blank/empty, difference present
         // If both are not null/blank/empty, we need to check difference
         
-        if(isDifferentList(conceptCache.getAlternativeUris(), this.getAlternativeUris()));
-        if(isDifferentList(conceptCache.getEqualTo(), this.getEqualTo()));
-        if(isDifferentList(conceptCache.getWordNetIds(), this.getWordNetIds()));
+        if(isDifferentList(conceptCache.getAlternativeUris(), this.getAlternativeUris())) return -1;
+        if(isDifferentList(conceptCache.getEqualTo(), this.getEqualTo())) return -1;
+        if(isDifferentList(conceptCache.getWordNetIds(), this.getWordNetIds())) return -1;
         if (isDifferentString(conceptCache.getConceptList(), this.getConceptList())) return -1;
         if (isDifferentString(conceptCache.getCreatorId(), this.getCreatorId())) return -1;
         if (isDifferentString(conceptCache.getDescription(), this.getDescription())) return -1;
