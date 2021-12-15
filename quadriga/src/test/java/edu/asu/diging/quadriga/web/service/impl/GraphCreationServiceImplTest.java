@@ -196,7 +196,7 @@ public class GraphCreationServiceImplTest {
                     "http://www.digitalhps.org/concepts/WID-10295819-N-02-married" },
                 predicateNode.getAlternativeUris().toArray());
         Assert.assertArrayEquals(new String[] { "http://www.digitalhps.org/concepts/cousin",
-                    "http://www.digitalhps.org/concepts/cousin-2" },
+            "http://www.digitalhps.org/concepts/cousin-2" },
                 subjectNode2.getAlternativeUris().toArray());
         Assert.assertArrayEquals(
                 new String[] { "http://www.digitalhps.org/concepts/be", "http://www.digitalhps.org/concepts/be-2" },
