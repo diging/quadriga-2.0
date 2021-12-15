@@ -21,7 +21,42 @@
 <script
     src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
-    /*<![CDATA[*/
+	function updateGraph(cy, nodes, edges) {
+		let existingNodes = new Map();
+		cy.nodes().forEach(function(node) {
+			if (node.data('uri') && node.data('group') != 0) {
+				existingNodes.set(node.data('uri'), node.data('id'));
+			}
+		});
+		let filteredNodes = [];
+		let mapping = new Map();
+		nodes.forEach(function(node) {
+			console.log(node);
+			if (node.group == 0 || !node.uri || !existingNodes.has(node.uri)) {
+				filteredNodes.push(node);
+			} else if (node.uri && existingNodes.has(node.uri)) {
+				mapping.set(node.id, existingNodes.get(node.uri));
+			}
+		});
+		console.log(filteredNodes);
+		
+		edges.forEach(function(edge) {
+			if (mapping.has(edge.source)) {
+				edge.source = mapping.get(edge.source);
+			}
+			
+			if (mapping.has(edge.target)) {
+				edge.target = mapping.get(edge.target);
+			}
+		});
+		console.log(edges);
+		
+		cy.add([
+		  { group: 'nodes', data: filteredNodes },
+		  { group: 'edges', data: edges }
+		]);
+	}
+	
     $(function() {
         var cy = cytoscape({
             container : document.getElementById('cy'),
@@ -58,65 +93,21 @@
         });
         
         cy.on('tap', 'node', function(event) {
-            var node = event.target;
-//             document.getElementById('concept-title').innerHTML = `Concept: ${node.data('label')} `;
-//             document.getElementById('concept-description').innerHTML = node.data('description')
-        });
-        
-        cy.on('dbclick', 'node', function(event) {
-            var currentNode = event.target;
-            
-//             const currentEventGraphIds = currentNode.data('eventGraphIds')
-            
-//             cy.filter('node')
-//             .filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length == 0)
-//             .forEach(filteredNode => filteredNode.style('opacity', 0.3));
-            
-//             cy.filter('node')
-//             .filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
-//             .forEach(filteredNode => {
-//                 if(filteredNode.data('group') == 0) {
-//                     filteredNode.style('width', 50);
-//                     filteredNode.style('height', 50);
-//                 } else if(filteredNode.data('group') == 1) {
-//                     filteredNode.style('width', 65);
-//                     filteredNode.style('height', 65);
-//                 }
-//             });
-            
-//             cy.filter('edge')
-//             .filter(edge => !currentEventGraphIds.includes(edge.data('eventGraphId')))
-//             .forEach(filteredEdge => filteredEdge.style('opacity', 0.3));
-        });
-        
-        cy.on('mouseout', 'node', function(event) {
-            var currentNode = event.target
-//             const currentEventGraphIds = currentNode.data('eventGraphIds')
-            
-//             cy.filter('node')
-//             .filter(node => node.style('opacity') != '1')
-//             .forEach(filteredNode => filteredNode.style('opacity', 1));
-            
-//             cy.filter('node')
-//             .filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
-//             .forEach(filteredNode => {
-//                 if(filteredNode.data('group') == 0) {
-//                     filteredNode.style('width', 40);
-//                     filteredNode.style('height', 40);
-//                 } else if(filteredNode.data('group') == 1) {
-//                     filteredNode.style('width', 55);
-//                     filteredNode.style('height', 55);
-//                 }
-//             });
-            
-//             cy.filter('edge')
-//             .filter(edge => edge.style('opacity') != '1')
-//             .forEach(filteredEdge => filteredEdge.style('opacity', '1'));
+        	var currentNode = event.target;
+            const queryUri = currentNode.data('uri');
+            $.ajax({
+    			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + queryUri,
+    			'type': "GET",
+    			'success': function(data) {
+    				updateGraph(cy, data.nodes, data.edges);
+    			},
+    			'error': function(data) {
+    				
+    			}
+    		});
         });
         
     });
-    
-    /*]]>*/
 </script>
 </head>
 <body>
