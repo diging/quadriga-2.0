@@ -19,5 +19,5 @@ public interface MappedTripleService {
      */
     List<Triple> getMappedTriples(String mappedCollectionId);
 
-    List<Triple> getTriplesByUri(String mappedCollectionId, String uri);
+    List<Triple> getTriplesByUri(String mappedCollectionId, String uri, List<String> ignoreList);
 }

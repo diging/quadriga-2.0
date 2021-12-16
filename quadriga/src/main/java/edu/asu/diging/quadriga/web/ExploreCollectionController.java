@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class ExploreCollectionController {
             @RequestParam(value = "uri", required = true) String uri, Model model)
             throws InvalidObjectIdException, CollectionNotFoundException {
         MappedCollection mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId);
-        List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(), uri);
+        List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(), uri, new ArrayList<>());
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         model.addAttribute("elements", graphElements);
         model.addAttribute("collection", collectionId);
@@ -43,10 +44,10 @@ public class ExploreCollectionController {
 
     @GetMapping(value = "/auth/collections/{collectionId}/graph")
     public ResponseEntity<GraphElements> getGraphForUri(@PathVariable String collectionId,
-            @RequestParam(value = "uri", required = true) String uri)
+            @RequestParam(value = "uri", required = true) String uri, @RequestParam(value = "ignoreList", required = false) List<String> ignoreList)
             throws InvalidObjectIdException, CollectionNotFoundException {
         MappedCollection mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId);
-        List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(), uri);
+        List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(), uri, ignoreList);
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }

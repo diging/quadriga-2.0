@@ -31,30 +31,40 @@
 		let filteredNodes = [];
 		let mapping = new Map();
 		nodes.forEach(function(node) {
-			console.log(node);
-			if (node.group == 0 || !node.uri || !existingNodes.has(node.uri)) {
+			if (node.data.group == 0 || !node.data.uri || !existingNodes.has(node.data.uri)) {
 				filteredNodes.push(node);
-			} else if (node.uri && existingNodes.has(node.uri)) {
-				mapping.set(node.id, existingNodes.get(node.uri));
+				cy.add({
+					group: 'nodes',
+					data: node.data
+				});
+			} else if (node.data.uri && existingNodes.has(node.data.uri)) {
+				mapping.set(node.data.id, existingNodes.get(node.data.uri));
 			}
 		});
+		console.log(mapping);
 		console.log(filteredNodes);
 		
 		edges.forEach(function(edge) {
-			if (mapping.has(edge.source)) {
-				edge.source = mapping.get(edge.source);
+			if (mapping.has(edge.data.source)) {
+				edge.data.source = mapping.get(edge.data.source);
 			}
 			
-			if (mapping.has(edge.target)) {
-				edge.target = mapping.get(edge.target);
+			if (mapping.has(edge.data.target)) {
+				edge.data.target = mapping.get(edge.data.target);
 			}
+			console.log(edge);
+			cy.add({
+				group: 'edges',
+				data: edge.data
+			});
 		});
-		console.log(edges);
 		
-		cy.add([
-		  { group: 'nodes', data: filteredNodes },
-		  { group: 'edges', data: edges }
-		]);
+		var layout = cy.layout({
+            name : 'cose',
+            idealEdgeLength : 5,
+        });
+
+		layout.run();
 	}
 	
     $(function() {
@@ -94,9 +104,15 @@
         
         cy.on('tap', 'node', function(event) {
         	var currentNode = event.target;
+        	var connectedPredicates = currentNode.neighborhood('node[group = 0]');
+        	var connectedNodes = connectedPredicates.neighborhood('node[group = 1][uri]');
+        	var ignoreList = '';
+        	connectedNodes.forEach(function(node) {
+        		ignoreList += node.data('uri') + ',';
+        	});
             const queryUri = currentNode.data('uri');
             $.ajax({
-    			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + queryUri,
+    			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + queryUri + '&ignoreList=' + ignoreList,
     			'type': "GET",
     			'success': function(data) {
     				updateGraph(cy, data.nodes, data.edges);

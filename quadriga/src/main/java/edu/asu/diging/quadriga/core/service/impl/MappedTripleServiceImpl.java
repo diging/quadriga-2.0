@@ -110,8 +110,8 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     }
 
     @Override
-    public List<Triple> getTriplesByUri(String mappedCollectionId, String uri) {
-        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedCollectionId(uri, mappedCollectionId);
+    public List<Triple> getTriplesByUri(String mappedCollectionId, String uri, List<String> ignoreList) {
+        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedCollectionId(uri, ignoreList, mappedCollectionId);
         return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
     }
     
