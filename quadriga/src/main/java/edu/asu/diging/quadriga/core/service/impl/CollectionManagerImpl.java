@@ -33,7 +33,7 @@ public class CollectionManagerImpl implements CollectionManager {
         collection.setApps(apps);
         return collectionRepo.save(collection);
     }
-
+    
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#findCollection(java.lang.String)
      */

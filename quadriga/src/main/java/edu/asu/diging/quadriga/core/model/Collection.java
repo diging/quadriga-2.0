@@ -1,6 +1,6 @@
 package edu.asu.diging.quadriga.core.model;
-import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Id;
@@ -18,11 +18,10 @@ public class Collection {
 
     // Time will be stored in UTC
     private LocalDateTime creationTime;
-    
+        
     public Collection() {
         this.creationTime = LocalDateTime.now();
     }
-
     public ObjectId getId() {
         return _id;
     }

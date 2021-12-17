@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.conceptpower.service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
+import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
 
 /**
  * This service is used to get concept data from ConceptPower
@@ -24,5 +25,14 @@ public interface ConceptPowerService {
      * @return the conceptCache database entry
      */
     public ConceptCache getConceptByUri(String uri);
+    
+    /**
+     * This method maps the ConceptPowerReply object returned from ConceptPower to a
+     * ConceptCache object that would be stored in the database
+     * 
+     * @param conceptPowerReply is the object used to generate a ConceptCache object
+     * @return the generated ConceptCache object
+     */
+    public ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply);
 
 }

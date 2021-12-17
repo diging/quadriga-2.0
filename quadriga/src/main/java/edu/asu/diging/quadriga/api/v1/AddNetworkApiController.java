@@ -100,7 +100,6 @@ public class AddNetworkApiController {
                     || !tokenInfo.isActive() || !collection.getApps().contains(tokenInfo.getClient_id()))) {
                 return HttpStatus.UNAUTHORIZED;
             }
-
         } catch (OAuthException e) {
 
             // we got unauth twice (using existing access token and re-generated one)

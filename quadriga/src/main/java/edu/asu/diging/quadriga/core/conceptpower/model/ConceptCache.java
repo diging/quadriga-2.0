@@ -12,6 +12,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -183,40 +184,43 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
 
     @Override
     public int compareTo(ConceptCache conceptCache) {
-        if (!this.getAlternativeUris().equals(conceptCache.getAlternativeUris())) {
-            return -1;
-        }
-        if (!this.getConceptList().equals(conceptCache.getConceptList())) {
-            return -1;
-        }
-        if (!this.getCreatorId().equals(conceptCache.getCreatorId())) {
-            return -1;
-        }
-        if (!this.getDescription().equals(conceptCache.getDescription())) {
-            return -1;
-        }
-        if (!this.getEqualTo().equals(conceptCache.getEqualTo())) {
-            return -1;
-        }
-        if (!this.getId().equals(conceptCache.getId())) {
-            return -1;
-        }
-        if (!this.getPos().equals(conceptCache.getPos())) {
-            return -1;
-        }
-        if (!this.getTypeId().equals(conceptCache.getTypeId())) {
-            return -1;
-        }
-        if (!this.getUri().equals(conceptCache.getUri())) {
-            return -1;
-        }
-        if (!this.getWord().equals(conceptCache.getWord())) {
-            return -1;
-        }
-        if (!this.getWordNetIds().equals(conceptCache.getWordNetIds())) {
-            return -1;
-        }
+        // If both old and new cache values are null/blank/empty, nothing has changed
+        // If old value is null/blank/empty, new value is not null/blank/empty, difference present
+        // If old value is not null/blank/empty, new value is null/blank/empty, difference present
+        // If both are not null/blank/empty, we need to check difference
+        
+        if(isDifferentList(conceptCache.getAlternativeUris(), this.getAlternativeUris())) return -1;
+        if(isDifferentList(conceptCache.getEqualTo(), this.getEqualTo())) return -1;
+        if(isDifferentList(conceptCache.getWordNetIds(), this.getWordNetIds())) return -1;
+        if (isDifferentString(conceptCache.getConceptList(), this.getConceptList())) return -1;
+        if (isDifferentString(conceptCache.getCreatorId(), this.getCreatorId())) return -1;
+        if (isDifferentString(conceptCache.getDescription(), this.getDescription())) return -1;
+        if (isDifferentString(conceptCache.getId(), this.getId())) return -1;
+        if (isDifferentString(conceptCache.getPos(), this.getPos())) return -1;
+        if (isDifferentString(conceptCache.getTypeId(), this.getTypeId())) return -1;
+        if (isDifferentString(conceptCache.getUri(), this.getUri())) return -1;
+        if (isDifferentString(conceptCache.getWord(), this.getWord())) return -1;
         return 0;
+    }
+    
+    private static boolean isDifferentString(String str1, String str2) {
+        if(!(StringUtils.isEmpty(str1) && StringUtils.isEmpty(str2)) 
+                && (StringUtils.isEmpty(str1) || !str1.equals(str2))) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isDifferentList(List<String> list1, List<String> list2) {
+        if (!(isNullOrEmpty(list1) && isNullOrEmpty(list2) 
+                && (isNullOrEmpty(list1) || !list1.equals(list2)))) {
+            return true;
+        }
+        return false;
+    }
+    
+    private static boolean isNullOrEmpty(List<String> list) {
+        return list == null || list.isEmpty();
     }
 
 }

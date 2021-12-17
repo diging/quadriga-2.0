@@ -42,8 +42,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         Map<String, GraphNodeData> uniqueNodes = new HashMap<String, GraphNodeData>();
 
         eventGraphs.stream()
-        .filter(eventGraph -> eventGraph.getRootEvent() instanceof RelationEvent)
-        .forEach(validEventGraph -> createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()),
+            .filter(eventGraph -> eventGraph.getRootEvent() instanceof RelationEvent)
+            .forEach(validEventGraph -> createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()),
                         graphNodes, graphEdges, uniqueNodes, validEventGraph.getId().toString()));
 
         GraphElements graphElements = new GraphElements();
@@ -126,8 +126,9 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         if(sourceUri != null && !sourceUri.equals("") && node.getAlternativeUris() != null) {
             node.getAlternativeUris()
             .stream()
-            .filter(alternativeUri -> alternativeUri != null && !alternativeUri.equals("") && !alternativeUri.equals(sourceUri))
-            .forEach(alternativeUriValue -> uniqueNodes.put(alternativeUriValue, node));
+            .filter(nullableAltUri -> nullableAltUri != null)
+            .filter(alternativeUri -> !alternativeUri.equals("") && !alternativeUri.equals(sourceUri))
+                .forEach(alternativeUriValue -> uniqueNodes.put(alternativeUriValue, node));
         }
         
         return node.getId();
@@ -154,7 +155,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
                 node.setAlternativeUris(conceptCache.getAlternativeUris());
             }
         } else {
-            // TODO: Need to get data from viaf if viaf URL is present
+            // Need to get data from viaf if viaf URL is present, but doesn't seem to be part of story Q20-19
             node.setLabel(event.getTerm().getPrintedRepresentation().getTermParts().iterator().next().getExpression());
         }
 
