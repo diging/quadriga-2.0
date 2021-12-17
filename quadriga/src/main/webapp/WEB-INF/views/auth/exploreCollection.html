@@ -9,17 +9,11 @@
 
 .cy {
     height: 500px;
-    flex: 3.5
-}
-
-.cy-accordion {
-    margin-left: 10px;
-    flex: 1.5
+    flex: 3.5;
+    border: 2px solid;
 }
 </style>
-<script src="https://code.jquery.com/jquery-2.1.3.js"></script>
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
 	function updateGraph(cy, nodes, edges) {
 		let existingNodes = new Map();
@@ -41,8 +35,6 @@
 				mapping.set(node.data.id, existingNodes.get(node.data.uri));
 			}
 		});
-		console.log(mapping);
-		console.log(filteredNodes);
 		
 		edges.forEach(function(edge) {
 			if (mapping.has(edge.data.source)) {
@@ -104,23 +96,26 @@
         
         cy.on('tap', 'node', function(event) {
         	var currentNode = event.target;
-        	var connectedPredicates = currentNode.neighborhood('node[group = 0]');
-        	var connectedNodes = connectedPredicates.neighborhood('node[group = 1][uri]');
-        	var ignoreList = '';
-        	connectedNodes.forEach(function(node) {
-        		ignoreList += node.data('uri') + ',';
-        	});
-            const queryUri = currentNode.data('uri');
-            $.ajax({
-    			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + queryUri + '&ignoreList=' + ignoreList,
-    			'type': "GET",
-    			'success': function(data) {
-    				updateGraph(cy, data.nodes, data.edges);
-    			},
-    			'error': function(data) {
-    				
-    			}
-    		});
+        	if (!currentNode.data('isVisited') && currentNode.data('group') != 0) {
+        		var queryUri = currentNode.data('uri');
+            	var connectedPredicates = currentNode.neighborhood('node[group = 0]');
+            	var connectedNodes = connectedPredicates.neighborhood('node[group = 1][uri][uri != "' + queryUri + '"]');
+            	var ignoreList = '';
+            	connectedNodes.forEach(function(node) {
+            		ignoreList += node.data('uri') + ',';
+            	});
+                $.ajax({
+        			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + queryUri + '&ignoreList=' + ignoreList,
+        			'type': "GET",
+        			'success': function(data) {
+        				updateGraph(cy, data.nodes, data.edges);
+        				currentNode.data('isVisited', true);
+        			},
+        			'error': function(data) {
+        				
+        			}
+        		});
+        	}
         });
         
     });
@@ -128,7 +123,7 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <h1>Collection page</h1>
+        <h1>[[${collectionName}]]</h1>
         <div class="cy-container">
             <div id="cy" class="cy"></div>
         </div>

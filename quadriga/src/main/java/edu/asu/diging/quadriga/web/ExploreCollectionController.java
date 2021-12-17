@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.MappedCollection;
 import edu.asu.diging.quadriga.core.model.Triple;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.MappedCollectionService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.web.model.GraphElements;
@@ -24,6 +26,9 @@ import edu.asu.diging.quadriga.web.model.GraphElements;
 @Controller
 public class ExploreCollectionController {
 
+    @Autowired
+    private CollectionManager collectionManager;
+    
     @Autowired
     private MappedCollectionService mappedCollectionService;
 
@@ -34,10 +39,12 @@ public class ExploreCollectionController {
     public String exploreTriples(@PathVariable String collectionId,
             @RequestParam(value = "uri", required = true) String uri, Model model)
             throws InvalidObjectIdException, CollectionNotFoundException {
+        Collection collection = collectionManager.findCollection(collectionId);
         MappedCollection mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId);
         List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(), uri, new ArrayList<>());
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         model.addAttribute("elements", graphElements);
+        model.addAttribute("collectionName", collection.getName());
         model.addAttribute("collection", collectionId);
         return "auth/exploreCollection";
     }

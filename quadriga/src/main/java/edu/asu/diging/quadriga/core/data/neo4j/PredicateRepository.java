@@ -15,8 +15,8 @@ public interface PredicateRepository extends Neo4jRepository<Predicate, Long> {
     List<Predicate> findByMappedCollectionId(String mappedCollectionId);
 
     @Query("MATCH (p1:Concept)-[r]->(p2:Concept)"
-            + "WHERE r.mappedCollectionId = $mappedCollectionId AND (p1.uri=$uri OR p2.uri=$uri) AND NOT p1.uri IN $ignoreList AND NOT p2.uri IN $ignoreList"
-            + "RETURN r")
+            + "WHERE r.mappedCollectionId = $mappedCollectionId AND (p1.uri=$uri OR p2.uri=$uri) AND NOT p1.uri IN $ignoreList AND NOT p2.uri IN $ignoreList "
+            + "RETURN r;")
     List<Predicate> findBySourceUriOrTargetUriAndMappedCollectionId(@Param("uri") String uri, @Param("ignoreList") List<String> ignoreList,
             @Param("mappedCollectionId") String mappedCollectionId);
 
