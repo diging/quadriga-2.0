@@ -13,8 +13,26 @@
     border: 2px solid;
 }
 </style>
+<script th:src="@{/resources/notify/bootstrap-notify.min.js}"></script>
+<link th:href="@{/resources/notify/animate.css}" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
+	
+	function showNotification(message, status, time){
+    	$.notify('<i class="fas fa-exclamation-circle"></i>'+message, {
+    		type: status,
+    		offset: {
+    			x: 50,
+    			y: 90
+    		},
+    		timer: time,
+    		animate: {
+    			enter: 'animated fadeInRight',
+    			exit: 'animated fadeOutRight'
+    		},
+    	});
+    }
+	
 	function updateGraph(cy, nodes, edges) {
 		let existingNodes = new Map();
 		cy.nodes().forEach(function(node) {
@@ -112,7 +130,7 @@
         				currentNode.data('isVisited', true);
         			},
         			'error': function(data) {
-        				
+        				showNotification("Error fetching the sub-graph", "danger", 10000);
         			}
         		});
         	}
@@ -124,8 +142,19 @@
 <body>
     <div layout:fragment="content">
         <h1>[[${collectionName}]]</h1>
+        <label>Search and Select Concept</label>
+        <div class="col-md-12">
+            <div class="input-group ${status.error ? 'has-error' : ''} col-md-12">
+                <input type="text" id="searchbox" class="form-control" placeholder="Search Conceptpower...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="searchGo"><i class="fas fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+        <div id="searchResults" class="list-group"></div>
         <div class="cy-container">
             <div id="cy" class="cy"></div>
         </div>
+    </div>
 </body>
 </html>
