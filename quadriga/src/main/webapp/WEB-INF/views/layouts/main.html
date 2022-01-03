@@ -28,6 +28,9 @@
 <!-- Custom styles for this template -->
 <link th:href="@{/resources/bootstrap/grid.css}" type="text/css"
 	rel="stylesheet">
+	
+<link rel="stylesheet"
+	th:href="@{/resources/static/css/layouts/main.css}" type="text/css" />
 
 <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
 <!--[if lt IE 9]><script src="<c:url value="/resources/bootstrap/assets/js/ie8-responsive-file-warning.js" />"></script><![endif]-->
@@ -46,26 +49,31 @@
 <script th:src="@{/resources/bootstrap/js/main.js}"></script>
 </head>
 
-<body style="padding-bottom: 20px;">
+<body>
 	<div class="container">
-		<div class="page-header" style="margin-bottom: 50px">
-			<nav class = "navbar navbar-default navbar-fixed-top" role="navigation" style="box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.15);">
+		<div class="page-header quadriga-page-header">
+			<nav class = "navbar navbar-default navbar-fixed-top quadriga-navbar" role="navigation">
 				<div class = "container">
 					<div class="navbar-header">
-						<a class="navbar-brand" href="/quadriga" style="padding:0">
-							<img th:src="@{/resources/static/images/logo.png}" alt="Quadriga logo" style="height: 52px">
+						<a class="navbar-brand quadriga-brand" href="/quadriga">
+							<img th:src="@{/resources/static/images/logo.png}" class="quadriga-logo" alt="Quadriga logo">
 						</a>
 				    </div>
 					<ul class="nav navbar-nav navbar-right">
-						<li role="presentation"><a th:href="@{/}">Home</a></li>
+						<li role="presentation">
+							<a th:href="@{/}" class="quadriga-navbar-item">Home</a>
+						</li>
 	
-						<li sec:authorize="hasRole('ADMIN')" role="presentation"><a
-							th:href="@{/admin/user/list}">Users</a></li>
+						<li sec:authorize="hasRole('ADMIN')" role="presentation">
+							<a th:href="@{/admin/user/list}" class="quadriga-navbar-item">Users</a>
+						</li>
 	
 	                    <li class="dropdown" sec:authorize="hasRole('USER')" role="presentation">
-								<a
-									class="dropdown-toggle" data-toggle="dropdown"
-									aria-haspopup="true" aria-expanded="false">Collections <span class="caret"></span></a>
+								<a class="dropdown-toggle collections-dropdown" data-toggle="dropdown"
+									aria-haspopup="true" aria-expanded="false">
+									Collections
+									<span class="caret"></span>
+								</a>
 								<ul class="dropdown-menu">
 									<li sec:authorize="hasRole('USER')" role="presentation"><a
 										th:href="@{/auth/collections/add}">Add Collection</a></li>
@@ -80,14 +88,17 @@
 								<input type="hidden" name="${_csrf.parameterName}"
 									value="${_csrf.token}" />
 								<button class="btn-link" type="submit" title="Logout">
-									<i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+									<img th:src="@{/resources/static/images/Vector.png}" class="logout-icon" aria-hidden="true">
 								</button>
 							</form>
 						</li>
 	
-						<li sec:authorize="isAnonymous()" role="presentation"><a
-							title="Login" th:href="@{/login}"><i
-								class="fas fa-sign-in-alt"></i></a></li>
+						<li sec:authorize="isAnonymous()" role="presentation">
+							<a title="Login" th:href="@{/login}">
+								<!-- <i class="fas fa-sign-in-alt"></i> -->
+								<img th:src="@{/resources/static/images/Vector.png}" class="login-icon" aria-hidden="true">
+							</a>
+						</li>
 					</ul>
 					</div>
 			</nav>
