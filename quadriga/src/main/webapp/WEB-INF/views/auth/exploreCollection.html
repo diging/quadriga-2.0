@@ -18,6 +18,47 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
 	
+	function searchConceptPower(searchTerm) {
+		if (searchTerm) {
+			$.ajax({
+				'url': '[(${baseConceptPowerSearchUri})]?word=' + searchTerm,
+				'type': "GET",
+				crossDomain: true,
+				'headers': {
+		              'accept': 'application/json',
+		              'Access-Control-Allow-Origin':'*',
+		              'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
+		              'Access-Control-Allow-Headers': 'Origin, Content-Type'
+		          },
+				'success': function(data) {
+					var container = $("#searchResults");
+				    container.empty();
+				    container.show();
+				    
+				    data["conceptEntries"].forEach(function(concept) {
+				    	var li = $('<a href="#" class="list-group-item"></a>');
+				        li.append('<i class="fas fa-tag"></i> <strong> ' + concept.lemma + '</strong><br>');
+			    	    
+				        var newLi = $('<div class=textAndCheckMark>');
+				        newLi.append('<small class=textOfSub>' + concept.description + '</small>');
+				        li.on('click', function() {
+					        displayGraph(concept);
+					        container.empty();
+					        container.hide();
+						});
+				        newLi.append('</div>');
+				        li.append(newLi);
+				        container.append(li);
+				        counter = counter+1;
+				    });
+				},
+				'error': function(data) {
+					showNotification("Error searching the concept", "danger", 10000);
+				}
+			});
+		}
+	}
+	
 	function showNotification(message, status, time){
     	$.notify('<i class="fas fa-exclamation-circle"></i>'+message, {
     		type: status,
@@ -77,82 +118,103 @@
 		layout.run();
 	}
 	
-    $(function() {
-        var cy = cytoscape({
-            container : document.getElementById('cy'),
-            elements : [[${elements}]],
-            layout : {
-                name : 'cose',
-                idealEdgeLength : 5,
-            },
-            style : [
-                    {
-                        selector : 'node',
-                        css : {
-                            'background-color' : 'mapData(group, 0, 1, #E1CE7A, #FDD692)',
-                            'border-color' : '#B98F88',
-                            'border-width' : 1,
-                            'font-family' : 'Raleway, sans-serif',
-                            'font-size' : '12px',
-                            'font-weight' : 'bold',
-                            'color' : 'mapData(group, 0, 1, #666, #333)',
-                            'label' : 'data(label)',
-                            'width' : 'mapData(group, 0, 1, 40, 55)',
-                            'height' : "mapData(group, 0, 1, 40, 55)",
-                            'text-valign' : 'center'
-                        }
+    function displayGraph(concept) {
+    	$.ajax({
+			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + concept.equal_to,
+			'type': "GET",
+			'success': function(data) {
+				var cycontainer = $("#cy");
+				cycontainer.empty();
+				cycontainer.show();
+				var cy = cytoscape({
+		            container : cycontainer,
+		            elements : data,
+		            layout : {
+		                name : 'cose',
+		                idealEdgeLength : 5,
+		            },
+		            style : [
+		                    {
+		                        selector : 'node',
+		                        css : {
+		                            'background-color' : 'mapData(group, 0, 1, #E1CE7A, #FDD692)',
+		                            'border-color' : '#B98F88',
+		                            'border-width' : 1,
+		                            'font-family' : 'Raleway, sans-serif',
+		                            'font-size' : '12px',
+		                            'font-weight' : 'bold',
+		                            'color' : 'mapData(group, 0, 1, #666, #333)',
+		                            'label' : 'data(label)',
+		                            'width' : 'mapData(group, 0, 1, 40, 55)',
+		                            'height' : "mapData(group, 0, 1, 40, 55)",
+		                            'text-valign' : 'center'
+		                        }
 
-                    }, {
-                        selector : 'edge',
-                        css : {
-                            'width' : 1,
-                            'line-color' : '#754F44',
-                            'target-arrow-shape' : 'none'
-                        }
-                    } ]
-        });
-        
-        cy.on('tap', 'node', function(event) {
-        	var currentNode = event.target;
-        	if (!currentNode.data('isVisited') && currentNode.data('group') != 0) {
-        		var queryUri = currentNode.data('uri');
-            	var connectedPredicates = currentNode.neighborhood('node[group = 0]');
-            	var connectedNodes = connectedPredicates.neighborhood('node[group = 1][uri][uri != "' + queryUri + '"]');
-            	var ignoreList = '';
-            	connectedNodes.forEach(function(node) {
-            		ignoreList += node.data('uri') + ',';
-            	});
-                $.ajax({
-        			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + queryUri + '&ignoreList=' + ignoreList,
-        			'type': "GET",
-        			'success': function(data) {
-        				updateGraph(cy, data.nodes, data.edges);
-        				currentNode.data('isVisited', true);
-        			},
-        			'error': function(data) {
-        				showNotification("Error fetching the sub-graph", "danger", 10000);
-        			}
-        		});
-        	}
-        });
-        
+		                    }, {
+		                        selector : 'edge',
+		                        css : {
+		                            'width' : 1,
+		                            'line-color' : '#754F44',
+		                            'target-arrow-shape' : 'none'
+		                        }
+		                    } ]
+		        });
+		        
+		        cy.on('tap', 'node', function(event) {
+		        	var currentNode = event.target;
+		        	if (!currentNode.data('isVisited') && currentNode.data('group') != 0) {
+		        		var queryUri = currentNode.data('uri');
+		            	var connectedPredicates = currentNode.neighborhood('node[group = 0]');
+		            	var connectedNodes = connectedPredicates.neighborhood('node[group = 1][uri][uri != "' + queryUri + '"]');
+		            	var ignoreList = '';
+		            	connectedNodes.forEach(function(node) {
+		            		ignoreList += node.data('uri') + ',';
+		            	});
+		                $.ajax({
+		        			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + queryUri + '&ignoreList=' + ignoreList,
+		        			'type': "GET",
+		        			'success': function(data) {
+		        				updateGraph(cy, data.nodes, data.edges);
+		        				currentNode.data('isVisited', true);
+		        			},
+		        			'error': function(data) {
+		        				showNotification("Error fetching the sub-graph", "danger", 10000);
+		        			}
+		        		});
+		        	}
+		        });
+			},
+			'error': function(data) {
+				showNotification("Error fetching the graph", "danger", 10000);
+			}
+		});
+    }
+    
+    $( document ).ready(function() {
+    	$('#searchGo').click(function() {
+    		searchConceptPower($("#searchbox").val());
+    	});
     });
+    
 </script>
 </head>
 <body>
     <div layout:fragment="content">
         <h1>[[${collectionName}]]</h1>
-        <label>Search and Select Concept</label>
-        <div class="col-md-12">
-            <div class="input-group ${status.error ? 'has-error' : ''} col-md-12">
-                <input type="text" id="searchbox" class="form-control" placeholder="Search Conceptpower...">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id="searchGo"><i class="fas fa-search"></i></button>
-                </span>
+        <div>
+            <label>Search and Select Concept</label>
+            <div class="col-md-12">
+                <div class="input-group ${status.error ? 'has-error' : ''} col-md-12">
+                    <input type="text" id="searchbox" class="form-control" placeholder="Search Conceptpower...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" id="searchGo"><i class="fas fa-search"></i></button>
+                    </span>
+                </div>
             </div>
+            <div id="searchResults" class="list-group"></div>
         </div>
-        <div id="searchResults" class="list-group"></div>
-        <div class="cy-container">
+        <br>
+        <div class="cy-container" type="hidden">
             <div id="cy" class="cy"></div>
         </div>
     </div>

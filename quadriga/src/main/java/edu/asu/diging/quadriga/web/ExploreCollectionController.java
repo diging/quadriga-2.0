@@ -54,9 +54,10 @@ public class ExploreCollectionController {
         List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(), uri,
                 new ArrayList<>());
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
-        model.addAttribute("elements", graphElements);
+//        model.addAttribute("elements", graphElements);
         model.addAttribute("collectionName", collection.getName());
         model.addAttribute("collection", collectionId);
+        model.addAttribute("baseConceptPowerSearchUri", "//chps.asu.edu/conceptpower/rest/ConceptSearch");
         return "auth/exploreCollection";
     }
 
