@@ -7,7 +7,7 @@
     flex-wrap: wrap;
 }
 
-.cy {
+#cy {
     height: 500px;
     flex: 3.5;
     border: 2px solid;
@@ -21,15 +21,8 @@
 	function searchConceptPower(searchTerm) {
 		if (searchTerm) {
 			$.ajax({
-				'url': '[(${baseConceptPowerSearchUri})]?word=' + searchTerm,
+				'url': [[@{/search/concept}]] + '?searchTerm=' + searchTerm,
 				'type': "GET",
-				crossDomain: true,
-				'headers': {
-		              'accept': 'application/json',
-		              'Access-Control-Allow-Origin':'*',
-		              'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
-		              'Access-Control-Allow-Headers': 'Origin, Content-Type'
-		          },
 				'success': function(data) {
 					var container = $("#searchResults");
 				    container.empty();
@@ -49,7 +42,6 @@
 				        newLi.append('</div>');
 				        li.append(newLi);
 				        container.append(li);
-				        counter = counter+1;
 				    });
 				},
 				'error': function(data) {
@@ -120,14 +112,14 @@
 	
     function displayGraph(concept) {
     	$.ajax({
-			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + concept.equal_to,
-			'type': "GET",
+			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + concept.concept_uri,
+			'type': 'GET',
 			'success': function(data) {
-				var cycontainer = $("#cy");
+				var cycontainer = $(".cy-container");
 				cycontainer.empty();
-				cycontainer.show();
+				cycontainer.append('<div id="cy"></div>');
 				var cy = cytoscape({
-		            container : cycontainer,
+		            container : $('#cy'),
 		            elements : data,
 		            layout : {
 		                name : 'cose',
@@ -194,6 +186,13 @@
     	$('#searchGo').click(function() {
     		searchConceptPower($("#searchbox").val());
     	});
+    	
+    	$('#searchbox').keypress(function(event){
+    	    var keycode = (event.keyCode ? event.keyCode : event.which);
+    	    if(keycode == '13') {
+    	    	searchConceptPower($("#searchbox").val());
+    	    }
+    	});
     });
     
 </script>
@@ -201,21 +200,19 @@
 <body>
     <div layout:fragment="content">
         <h1>[[${collectionName}]]</h1>
-        <div>
+        <div class="row">
             <label>Search and Select Concept</label>
             <div class="col-md-12">
-                <div class="input-group ${status.error ? 'has-error' : ''} col-md-12">
+                <div class="input-group col-md-12">
                     <input type="text" id="searchbox" class="form-control" placeholder="Search Conceptpower...">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button" id="searchGo"><i class="fas fa-search"></i></button>
                     </span>
                 </div>
             </div>
-            <div id="searchResults" class="list-group"></div>
         </div>
-        <br>
-        <div class="cy-container" type="hidden">
-            <div id="cy" class="cy"></div>
+        <div id="searchResults" class="list-group"></div>
+        <div class="cy-container">
         </div>
     </div>
 </body>

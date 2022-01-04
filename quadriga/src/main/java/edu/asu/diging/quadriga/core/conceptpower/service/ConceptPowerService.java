@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.conceptpower.service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
+import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerSearchResults;
 
 /**
  * This service is used to get concept data from ConceptPower
@@ -34,5 +35,7 @@ public interface ConceptPowerService {
      * @return the generated ConceptCache object
      */
     public ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply);
+    
+    public ConceptPowerSearchResults searchConcepts(String searchTerm, int page);
 
 }

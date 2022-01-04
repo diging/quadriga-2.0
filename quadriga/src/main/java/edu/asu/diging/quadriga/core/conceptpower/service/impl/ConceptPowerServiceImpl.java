@@ -17,6 +17,7 @@ import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptType;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptEntry;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
+import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerSearchResults;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.Type;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerConnectorService;
@@ -180,6 +181,11 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
             }
         }
         return conceptCache;
+    }
+
+    @Override
+    public ConceptPowerSearchResults searchConcepts(String searchTerm, int page) {
+        return conceptPowerConnectorService.searchConcepts(searchTerm, page);
     }
 
 }

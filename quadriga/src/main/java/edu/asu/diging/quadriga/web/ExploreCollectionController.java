@@ -1,6 +1,5 @@
 package edu.asu.diging.quadriga.web;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -29,7 +28,9 @@ import edu.asu.diging.quadriga.web.model.GraphElements;
 public class ExploreCollectionController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
-    
+
+    private static final String URI_PREFIX = "http";
+
     @Autowired
     private CollectionManager collectionManager;
 
@@ -40,37 +41,39 @@ public class ExploreCollectionController {
     private MappedTripleService mappedTripleService;
 
     @RequestMapping(value = "/auth/collections/{collectionId}/explore")
-    public String exploreTriples(@PathVariable String collectionId,
-            @RequestParam(value = "uri", required = true) String uri, Model model) {
+    public String exploreTriples(@PathVariable String collectionId, Model model) {
         Collection collection;
-        MappedCollection mappedCollection;
         try {
             collection = collectionManager.findCollection(collectionId);
-            mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId);
-        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+        } catch (InvalidObjectIdException e) {
             logger.error("No Collection found for id {}", collectionId);
             return "error404Page";
         }
-        List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(), uri,
-                new ArrayList<>());
-        GraphElements graphElements = GraphUtil.mapToGraph(triples);
-//        model.addAttribute("elements", graphElements);
         model.addAttribute("collectionName", collection.getName());
         model.addAttribute("collection", collectionId);
-        model.addAttribute("baseConceptPowerSearchUri", "//chps.asu.edu/conceptpower/rest/ConceptSearch");
         return "auth/exploreCollection";
     }
 
     @GetMapping(value = "/auth/collections/{collectionId}/graph")
     public ResponseEntity<GraphElements> getGraphForUri(@PathVariable String collectionId,
             @RequestParam(value = "uri", required = true) String uri,
-            @RequestParam(value = "ignoreList", required = false) List<String> ignoreList)
+            @RequestParam(value = "ignoreList", required = false, defaultValue = "{}") List<String> ignoreList)
             throws InvalidObjectIdException, CollectionNotFoundException {
         MappedCollection mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId);
-        List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(), uri,
-                ignoreList);
+        List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(),
+                processUri(uri), ignoreList);
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
+    }
+
+    private String processUri(String uri) {
+        if (!uri.startsWith(URI_PREFIX)) {
+            uri = "https://" + uri;
+        }
+        if (uri.endsWith("/")) {
+            uri = uri.substring(0, uri.length() - 1);
+        }
+        return uri;
     }
 
 }

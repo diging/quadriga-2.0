@@ -11,6 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
+import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerSearchResults;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerConnectorService;
 
 @Service
@@ -29,6 +31,9 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
 
     @Value("${conceptpower_id_url}")
     private String conceptPowerIdURL;
+
+    @Value("${conceptpower_search_url}")
+    private String conceptPowerSearchURL;
 
     private RestTemplate restTemplate;
 
@@ -65,6 +70,31 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
             if (conceptPowerURL == null || conceptPowerURL.equals("")) {
                 logger.error("ConceptPowerURL was found to be blank or null");
             }
+        }
+
+        return null;
+    }
+
+    @Override
+    public ConceptPowerSearchResults searchConcepts(String searchTerm, int page) {
+        Map<String, String> pathVariables = new HashMap<>();
+        pathVariables.put("search_term", searchTerm);
+        pathVariables.put("page_number", "" + page);
+        String searchURL = conceptPowerBaseURL + conceptPowerSearchURL;
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
+
+        try {
+            ResponseEntity<ConceptPowerSearchResults> response = restTemplate.exchange(searchURL, HttpMethod.GET,
+                    httpEntity, ConceptPowerSearchResults.class, pathVariables);
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return response.getBody();
+            } else {
+                logger.error("Error while searching concept power");
+            }
+        } catch (RestClientException e) {
+            logger.error(e.getMessage());
         }
 
         return null;
