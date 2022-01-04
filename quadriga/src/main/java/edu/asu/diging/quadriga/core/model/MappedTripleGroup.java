@@ -11,13 +11,14 @@ import org.bson.types.ObjectId;
  * @author poojakulkarni
  *
  */
-public class MappedCollection {
+public class MappedTripleGroup {
     
     @Id
     private ObjectId _id;
     
     private String name;
     private ObjectId collectionId;
+    private MappedTripleType mappedTripleType;
     
     public ObjectId get_id() {
         return _id;
@@ -41,6 +42,14 @@ public class MappedCollection {
     
     public void setCollectionId(ObjectId collectionId) {
         this.collectionId = collectionId;
+    }
+
+    public MappedTripleType getMappedTripleType() {
+        return mappedTripleType;
+    }
+
+    public void setMappedTripleType(MappedTripleType mappedTripleType) {
+        this.mappedTripleType = mappedTripleType;
     }
 
 }

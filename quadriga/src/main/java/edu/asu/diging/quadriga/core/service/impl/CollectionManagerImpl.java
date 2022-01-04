@@ -2,8 +2,6 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.Objects;
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +13,6 @@ import edu.asu.diging.quadriga.core.service.CollectionManager;
 
 @Service
 public class CollectionManagerImpl implements CollectionManager {
-    
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CollectionRepository collectionRepo;
@@ -52,8 +48,7 @@ public class CollectionManagerImpl implements CollectionManager {
         try {
             return collectionRepo.findById(new ObjectId(id)).orElse(null);
         } catch(IllegalArgumentException e) {
-            logger.error("Couldn't retrieve a collection, invalid collectionId: " + id);
-            throw new InvalidObjectIdException();
+            throw new InvalidObjectIdException("CollectionId: " + id);
         }
     }
 
@@ -77,8 +72,7 @@ public class CollectionManagerImpl implements CollectionManager {
             collection.setDescription(description);
             return collectionRepo.save(collection);
         } else {
-            logger.error("Couldn't find collection for collectionId: " + id);
-            throw new CollectionNotFoundException();
+            throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
     
@@ -98,8 +92,7 @@ public class CollectionManagerImpl implements CollectionManager {
             // If it is linked to a network, we will archive the collection.
             collectionRepo.delete(collection);
         } else {
-            logger.error("Couldn't find collection for collectionId: " + id);
-            throw new CollectionNotFoundException();
+            throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
 
