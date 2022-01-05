@@ -17,7 +17,6 @@ public class Concept {
     private String uri;
     private String label;
     private String linkedEventGraphId;
-    private String mappingType;
     private String mappedTripleGroupId;
     
     @Relationship(type = "PREDICATE")
@@ -69,14 +68,6 @@ public class Concept {
 
     public void setLinkedEventGraphId(String linkedEventGraphId) {
         this.linkedEventGraphId = linkedEventGraphId;
-    }
-
-    public String getMappingType() {
-        return mappingType;
-    }
-
-    public void setMappingType(String mappingType) {
-        this.mappingType = mappingType;
     }
     
 }

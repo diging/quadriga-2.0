@@ -14,7 +14,6 @@ import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.mapped.Concept;
-import edu.asu.diging.quadriga.core.model.mapped.MappingTypes;
 import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 
@@ -67,7 +66,6 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         concept.setUri(data.getMetadata().getInterpretation());
         concept.setMappedTripleGroupId(mappedTripleGroupId);
         concept.setLinkedEventGraphId(eventGraphId);
-        concept.setMappingType(MappingTypes.DEFAULT_MAPPING);
         return concept;
     }
 
@@ -89,7 +87,6 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         predicate.setSource(subject);
         predicate.setTarget(object);
         predicate.setLinkedEventGraphId(eventGraphId);
-        predicate.setMappingType(MappingTypes.DEFAULT_MAPPING);
         predicate.setMappedTripleGroupId(mappedTripleGroupId);
         return predicate;
     }

@@ -16,7 +16,6 @@ public class Predicate {
     private String relationship;
     private String label;
     private String linkedEventGraphId;
-    private String mappingType;
     private String mappedTripleGroupId;
     
     @StartNode
@@ -71,14 +70,6 @@ public class Predicate {
 
     public void setLinkedEventGraphId(String linkedEventGraphId) {
         this.linkedEventGraphId = linkedEventGraphId;
-    }
-
-    public String getMappingType() {
-        return mappingType;
-    }
-
-    public void setMappingType(String mappingType) {
-        this.mappingType = mappingType;
     }
     
 }

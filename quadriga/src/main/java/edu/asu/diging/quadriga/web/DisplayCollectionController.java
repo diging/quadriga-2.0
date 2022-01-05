@@ -17,13 +17,13 @@ import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
-import edu.asu.diging.quadriga.core.model.MappedCollection;
+import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.mapped.Concept;
 import edu.asu.diging.quadriga.core.model.mapped.MappingTypes;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.ConceptManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
-import edu.asu.diging.quadriga.core.service.MappedCollectionService;
+import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 
 @Controller
 public class DisplayCollectionController {
@@ -35,7 +35,7 @@ public class DisplayCollectionController {
     private EventGraphService eventGraphService;
     
     @Autowired
-    private MappedCollectionService mappedCollectionService;
+    private MappedTripleGroupService mappedTripleGroupService;
     
     @Autowired
     private ConceptManager conceptManager;
@@ -80,31 +80,31 @@ public class DisplayCollectionController {
     }
     
     /**
-     * This method gets a mappedCollection using the current collectionId
-     * Once a mappedCollection is found, it looks for this MappedCollection in 'Concept' nodes
+     * This method gets a mappedTripleGroup using the current collectionId
+     * Once a mappedTripleGroup is found, it looks for this MappedTripleGroup in 'Concept' nodes
      * A count of all such concepts with mapping type "DefaultMapping" are returned
      * 
      * Before returning, we divide the count of concepts by two because every default
      * mapping has two concepts, a subject and an object
      * 
-     * @param collectionId used to find mappedCollectionId
+     * @param collectionId used to find mappedTripleGroupId
      * @return the number of default mappings
      */
     private int getDefaultMappingss(String collectionId) {
         int defaultMappings = 0;
-        MappedCollection mappedCollection = null;
+        MappedTripleGroup mappedTripleGroup = null;
         try {
-            mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId.toString());
+            mappedTripleGroup = mappedTripleGroupService.findMappedTripleGroupByCollectionId(collectionId.toString());
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            logger.error("Couldn't find mappedCollection to get default mappings from Neo4J for collectionId: " + collectionId);
+            logger.error("Couldn't find mappedTripleGroup to get default mappings from Neo4J for collectionId: " + collectionId);
         }
         
-        if(mappedCollection != null) {
-            List<Concept> concepts = conceptManager.findConceptsByMappingTypeAndMappedCollectionId(MappingTypes.DEFAULT_MAPPING, mappedCollection.get_id().toString());
+        if(mappedTripleGroup != null) {
+            List<Concept> concepts = conceptManager.findConceptsByMappingTypeAndMappedTripleGroupId(MappingTypes.DEFAULT_MAPPING, mappedTripleGroup.get_id().toString());
             // We need to divide by two as one default mapping will have 2 concepts, a subject and an object
             defaultMappings = (concepts.isEmpty() ? 0 : concepts.size()) / 2;
         } else {
-            logger.error("Couldn't find mappedCollection to get default mappings from Neo4J for collectionId: " + collectionId);
+            logger.error("Couldn't find mappedTripleGroup to get default mappings from Neo4J for collectionId: " + collectionId);
         }
         return defaultMappings;
     }
