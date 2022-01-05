@@ -59,9 +59,11 @@ public class AddNetworkApiController {
     @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId) {
         
+        // Every time a new network is submitted, the triple in that network has to be added as a
+        // new MappedTripleGroup for given collectionId
         MappedTripleGroup mappedTripleGroup;
         try {
-            mappedTripleGroup = mappedTripleGroupService.findOrAddMappedTripleGroupByCollectionId(collectionId);
+            mappedTripleGroup = mappedTripleGroupService.addMappedTripleGroup(collectionId);
             if(mappedTripleGroup == null) {
                 return HttpStatus.NOT_FOUND;
             }
@@ -84,6 +86,7 @@ public class AddNetworkApiController {
         eventGraphService.saveEventGraphs(eventGraphs);
 
         try {
+            // The new MappedTripleGroup's Id has to be added to Concepts and Predicates
             mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedTripleGroup);
         } catch (NodeNotFoundException e1) {
             return HttpStatus.BAD_REQUEST;

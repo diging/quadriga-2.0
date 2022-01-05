@@ -1,8 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import org.bson.types.ObjectId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +16,6 @@ import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 
 @Service
 public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private MappedTripleGroupRepository mappedTripleGroupRepository;
@@ -66,6 +62,8 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
         
         mappedTripleGroup.setCollectionId(checkAndGetCollection(collectionId).getId());
+        
+        // This will be updated when custom mappings are added
         mappedTripleGroup.setMappedTripleType(MappedTripleType.DefaultMapping);
         
         return mappedTripleGroupRepository.save(mappedTripleGroup);
@@ -134,33 +132,6 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         } else {
             throw new MappedTripleGroupNotFoundException("MappedTripleGroupId: " + mappedTripleGroupId);
         }
-    }
-
-    /**
-     * This method will try to find a MappedTripleGroup entry based on the given
-     * collectionId. If no entry was found, it will try to create a new one
-     * 
-     * @param collectionId used to look for the MappedTripleGroup entry
-     * @return an existing or a new mappedTripleGroup entry
-     * @throws InvalidObjectIdException    if collectionId couldn't be converted to
-     *                                     ObjectId
-     * @throws CollectionNotFoundException if a collection for given collectionId
-     *                                     doesn't exist
-     */
-    @Override
-    public MappedTripleGroup findOrAddMappedTripleGroupByCollectionId(String collectionId)
-            throws InvalidObjectIdException, CollectionNotFoundException {
-        MappedTripleGroup mappedTripleGroup = findMappedTripleGroupByCollectionId(collectionId);
-
-        // In case this is a new collection and a network is being submitted to this
-        // collection for the first time, we create a new MappedTripleGroup entry
-        if (mappedTripleGroup == null) {
-            mappedTripleGroup = addMappedTripleGroup(collectionId);
-        }
-        if (mappedTripleGroup == null) {
-            logger.error("Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
-        }
-        return mappedTripleGroup;
     }
 
 }
