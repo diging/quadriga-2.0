@@ -127,8 +127,7 @@ public class AddNetworkApiController {
 
         try {
             // The new MappedTripleGroup's Id has to be added to Concepts and Predicates
-            // If there are n EventGraphs created for one network, all of them will have same default mapping, so link the triple with any one of them
-            mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedTripleGroup, eventGraphs.get(0).getId().toString());
+            mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedTripleGroup);
         } catch (NodeNotFoundException e1) {
             return HttpStatus.BAD_REQUEST;
         }

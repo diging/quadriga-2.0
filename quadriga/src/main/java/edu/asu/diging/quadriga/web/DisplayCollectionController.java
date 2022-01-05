@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.web;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,7 @@ import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
-import edu.asu.diging.quadriga.core.model.mapped.Concept;
-import edu.asu.diging.quadriga.core.model.mapped.MappingTypes;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
-import edu.asu.diging.quadriga.core.service.ConceptManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 
@@ -36,9 +34,6 @@ public class DisplayCollectionController {
     
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
-    
-    @Autowired
-    private ConceptManager conceptManager;
     
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -73,40 +68,28 @@ public class DisplayCollectionController {
         model.addAttribute("numberOfSubmittedNetworks", eventGraphs.stream().collect(Collectors.groupingBy(event -> event.getContext().getSourceUri())).size());
         
         // Get default mappings from Concepts
-        model.addAttribute("defaultMappings", getDefaultMappingss(collectionId.toString()));
+        model.addAttribute("defaultMappings", getDefaultMappings(collectionId.toString()));
         
         return "auth/displayCollection";
         
     }
     
     /**
-     * This method gets a mappedTripleGroup using the current collectionId
-     * Once a mappedTripleGroup is found, it looks for this MappedTripleGroup in 'Concept' nodes
-     * A count of all such concepts with mapping type "DefaultMapping" are returned
-     * 
-     * Before returning, we divide the count of concepts by two because every default
-     * mapping has two concepts, a subject and an object
+     * This method gets all mappedTripleGroups that have the current collectionId for which
+     * the mappedTripleType is "DefaultMapping"
      * 
      * @param collectionId used to find mappedTripleGroupId
      * @return the number of default mappings
      */
-    private int getDefaultMappingss(String collectionId) {
-        int defaultMappings = 0;
-        MappedTripleGroup mappedTripleGroup = null;
+    private int getDefaultMappings(String collectionId) {
         try {
-            mappedTripleGroup = mappedTripleGroupService.findMappedTripleGroupByCollectionId(collectionId.toString());
+            List<MappedTripleGroup> defaultMappings = mappedTripleGroupService.findDefaultMappedTripleGroupsByCollectionId(collectionId.toString());
+            if(defaultMappings == null || defaultMappings.isEmpty()) return 0;
+            return defaultMappings.size();
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            logger.error("Couldn't find mappedTripleGroup to get default mappings from Neo4J for collectionId: " + collectionId);
+            logger.error(ExceptionUtils.getStackTrace(e));
+            return 0;
         }
-        
-        if(mappedTripleGroup != null) {
-            List<Concept> concepts = conceptManager.findConceptsByMappingTypeAndMappedTripleGroupId(MappingTypes.DEFAULT_MAPPING, mappedTripleGroup.get_id().toString());
-            // We need to divide by two as one default mapping will have 2 concepts, a subject and an object
-            defaultMappings = (concepts.isEmpty() ? 0 : concepts.size()) / 2;
-        } else {
-            logger.error("Couldn't find mappedTripleGroup to get default mappings from Neo4J for collectionId: " + collectionId);
-        }
-        return defaultMappings;
     }
 
 }

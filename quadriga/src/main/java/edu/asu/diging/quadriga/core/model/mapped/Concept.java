@@ -16,7 +16,6 @@ public class Concept {
     
     private String uri;
     private String label;
-    private String linkedEventGraphId;
     private String mappedTripleGroupId;
     
     @Relationship(type = "PREDICATE")
@@ -60,14 +59,6 @@ public class Concept {
 
     public void setMappedTripleGroupId(String mappedTripleGroupId) {
         this.mappedTripleGroupId = mappedTripleGroupId;
-    }
-
-    public String getLinkedEventGraphId() {
-        return linkedEventGraphId;
-    }
-
-    public void setLinkedEventGraphId(String linkedEventGraphId) {
-        this.linkedEventGraphId = linkedEventGraphId;
     }
     
 }

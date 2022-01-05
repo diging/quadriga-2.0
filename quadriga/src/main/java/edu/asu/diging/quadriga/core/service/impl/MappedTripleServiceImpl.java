@@ -30,7 +30,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
      * @see edu.asu.diging.quadriga.core.service.impl.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph)
      */
     @Override
-    public Predicate storeMappedGraph(Graph graph, MappedTripleGroup mappedTripleGroup, String eventGraphId) throws NodeNotFoundException {
+    public Predicate storeMappedGraph(Graph graph, MappedTripleGroup mappedTripleGroup) throws NodeNotFoundException {
         DefaultMapping mapping = graph.getMetadata().getDefaultMapping();
         if (mapping == null) {
             return null;
@@ -38,17 +38,17 @@ public class MappedTripleServiceImpl implements MappedTripleService {
 
         String mappedTripleGroupId = mappedTripleGroup.get_id().toString();
         Map<String, NodeData> nodes = graph.getNodes();
-        Concept subject = createConcept(mapping.getSubject(), nodes, mappedTripleGroupId, eventGraphId);
+        Concept subject = createConcept(mapping.getSubject(), nodes, mappedTripleGroupId);
         subject = conceptRepo.save(subject);
-        Concept object = createConcept(mapping.getObject(), nodes, mappedTripleGroupId, eventGraphId);
+        Concept object = createConcept(mapping.getObject(), nodes, mappedTripleGroupId);
         object = conceptRepo.save(object);
-        Predicate predicate = createPredicate(mapping.getPredicate(), nodes, subject, object, mappedTripleGroupId, eventGraphId);
+        Predicate predicate = createPredicate(mapping.getPredicate(), nodes, subject, object, mappedTripleGroupId);
         predicateRepo.save(predicate);
         
         return predicate;
     }
 
-    private Concept createConcept(TripleElement element, Map<String, NodeData> nodes, String mappedTripleGroupId, String eventGraphId) throws NodeNotFoundException {
+    private Concept createConcept(TripleElement element, Map<String, NodeData> nodes, String mappedTripleGroupId) throws NodeNotFoundException {
         Concept concept = new Concept();
         if (element.getType().equals(TripleElement.TYPE_URI)) {
             concept.setLabel(element.getLabel());
@@ -65,11 +65,10 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         concept.setLabel(data.getLabel());
         concept.setUri(data.getMetadata().getInterpretation());
         concept.setMappedTripleGroupId(mappedTripleGroupId);
-        concept.setLinkedEventGraphId(eventGraphId);
         return concept;
     }
 
-    private Predicate createPredicate(TripleElement element, Map<String, NodeData> nodes, Concept subject, Concept object, String mappedTripleGroupId, String eventGraphId) throws NodeNotFoundException {
+    private Predicate createPredicate(TripleElement element, Map<String, NodeData> nodes, Concept subject, Concept object, String mappedTripleGroupId) throws NodeNotFoundException {
         Predicate predicate = new Predicate();
         
         if (element.getType().equals(TripleElement.TYPE_URI)) {
@@ -86,7 +85,6 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         
         predicate.setSource(subject);
         predicate.setTarget(object);
-        predicate.setLinkedEventGraphId(eventGraphId);
         predicate.setMappedTripleGroupId(mappedTripleGroupId);
         return predicate;
     }

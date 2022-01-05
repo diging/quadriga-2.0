@@ -1,5 +1,8 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,20 +76,32 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
      * This method first checks whether a collection with the given collectionId
      * exists
      * 
-     * If yes, it finds a MappedTripleGroup entry in the database with this
+     * If yes, it finds all MappedTripleGroup entries in the database with this
      * collectionId
      * 
-     * @param collectionId used to look for the MappedTripleGroup entry
-     * @return the MappedTripleGroup entry that was found, else null
+     * @param collectionId used to look for the MappedTripleGroup entries
+     * @return the MappedTripleGroup entries that were found, else null
      * @throws InvalidObjectIdException    if collectionId couldn't be converted to
      *                                     ObjectId
      * @throws CollectionNotFoundException if collection with given collectionId
      *                                     doesn't exist
      */
     @Override
-    public MappedTripleGroup findMappedTripleGroupByCollectionId(String collectionId)
+    public List<MappedTripleGroup> findDefaultMappedTripleGroupsByCollectionId(String collectionId)
             throws InvalidObjectIdException, CollectionNotFoundException {
-        return mappedTripleGroupRepository.findByCollectionId(checkAndGetCollection(collectionId).getId()).orElse(null);
+        
+        List<MappedTripleGroup> tripleGroups = mappedTripleGroupRepository
+                .findByCollectionId(checkAndGetCollection(collectionId).getId())
+                .orElse(null);
+        
+        if(tripleGroups != null) {
+            return tripleGroups
+                .stream()
+                .filter(triple -> triple.getMappedTripleType().equals(MappedTripleType.DefaultMapping))
+                .collect(Collectors.toList());
+        }
+        
+        return null;
     }
 
     /**
