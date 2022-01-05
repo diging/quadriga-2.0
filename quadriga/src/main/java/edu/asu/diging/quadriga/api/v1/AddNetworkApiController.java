@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.api.v1;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,10 @@ import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
-import edu.asu.diging.quadriga.core.model.MappedCollection;
+import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
-import edu.asu.diging.quadriga.core.service.MappedCollectionService;
+import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
 
@@ -47,7 +48,7 @@ public class AddNetworkApiController {
     private MappedTripleService mappedTripleService;
     
     @Autowired
-    private MappedCollectionService mappedCollectionService;
+    private MappedTripleGroupService mappedTripleGroupService;
 
     @Autowired
     private CitesphereConnectorImpl citesphereConnectorImpl;
@@ -96,16 +97,18 @@ public class AddNetworkApiController {
         if(tokenInfo == null || !tokenInfo.isActive()) {
             return HttpStatus.UNAUTHORIZED;
         }
-        
-        // the flow will reach  here  only when token is present, valid  and active
-        // Next, we check whether a collection and mappedCollection is present
-        MappedCollection mappedCollection;
+        // The flow will reach  here  only when token is present, valid  and active
+        // Next, we check whether a collection and mappedTripleGroup is present
+        // Every time a new network is submitted, the triple in that network has to be added as a
+        // new MappedTripleGroup for given collectionId
+        MappedTripleGroup mappedTripleGroup;
         try {
-            mappedCollection = mappedCollectionService.findOrAddMappedCollectionByCollectionId(collectionId);
-            if(mappedCollection == null) {
+            mappedTripleGroup = mappedTripleGroupService.addMappedTripleGroup(collectionId);
+            if(mappedTripleGroup == null) {
                 return HttpStatus.NOT_FOUND;
             }
         } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
+            logger.error(ExceptionUtils.getStackTrace(e));
             return HttpStatus.NOT_FOUND;
         }
 
@@ -113,7 +116,7 @@ public class AddNetworkApiController {
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
         eventGraphs.forEach(e -> {
-            e.setCollectionId(mappedCollection.getCollectionId());
+            e.setCollectionId(mappedTripleGroup.getCollectionId());
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
             e.setContext(quadruple.getGraph().getMetadata().getContext());
 
@@ -127,8 +130,8 @@ public class AddNetworkApiController {
         eventGraphService.saveEventGraphs(eventGraphs);
 
         try {
-            // If there are n EventGraphs created for one network, all of them will have same default mapping, so link the triple with any one of them
-            mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedCollection, eventGraphs.get(0).getId().toString());
+            // The new MappedTripleGroup's Id has to be added to Concepts and Predicates
+            mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedTripleGroup);
         } catch (NodeNotFoundException e1) {
             return HttpStatus.BAD_REQUEST;
         }
