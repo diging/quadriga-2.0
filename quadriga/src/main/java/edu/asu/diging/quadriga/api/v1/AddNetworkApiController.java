@@ -93,12 +93,13 @@ public class AddNetworkApiController {
         if(tokenInfo == null || !tokenInfo.isActive()) {
             return HttpStatus.UNAUTHORIZED;
         }
-        
-        // the flow will reach  here  only when token is present, valid  and active
+        // The flow will reach  here  only when token is present, valid  and active
         // Next, we check whether a collection and mappedTripleGroup is present
+        // Every time a new network is submitted, the triple in that network has to be added as a
+        // new MappedTripleGroup for given collectionId
         MappedTripleGroup mappedTripleGroup;
         try {
-            mappedTripleGroup = mappedTripleGroupService.findOrAddMappedTripleGroupByCollectionId(collectionId);
+            mappedTripleGroup = mappedTripleGroupService.addMappedTripleGroup(collectionId);
             if(mappedTripleGroup == null) {
                 return HttpStatus.NOT_FOUND;
             }
@@ -125,6 +126,7 @@ public class AddNetworkApiController {
         eventGraphService.saveEventGraphs(eventGraphs);
 
         try {
+            // The new MappedTripleGroup's Id has to be added to Concepts and Predicates
             // If there are n EventGraphs created for one network, all of them will have same default mapping, so link the triple with any one of them
             mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedTripleGroup, eventGraphs.get(0).getId().toString());
         } catch (NodeNotFoundException e1) {

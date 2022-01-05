@@ -5,11 +5,27 @@ import javax.persistence.Id;
 import org.bson.types.ObjectId;
 
 /**
- * A mapped collection is used to map Concepts and Predicates to a collection
+ * A MappedTripleGroup is used to map Concepts and Predicates to a collection
+ * One CollectionId can have multiple MappedTripleGroups
+ * A new MappedTripleGroup is created per network
+ * Every MappedTripleGroup will have MappedTripleType which specifies mapping type
  * Once a network is submitted by a user, the user can give a name to the mapped collection
  * 
+ * MappedTriple Group examples
+ * 
+ * Collection C1 -
+ * M1 => C1 + DefaultMapping
+ * M2 => C1 + DefaultMapping
+ * M3 => C1 + CustomMapping1
+ * M4 => C1 + CustomMapping2
+ * 
+ * Collection C2 -
+ * M5 => C2 + DefaultMapping
+ * M6 => C2 + CustomMapping3
+ * 
+ * 
  * @author poojakulkarni
- *
+ * 
  */
 public class MappedTripleGroup {
     
