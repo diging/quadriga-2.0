@@ -66,8 +66,11 @@
 				<td><span th:text="${#temporals.format(network.creationTime, 'MM/dd/yyyy hh:mm a')}"></span></td>
 				<td>
 					<a th:href="@{/auth/collections/{collectionid}/network/(collectionid=${collection.id}, sourceURI=${network.sourceURI})}">
-						Visualize
+						Visualize,
 					</a>
+                    <a th:href="@{/auth/collections/{collectionid}/explore/(collectionid=${collection.id})}">
+                        Explore
+                    </a>
 				</td>
 			</tr>
 		  </tbody>

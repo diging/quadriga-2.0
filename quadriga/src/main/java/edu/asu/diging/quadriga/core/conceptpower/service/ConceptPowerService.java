@@ -36,6 +36,12 @@ public interface ConceptPowerService {
      */
     public ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply);
     
+    /**
+     * Searches conceptpower for the given search term
+     * @param searchTerm Term to be searched
+     * @param page Page number to be retrieved
+     * @return the retrieved search response from conceptpower
+     */
     public ConceptPowerSearchResults searchConcepts(String searchTerm, int page);
 
 }

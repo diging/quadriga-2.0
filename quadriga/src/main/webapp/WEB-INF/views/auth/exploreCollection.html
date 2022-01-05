@@ -13,36 +13,54 @@
     border: 2px solid;
 }
 </style>
-<script th:src="@{/resources/notify/bootstrap-notify.min.js}"></script>
 <link th:href="@{/resources/notify/animate.css}" rel="stylesheet"/>
+<script th:src="@{/resources/notify/bootstrap-notify.min.js}"></script>
+<script th:src="@{/resources/paginator/jquery.twbsPagination.min.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
 	
-	function searchConceptPower(searchTerm) {
+	function searchConceptPower(searchTerm, page) {
 		if (searchTerm) {
 			$.ajax({
-				'url': [[@{/search/concept}]] + '?searchTerm=' + searchTerm,
+				'url': [[@{/search/concept}]] + '?searchTerm=' + searchTerm + '&page=' + page,
 				'type': "GET",
 				'success': function(data) {
 					var container = $("#searchResults");
 				    container.empty();
 				    container.show();
-				    
-				    data["conceptEntries"].forEach(function(concept) {
-				    	var li = $('<a href="#" class="list-group-item"></a>');
-				        li.append('<i class="fas fa-tag"></i> <strong> ' + concept.lemma + '</strong><br>');
-			    	    
-				        var newLi = $('<div class=textAndCheckMark>');
-				        newLi.append('<small class=textOfSub>' + concept.description + '</small>');
-				        li.on('click', function() {
-					        displayGraph(concept);
-					        container.empty();
-					        container.hide();
-						});
-				        newLi.append('</div>');
-				        li.append(newLi);
-				        container.append(li);
-				    });
+				    if (data["conceptEntries"]) {
+				    	$("#clear-search").show();
+				    	container.append('<ul id="pagination-concept" class="pagination-sm"></ul>');
+				    	$('#pagination-concept').twbsPagination({
+				    	    totalPages: Math.ceil(data["pagination"].totalNumberOfRecords/20), //conceptpower search results are of size 20
+				    	    startPage: data["pagination"].pageNumber,
+				    	    prev: "«",
+				    	    next: "»",
+				    	    visiblePages: 10,
+				    	    initiateStartPageClick: false,
+				    	    onPageClick: function (event, page) {
+				    	        searchConceptPower(searchTerm, page);
+				    	    }
+				    	});
+				    	
+				    	data["conceptEntries"].forEach(function(concept) {
+					    	var li = $('<a href="#" class="list-group-item"></a>');
+					        li.append('<i class="fas fa-tag"></i> <strong> ' + concept.lemma + '</strong><br>');
+					        var newLi = $('<div>');
+					        newLi.append('<small class=textOfSub>' + concept.description + '</small>');
+					        newLi.append('</div>');
+					        li.on('click', function() {
+						        displayGraph(concept);
+						        container.empty();
+						        container.hide();
+						        $("#clear-search").hide();
+							});
+					        li.append(newLi);
+					        container.append(li);
+					    });
+				    } else {
+				    	showNotification("No search results found", "danger", 10000);
+				    }
 				},
 				'error': function(data) {
 					showNotification("Error searching the concept", "danger", 10000);
@@ -67,6 +85,7 @@
     }
 	
 	function updateGraph(cy, nodes, edges) {
+		var isUpdated = false;
 		let existingNodes = new Map();
 		cy.nodes().forEach(function(node) {
 			if (node.data('uri') && node.data('group') != 0) {
@@ -76,18 +95,22 @@
 		let filteredNodes = [];
 		let mapping = new Map();
 		nodes.forEach(function(node) {
+			//Add the node to the graph if it is a predicate node or if it does not already exist in the graph yet
 			if (node.data.group == 0 || !node.data.uri || !existingNodes.has(node.data.uri)) {
+				isUpdated = true;
 				filteredNodes.push(node);
 				cy.add({
 					group: 'nodes',
 					data: node.data
 				});
 			} else if (node.data.uri && existingNodes.has(node.data.uri)) {
+				//If the node already exists in the graph, we need its id in order to associate any new incoming edges
 				mapping.set(node.data.id, existingNodes.get(node.data.uri));
 			}
 		});
 		
 		edges.forEach(function(edge) {
+			//If the source or target already exist in the current graph, update the edge accordingly
 			if (mapping.has(edge.data.source)) {
 				edge.data.source = mapping.get(edge.data.source);
 			}
@@ -95,7 +118,6 @@
 			if (mapping.has(edge.data.target)) {
 				edge.data.target = mapping.get(edge.data.target);
 			}
-			console.log(edge);
 			cy.add({
 				group: 'edges',
 				data: edge.data
@@ -106,15 +128,22 @@
             name : 'cose',
             idealEdgeLength : 5,
         });
-
-		layout.run();
+		
+		//Restructure the graph layout
+		if (isUpdated) {
+			layout.run();
+		}
 	}
 	
     function displayGraph(concept) {
     	$.ajax({
-			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + concept.concept_uri,
+			'url': [[@{/auth/collections/}]] + '[(${collection})]/sub-graph?uri=' + concept.concept_uri,
 			'type': 'GET',
 			'success': function(data) {
+				if (data.nodes && data.nodes.length == 0) {
+					showNotification("No mapped triples found for the selected topic", "warning", 10000);
+					return;
+				}
 				var cycontainer = $(".cy-container");
 				cycontainer.empty();
 				cycontainer.append('<div id="cy"></div>');
@@ -156,6 +185,7 @@
 		        	var currentNode = event.target;
 		        	if (!currentNode.data('isVisited') && currentNode.data('group') != 0) {
 		        		var queryUri = currentNode.data('uri');
+		        		//Prepare the ignore list for querying
 		            	var connectedPredicates = currentNode.neighborhood('node[group = 0]');
 		            	var connectedNodes = connectedPredicates.neighborhood('node[group = 1][uri][uri != "' + queryUri + '"]');
 		            	var ignoreList = '';
@@ -163,7 +193,7 @@
 		            		ignoreList += node.data('uri') + ',';
 		            	});
 		                $.ajax({
-		        			'url': [[@{/auth/collections/}]] + '[(${collection})]/graph?uri=' + queryUri + '&ignoreList=' + ignoreList,
+		        			'url': [[@{/auth/collections/}]] + '[(${collection})]/sub-graph?uri=' + queryUri + '&ignoreList=' + ignoreList,
 		        			'type': "GET",
 		        			'success': function(data) {
 		        				updateGraph(cy, data.nodes, data.edges);
@@ -183,14 +213,19 @@
     }
     
     $( document ).ready(function() {
+    	$('#clear-search').click(function() {
+    		$("#searchResults").empty();
+    		$("#clear-search").hide();
+    	});
+    	
     	$('#searchGo').click(function() {
-    		searchConceptPower($("#searchbox").val());
+    		searchConceptPower($("#searchbox").val(), 1);
     	});
     	
     	$('#searchbox').keypress(function(event){
     	    var keycode = (event.keyCode ? event.keyCode : event.which);
     	    if(keycode == '13') {
-    	    	searchConceptPower($("#searchbox").val());
+    	    	searchConceptPower($("#searchbox").val(), 1);
     	    }
     	});
     });
@@ -201,7 +236,7 @@
     <div layout:fragment="content">
         <h1>[[${collectionName}]]</h1>
         <div class="row">
-            <label>Search and Select Concept</label>
+            <label class="col-md-12">Search and Select Concept</label>
             <div class="col-md-12">
                 <div class="input-group col-md-12">
                     <input type="text" id="searchbox" class="form-control" placeholder="Search Conceptpower...">
@@ -209,11 +244,11 @@
                         <button class="btn btn-default" type="button" id="searchGo"><i class="fas fa-search"></i></button>
                     </span>
                 </div>
+                <a id="clear-search" class="pull-right" style="display: none">Clear</a>
             </div>
         </div>
         <div id="searchResults" class="list-group"></div>
-        <div class="cy-container">
-        </div>
+        <div class="cy-container"></div>
     </div>
 </body>
 </html>

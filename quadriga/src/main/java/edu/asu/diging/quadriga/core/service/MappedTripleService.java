@@ -14,10 +14,17 @@ public interface MappedTripleService {
 
     /**
      * Retrieves the mapped triples for the given collection id
-     * @param collectionId Collection Id for which the triples are to be fetched
+     * @param mappedCollectionId Mapped Collection Id for which the triples are to be fetched
      * @return the retrieved Triples
      */
     List<Triple> getMappedTriples(String mappedCollectionId);
 
+    /**
+     * Retrieves the mapped triples for concept with the given uri and excluding the ones containing concept from the ignoreList
+     * @param mappedCollectionId Mapped Collection Id for which the triples are to be fetched
+     * @param uri URI of the concept
+     * @param ignoreList List of concept URIs to be ignored which are directly connected to the query concept
+     * @return the retrieved Triples
+     */
     List<Triple> getTriplesByUri(String mappedCollectionId, String uri, List<String> ignoreList);
 }

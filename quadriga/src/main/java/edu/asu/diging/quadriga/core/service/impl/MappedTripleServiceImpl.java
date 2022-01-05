@@ -109,6 +109,9 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getTriplesByUri(java.lang.String, java.lang.String, java.util.List)
+     */
     @Override
     public List<Triple> getTriplesByUri(String mappedCollectionId, String uri, List<String> ignoreList) {
         List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedCollectionId(uri, ignoreList, mappedCollectionId);

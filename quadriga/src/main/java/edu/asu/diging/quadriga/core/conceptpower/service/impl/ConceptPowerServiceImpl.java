@@ -183,6 +183,9 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         return conceptCache;
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerService#searchConcepts(java.lang.String, int)
+     */
     @Override
     public ConceptPowerSearchResults searchConcepts(String searchTerm, int page) {
         return conceptPowerConnectorService.searchConcepts(searchTerm, page);

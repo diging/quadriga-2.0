@@ -41,6 +41,7 @@ public class GraphUtil {
     private static GraphNodeData createNode(TripleElement tripleElement, GraphNodeType graphNodeType,
             Map<String, GraphNodeData> conceptNodeMap, List<GraphData> nodes) {
         String elementUri = tripleElement.getUri();
+        //Avoid node duplication if the element is not a predicate element and if it already exists
         if (graphNodeType != GraphNodeType.PREDICATE && elementUri != null && !elementUri.isEmpty()
                 && conceptNodeMap.containsKey(elementUri)) {
             return conceptNodeMap.get(elementUri);

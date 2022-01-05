@@ -54,7 +54,7 @@ public class ExploreCollectionController {
         return "auth/exploreCollection";
     }
 
-    @GetMapping(value = "/auth/collections/{collectionId}/graph")
+    @GetMapping(value = "/auth/collections/{collectionId}/sub-graph")
     public ResponseEntity<GraphElements> getGraphForUri(@PathVariable String collectionId,
             @RequestParam(value = "uri", required = true) String uri,
             @RequestParam(value = "ignoreList", required = false, defaultValue = "{}") List<String> ignoreList)
@@ -66,6 +66,7 @@ public class ExploreCollectionController {
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
 
+    // Normalize the URI prefix and suffix
     private String processUri(String uri) {
         if (!uri.startsWith(URI_PREFIX)) {
             uri = "https://" + uri;
