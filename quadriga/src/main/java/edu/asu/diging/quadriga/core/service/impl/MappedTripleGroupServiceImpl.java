@@ -28,9 +28,10 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
 
     /**
      * Converts the given collectionId into an ObjectId and persists a
-     * MappedTripleGroup in the database with this collectionId
+     * MappedTripleGroup in the database with this collectionId and MappedTripleType
      * 
      * @param collectionId set to the new MappedTripleGroup
+     * @param mappedTripleType is the group type which the current triple belongs to
      * @return the persisted MappedTripleGroup object
      * @throws InvalidObjectIdException    if collectionId couldn't be converted to
      *                                     ObjectId
@@ -56,9 +57,10 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
      * exists
      * 
      * If yes, it finds a MappedTripleGroup entry in the database with this
-     * collectionId
+     * collectionId and the MappedTripleType
      * 
      * @param collectionId used to look for the MappedTripleGroup entry
+     * @param mappedTripleType is the group type to be looked for in the database
      * @return the MappedTripleGroup entry that was found, else null
      * @throws InvalidObjectIdException    if collectionId couldn't be converted to
      *                                     ObjectId
@@ -125,6 +127,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
      * collectionId and mappedTripleType. If no entry was found, it will try to create a new one
      * 
      * @param collectionId used to look for the MappedTripleGroup entry
+     * @param mappedTripleType is the group type which is to be looked for in the database
      * @return an existing or a new mappedTripleGroup entry
      * @throws InvalidObjectIdException    if collectionId couldn't be converted to
      *                                     ObjectId
