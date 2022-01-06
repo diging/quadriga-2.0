@@ -97,7 +97,7 @@ public class MappedTripleGroupServiceImplTest {
 
         Mockito.when(collectionManager.getCollection(objectId.toString())).thenReturn(collection);
         Mockito.when(mappedTripleGroupRepository.findByCollectionIdAndMappedTripleType(objectId, MappedTripleType.DEFAULT_MAPPING))
-        .thenReturn(Optional.of(mappedTripleGroup));
+            .thenReturn(Optional.of(mappedTripleGroup));
 
         MappedTripleGroup foundMappedTripleGroup = mappedTripleGroupServiceImpl
                 .findByCollectionIdAndMappingType(objectId.toString(), MappedTripleType.DEFAULT_MAPPING);
