@@ -1,15 +1,18 @@
-package edu.asu.diging.quadriga.core.service.impl;
+package edu.asu.diging.quadriga.core.citesphere.impl;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
@@ -27,42 +30,69 @@ import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.token.AccessToken;
+
 import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
-import edu.asu.diging.quadriga.core.service.TokenValidator;
+import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 
 @Service
-@PropertySource({ "classpath:config.properties" })
-public class TokenValidatorImpl implements TokenValidator {
+@PropertySource("classpath:/config.properties")
+public class CitesphereConnectorImpl implements CitesphereConnector {
 
-    @Value("${citesphere_base_url}")
-    private String citesphereBaseURL;
-
-    @Value("${citesphere_check_token_endpoint}")
-    private String citesphereCheckTokenEndpoint;
-
-    @Value("${citesphere_token_endpoint}")
-    private String citesphereTokenEndpoint;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${citesphere_client_id}")
     private String citesphereClientId;
 
     @Value("${citesphere_client_secret}")
-    private String citesphereClientSecret;
+    private String citesphereSecret;
+
+    @Value("${citesphere_base_url}")
+    private String citesphereBaseUrl;
+
+    @Value("${citesphere_token_endpoint}")
+    private String citesphereTokenEndpoint;
+
+    @Value("${citesphere_check_token_endpoint}")
+    private String citesphereCheckTokenEndpoint;
 
     @Value("${citesphere_scopes}")
     private String citesphereScopes;
 
+    @Value("${citesphere_get_apps_endpoint}")
+    private String citesphereAppsEndpoint;
+
     private RestTemplate restTemplate;
 
-    private String accessToken;
+    private String currentAccessToken;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    public TokenValidatorImpl() {
+    public CitesphereConnectorImpl() {
         restTemplate = new RestTemplate();
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector#getCitesphereApps()
+     */
+    @Override
+    public List<CitesphereAppInfo> getCitesphereApps() throws HttpClientErrorException {
+        String appUrl = citesphereBaseUrl + citesphereAppsEndpoint;
+
+        try {
+            return restTemplate.exchange(appUrl, HttpMethod.GET, generateCheckTokenEntity(),
+                    new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
+                    }).getBody();
+        } catch (HttpClientErrorException ex) {
+            if (ex.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+                currentAccessToken = getAccessToken();
+                return restTemplate.exchange(appUrl, HttpMethod.GET, generateCheckTokenEntity(),
+                        new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
+                        }).getBody();
+            }
+            throw ex;
+        }
+    }
     
     /**
      * This method accepts a token from Vogon and sends it to Citesphere's "check_token"
@@ -81,7 +111,7 @@ public class TokenValidatorImpl implements TokenValidator {
     public TokenInfo getTokenInfo(String token) throws BadCredentialsException, OAuthException {
         
 
-        String checkTokenUrl = citesphereBaseURL + citesphereCheckTokenEndpoint + "?token=" + token;
+        String checkTokenUrl = citesphereBaseUrl + citesphereCheckTokenEndpoint + "?token=" + token;
         TokenInfo tokenInfo = null;
         
         try {
@@ -92,7 +122,7 @@ public class TokenValidatorImpl implements TokenValidator {
                 
                 // If we get an unauthorized exception, the accessToken could be expired
                 // so we generate a new access token and we again try to call checkToken URL
-                accessToken = getAccessToken();
+                currentAccessToken = getAccessToken();
                 try {
                     tokenInfo = restTemplate.postForObject(checkTokenUrl, generateCheckTokenEntity(), TokenInfo.class, new Object[] {});
                 }  catch(HttpClientErrorException e2) {
@@ -124,41 +154,32 @@ public class TokenValidatorImpl implements TokenValidator {
      * @return an HTTP Entity
      */
     private HttpEntity<String> generateCheckTokenEntity() {
-        if (accessToken == null) {
-            accessToken = getAccessToken();
+        if (currentAccessToken == null) {
+            currentAccessToken = getAccessToken();
         }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
+        headers.set("Authorization", "Bearer " + currentAccessToken);
 
         return new HttpEntity<String>(headers);
     }
 
-    
-    /**
-     * This method is used to generate an access token using the ClientId and ClientSecret
-     * that is registered with Citesphere
-     * 
-     * @return the generated access token
-     */
     private String getAccessToken() {
-
         AuthorizationGrant clientGrant = new ClientCredentialsGrant();
         ClientID clientID = new ClientID(citesphereClientId);
-        Secret clientSecret = new Secret(citesphereClientSecret);
+        Secret clientSecret = new Secret(citesphereSecret);
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         Scope scope = new Scope(citesphereScopes.split(","));
-        URI tokenEndpoint;
 
+        URI tokenEndpoint;
         try {
-            tokenEndpoint = new URI(citesphereBaseURL + citesphereTokenEndpoint);
+            tokenEndpoint = new URI(citesphereBaseUrl + citesphereTokenEndpoint);
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
 
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientGrant, scope);
         TokenResponse response;
-
         try {
             response = TokenResponse.parse(request.toHTTPRequest().send());
         } catch (ParseException | IOException e) {
@@ -171,7 +192,8 @@ public class TokenValidatorImpl implements TokenValidator {
                     "Quadriga could not retrieve access token. Maybe the configuration is wrong.");
         }
 
-        return ((AccessTokenResponse) response).getTokens().getAccessToken().getValue();
+        AccessToken accessTokenResponse = ((AccessTokenResponse) response).getTokens().getAccessToken();
+        return accessTokenResponse.getValue();
     }
 
 }
