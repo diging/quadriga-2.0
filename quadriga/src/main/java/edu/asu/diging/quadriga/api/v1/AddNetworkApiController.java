@@ -3,7 +3,7 @@ package edu.asu.diging.quadriga.api.v1;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +22,7 @@ import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
@@ -59,16 +60,16 @@ public class AddNetworkApiController {
     @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId) {
         
-        // Every time a new network is submitted, the triple in that network has to be added as a
-        // new MappedTripleGroup for given collectionId
+        // Every time a new network is submitted, the triple in that network has to be added as the
+        // default MappedTripleGroup for given collectionId
         MappedTripleGroup mappedTripleGroup;
         try {
-            mappedTripleGroup = mappedTripleGroupService.addMappedTripleGroup(collectionId);
+            mappedTripleGroup = mappedTripleGroupService.getMappedTripleGroup(collectionId, MappedTripleType.DEFAULT_MAPPING);
             if(mappedTripleGroup == null) {
                 return HttpStatus.NOT_FOUND;
             }
         } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
-            logger.error(ExceptionUtils.getStackTrace(e));
+            logger.error(e.getMessage());
             return HttpStatus.NOT_FOUND;
         }
 
@@ -80,7 +81,7 @@ public class AddNetworkApiController {
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
         eventGraphs.forEach(e -> {
-            e.setCollectionId(mappedTripleGroup.getCollectionId());
+            e.setCollectionId(new ObjectId(collectionId));
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
         });
         eventGraphService.saveEventGraphs(eventGraphs);
