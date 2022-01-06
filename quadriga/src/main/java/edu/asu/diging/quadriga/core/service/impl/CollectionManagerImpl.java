@@ -48,7 +48,7 @@ public class CollectionManagerImpl implements CollectionManager {
         try {
             return collectionRepo.findById(new ObjectId(id)).orElse(null);
         } catch(IllegalArgumentException e) {
-            throw new InvalidObjectIdException("CollectionId: " + id);
+            throw new InvalidObjectIdException(e);
         }
     }
 
@@ -83,6 +83,7 @@ public class CollectionManagerImpl implements CollectionManager {
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      * 
      */
+    @Override
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
         
@@ -94,6 +95,28 @@ public class CollectionManagerImpl implements CollectionManager {
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
+    }
+    
+    
+    /**
+     * This method checks whether a collection with given collectionId exists and
+     * returns the collection if it exists.
+     * If it doesn't exist, it simply throws an exception
+     * 
+     * @param collectionId is the id of the collection to be checked
+     * @return the Collection entry found in the database
+     * @throws InvalidObjectIdException    if collectionId couldn't be conveted to
+     *                                     ObjectId
+     * @throws CollectionNotFoundException if collection with given collectionId
+     *                                     does't exist
+     */
+    @Override
+    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException {
+        Collection collection = findCollection(collectionId);
+        if (collection == null) {
+            throw new CollectionNotFoundException("CollectionId: " + collectionId);
+        }
+        return collection;
     }
 
 }

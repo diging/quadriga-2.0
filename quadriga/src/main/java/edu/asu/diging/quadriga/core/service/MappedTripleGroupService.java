@@ -6,6 +6,7 @@ import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.exceptions.MappedTripleGroupNotFoundException;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
 
 /**
  * 
@@ -17,15 +18,20 @@ import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
  */
 public interface MappedTripleGroupService {
 
-    public MappedTripleGroup addMappedTripleGroup(String collectionId)
+    public MappedTripleGroup addMappedTripleGroup(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException;
 
-    public List<MappedTripleGroup> findDefaultMappedTripleGroupsByCollectionId(String collectionId)
+    public List<MappedTripleGroup> findDefaultMappedTripleGroupsByCollectionId(String collectionId);
+
+    public MappedTripleGroup findByCollectionIdAndMappingType(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException;
 
-    public MappedTripleGroup findMappedTripleGroupById(String mappedTripleGroupId) throws InvalidObjectIdException;
+    public MappedTripleGroup getById(String mappedTripleGroupId) throws InvalidObjectIdException;
 
     public MappedTripleGroup updateMappedTripleGroupNameById(String mappedTripleGroupId, String name)
             throws InvalidObjectIdException, MappedTripleGroupNotFoundException;
+    
+    public MappedTripleGroup getMappedTripleGroup(String collectionId, MappedTripleType mappedTripleType)
+            throws InvalidObjectIdException, CollectionNotFoundException;
 
 }

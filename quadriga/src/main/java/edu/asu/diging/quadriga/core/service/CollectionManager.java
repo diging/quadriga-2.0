@@ -10,4 +10,5 @@ public interface CollectionManager {
     public Collection findCollection(String id) throws InvalidObjectIdException;
     public Collection editCollection(String id, String name, String description) throws CollectionNotFoundException, InvalidObjectIdException;
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
+    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException;
 }

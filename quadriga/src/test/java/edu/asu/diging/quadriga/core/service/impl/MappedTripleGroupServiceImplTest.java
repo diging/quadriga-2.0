@@ -49,9 +49,9 @@ public class MappedTripleGroupServiceImplTest {
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
         mappedTripleGroup.setCollectionId(objectId);
         mappedTripleGroup.setName(name);
-        mappedTripleGroup.setMappedTripleType(MappedTripleType.DefaultMapping);
+        mappedTripleGroup.setMappedTripleType(MappedTripleType.DEFAULT_MAPPING);
 
-        Mockito.when(collectionManager.findCollection(objectId.toString())).thenReturn(collection);
+        Mockito.when(collectionManager.getCollection(objectId.toString())).thenReturn(collection);
         Mockito.when(mappedTripleGroupRepository.save(Mockito.argThat(new ArgumentMatcher<MappedTripleGroup>() {
 
             @Override
@@ -60,28 +60,28 @@ public class MappedTripleGroupServiceImplTest {
             }
         }))).thenReturn(mappedTripleGroup);
 
-        MappedTripleGroup savedMappedTripleGroup = mappedTripleGroupServiceImpl.addMappedTripleGroup(objectId.toString());
+        MappedTripleGroup savedMappedTripleGroup = mappedTripleGroupServiceImpl.addMappedTripleGroup(objectId.toString(), MappedTripleType.DEFAULT_MAPPING);
 
         Assert.assertEquals(mappedTripleGroup.getCollectionId(), savedMappedTripleGroup.getCollectionId());
-        Assert.assertEquals(MappedTripleType.DefaultMapping, savedMappedTripleGroup.getMappedTripleType());
+        Assert.assertEquals(MappedTripleType.DEFAULT_MAPPING, savedMappedTripleGroup.getMappedTripleType());
         Assert.assertEquals(name, savedMappedTripleGroup.getName());
     }
 
     @Test
     public void test_addMappedTripleGroup_invalidObjectId()
             throws InvalidObjectIdException, CollectionNotFoundException {
-        Mockito.when(collectionManager.findCollection("xxx")).thenThrow(InvalidObjectIdException.class);
+        Mockito.when(collectionManager.getCollection("xxx")).thenThrow(InvalidObjectIdException.class);
         Assert.assertThrows(InvalidObjectIdException.class,
-                () -> mappedTripleGroupServiceImpl.addMappedTripleGroup("xxx"));
+                () -> mappedTripleGroupServiceImpl.addMappedTripleGroup("xxx", MappedTripleType.DEFAULT_MAPPING));
     }
 
     @Test
     public void test_addMappedTripleGroup_collectionNotFound()
             throws InvalidObjectIdException, CollectionNotFoundException {
         ObjectId objectId = new ObjectId();
-        Mockito.when(collectionManager.findCollection(objectId.toString())).thenReturn(null);
+        Mockito.when(collectionManager.getCollection(objectId.toString())).thenThrow(new CollectionNotFoundException());
         Assert.assertThrows(CollectionNotFoundException.class,
-                () -> mappedTripleGroupServiceImpl.addMappedTripleGroup(objectId.toString()));
+                () -> mappedTripleGroupServiceImpl.addMappedTripleGroup(objectId.toString(), MappedTripleType.DEFAULT_MAPPING));
     }
 
     @Test
@@ -123,18 +123,16 @@ public class MappedTripleGroupServiceImplTest {
     @Test
     public void test_findMappedTripleGroupByCollectionId_invalidObjectId()
             throws InvalidObjectIdException, CollectionNotFoundException {
-        Mockito.when(collectionManager.findCollection("xxx")).thenThrow(InvalidObjectIdException.class);
-        Assert.assertThrows(InvalidObjectIdException.class,
-                () -> mappedTripleGroupServiceImpl.findDefaultMappedTripleGroupsByCollectionId("xxx"));
+        Mockito.when(collectionManager.getCollection("xxx")).thenThrow(InvalidObjectIdException.class);
+        Assert.assertThrows(InvalidObjectIdException.class, () -> mappedTripleGroupServiceImpl.findByCollectionIdAndMappingType("xxx", MappedTripleType.DEFAULT_MAPPING));
     }
 
     @Test
     public void test_findMappedTripleGroupByCollectionId_collectionNotFound()
             throws InvalidObjectIdException, CollectionNotFoundException {
         ObjectId objectId = new ObjectId();
-        Mockito.when(collectionManager.findCollection(objectId.toString())).thenReturn(null);
-        Assert.assertThrows(CollectionNotFoundException.class,
-                () -> mappedTripleGroupServiceImpl.findDefaultMappedTripleGroupsByCollectionId(objectId.toString()));
+        Mockito.when(collectionManager.getCollection(objectId.toString())).thenThrow(new CollectionNotFoundException());
+        Assert.assertThrows(CollectionNotFoundException.class, () -> mappedTripleGroupServiceImpl.findByCollectionIdAndMappingType(objectId.toString(), MappedTripleType.DEFAULT_MAPPING));
     }
 
     @Test
@@ -143,14 +141,14 @@ public class MappedTripleGroupServiceImplTest {
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
         mappedTripleGroup.set_id(objectId);
         Mockito.when(mappedTripleGroupRepository.findById(objectId)).thenReturn(Optional.of(mappedTripleGroup));
-        MappedTripleGroup foundCollection = mappedTripleGroupServiceImpl.findMappedTripleGroupById(objectId.toString());
+        MappedTripleGroup foundCollection = mappedTripleGroupServiceImpl.getById(objectId.toString());
         Assert.assertEquals(mappedTripleGroup.get_id(), foundCollection.get_id());
     }
 
     @Test
     public void test_findMappedTripleGroupById_invalidObjectId() throws InvalidObjectIdException {
         Assert.assertThrows(InvalidObjectIdException.class,
-                () -> mappedTripleGroupServiceImpl.findMappedTripleGroupById("xxx"));
+                () -> mappedTripleGroupServiceImpl.getById("xxx"));
     }
 
     @Test
