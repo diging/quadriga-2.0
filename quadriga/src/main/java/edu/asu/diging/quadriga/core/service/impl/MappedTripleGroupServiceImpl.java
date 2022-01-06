@@ -1,8 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,16 +65,16 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
     @Override
     public List<MappedTripleGroup> findDefaultMappedTripleGroupsByCollectionId(String collectionId) {
         
-        List<MappedTripleGroup> tripleGroups = mappedTripleGroupRepository
-                .findByCollectionId(checkAndGetCollection(collectionId).getId())
-                .orElse(null);
-        
-        if(tripleGroups != null) {
-            return tripleGroups
-                .stream()
-                .filter(triple -> triple.getMappedTripleType().equals(MappedTripleType.DefaultMapping))
-                .collect(Collectors.toList());
-        }
+//        List<MappedTripleGroup> tripleGroups = mappedTripleGroupRepository
+//                .findByCollectionId(collectionManager.getCollection(collectionId).getId())
+//                .orElse(null);
+//        
+//        if(tripleGroups != null) {
+//            return tripleGroups
+//                .stream()
+//                .filter(triple -> triple.getMappedTripleType().equals(MappedTripleType.DEFAULT_MAPPING))
+//                .collect(Collectors.toList());
+//        }
         
         return null;
     }

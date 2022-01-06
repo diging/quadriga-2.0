@@ -3,7 +3,6 @@ package edu.asu.diging.quadriga.web;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +18,12 @@ import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
+import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
+import edu.asu.diging.quadriga.core.service.PredicateManager;
 
 @Controller
 public class DisplayCollectionController {
@@ -34,6 +36,9 @@ public class DisplayCollectionController {
     
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
+    
+    @Autowired
+    private PredicateManager predicateManager;
     
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -68,28 +73,37 @@ public class DisplayCollectionController {
         model.addAttribute("numberOfSubmittedNetworks", eventGraphs.stream().collect(Collectors.groupingBy(event -> event.getContext().getSourceUri())).size());
         
         // Get default mappings from Concepts
-        model.addAttribute("defaultMappings", getDefaultMappings(collectionId.toString()));
+        model.addAttribute("defaultMappings", getNumberOfDefaultMappings(collectionId.toString()));
         
         return "auth/displayCollection";
         
     }
     
     /**
-     * This method gets all mappedTripleGroups that have the current collectionId for which
-     * the mappedTripleType is "DefaultMapping"
+     * This method returns the number of default mappings present in the collection
+     * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
+     * To get this number of default mappings, this method will check how many 'Predicates' have
+     * this mappedTripleGroupId linked to them
+     * This is because every default mapping has one predicate
+     * So, if the MappedTripleGroupId is present on n predicates, this collection
+     * must have n defaultMappings 
      * 
      * @param collectionId used to find mappedTripleGroupId
      * @return the number of default mappings
      */
-    private int getDefaultMappings(String collectionId) {
+    private int getNumberOfDefaultMappings(String collectionId) {
         try {
-            List<MappedTripleGroup> defaultMappings = mappedTripleGroupService.findDefaultMappedTripleGroupsByCollectionId(collectionId.toString());
-            if(defaultMappings == null || defaultMappings.isEmpty()) return 0;
-            return defaultMappings.size();
+            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            if(mappedTripleGroup != null) {
+                List<Predicate> predicates = predicateManager.findByMappedTripleGroupId(mappedTripleGroup.get_id().toString());
+                if(predicates != null && !predicates.isEmpty()) {
+                    return predicates.size();
+                }
+            }
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            logger.error(ExceptionUtils.getStackTrace(e));
-            return 0;
+            logger.error(e.getMessage());
         }
+        return 0;
     }
 
 }
