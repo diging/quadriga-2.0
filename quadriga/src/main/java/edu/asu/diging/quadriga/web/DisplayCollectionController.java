@@ -99,7 +99,7 @@ public class DisplayCollectionController {
                 // The EventGraph that has the oldest creation date & time will be the network's creation date & time
                 EventGraph firstEventGraph = Collections.min(eventGraphsInNetwork, (eventGraph1, eventGraph2) -> eventGraph1
                         .getCreationTime().compareTo(eventGraph2.getCreationTime()));
-                network.setCreationTime(firstEventGraph.getCreationTime());
+                network.setCreationTime(firstEventGraph.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
                 network.setCreator(firstEventGraph.getContext().getCreator());
                 network.setAppName(firstEventGraph.getAppName());
                 networks.add(network);

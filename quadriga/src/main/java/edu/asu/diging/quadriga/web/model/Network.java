@@ -1,6 +1,6 @@
 package edu.asu.diging.quadriga.web.model;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * A model to display networks on the collection page
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class Network {
     
     private String sourceURI;
-    private LocalDateTime creationTime;
+    private ZonedDateTime creationTime;
     private String creator;
     private String appName;
     
@@ -20,11 +20,11 @@ public class Network {
     public void setSourceURI(String sourceURI) {
         this.sourceURI = sourceURI;
     }
-    public LocalDateTime getCreationTime() {
+    public ZonedDateTime getCreationTime() {
         return creationTime;
     }
-    public void setCreationTime(LocalDateTime creationTime) {
-        this.creationTime = creationTime;
+    public void setCreationTime(ZonedDateTime zonedDateTime) {
+        this.creationTime = zonedDateTime;
     }
     public String getCreator() {
         return creator;
