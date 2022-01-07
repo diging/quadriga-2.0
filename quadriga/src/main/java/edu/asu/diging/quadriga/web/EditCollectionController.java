@@ -52,11 +52,11 @@ public class EditCollectionController {
         Collection collection = null;
 
         try {
-                collection = collectionManager.findCollection(id);
-            } catch (InvalidObjectIdException e) {
-                logger.error(e.getMessage());
-                return "error404Page";
-            }
+            collection = collectionManager.findCollection(id);
+        } catch (InvalidObjectIdException e) {
+            logger.error(e.getMessage());
+            return "error404Page";
+        }
         if (Objects.nonNull(collection)) {
             
             CollectionForm collectionForm = new CollectionForm();
