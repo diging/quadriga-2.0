@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.web;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,11 +63,13 @@ public class DisplayCollectionController {
         if(!eventGraphs.isEmpty()) {
             // We get last network submission info by getting the last EventGraph which will be a part of the last network
             EventGraph lastNetwork = eventGraphs.get(0);
-            model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime());
+            model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
             model.addAttribute("lastNetworkSubmittedBy", lastNetwork.getAppName());
         }
         
-        model.addAttribute("collection", collection);
+        model.addAttribute("collectionName", collection.getName());
+        model.addAttribute("description", collection.getDescription());
+        model.addAttribute("creationTime", collection.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
         
         // One network may have multiple eventGraphs, but all of them will have same sourceURI in the context
         // This sourceURI will be used to group eventGraphs together that belong to the same network

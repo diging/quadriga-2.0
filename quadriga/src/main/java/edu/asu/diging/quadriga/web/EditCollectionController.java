@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +30,8 @@ import edu.asu.diging.quadriga.web.forms.CollectionForm;
  */
 @Controller
 public class EditCollectionController {
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CollectionManager collectionManager;
@@ -45,23 +49,27 @@ public class EditCollectionController {
      */
     @RequestMapping(value = "/auth/collections/{id}/edit", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
-        Collection collection;
+        Collection collection = null;
+
         try {
-            collection = collectionManager.findCollection(id);
-            if (Objects.nonNull(collection)) {
-                CollectionForm collectionForm = new CollectionForm();
-                collectionForm.setId(id);
-                collectionForm.setName(collection.getName());
-                collectionForm.setDescription(collection.getDescription());
-                collectionForm.setApps(collection.getApps());
-                
-                model.addAttribute("citesphereApps", citesphereConnector.getCitesphereApps());
-                model.addAttribute("collectionForm", collectionForm);
-                return "auth/editCollection";
-            } else {
+                collection = collectionManager.findCollection(id);
+            } catch (InvalidObjectIdException e) {
+                logger.error(e.getMessage());
                 return "error404Page";
             }
-        } catch (InvalidObjectIdException e) {
+        if (Objects.nonNull(collection)) {
+            
+            CollectionForm collectionForm = new CollectionForm();
+            collectionForm.setId(id);
+            collectionForm.setName(collection.getName());
+            collectionForm.setDescription(collection.getDescription());
+            collectionForm.setApps(collection.getApps());
+            
+            model.addAttribute("citesphereApps", citesphereConnector.getCitesphereApps());
+            model.addAttribute("collectionForm", collectionForm);
+            
+            return "auth/editCollection";
+        } else {
             return "error404Page";
         }
     }
