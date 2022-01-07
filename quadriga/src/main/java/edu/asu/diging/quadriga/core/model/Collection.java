@@ -1,12 +1,16 @@
 package edu.asu.diging.quadriga.core.model;
 
-import java.time.LocalDateTime;
-
+import java.time.OffsetDateTime;
 import java.util.List;
 import javax.persistence.Id;
 
 import org.bson.types.ObjectId;
 
+/**
+ * Represents a Collection of networks
+ * Creation time in the collection will be stored in UTC
+ *
+ */
 public class Collection {
 
     @Id
@@ -14,16 +18,13 @@ public class Collection {
     
     private String name;
     private String description;
-
-    // Time will be stored in UTC
-    private LocalDateTime creationTime;
-    
+    private OffsetDateTime creationTime;
     private List<String> apps;
     
     public Collection() {
-        this.creationTime = LocalDateTime.now();
+        this.creationTime = OffsetDateTime.now();
     }
-    
+
     public ObjectId getId() {
         return _id;
     }
@@ -48,7 +49,7 @@ public class Collection {
         this.description = description;
     }
     
-    public LocalDateTime getCreationTime() {
+    public OffsetDateTime getCreationTime() {
         return creationTime;
     }
     

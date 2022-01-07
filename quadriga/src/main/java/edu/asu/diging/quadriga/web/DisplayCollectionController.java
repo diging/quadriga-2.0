@@ -4,11 +4,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +23,13 @@ import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
+import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.web.model.Network;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
+import edu.asu.diging.quadriga.core.service.PredicateManager;
 
 @Controller
 public class DisplayCollectionController {
@@ -39,6 +42,9 @@ public class DisplayCollectionController {
 
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
+    
+    @Autowired
+    private PredicateManager predicateManager;
     
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -73,14 +79,13 @@ public class DisplayCollectionController {
         }
 
         model.addAttribute("size", size);
-        
         // Get all EventGraphs for this collection
         List<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId());
 
         if (!eventGraphsList.isEmpty()) {
             // Latest EventGraph will be for the last network submitted
             EventGraph lastNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
-            model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime());
+            model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
             model.addAttribute("lastNetworkSubmittedBy", lastNetwork.getAppName());
             
             // Every EventGraph with same sourceURI belongs to the same network
@@ -110,27 +115,46 @@ public class DisplayCollectionController {
             model.addAttribute("numberOfSubmittedNetworks", networks.size());
         }
         
-        model.addAttribute("defaultMappings", getDefaultMappings(collectionId.toString()));
+        model.addAttribute("collectionName", collection.getName());
+        model.addAttribute("description", collection.getDescription());
+        model.addAttribute("creationTime", collection.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
+        
+        // One network may have multiple eventGraphs, but all of them will have same sourceURI in the context
+        // This sourceURI will be used to group eventGraphs together that belong to the same network
+        model.addAttribute("numberOfSubmittedNetworks", eventGraphsList.stream().collect(Collectors.groupingBy(event -> event.getContext().getSourceUri())).size());
+        
+        // Get default mappings from Concepts
+        model.addAttribute("defaultMappings", getNumberOfDefaultMappings(collectionId.toString()));
+        
         return "auth/displayCollection";
 
     }
 
     /**
-     * This method gets all mappedTripleGroups that have the current collectionId for which
-     * the mappedTripleType is "DefaultMapping"
+     * This method returns the number of default mappings present in the collection
+     * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
+     * To get this number of default mappings, this method will check how many 'Predicates' have
+     * this mappedTripleGroupId linked to them
+     * This is because every default mapping has one predicate
+     * So, if the MappedTripleGroupId is present on n predicates, this collection
+     * must have n defaultMappings 
      * 
      * @param collectionId used to find mappedTripleGroupId
      * @return the number of default mappings
      */
-    private int getDefaultMappings(String collectionId) {
+    private int getNumberOfDefaultMappings(String collectionId) {
         try {
-            List<MappedTripleGroup> defaultMappings = mappedTripleGroupService.findDefaultMappedTripleGroupsByCollectionId(collectionId.toString());
-            if(defaultMappings == null || defaultMappings.isEmpty()) return 0;
-            return defaultMappings.size();
+            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            if(mappedTripleGroup != null) {
+                List<Predicate> predicates = predicateManager.findByMappedTripleGroupId(mappedTripleGroup.get_id().toString());
+                if(predicates != null && !predicates.isEmpty()) {
+                    return predicates.size();
+                }
+            }
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            logger.error(ExceptionUtils.getStackTrace(e));
-            return 0;
+            logger.error(e.getMessage());
         }
+        return 0;
     }
     
     private Map<String, List<EventGraph>> groupEventGraphs(List<EventGraph> eventGraphs) {

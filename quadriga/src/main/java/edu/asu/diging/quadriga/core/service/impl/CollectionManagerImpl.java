@@ -29,6 +29,7 @@ public class CollectionManagerImpl implements CollectionManager {
         collection.setApps(apps);
         return collectionRepo.save(collection);
     }
+    
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#findCollection(java.lang.String)
      */
@@ -37,7 +38,7 @@ public class CollectionManagerImpl implements CollectionManager {
         try {
             return collectionRepo.findById(new ObjectId(id)).orElse(null);
         } catch(IllegalArgumentException e) {
-            throw new InvalidObjectIdException("CollectionId: " + id);
+            throw new InvalidObjectIdException(e);
         }
     }
     
@@ -61,6 +62,7 @@ public class CollectionManagerImpl implements CollectionManager {
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#deleteCollection(java.lang.String)
      */
+    @Override
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
         
@@ -72,6 +74,19 @@ public class CollectionManagerImpl implements CollectionManager {
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#getCollection(java.lang.String)
+     */
+    @Override
+    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException {
+        Collection collection = findCollection(collectionId);
+        if (collection == null) {
+            throw new CollectionNotFoundException("CollectionId: " + collectionId);
+        }
+        return collection;
     }
 
 }
