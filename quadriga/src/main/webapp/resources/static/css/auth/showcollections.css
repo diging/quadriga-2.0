@@ -1,0 +1,46 @@
+.new-collection-button-div {
+	margin-top:20px
+}
+
+.new-collection-button {
+	background: rgba(239, 149, 84, 1);
+	width: 100%;
+}
+
+.search-bar-div {
+	margin-top: 25px;
+	margin-bottom: 35px;
+	width: 56%;
+	height: 40px;
+	background: rgba(242, 242, 242, 1);
+	border-radius: 2px;
+	position: relative;
+}
+
+.search-text-div {
+	color: rgba(132, 132, 132, 1);
+	margin: 0;
+  	position: absolute;
+  	top: 50%;
+  	-ms-transform: translateY(-50%);
+  	transform: translateY(-50%);
+  	margin-left: 15px;
+}
+
+.search-text {
+	margin-left: 20px;
+}
+
+.collection-actions {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.collection-action {
+	flex: 1
+}
+
+.collection-action-icon {
+	margin-right: 10px;
+}
