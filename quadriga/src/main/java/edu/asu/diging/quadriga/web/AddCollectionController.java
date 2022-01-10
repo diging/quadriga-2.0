@@ -1,5 +1,10 @@
 package edu.asu.diging.quadriga.web;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
+import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
@@ -26,15 +32,30 @@ public class AddCollectionController {
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.GET)
     public String get(Model model) {
         model.addAttribute("collectionForm", new CollectionForm());
-        model.addAttribute("citesphereApps", citesphereConnector.getCitesphereApps());
         return "auth/addCollection";
     }
 
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.POST)
-    public String add(@Valid CollectionForm collectionForm, BindingResult result, RedirectAttributes redirectAttrs) {
+    public String add(Model model, @Valid CollectionForm collectionForm, BindingResult result, RedirectAttributes redirectAttrs) {
         if (result.hasErrors()) {
             return "auth/addCollection";
         }
+        
+        List<CitesphereAppInfo> citesphereApps = citesphereConnector.getCitesphereApps();
+        HashSet<String> appSet = new HashSet<String>(
+                citesphereApps.stream().map(app -> app.getClientId()).collect(Collectors.toList()));
+        List<String> invalidApps = new ArrayList<>();
+        collectionForm.getApps().forEach(clientId -> {
+            if (!appSet.contains(clientId)) {
+                invalidApps.add(clientId);
+            }
+        });
+        
+        if (!invalidApps.isEmpty()) {
+            model.addAttribute("collectionForm", collectionForm);
+            return "auth/addCollection";
+        }
+        
         collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription(),
                 collectionForm.getApps());
 

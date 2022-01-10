@@ -1,6 +1,10 @@
 package edu.asu.diging.quadriga.web;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -16,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
@@ -52,8 +57,6 @@ public class EditCollectionController {
             collectionForm.setName(collection.getName());
             collectionForm.setDescription(collection.getDescription());
             collectionForm.setApps(collection.getApps());
-            
-            model.addAttribute("citesphereApps", citesphereConnector.getCitesphereApps());
             model.addAttribute("collectionForm", collectionForm);
             return "auth/editCollection";
         } else {
@@ -71,10 +74,25 @@ public class EditCollectionController {
      * @return
      */
     @RequestMapping(value = "/auth/collections/{id}/edit", method = RequestMethod.POST)
-    public String edit(@PathVariable String id, @Valid CollectionForm collectionForm,
+    public String edit(Model model, @PathVariable String id, @Valid CollectionForm collectionForm,
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "auth/editCollection";
+        }
+        
+        List<CitesphereAppInfo> citesphereApps = citesphereConnector.getCitesphereApps();
+        HashSet<String> appSet = new HashSet<String>(
+                citesphereApps.stream().map(app -> app.getClientId()).collect(Collectors.toList()));
+        List<String> invalidApps = new ArrayList<>();
+        collectionForm.getApps().forEach(clientId -> {
+            if (!appSet.contains(clientId)) {
+                invalidApps.add(clientId);
+            }
+        });
+        
+        if (!invalidApps.isEmpty()) {
+            model.addAttribute("collectionForm", collectionForm);
+            return "auth/addCollection";
         }
 
         try {
