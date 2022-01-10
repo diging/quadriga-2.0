@@ -1,6 +1,5 @@
 package edu.asu.diging.quadriga.web;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -83,16 +82,11 @@ public class EditCollectionController {
         List<CitesphereAppInfo> citesphereApps = citesphereConnector.getCitesphereApps();
         HashSet<String> appSet = new HashSet<String>(
                 citesphereApps.stream().map(app -> app.getClientId()).collect(Collectors.toList()));
-        List<String> invalidApps = new ArrayList<>();
-        collectionForm.getApps().forEach(clientId -> {
+        for (String clientId : collectionForm.getApps()) {
             if (!appSet.contains(clientId)) {
-                invalidApps.add(clientId);
+                model.addAttribute("collectionForm", collectionForm);
+                return "auth/addCollection";
             }
-        });
-        
-        if (!invalidApps.isEmpty()) {
-            model.addAttribute("collectionForm", collectionForm);
-            return "auth/addCollection";
         }
 
         try {
