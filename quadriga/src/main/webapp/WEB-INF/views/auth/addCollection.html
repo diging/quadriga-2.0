@@ -2,7 +2,7 @@
 <head>
 <title>Quadriga 2.0</title>
 <style> 
-.textOfSub {
+.description {
     width:95%
 }
 #applicationList {
@@ -41,7 +41,7 @@
 				data.forEach(function(app) {
 				    var item = $('<div href="#" class="list-group-item app" data-client-id="'+ app.clientId +'">');
 					item.append('<strong>'+ app.name +'</strong><input title="Select" type="checkbox" class="checkbox pull-right"/><br>');
-					item.append('<small class=textOfSub>'+ app.description +'</small></div>');
+					item.append('<small class=description>'+ app.description +'</small></div>');
 					item.on('click', function() {
 						var checkbox = $(this).find(".checkbox");
 			        	checkbox.prop("checked", !checkbox.prop("checked"))
