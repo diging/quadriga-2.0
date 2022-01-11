@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +19,8 @@ public class DeleteCollectionController {
     @Autowired
     private CollectionManager collectionManager;
     
+    private Logger logger = LoggerFactory.getLogger(getClass());
+    
     @RequestMapping(value = "/auth/collections/{id}/delete", method = RequestMethod.GET)
     public String get(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
@@ -27,6 +31,7 @@ public class DeleteCollectionController {
         
             return "redirect:/auth/collections";
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+            logger.error("Couldn't delete collection", e);
             return "error404Page";
         }
     }
