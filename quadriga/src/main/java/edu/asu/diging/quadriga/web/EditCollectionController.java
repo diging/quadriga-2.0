@@ -31,13 +31,13 @@ import edu.asu.diging.quadriga.web.forms.CollectionForm;
 @Controller
 public class EditCollectionController {
     
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private CollectionManager collectionManager;
     
     @Autowired
     private CitesphereConnector citesphereConnector;
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Request handler for getting the "Edit collections" view
@@ -54,7 +54,7 @@ public class EditCollectionController {
         try {
             collection = collectionManager.findCollection(id);
         } catch (InvalidObjectIdException e) {
-            logger.error(e.getMessage());
+            logger.error("Couldn't edit collection", e);
             return "error404Page";
         }
         if (Objects.nonNull(collection)) {
