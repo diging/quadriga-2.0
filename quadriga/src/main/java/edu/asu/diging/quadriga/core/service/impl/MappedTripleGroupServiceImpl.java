@@ -1,6 +1,5 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
-import java.util.List;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,38 +48,6 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         mappedTripleGroup.setMappedTripleType(mappedTripleType);
         
         return mappedTripleGroupRepository.save(mappedTripleGroup);
-    }
-
-    /**
-     * This method first checks whether a collection with the given collectionId
-     * exists.
-     * 
-     * If yes, it finds a MappedTripleGroup entry in the database with this
-     * collectionId and the MappedTripleType.
-     * 
-     * @param collectionId used to look for the MappedTripleGroup entry
-     * @param mappedTripleType is the group type to be looked for in the database
-     * @return the MappedTripleGroup entry that was found, else null
-     * @throws InvalidObjectIdException    if collectionId couldn't be converted to
-     *                                     ObjectId
-     * @throws CollectionNotFoundException if collection with given collectionId
-     *                                     doesn't exist
-     */
-    @Override
-    public List<MappedTripleGroup> findDefaultMappedTripleGroupsByCollectionId(String collectionId) {
-        
-//        List<MappedTripleGroup> tripleGroups = mappedTripleGroupRepository
-//                .findByCollectionId(collectionManager.getCollection(collectionId).getId())
-//                .orElse(null);
-//        
-//        if(tripleGroups != null) {
-//            return tripleGroups
-//                .stream()
-//                .filter(triple -> triple.getMappedTripleType().equals(MappedTripleType.DEFAULT_MAPPING))
-//                .collect(Collectors.toList());
-//        }
-        
-        return null;
     }
     
     @Override
