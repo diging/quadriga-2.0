@@ -13,92 +13,104 @@
   				</form>
   			</div>
 		</div>
-		<div th:if="${collections.empty}">No Collections available</div>
-		<div th:if="${collections.totalPages gt 0}" class="search-bar-div">
-			<div class="search-text-div">
-				<i class="fas fa-search"></i>
-				<span class="search-text">Search</span>
-			</div> 
+		<div th:if="${collections.empty}">
+			No Collections available
 		</div>
-		<div class="table-responsive">
-			<table class="table">
-				<thead>
-					<tr>
-						<th>Collection</th>
-						<th>Description <!-- TODO: Only first 20 characters to be displayed --></th>
-						<th>Action</th>
-					</tr>
-				</thead>
-			<tbody>
-			<tr th:each="collection: ${collections}">
-				<td th:text="${collection.name}"></td>
-				<td th:text="${collection.description}"></td>
-				<td>
-					<div class="collection-actions">
-						<a th:href="@{/auth/collections/{id}(id=${collection.id})}" class="collection-action">
-							<i class="fas fa-eye collection-action-icon"></i>View
+		<div th:if="${collections.totalPages gt 0}">
+			<div class="search-bar-div">
+				<form>
+				  <div class="form-group">
+				    <div class="input-group">
+				          <span class="input-group-addon search-text-div">
+				          	<span class="fas fa-search"></span>
+				          </span>
+				          <input class="form-control left-border-none" placeholder="Search" type="text" name="search"/>
+				      </div>
+				  </div>
+				</form>
+			</div>
+			<div>
+				<div class="table-responsive table-bordered">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Description</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="collection: ${collections}">
+								<td th:text="${collection.name}"></td>
+								<td th:text="${#strings.abbreviate(collection.description, 60)}"></td>
+								<td>
+									<div class="collection-actions">
+										<a th:href="@{/auth/collections/{id}(id=${collection.id})}" class="collection-action collection-action-link">
+											<i class="fas fa-eye collection-action-icon"></i>View
+										</a>
+										<a th:href="@{/auth/collections/{id}/edit(id=${collection.id})}" class="collection-action collection-action-link">
+											<i class="fas fa-edit collection-action-icon" aria-hidden="true"></i> Edit
+										</a>
+										<div class="collection-action" sec:authorize="hasRole('USER')" role="presentation">
+											<div class="modal modal-warning fade in" th:id="modal-warning+${collection.id}" style="color:black">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="modal-header">
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												 				<i class="fas fa-times-circle"></i>
+												 			</button>
+												 			<h5 class="modal-title">Deleting Collection - <b><span th:text="${collection.name}"></span></b></h5>
+												 		</div>
+												 		<div class="modal-body">
+												 			<h4>Are you sure want to delete this collection?</h4>
+												 		</div>
+												 		<div class="modal-footer">
+												 			<a th:href="@{/auth/collections/{id}/delete(id=${collection.id})}" class="btn btn-primary pull-left">
+												 				Yes
+												 			</a>
+												 			<button type="button" class="btn btn-outline pull-left" data-dismiss="modal" style="margin-left:15px">Cancel</button>
+												 		</div>
+												 	</div>
+												 </div>
+											</div>
+											<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${collection.id}" class="collection-action-link">
+												<i class="fas fa-trash collection-action-icon"></i> Delete
+											</a>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<nav aria-label="Pagination" th:if="${collections.totalPages gt 0}">
+				<ul class="pagination justify-content-center font-weight-bold">
+					<li class="page-item" th:classappend="${collections.number eq 0} ? 'disabled'">
+						<a class="page-link"
+							th:href="@{/auth/collections?page={id}(id=${collections.number lt 2 ? 1 : collections.number})}"
+							aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+							<span aria-hidden="true">&laquo;</span>
 						</a>
-						<a th:href="@{/auth/collections/{id}/edit(id=${collection.id})}" class="collection-action">
-							<i class="fas fa-edit collection-action-icon" aria-hidden="true"></i> Edit
+					</li>
+					<li class="page-item"
+						th:classappend="${i eq collections.number + 1} ? 'active'"
+						th:each="i : ${#numbers.sequence( 1, collections.totalPages, 1)}">
+						<a class="page-link"
+						th:href="@{/auth/collections?page={id}(id=${i})}" th:text="${i}"
+						th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+					</li>
+					<li class="page-item"
+						th:classappend="${collections.number + 1 eq collections.totalPages} ? 'disabled'">
+						<a class="page-link"
+						th:href="@{/auth/collections?page={id}(id=${collections.number + 2})}"
+						aria-label="Next" title="Next Page" data-toggle="tooltip">
+							<span aria-hidden="true">&raquo;</span>
 						</a>
-						<div class="btn-link collection-action" sec:authorize="hasRole('USER')" role="presentation">
-							<div class="modal modal-warning fade in" th:id="modal-warning+${collection.id}" style="color:black">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								 				<i class="fas fa-times-circle"></i>
-								 			</button>
-								 			<h5 class="modal-title">Deleting Collection - <b><span th:text="${collection.name}"></span></b></h5>
-								 		</div>
-								 		<div class="modal-body">
-								 			<h4>Are you sure want to delete this collection?</h4>
-								 		</div>
-								 		<div class="modal-footer">
-								 			<a th:href="@{/auth/collections/{id}/delete(id=${collection.id})}" class="btn btn-primary pull-left">
-								 				Yes
-								 			</a>
-								 			<button type="button" class="btn btn-outline pull-left" data-dismiss="modal" style="margin-left:15px">Cancel</button>
-								 		</div>
-								 	</div>
-								 </div>
-							</div>
-							<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${collection.id}" style="cursor:pointer">
-								<i class="fas fa-trash collection-action-icon"></i> Delete
-							</a>
-						</div>
-					</div>
-				</td>
-			</tr>
-			</tbody>
-			</table>
+					</li>
+				</ul>
+			</nav>
 		</div>
-		<nav aria-label="Pagination" th:if="${collections.totalPages gt 0}">
-			<ul class="pagination justify-content-center font-weight-bold">
-				<li class="page-item"
-					th:classappend="${collections.number eq 0} ? 'disabled'"><a
-					class="page-link"
-					th:href="@{/auth/collections?page={id}(id=${collections.number lt 2 ? 1 : collections.number})}"
-					aria-label="Previous" title="Previous Page" data-toggle="tooltip">
-						<span aria-hidden="true">&laquo;</span>
-				</a></li>
-				<li class="page-item"
-					th:classappend="${i eq collections.number + 1} ? 'active'"
-					th:each="i : ${#numbers.sequence( 1, collections.totalPages, 1)}">
-					<a class="page-link"
-					th:href="@{/auth/collections?page={id}(id=${i})}" th:text="${i}"
-					th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-				</li>
-				<li class="page-item"
-					th:classappend="${collections.number + 1 eq collections.totalPages} ? 'disabled'">
-					<a class="page-link"
-					th:href="@{/auth/collections?page={id}(id=${collections.number + 2})}"
-					aria-label="Next" title="Next Page" data-toggle="tooltip"> <span
-						aria-hidden="true">&raquo;</span>
-				</a>
-				</li>
-			</ul>
-		</nav>
 	</div>
 
 </body>

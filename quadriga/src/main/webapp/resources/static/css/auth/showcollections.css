@@ -12,19 +12,15 @@
 	margin-bottom: 35px;
 	width: 56%;
 	height: 40px;
-	background: rgba(242, 242, 242, 1);
 	border-radius: 2px;
 	position: relative;
 }
 
 .search-text-div {
 	color: rgba(132, 132, 132, 1);
-	margin: 0;
-  	position: absolute;
-  	top: 50%;
-  	-ms-transform: translateY(-50%);
-  	transform: translateY(-50%);
-  	margin-left: 15px;
+	background: rgba(242, 242, 242, 1);
+    border: none !important;
+	padding-left: 18px !important
 }
 
 .search-text {
@@ -35,12 +31,33 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
+	width: 75%
 }
 
 .collection-action {
 	flex: 1
 }
 
+.collection-action-link {
+	text-decoration: none;
+	color: rgba(239, 149, 84, 1);
+	cursor: pointer;
+}
+
+.collection-action-link:hover {
+	text-decoration: none;
+	color: rgba(239, 110, 53, 1);
+}
+
 .collection-action-icon {
 	margin-right: 10px;
 }
+
+ .left-border-none {
+    border: none !important;
+    box-shadow: inset 0px 0px 0 rgba(0,0,0,0) !important;
+ }
+ 
+ .form-control {
+	background: rgba(242, 242, 242, 1) !important;
+ }
