@@ -9,7 +9,7 @@ import edu.asu.diging.quadriga.core.model.Collection;
 public interface CollectionManager {
     
     /**
-     * Saves a collection in database with the given details
+     * Saves a collection in database with the given details.
      * @param name collection name
      * @param description collection description
      * @param apps list of citesphere apps attached to the collection
@@ -18,7 +18,7 @@ public interface CollectionManager {
     public Collection addCollection(String name, String description, List<String> apps);
     
     /**
-     * Finds a collection from the collection table by id
+     * Finds a collection from the collection table by id.
      * @param id used to look up the collection in the database
      * @throws InvalidObjectIdException if the id passed is not a hex string
      * @return Collection Instance that is found from the database
@@ -28,7 +28,7 @@ public interface CollectionManager {
     
     /**
      * 
-     * Edits an existing Collection and updates it in the db
+     * Edits an existing Collection and updates it in the db.
      * 
      * @param id of the collection that needs to be updated
      * @param name will be the updated name value
@@ -40,7 +40,8 @@ public interface CollectionManager {
     public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, InvalidObjectIdException;
     
     /**
-     * Deletes a collection from collection table by id
+     * Deletes a collection from collection table by id.
+     * 
      * @param id used to look up the collection in database
      * @throws CollectionNotFoundException in case the collection for the given id is missing
      * @throws InvalidObjectIdException if the id passed is not a hex string

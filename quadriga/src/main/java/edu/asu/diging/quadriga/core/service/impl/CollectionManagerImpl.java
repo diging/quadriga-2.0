@@ -76,7 +76,6 @@ public class CollectionManagerImpl implements CollectionManager {
         }
     }
     
-    
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#getCollection(java.lang.String)
      */
