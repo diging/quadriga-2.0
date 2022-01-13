@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.core.citesphere.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,7 +15,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -36,10 +42,12 @@ import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
+import edu.asu.diging.quadriga.core.model.citesphere.CitesphereToken;
+import edu.asu.diging.quadriga.core.model.citesphere.CitesphereUser;
 
 @Service
 @PropertySource("classpath:/config.properties")
-public class CitesphereConnectorImpl implements CitesphereConnector {
+public class CitesphereConnectorImpl implements CitesphereConnector, AuthenticationProvider {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -191,6 +199,29 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
 
         AccessToken accessTokenResponse = ((AccessTokenResponse) response).getTokens().getAccessToken();
         return accessTokenResponse.getValue();
+    }
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        String token = authentication.getCredentials().toString();
+        TokenInfo tokenInfo = getTokenInfo(token);
+        
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        for (String role : tokenInfo.getAuthorities()) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        
+        CitesphereToken citesphereAuth = new CitesphereToken(authorities);
+        citesphereAuth.setPrincipal(new CitesphereUser(tokenInfo.getUser_name(), tokenInfo.getClient_id(), authorities));
+        citesphereAuth.setAuthenticated(true);
+        citesphereAuth.setDetails(tokenInfo);
+        
+        return citesphereAuth;
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return authentication.isAssignableFrom(CitesphereToken.class);
     }
 
 }

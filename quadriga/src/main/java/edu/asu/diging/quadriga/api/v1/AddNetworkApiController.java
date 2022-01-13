@@ -6,19 +6,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
-import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
-import edu.asu.diging.quadriga.core.citesphere.impl.CitesphereConnectorImpl;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
-import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
@@ -36,9 +31,6 @@ public class AddNetworkApiController {
 
     @Autowired
     private MappedTripleService mappedTripleService;
-    
-    @Autowired
-    private CitesphereConnectorImpl citesphereConnectorImpl;
 
     /**
      * The method parse given Json from the post request body and add Network
@@ -52,37 +44,13 @@ public class AddNetworkApiController {
      */
     @ResponseBody
     @RequestMapping(value = "/api/v1/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpStatus processJson(@RequestBody Quadruple quadruple, @RequestHeader(name = "Authorization",  required = true) String authHeader) {
+    public HttpStatus processJson(@RequestBody Quadruple quadruple) {
 
         if (quadruple == null) {
             return HttpStatus.NO_CONTENT;
         }
         
-        String token = getTokenFromHeader(authHeader);
-        if(token == null) {
-            return HttpStatus.NOT_FOUND;
-        }
-        
-        TokenInfo tokenInfo;
-        try {
-            tokenInfo = citesphereConnectorImpl.getTokenInfo(token);
-            
-            // either token info wasn't returned by citesphere or the token has expired
-            if(tokenInfo == null || !tokenInfo.isActive()) {
-                return HttpStatus.UNAUTHORIZED;
-            }
-            
-        } catch (OAuthException e) {
-            
-            // we got unauth twice (using existing access token and re-generated one)
-            return HttpStatus.UNAUTHORIZED;
-        } catch(BadCredentialsException e) {
-            
-            //Token is invalid
-            return HttpStatus.FORBIDDEN;
-        }
-        
-        // the flow will reach  here  only when token is present, valid  and active
+        // the flow will reach  here  only when the citesphere token is present, valid and active
 
         // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
@@ -98,31 +66,6 @@ public class AddNetworkApiController {
 
         return HttpStatus.ACCEPTED;
 
-    }
-    
-    
-    /**
-     * This method will check and get a token that should be present in the
-     * Authorization Header of the add network request
-     * 
-     * The token will be in the form of "Bearer xxxxxxx"
-     * 
-     * @param authHeader is the header to be checked
-     * @return
-     */
-    private String getTokenFromHeader(String authHeader) {
-        String token;
-        
-        if(authHeader == null || authHeader.trim().isEmpty()) {
-            return null;
-        } else {
-            // Trims the string "Bearer " to extract the exact token from the Authorization Header
-            token = authHeader.substring(7);
-            if(token == null || token.trim().isEmpty()) {
-                return null;
-            }
-        }
-        return token;
     }
 
 }
