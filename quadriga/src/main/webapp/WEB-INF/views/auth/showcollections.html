@@ -9,7 +9,7 @@
   			<h1 class="col-md-10">My Collections</h1>
   			<div class="col-md-2 new-collection-button-div">
   				<form th:action="@{/auth/collections/add}">
-  					<button class="btn btn-warning new-collection-button">+ New Collection</button>
+  					<button class="btn new-collection-button">+ New Collection</button>
   				</form>
   			</div>
 		</div>
@@ -62,10 +62,10 @@
 												 			<h5 class="modal-title">Deleting Collection - <b><span th:text="${collection.name}"></span></b></h5>
 												 		</div>
 												 		<div class="modal-body">
-												 			<h4>Are you sure want to delete this collection?</h4>
+												 			<h4>Are you sure you want to delete this collection?</h4>
 												 		</div>
 												 		<div class="modal-footer">
-												 			<a th:href="@{/auth/collections/{id}/delete(id=${collection.id})}" class="btn btn-primary pull-left">
+												 			<a th:href="@{/auth/collections/{id}/delete(id=${collection.id})}" class="btn btn-warning pull-left delete-yes-action">
 												 				Yes
 												 			</a>
 												 			<button type="button" class="btn btn-outline pull-left cancel-delete-button" data-dismiss="modal">Cancel</button>

@@ -4,6 +4,7 @@
 
 .new-collection-button {
 	background: rgba(239, 149, 84, 1);
+	color: white;
 	width: 100%;
 }
 
@@ -51,6 +52,11 @@
 
 .collection-action-icon {
 	margin-right: 10px;
+}
+
+.delete-yes-action {
+	background: rgba(239, 149, 84, 1);
+	color: white;
 }
 
  .left-border-none {
