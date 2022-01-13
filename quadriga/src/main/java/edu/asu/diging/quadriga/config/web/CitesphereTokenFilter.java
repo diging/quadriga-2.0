@@ -17,6 +17,13 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereToken;
 
+/**
+ * This class acts as a filter to check whether the request has a bearer
+ * authorization token in its header and authenticates the request.
+ * 
+ * @author poojakulkarni
+ *
+ */
 public class CitesphereTokenFilter extends AbstractAuthenticationProcessingFilter {
 
     public static final String AUTHENTICATION_SCHEME_BASIC = "Bearer";

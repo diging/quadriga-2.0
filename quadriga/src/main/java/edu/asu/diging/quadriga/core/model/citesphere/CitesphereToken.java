@@ -5,6 +5,13 @@ import java.util.Collection;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * The Citesphere Token that represents the authenticated token received by quadriga
+ * and the principal user, authorities that were returned as a response from Citesphere
+ * 
+ * @author poojakulkarni
+ *
+ */
 public class CitesphereToken extends AbstractAuthenticationToken {
 
     private static final long serialVersionUID = 1L;
