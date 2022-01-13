@@ -52,7 +52,7 @@
 											<i class="fas fa-edit collection-action-icon" aria-hidden="true"></i> Edit
 										</a>
 										<div class="collection-action" sec:authorize="hasRole('USER')" role="presentation">
-											<div class="modal modal-warning fade in" th:id="modal-warning+${collection.id}" style="color:black">
+											<div class="modal modal-warning fade in delete-modal" th:id="modal-warning+${collection.id}">
 												<div class="modal-dialog">
 													<div class="modal-content">
 														<div class="modal-header">
@@ -68,7 +68,7 @@
 												 			<a th:href="@{/auth/collections/{id}/delete(id=${collection.id})}" class="btn btn-primary pull-left">
 												 				Yes
 												 			</a>
-												 			<button type="button" class="btn btn-outline pull-left" data-dismiss="modal" style="margin-left:15px">Cancel</button>
+												 			<button type="button" class="btn btn-outline pull-left cancel-delete-button" data-dismiss="modal">Cancel</button>
 												 		</div>
 												 	</div>
 												 </div>
@@ -96,7 +96,7 @@
 					<li class="page-item"
 						th:classappend="${i eq collections.number + 1} ? 'active'"
 						th:each="i : ${#numbers.sequence( 1, collections.totalPages, 1)}">
-						<a class="page-link"
+						<a class="page-link collection-page-number"
 						th:href="@{/auth/collections?page={id}(id=${i})}" th:text="${i}"
 						th:title="${'Page '+ i}" data-toggle="tooltip"></a>
 					</li>

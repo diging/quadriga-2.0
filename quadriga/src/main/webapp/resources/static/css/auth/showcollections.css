@@ -61,3 +61,16 @@
  .form-control {
 	background: rgba(242, 242, 242, 1) !important;
  }
+ 
+ .delete-modal {
+ 	color:black
+ }
+ 
+ .cancel-delete-button {
+ 	margin-left:15px
+ }
+ 
+ .collection-page-number {
+ 	background-color: rgba(239, 149, 84, 1) !important;
+ 	border-color: rgba(239, 149, 84, 1) !important;
+ }
