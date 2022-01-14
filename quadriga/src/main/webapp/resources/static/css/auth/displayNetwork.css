@@ -1,12 +1,13 @@
 .cy-container {
+	margin-top: 50px;
 	display: flex;
 	flex-wrap: wrap;
 }
 
 .cy {
-	height: 500px;
-	flex: 3.5
+	flex: 3.5;
 	background: #F2F2F2;
+	border-radius: 4px;
 }
 
 .cy-accordion {

@@ -19,16 +19,14 @@
 					{
 						selector : 'node',
 						css : {
-							'background-color' : 'mapData(group, 0, 1, #E1CE7A, #FDD692)',
-							'border-color' : '#B98F88',
-							'border-width' : 1,
+							'background-color' : 'mapData(group, 0, 1, #F6E4C2, #ffffff)',
 							'font-family' : 'Raleway, sans-serif',
 							'font-size' : '12px',
 							'font-weight' : 'bold',
 							'color' : 'mapData(group, 0, 1, #666, #333)',
 							'label' : 'data(label)',
-							'width' : 'mapData(group, 0, 1, 40, 55)',
-							'height' : "mapData(group, 0, 1, 40, 55)",
+							'width' : 'mapData(group, 0, 1, 60, 75)',
+							'height' : "mapData(group, 0, 1, 60, 75)",
 							'text-valign' : 'center',
 							'shape': 'round-rectangle'
 						}
@@ -71,11 +69,11 @@
 			.filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
 			.forEach(filteredNode => {
 				if(filteredNode.data('group') == 0) {
-					filteredNode.style('width', 50);
-					filteredNode.style('height', 50);
+					filteredNode.style('width', 70);
+					filteredNode.style('height', 70);
 				} else if(filteredNode.data('group') == 1) {
-					filteredNode.style('width', 65);
-					filteredNode.style('height', 65);
+					filteredNode.style('width', 85);
+					filteredNode.style('height', 85);
 				}
 			});
 			
@@ -96,11 +94,11 @@
 			.filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
 			.forEach(filteredNode => {
 				if(filteredNode.data('group') == 0) {
-					filteredNode.style('width', 40);
-					filteredNode.style('height', 40);
+					filteredNode.style('width', 60);
+					filteredNode.style('height', 60);
 				} else if(filteredNode.data('group') == 1) {
-					filteredNode.style('width', 55);
-					filteredNode.style('height', 55);
+					filteredNode.style('width', 75);
+					filteredNode.style('height', 75);
 				}
 			});
 			
