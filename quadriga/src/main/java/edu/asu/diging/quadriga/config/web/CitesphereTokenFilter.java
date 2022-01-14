@@ -21,7 +21,7 @@ import edu.asu.diging.quadriga.core.model.citesphere.CitesphereToken;
  * This class acts as a filter to check whether the request has a bearer
  * authorization token in its header and authenticates the request.
  * 
- * @author poojakulkarni
+ * Based on <a href="https://github.com/diging/giles-eco-giles-web/blob/develop/giles-eco/src/main/java/edu/asu/diging/gilesecosystem/web/config/CitesphereTokenFilter.java"> CitesphereTokenFilter </a>
  *
  */
 public class CitesphereTokenFilter extends AbstractAuthenticationProcessingFilter {

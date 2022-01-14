@@ -6,6 +6,10 @@ public class TokenInfo {
     
     private boolean active;
     private long exp;
+    private String user_name;
+    private List<String> authorities;
+    private String client_id;
+    private List<String> scope;
     
     public boolean isActive() {
         return active;
@@ -43,9 +47,5 @@ public class TokenInfo {
     public void setScope(List<String> scope) {
         this.scope = scope;
     }
-    private String user_name;
-    private List<String> authorities;
-    private String client_id;
-    private List<String> scope;
 
 }
