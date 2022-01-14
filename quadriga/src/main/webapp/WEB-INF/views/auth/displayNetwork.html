@@ -1,22 +1,7 @@
 <html layout:decorate="~{layouts/main}">
 <head>
 <title>Quadriga 2.0</title>
-<style>
-.cy-container {
-	display: flex;
-	flex-wrap: wrap;
-}
-
-.cy {
-	height: 500px;
-	flex: 3.5
-}
-
-.cy-accordion {
-	margin-left: 10px;
-	flex: 1.5
-}
-</style>
+<link rel="stylesheet" th:href="@{/resources/static/css/auth/displayNetwork.css}" type="text/css" />
 <script src="https://code.jquery.com/jquery-2.1.3.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
@@ -27,7 +12,7 @@
 			container : document.getElementById('cy'),
 			elements : /*[[${elements}]]*/ {},
 			layout : {
-				name : 'cose',
+				name : 'breadthfirst',
 				idealEdgeLength : 5,
 			},
 			style : [
@@ -44,7 +29,8 @@
 							'label' : 'data(label)',
 							'width' : 'mapData(group, 0, 1, 40, 55)',
 							'height' : "mapData(group, 0, 1, 40, 55)",
-							'text-valign' : 'center'
+							'text-valign' : 'center',
+							'shape': 'round-rectangle'
 						}
 
 					}, {
@@ -52,9 +38,19 @@
 						css : {
 							'width' : 1,
 							'line-color' : '#754F44',
-							'target-arrow-shape' : 'none'
+							"curve-style": "unbundled-bezier",
+						    "target-arrow-shape": "vee"
 						}
 					} ]
+		});
+		
+		cy.filter('node')
+		.forEach(filteredNode => {
+			if(filteredNode.data('group') == 0) {
+				filteredNode.style('shape', 'ellipse');
+			} else if(filteredNode.data('group') == 1) {
+				filteredNode.style('shape', 'round-rectangle');
+			}
 		});
 		
 		cy.on('tap', 'node', function(event) {

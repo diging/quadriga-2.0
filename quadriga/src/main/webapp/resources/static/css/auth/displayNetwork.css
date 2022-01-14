@@ -1,0 +1,15 @@
+.cy-container {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.cy {
+	height: 500px;
+	flex: 3.5
+	background: #F2F2F2;
+}
+
+.cy-accordion {
+	margin-left: 10px;
+	flex: 1.5
+}

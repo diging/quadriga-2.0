@@ -94,7 +94,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         }
         
         if(objectNodeId != null && predicateNodeId != null) {
-            createEdge(graphEdges, objectNodeId, predicateNodeId, eventGraphId);
+            createEdge(graphEdges, predicateNodeId, objectNodeId, eventGraphId);
         }
 
         return predicateNodeId;
