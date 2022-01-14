@@ -46,9 +46,6 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                             if (arg0.getRequestURI().indexOf("/api/") > -1) {
                                 return false;
                             }
-                            if (arg0.getRequestURI().indexOf("/rest/") > -1) {
-                                return false;
-                            }
                             if (arg0.getMethod().equals("GET")) {
                                 return false;
                             }
