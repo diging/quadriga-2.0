@@ -5,30 +5,36 @@
 <script src="https://code.jquery.com/jquery-2.1.3.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
+	<script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+  	<script src="https://unpkg.com/dagre@0.8.5/dist/dagre.js"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.3.2/cytoscape-dagre.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
 	/*<![CDATA[*/
 	$(function() {
+		const ZOOM_SPEED = 0.1
+		var zoom = 1
 		var cy = cytoscape({
 			container : document.getElementById('cy'),
 			elements : /*[[${elements}]]*/ {},
 			layout : {
-				name : 'breadthfirst',
+				name : 'dagre',
 				idealEdgeLength : 5,
 			},
 			style : [
 					{
 						selector : 'node',
 						css : {
-							'background-color' : 'mapData(group, 0, 1, #F6E4C2, #ffffff)',
+							'background-color' : 'mapData(group, 0, 1, #E1CE7A, #FDD692)',
+							'border-color' : '#B98F88',
+							'border-width' : 1,
 							'font-family' : 'Raleway, sans-serif',
 							'font-size' : '12px',
 							'font-weight' : 'bold',
 							'color' : 'mapData(group, 0, 1, #666, #333)',
 							'label' : 'data(label)',
-							'width' : 'mapData(group, 0, 1, 60, 75)',
-							'height' : "mapData(group, 0, 1, 60, 75)",
-							'text-valign' : 'center',
-							'shape': 'round-rectangle'
+							'width' : 'mapData(group, 0, 1, 40, 55)',
+							'height' : "mapData(group, 0, 1, 40, 55)",
+							'text-valign' : 'center'
 						}
 
 					}, {
@@ -36,19 +42,9 @@
 						css : {
 							'width' : 1,
 							'line-color' : '#754F44',
-							"curve-style": "unbundled-bezier",
-						    "target-arrow-shape": "vee"
+							'target-arrow-shape' : 'none'
 						}
 					} ]
-		});
-		
-		cy.filter('node')
-		.forEach(filteredNode => {
-			if(filteredNode.data('group') == 0) {
-				filteredNode.style('shape', 'ellipse');
-			} else if(filteredNode.data('group') == 1) {
-				filteredNode.style('shape', 'round-rectangle');
-			}
 		});
 		
 		cy.on('tap', 'node', function(event) {
@@ -69,11 +65,11 @@
 			.filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
 			.forEach(filteredNode => {
 				if(filteredNode.data('group') == 0) {
-					filteredNode.style('width', 70);
-					filteredNode.style('height', 70);
+					filteredNode.style('width', 50);
+					filteredNode.style('height', 50);
 				} else if(filteredNode.data('group') == 1) {
-					filteredNode.style('width', 85);
-					filteredNode.style('height', 85);
+					filteredNode.style('width', 65);
+					filteredNode.style('height', 65);
 				}
 			});
 			
@@ -94,11 +90,11 @@
 			.filter(node => currentEventGraphIds.filter(graphId => node.data('eventGraphIds').includes(graphId)).length != 0)
 			.forEach(filteredNode => {
 				if(filteredNode.data('group') == 0) {
-					filteredNode.style('width', 60);
-					filteredNode.style('height', 60);
+					filteredNode.style('width', 40);
+					filteredNode.style('height', 40);
 				} else if(filteredNode.data('group') == 1) {
-					filteredNode.style('width', 75);
-					filteredNode.style('height', 75);
+					filteredNode.style('width', 55);
+					filteredNode.style('height', 55);
 				}
 			});
 			
@@ -107,7 +103,16 @@
 			.forEach(filteredEdge => filteredEdge.style('opacity', '1'));
 		});
 		
+		$("#expand-div").click(function() {
+			zoom += ZOOM_SPEED
+			var style =$('#cy').attr('style');
+			style += "transform: scale(" + zoom +");";
+			$('#cy').attr('style',style);
+		});
+		
 	});
+	
+	
 	
 	/*]]>*/
 </script>
@@ -115,7 +120,10 @@
 <body>
 	<div layout:fragment="content">
 		<h1>Network page</h1>
-		<div class="cy-container">
+		<div class="network-container">
+			<div class="expand-icon">
+				<img th:src="@{/resources/static/images/expand.png}" aria-hidden="true" id="expand-div">
+			</div>
 			<div id="cy" class="cy"></div>
 			<div id="accordion" class="cy-accordion">
 				<div class="panel-group" id="accordion">
