@@ -12,8 +12,6 @@
 	
 	/*<![CDATA[*/
 	$(function() {
-		const ZOOM_SPEED = 0.1
-		var zoom = 1
 		var cy = cytoscape({
 			container : document.getElementById('cy'),
 			elements : /*[[${elements}]]*/ {},
@@ -133,7 +131,7 @@
 		<div class="row">
   			<h1 class="col-md-9">Network page</h1>
   			<div class="col-md-1 json-button-div">
-  				<form th:action="@{/auth/collections/add}">
+  				<form>
   					<button class="btn json-button">
   						<span>
   							<img th:src="@{/resources/static/images/export.png}" aria-hidden="true">
@@ -144,7 +142,7 @@
   			</div>
   			
   			<div class="col-md-1 png-button-div">
-  				<form th:action="@{/auth/collections/add}">
+  				<form>
   					<button class="btn png-button">
   						<span>
   							<img th:src="@{/resources/static/images/export.png}" aria-hidden="true">
