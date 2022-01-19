@@ -9,6 +9,7 @@
   	<script src="https://unpkg.com/dagre@0.8.5/dist/dagre.js"></script>
   	<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.3.2/cytoscape-dagre.min.js"></script>
 <script type="text/javascript" th:inline="javascript">
+	
 	/*<![CDATA[*/
 	$(function() {
 		const ZOOM_SPEED = 0.1
@@ -103,13 +104,23 @@
 			.forEach(filteredEdge => filteredEdge.style('opacity', '1'));
 		});
 		
-		$("#expand-div").click(function() {
-			zoom += ZOOM_SPEED
-			var style =$('#cy').attr('style');
-			style += "transform: scale(" + zoom +");";
-			$('#cy').attr('style',style);
+		$("#full-screen-div").click(function() {
+			var element = document.getElementById("cy");
+		    if (element.mozRequestFullScreen) {
+		        element.mozRequestFullScreen();
+		    } else if (element.webkitRequestFullScreen) {
+		      element.webkitRequestFullScreen();
+		    }
 		});
 		
+	});
+	
+	$(document).on('fullscreenchange mozfullscreenchange MSFullscreenChange webkitfullscreenchange',function() {
+		if(!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+			var element = document.getElementById("cy").getElementsByTagName("div")[0];
+			element.style.removeProperty('width');
+			element.style.removeProperty('height');
+	    }
 	});
 	
 	
@@ -119,10 +130,33 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<h1>Network page</h1>
+		<div class="row">
+  			<h1 class="col-md-9">Network page</h1>
+  			<div class="col-md-1 json-button-div">
+  				<form th:action="@{/auth/collections/add}">
+  					<button class="btn json-button">
+  						<span>
+  							<img th:src="@{/resources/static/images/export.png}" aria-hidden="true">
+  							<span class="json-text">JSON</span>
+  						</span>
+  					</button>
+  				</form>
+  			</div>
+  			
+  			<div class="col-md-1 png-button-div">
+  				<form th:action="@{/auth/collections/add}">
+  					<button class="btn png-button">
+  						<span>
+  							<img th:src="@{/resources/static/images/export.png}" aria-hidden="true">
+  							<span class="png-text">PNG</span>
+  						</span>
+  					</button>
+  				</form>
+  			</div>
+		</div>
 		<div class="network-container">
-			<div class="expand-icon">
-				<img th:src="@{/resources/static/images/expand.png}" aria-hidden="true" id="expand-div">
+			<div class="expand-icon" id="full-screen-div">
+				<img th:src="@{/resources/static/images/expand.png}" aria-hidden="true">
 			</div>
 			<div id="cy" class="cy"></div>
 			<div id="accordion" class="cy-accordion">
