@@ -34,6 +34,11 @@
 	border: 1px solid rgba(255, 111, 0, 1);
 }
 
+.png-button:focus {
+	color: rgba(239, 149, 84, 1);
+	border: 1px solid rgba(239, 149, 84, 1);
+}
+
 .png-text {
 	padding-top: 5px;
 	margin-left: 6px;

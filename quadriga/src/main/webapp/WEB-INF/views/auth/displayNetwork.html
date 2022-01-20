@@ -1,17 +1,21 @@
 <html layout:decorate="~{layouts/main}">
 <head>
 <title>Quadriga 2.0</title>
+
 <link rel="stylesheet" th:href="@{/resources/static/css/auth/displayNetwork.css}" type="text/css" />
+
 <script src="https://code.jquery.com/jquery-2.1.3.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
-	<script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
-  	<script src="https://unpkg.com/dagre@0.8.5/dist/dagre.js"></script>
-  	<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.3.2/cytoscape-dagre.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.19.1/cytoscape.min.js"></script>
+<script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+<script src="https://unpkg.com/dagre@0.8.5/dist/dagre.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.3.2/cytoscape-dagre.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-alpha1/html2canvas.js"></script>
+
 <script type="text/javascript" th:inline="javascript">
 	
 	/*<![CDATA[*/
 	$(function() {
+		
 		var cy = cytoscape({
 			container : document.getElementById('cy'),
 			elements : /*[[${elements}]]*/ {},
@@ -111,6 +115,29 @@
 		    }
 		});
 		
+		$("#png-export").click(function() {
+			html2canvas(document.getElementById("cy"), { scale: 3 }).then(function (canvas) {
+				var anchorTag = document.createElement("a");
+				document.body.appendChild(anchorTag);
+				document.getElementById("previewImage").appendChild(canvas);
+				anchorTag.download = "image.jpg";
+				anchorTag.href = canvas.toDataURL();
+				anchorTag.target = '_blank';
+				anchorTag.click();
+				document.getElementById("previewImage").removeChild(canvas);
+			});
+		});
+		
+		$("#json-export").click(function() {
+			console.log(/*[[${elements}]]*/ {});
+			var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(/*[[${elements}]]*/ {}, null, 2));
+			var anchorTag = document.createElement("a");
+			document.body.appendChild(anchorTag);
+			anchorTag.setAttribute("href",     dataStr     );
+			anchorTag.setAttribute("download", "network.json");
+			anchorTag.click();
+		});
+		
 	});
 	
 	$(document).on('fullscreenchange mozfullscreenchange MSFullscreenChange webkitfullscreenchange',function() {
@@ -131,25 +158,21 @@
 		<div class="row">
   			<h1 class="col-md-9">Network page</h1>
   			<div class="col-md-1 json-button-div">
-  				<form>
-  					<button class="btn json-button">
-  						<span>
-  							<img th:src="@{/resources/static/images/export.png}" aria-hidden="true">
-  							<span class="json-text">JSON</span>
-  						</span>
-  					</button>
-  				</form>
+  				<button class="btn json-button" id="json-export">
+  					<span>
+  						<img th:src="@{/resources/static/images/export.png}" aria-hidden="true">
+  						<span class="json-text">JSON</span>
+  					</span>
+  				</button>
   			</div>
   			
   			<div class="col-md-1 png-button-div">
-  				<form>
-  					<button class="btn png-button">
-  						<span>
-  							<img th:src="@{/resources/static/images/export.png}" aria-hidden="true">
-  							<span class="png-text">PNG</span>
-  						</span>
-  					</button>
-  				</form>
+  				<button class="btn png-button" id="png-export">
+  					<span>
+  						<img th:src="@{/resources/static/images/export.png}" aria-hidden="true">
+  						<span class="png-text">PNG</span>
+  					</span>
+  				</button>
   			</div>
 		</div>
 		<div class="network-container">
@@ -157,6 +180,7 @@
 				<img th:src="@{/resources/static/images/expand.png}" aria-hidden="true">
 			</div>
 			<div id="cy" class="cy"></div>
+			<div id="previewImage" style="visibility: hidden;"></div>
 			<div id="accordion" class="cy-accordion">
 				<div class="panel-group" id="accordion">
 					<div class="panel panel-default">
