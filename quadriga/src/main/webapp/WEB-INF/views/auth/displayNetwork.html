@@ -129,7 +129,6 @@
 		});
 		
 		$("#json-export").click(function() {
-			console.log(/*[[${elements}]]*/ {});
 			var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(/*[[${elements}]]*/ {}, null, 2));
 			var anchorTag = document.createElement("a");
 			document.body.appendChild(anchorTag);
