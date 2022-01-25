@@ -66,6 +66,7 @@ public class AddNetworkApiController {
         try {
             mappedTripleGroup = mappedTripleGroupService.getMappedTripleGroup(collectionId, MappedTripleType.DEFAULT_MAPPING);
             if(mappedTripleGroup == null) {
+                logger.error("Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
                 return HttpStatus.NOT_FOUND;
             }
         } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
