@@ -64,13 +64,13 @@ public class AddNetworkApiController {
         // default MappedTripleGroup for given collectionId
         MappedTripleGroup mappedTripleGroup;
         try {
-            mappedTripleGroup = mappedTripleGroupService.getMappedTripleGroup(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
             if(mappedTripleGroup == null) {
                 logger.error("Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
                 return HttpStatus.NOT_FOUND;
             }
         } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
-            logger.error(e.getMessage());
+            logger.error("Couldn't submit network", e);
             return HttpStatus.NOT_FOUND;
         }
 

@@ -18,7 +18,7 @@ public class CollectionManagerImpl implements CollectionManager {
     private CollectionRepository collectionRepo;
 
     /**
-     * Creates a new Collection instance and stores it in the db
+     * Creates a new Collection instance and stores it in the db.
      * 
      * @param collection   collection data from the Collection form needs to be added to database
      * 
@@ -34,7 +34,7 @@ public class CollectionManagerImpl implements CollectionManager {
     }
 
     /**
-     * Finds a collection from the collection table by id
+     * Finds a collection from the collection table by id.
      * 
      * @param id used to look up the collection in mongodb
      * 
@@ -54,7 +54,7 @@ public class CollectionManagerImpl implements CollectionManager {
 
     /**
      * 
-     * Edits an existing Collection and updates it in the db
+     * Edits an existing Collection and updates it in the db.
      * 
      * @param id of the collection that needs to be updated
      * @param name will be the updated name value
@@ -77,7 +77,7 @@ public class CollectionManagerImpl implements CollectionManager {
     }
     
     /**
-     * Deletes a collection from collection table by id
+     * Deletes a collection from collection table by id.
      * 
      * @param id used to look up the collection in mongodb
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId

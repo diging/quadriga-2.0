@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +32,8 @@ public class EditCollectionController {
 
     @Autowired
     private CollectionManager collectionManager;
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Request handler for getting the "Edit collections" view
@@ -55,6 +59,7 @@ public class EditCollectionController {
                 return "error404Page";
             }
         } catch (InvalidObjectIdException e) {
+            logger.error("Couldn't edit collection", e);
             return "error404Page";
         }
     }

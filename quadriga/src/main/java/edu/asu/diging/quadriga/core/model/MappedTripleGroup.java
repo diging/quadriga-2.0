@@ -6,14 +6,14 @@ import org.bson.types.ObjectId;
 
 /**
  * A MappedTripleGroup will group together all mappings of a specific mapping type
- * per collection
+ * per collection.
  * 
  * E.g. For Collection C1 a MappedTripleGroup M1 will be created for DefaultMapping,
  * another MappedTripleGroup M2 will be created for CustomMapping, etc.
  * 
- * This MappedTripleGroupId will be added to the triple's concepts and predicates
+ * This MappedTripleGroupId will be added to the triple's concepts and predicates.
  * 
- * This MappedTripleGroup can also be named by the user later
+ * This MappedTripleGroup can also be named by the user later.
  * 
  * @author poojakulkarni
  * 

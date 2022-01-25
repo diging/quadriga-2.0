@@ -55,7 +55,7 @@ public class MappedTripleGroupServiceImplTest {
             }
         }))).thenReturn(mappedTripleGroup);
 
-        MappedTripleGroup savedMappedTripleGroup = mappedTripleGroupServiceImpl.addMappedTripleGroup(objectId.toString(), MappedTripleType.DEFAULT_MAPPING);
+        MappedTripleGroup savedMappedTripleGroup = mappedTripleGroupServiceImpl.add(objectId.toString(), MappedTripleType.DEFAULT_MAPPING);
 
         Assert.assertEquals(mappedTripleGroup.getCollectionId(), savedMappedTripleGroup.getCollectionId());
         Assert.assertEquals(MappedTripleType.DEFAULT_MAPPING, savedMappedTripleGroup.getMappedTripleType());
@@ -66,7 +66,7 @@ public class MappedTripleGroupServiceImplTest {
     public void test_addMappedTripleGroup_invalidObjectId()
             throws InvalidObjectIdException, CollectionNotFoundException {
         Assert.assertThrows(InvalidObjectIdException.class,
-                () -> mappedTripleGroupServiceImpl.addMappedTripleGroup("xxx", MappedTripleType.DEFAULT_MAPPING));
+                () -> mappedTripleGroupServiceImpl.add("xxx", MappedTripleType.DEFAULT_MAPPING));
     }
 
     @Test
@@ -148,7 +148,7 @@ public class MappedTripleGroupServiceImplTest {
             }
         }))).thenReturn(mappedTripleGroupNew);
         
-        MappedTripleGroup mappedTripleGroupUpdated = mappedTripleGroupServiceImpl.updateMappedTripleGroupNameById(objectId.toString(), updatedName);
+        MappedTripleGroup mappedTripleGroupUpdated = mappedTripleGroupServiceImpl.updateName(objectId.toString(), updatedName);
         Assert.assertEquals(updatedName, mappedTripleGroupUpdated.getName());
         Assert.assertEquals(objectId, mappedTripleGroupUpdated.get_id());
     }
@@ -157,7 +157,7 @@ public class MappedTripleGroupServiceImplTest {
     public void test_updateMappedTripleGroupNameById_missingMappedTripleGroup() {
         ObjectId objectId = new ObjectId();
         Mockito.when(mappedTripleGroupRepository.findById(objectId)).thenReturn(Optional.ofNullable(null));
-        Assert.assertThrows(MappedTripleGroupNotFoundException.class, () -> mappedTripleGroupServiceImpl.updateMappedTripleGroupNameById(objectId.toString(), "XYZ"));
+        Assert.assertThrows(MappedTripleGroupNotFoundException.class, () -> mappedTripleGroupServiceImpl.updateName(objectId.toString(), "XYZ"));
     }
 
 }

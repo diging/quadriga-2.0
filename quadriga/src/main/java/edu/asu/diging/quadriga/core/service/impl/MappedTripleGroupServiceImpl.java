@@ -25,7 +25,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
 
     /**
      * Converts the given collectionId into an ObjectId and persists a
-     * MappedTripleGroup in the database with this collectionId and MappedTripleType
+     * MappedTripleGroup in the database with this collectionId and MappedTripleType.
      * 
      * @param collectionId set to the new MappedTripleGroup
      * @param mappedTripleType is the group type which the current triple belongs to
@@ -34,7 +34,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
      *                                     ObjectId
      */
     @Override
-    public MappedTripleGroup addMappedTripleGroup(String collectionId, MappedTripleType mappedTripleType)
+    public MappedTripleGroup add(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException {
         
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
@@ -53,10 +53,10 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
 
     /**
      * This method first checks whether a collection with the given collectionId
-     * exists
+     * exists.
      * 
      * If yes, it finds a MappedTripleGroup entry in the database with this
-     * collectionId and the MappedTripleType
+     * collectionId and the MappedTripleType.
      * 
      * @param collectionId used to look for the MappedTripleGroup entry
      * @param mappedTripleType is the group type to be looked for in the database
@@ -82,7 +82,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
 
     /**
      * This method tries to find a MappedTripleGroup with the given
-     * mappedTripleGroupId
+     * mappedTripleGroupId.
      * 
      * @param mappedTripleGroupId is the id used to find a MappedTripleGroup
      * @return the found mappedTripleGroupEntry
@@ -95,14 +95,14 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         try {
             mappedTripleGroupObjectId = new ObjectId(mappedTripleGroupId);
         } catch (IllegalArgumentException e) {
-            throw new InvalidObjectIdException("MappedTripleGroupId: " + mappedTripleGroupId);
+            throw new InvalidObjectIdException("MappedTripleGroupId: " + mappedTripleGroupId, e);
         }
         return mappedTripleGroupRepository.findById(mappedTripleGroupObjectId).orElse(null);
     }
 
     /**
      * This method looks for a MappedTripleGroup using the given mappedTripleGroupId
-     * and updates the name of that MappedTripleGroup with the given name
+     * and updates the name of that MappedTripleGroup with the given name.
      * 
      * @param collectionId used to look for the MappedTripleGroup entry
      * @return the updated MappedTripleGroup entry
@@ -114,7 +114,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
      *                                           collectionId doesn't exist
      */
     @Override
-    public MappedTripleGroup updateMappedTripleGroupNameById(String mappedTripleGroupId, String name)
+    public MappedTripleGroup updateName(String mappedTripleGroupId, String name)
             throws InvalidObjectIdException, MappedTripleGroupNotFoundException {
         MappedTripleGroup mappedTripleGroup = getById(mappedTripleGroupId);
         if (mappedTripleGroup != null) {
@@ -127,7 +127,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
     
     /**
      * This method will try to find a MappedTripleGroup entry based on the given
-     * collectionId and mappedTripleType. If no entry was found, it will try to create a new one
+     * collectionId and mappedTripleType. If no entry was found, it will try to create a new one.
      * 
      * @param collectionId used to look for the MappedTripleGroup entry
      * @param mappedTripleType is the group type which is to be looked for in the database
@@ -138,14 +138,14 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
      *                                     doesn't exist
      */
     @Override
-    public MappedTripleGroup getMappedTripleGroup(String collectionId, MappedTripleType mappedTripleType)
+    public MappedTripleGroup get(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException {
         MappedTripleGroup mappedTripleGroup = findByCollectionIdAndMappingType(collectionId, mappedTripleType);
 
         // In case this is a new collection, or existing collection but new mapping type for that collection
         // we create a new MappedTripleGroup entry
         if (mappedTripleGroup == null) {
-            mappedTripleGroup = addMappedTripleGroup(collectionId, mappedTripleType);
+            mappedTripleGroup = add(collectionId, mappedTripleType);
         }
         return mappedTripleGroup;
     }

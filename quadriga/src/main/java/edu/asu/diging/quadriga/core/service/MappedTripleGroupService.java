@@ -9,14 +9,14 @@ import edu.asu.diging.quadriga.core.model.MappedTripleType;
 /**
  * 
  * This is a service that uses the MappedTripleGroupRepository to manage a
- * MappedTripleGroup in the database
+ * MappedTripleGroup in the database.
  * 
  * @author poojakulkarni
  *
  */
 public interface MappedTripleGroupService {
 
-    public MappedTripleGroup addMappedTripleGroup(String collectionId, MappedTripleType mappedTripleType)
+    public MappedTripleGroup add(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException;
 
     public MappedTripleGroup findByCollectionIdAndMappingType(String collectionId, MappedTripleType mappedTripleType)
@@ -24,10 +24,10 @@ public interface MappedTripleGroupService {
 
     public MappedTripleGroup getById(String mappedTripleGroupId) throws InvalidObjectIdException;
 
-    public MappedTripleGroup updateMappedTripleGroupNameById(String mappedTripleGroupId, String name)
+    public MappedTripleGroup updateName(String mappedTripleGroupId, String name)
             throws InvalidObjectIdException, MappedTripleGroupNotFoundException;
     
-    public MappedTripleGroup getMappedTripleGroup(String collectionId, MappedTripleType mappedTripleType)
+    public MappedTripleGroup get(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException;
 
 }
