@@ -28,7 +28,7 @@
 			<form th:action="@{|/admin/user/${user.username}/disable|}" method="POST">
 				<button style="padding:0px" class="btn btn-link"><i class="fas fa-user-slash"></i> Deactivate User</button>
 			</form>
-			<form>
+			<form th:action="@{|/admin/user/${user.username}/apps|}" method="GET">
 				<button style="padding:0px" class="btn btn-link"><i class="fas fa-user-slash"></i>Assign apps</button>
 			</form>
 		</span>

@@ -1,0 +1,35 @@
+<html layout:decorate="~{layouts/main}">
+<head>
+	<title>Quadriga 2.0</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h3>Assign apps to user <span th:text="${username}"></span></h3>
+		<div class="table-bordered table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Client Id</th>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="app: ${apps}">
+						<td th:text="${app.clientId}"></td>
+						<td th:text="${app.name}"></td>
+						<td th:text="${app.description}"></td>
+						<td>
+							<form th:action="@{|/admin/user/${username}/apps/assign/${app.clientId}|}" method="GET">
+								<button th:if="${#sets.contains(userApps, app.clientId)}" class="btn btn-danger">Remove</button>
+								<button th:unless="${#sets.contains(userApps, app.clientId)}" class="btn btn-info">Assign</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>
