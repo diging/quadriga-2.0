@@ -1,11 +1,12 @@
 <html layout:decorate="~{layouts/main}">
 <head>
 	<title>Quadriga 2.0</title>
+	<link rel="stylesheet" th:href="@{/resources/static/css/admin/user/apps.css}" type="text/css" />
 </head>
 <body>
 	<div layout:fragment="content">
-		<h3>Assign apps to user <span th:text="${username}"></span></h3>
-		<div class="table-bordered table-responsive">
+		<h2>Assign apps to user <span th:text="${username}"></span></h2>
+		<div class="table-bordered table-responsive apps-table">
 			<table class="table">
 				<thead>
 					<tr>
@@ -21,10 +22,16 @@
 						<td th:text="${app.name}"></td>
 						<td th:text="${app.description}"></td>
 						<td>
-							<form th:action="@{|/admin/user/${username}/apps/assign/${app.clientId}|}" method="GET">
-								<button th:if="${#sets.contains(userApps, app.clientId)}" class="btn btn-danger">Remove</button>
-								<button th:unless="${#sets.contains(userApps, app.clientId)}" class="btn btn-info">Assign</button>
-							</form>
+							<a th:href="@{|/admin/user/${username}/app/${app.clientId}/assign|}"
+								th:unless="${#sets.contains(userApps, app.clientId)}"
+								class="assign-action">
+								<i class="fas fa-check-circle action-icon"></i>Assign
+							</a>
+							<a th:href="@{|/admin/user/${username}/app/${app.clientId}/revoke|}"
+								th:if="${#sets.contains(userApps, app.clientId)}"
+								class="revoke-action">
+								<i class="fas fa-times-circle action-icon"></i>Revoke
+							</a>
 						</td>
 					</tr>
 				</tbody>

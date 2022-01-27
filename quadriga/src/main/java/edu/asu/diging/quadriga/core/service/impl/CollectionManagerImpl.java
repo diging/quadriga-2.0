@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
@@ -70,5 +71,10 @@ public class CollectionManagerImpl implements CollectionManager {
             throw new CollectionNotFoundException();
         }
     }
+
+	@Override
+	public List<Collection> findByAppsIn(List<String> apps, Pageable pageable) {
+		return collectionRepo.findByAppsIn(apps, pageable);
+	}
 
 }

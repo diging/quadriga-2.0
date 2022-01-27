@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+import edu.asu.diging.quadriga.core.exceptions.UserAppNotFoundException;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 
 public interface SimpleUserAppService {
@@ -37,7 +38,8 @@ public interface SimpleUserAppService {
      * 
      * @param username is the username to be searched
      * @param appClientId is the appClientId to be searched
+     * @throws UserAppNotFoundException is no user + app combination was found to be removed
      */
-    public void deleteByUsernameAndAppClientId(String username, String appClientId);
+    public void delete(String username, String appClientId) throws UserAppNotFoundException;
     
 }

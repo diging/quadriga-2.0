@@ -2,6 +2,8 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 
@@ -41,5 +43,13 @@ public interface CollectionManager {
      * @param id used to look up the collection in database
      */
     public void deleteCollection(String id) throws CollectionNotFoundException;
+    
+    /**
+     * Finds all collections that have at least one of the app listed in the apps argument
+     * 
+     * @param apps is a list of apps to be searched
+     * @return a list of collections
+     */
+    public List<Collection> findByAppsIn(List<String> apps, Pageable pageable);
     
 }
