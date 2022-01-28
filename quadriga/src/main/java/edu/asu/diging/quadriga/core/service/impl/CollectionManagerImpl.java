@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 
@@ -17,7 +18,7 @@ public class CollectionManagerImpl implements CollectionManager {
     private CollectionRepository collectionRepo;
 
     /**
-     * Creates a new Collection instance and stores it in the db
+     * Creates a new Collection instance and stores it in the db.
      * 
      * @param collection   collection data from the Collection form needs to be added to database
      * 
@@ -33,31 +34,37 @@ public class CollectionManagerImpl implements CollectionManager {
     }
 
     /**
-     * Finds a collection from the collection table by id
+     * Finds a collection from the collection table by id.
      * 
      * @param id used to look up the collection in mongodb
      * 
      * 
      * @return Collection Instance that is found from the database
+     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      * 
      **/
     @Override
-    public Collection findCollection(String id) {
-        return collectionRepo.findById(new ObjectId(id)).orElse(null);
+    public Collection findCollection(String id) throws InvalidObjectIdException {
+        try {
+            return collectionRepo.findById(new ObjectId(id)).orElse(null);
+        } catch(IllegalArgumentException e) {
+            throw new InvalidObjectIdException(e);
+        }
     }
 
     /**
      * 
-     * Edits an existing Collection and updates it in the db
+     * Edits an existing Collection and updates it in the db.
      * 
      * @param id of the collection that needs to be updated
      * @param name will be the updated name value
      * @param description will be the updated description value
      * @return Collection Instance that is updated in database
      * @throws CollectionNotFoundException in case the collection for the given id is missing
+     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
     @Override
-    public Collection editCollection(String id, String name, String description) throws CollectionNotFoundException {
+    public Collection editCollection(String id, String name, String description) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
 
         if (Objects.nonNull(collection)) {
@@ -65,17 +72,19 @@ public class CollectionManagerImpl implements CollectionManager {
             collection.setDescription(description);
             return collectionRepo.save(collection);
         } else {
-            throw new CollectionNotFoundException();
+            throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
     
     /**
-     * Deletes a collection from collection table by id
+     * Deletes a collection from collection table by id.
      * 
      * @param id used to look up the collection in mongodb
+     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      * 
      */
-    public void deleteCollection(String id) throws CollectionNotFoundException {
+    @Override
+    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
         
         if(Objects.nonNull(collection)) {
@@ -84,7 +93,7 @@ public class CollectionManagerImpl implements CollectionManager {
             // If it is linked to a network, we will archive the collection.
             collectionRepo.delete(collection);
         } else {
-            throw new CollectionNotFoundException();
+            throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
 

@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 
 public class CollectionManagerImplTest {
@@ -64,7 +65,7 @@ public class CollectionManagerImplTest {
     
     
     @Test
-    public void test_deleteCollection_success() throws CollectionNotFoundException {
+    public void test_deleteCollection_success() throws CollectionNotFoundException, InvalidObjectIdException {
         
         String name = "name";
         String desc = "description";
@@ -105,7 +106,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_findCollection_success() {
+    public void test_findCollection_success() throws InvalidObjectIdException {
         Collection collection = new Collection();
         ObjectId objectId = new ObjectId();
         collection.setId(objectId);
@@ -115,7 +116,7 @@ public class CollectionManagerImplTest {
     }
     
     @Test
-    public void test_findCollection_missingCollection() {
+    public void test_findCollection_missingCollection() throws InvalidObjectIdException {
         ObjectId objectId = new ObjectId();
         Mockito.when(collectionRepo.findById(objectId)).thenReturn(Optional.ofNullable(null));
         Collection foundCollection = managerToTest.findCollection(objectId.toString());
@@ -123,7 +124,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_success() throws CollectionNotFoundException {
+    public void test_editCollection_success() throws CollectionNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
@@ -158,7 +159,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_nullDescription() throws CollectionNotFoundException {
+    public void test_editCollection_nullDescription() throws CollectionNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
@@ -193,7 +194,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_nullName() throws CollectionNotFoundException {
+    public void test_editCollection_nullName() throws CollectionNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
@@ -228,7 +229,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_nullNameAndDescription() throws CollectionNotFoundException {
+    public void test_editCollection_nullNameAndDescription() throws CollectionNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
@@ -263,7 +264,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_blankNameAndDescription() throws CollectionNotFoundException {
+    public void test_editCollection_blankNameAndDescription() throws CollectionNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
