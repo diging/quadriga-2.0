@@ -44,8 +44,6 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         } catch(IllegalArgumentException e) {
             throw new InvalidObjectIdException(e);
         }
-        
-        // This will be updated when custom mappings are added
         mappedTripleGroup.setMappedTripleType(mappedTripleType);
         
         return mappedTripleGroupRepository.save(mappedTripleGroup);
