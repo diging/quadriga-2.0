@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
@@ -50,6 +51,6 @@ public interface CollectionManager {
      * @param apps is a list of apps to be searched
      * @return a list of collections
      */
-    public List<Collection> findByAppsIn(List<String> apps, Pageable pageable);
+    public Page<Collection> findByAppsIn(List<String> apps, Pageable pageable);
     
 }

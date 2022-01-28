@@ -7,14 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
@@ -32,11 +30,9 @@ public class ListCollectionController {
     @RequestMapping(value = "/auth/collections", method = RequestMethod.GET)
     public String list(HttpServletRequest request, Model model) {
     	
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    	SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
-    	String username = simpleUser.getUsername();
+    	SimpleUser simpleUser = (SimpleUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	
-    	List<SimpleUserApp> userApps = simpleUserAppService.findByUsername(username);
+    	List<SimpleUserApp> userApps = simpleUserAppService.findByUsername(simpleUser.getUsername());
     	List<String> clientIds = null;
     	
     	if(userApps != null) {
