@@ -50,7 +50,7 @@ public class EditCollectionController {
         try {
             collection = collectionManager.findCollection(id);
         } catch (InvalidObjectIdException e) {
-        	logger.error("Couldn't edit collection", e);
+            logger.error("Couldn't edit collection", e);
             return "error404Page";
         }
         if (Objects.nonNull(collection)) {
