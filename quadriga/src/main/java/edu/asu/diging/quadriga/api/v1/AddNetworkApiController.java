@@ -53,7 +53,6 @@ public class AddNetworkApiController {
 
     @Autowired
     private CitesphereConnectorImpl citesphereConnectorImpl;
-
     /**
      * The method parse given Json from the post request body and add Network
      * instance to the database

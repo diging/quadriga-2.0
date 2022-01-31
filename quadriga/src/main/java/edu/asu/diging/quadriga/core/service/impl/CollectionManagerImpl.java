@@ -18,7 +18,7 @@ public class CollectionManagerImpl implements CollectionManager {
 
     @Autowired
     private CollectionRepository collectionRepo;
-
+    
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
      */
@@ -74,28 +74,6 @@ public class CollectionManagerImpl implements CollectionManager {
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
-    }
-    
-    
-    /**
-     * This method checks whether a collection with given collectionId exists and
-     * returns the collection if it exists.
-     * If it doesn't exist, it simply throws an exception
-     * 
-     * @param collectionId is the id of the collection to be checked
-     * @return the Collection entry found in the database
-     * @throws InvalidObjectIdException    if collectionId couldn't be conveted to
-     *                                     ObjectId
-     * @throws CollectionNotFoundException if collection with given collectionId
-     *                                     does't exist
-     */
-    @Override
-    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException {
-        Collection collection = findCollection(collectionId);
-        if (collection == null) {
-            throw new CollectionNotFoundException("CollectionId: " + collectionId);
-        }
-        return collection;
     }
 
 }

@@ -53,6 +53,7 @@ public class EventGraph {
     public OffsetDateTime getCreationTime() {
         return creationTime;
     }
+    
     public ObjectId getCollectionId() {
         return collectionId;
     }

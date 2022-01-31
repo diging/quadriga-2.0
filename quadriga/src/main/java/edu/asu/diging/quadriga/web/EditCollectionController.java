@@ -35,7 +35,7 @@ public class EditCollectionController {
 
     @Autowired
     private CollectionManager collectionManager;
-    
+
     @Autowired
     private CitesphereConnector citesphereConnector;
 
@@ -54,7 +54,7 @@ public class EditCollectionController {
         try {
             collection = collectionManager.findCollection(id);
         } catch (InvalidObjectIdException e) {
-            logger.error(e.getMessage());
+        	logger.error("Couldn't edit collection", e);
             return "error404Page";
         }
         if (Objects.nonNull(collection)) {

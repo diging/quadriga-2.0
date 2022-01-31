@@ -50,7 +50,4 @@ public interface CollectionManager {
      * 
      */
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
-    
-    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException;
-    
 }

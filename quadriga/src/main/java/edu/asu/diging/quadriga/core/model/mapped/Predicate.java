@@ -17,6 +17,8 @@ public class Predicate {
     private String label;
     private String mappedTripleGroupId;
     
+    private String mappedTripleGroupId;
+    
     @StartNode
     private Concept source;
 
