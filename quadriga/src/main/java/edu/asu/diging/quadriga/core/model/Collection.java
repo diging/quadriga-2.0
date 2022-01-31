@@ -13,6 +13,7 @@ public class Collection {
     
     private String name;
     private String description;
+    private String username;
     private List<String> apps;
 
     public ObjectId getId() {
@@ -38,6 +39,14 @@ public class Collection {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
     
     public List<String> getApps() {
         return apps;

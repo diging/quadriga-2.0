@@ -67,8 +67,11 @@ public class AddCollectionController {
         if (result.hasErrors()) {
             return "auth/addCollection";
         }
+        
+        SimpleUser user = (SimpleUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
         collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription(),
-                collectionForm.getApps());
+        		user.getUsername(), collectionForm.getApps());
 
         redirectAttrs.addFlashAttribute("show_alert", true);
         redirectAttrs.addFlashAttribute("alert_type", "success");

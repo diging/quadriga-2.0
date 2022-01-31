@@ -23,10 +23,11 @@ public class CollectionManagerImpl implements CollectionManager {
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
      */
-    public Collection addCollection(String name, String description, List<String> apps) {
+    public Collection addCollection(String name, String description, String username, List<String> apps) {
         Collection collection=new Collection();
         collection.setName(name);
         collection.setDescription(description);
+        collection.setUsername(username);
         collection.setApps(apps);
         return collectionRepo.save(collection);
     }

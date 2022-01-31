@@ -17,7 +17,7 @@ public interface CollectionManager {
      * @param apps list of citesphere apps attached to the collection
      * @return the saved collection
      */
-    public Collection addCollection(String name, String description, List<String> apps);
+    public Collection addCollection(String name, String description, String username, List<String> apps);
     
     /**
      * Finds a collection from the collection table by id
