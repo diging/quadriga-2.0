@@ -18,8 +18,6 @@ public class Concept {
     private String label;
     private String mappedTripleGroupId;
     
-    private String mappedTripleGroupId;
-    
     @Relationship(type = "PREDICATE")
     private List<Concept> relatedConcepts;
 

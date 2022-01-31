@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
@@ -60,8 +61,20 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 // The rest of the our application is protected.
                 .antMatchers("/users/**", "/admin/**").hasRole("ADMIN")
-                .antMatchers("/auth/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE);
+                .antMatchers("/auth/**","/api/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE)
+                // remove the following once legacy api is discontinued
+                .antMatchers("/rest/add").authenticated()
+                .anyRequest().hasRole("USER")
+                // remove the following once legacy api is discontinued
+                .and().httpBasic().realmName("TestRealm").authenticationEntryPoint(authenticationEntryPoint());
+    }
+    
+    @Bean
+    public BasicAuthenticationEntryPoint authenticationEntryPoint() {
+        BasicAuthenticationEntryPoint point = new BasicAuthenticationEntryPoint();
+        point.setRealmName("TestRealm");
+        return point;
     }
 
     @Bean

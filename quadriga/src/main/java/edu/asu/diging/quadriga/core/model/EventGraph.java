@@ -14,7 +14,7 @@ public class EventGraph {
     private DefaultMapping defaultMapping;
     private OffsetDateTime creationTime;
     private ObjectId collectionId;
-    private String appName;
+    private String submittingApp;
     private Context context;
     
     public EventGraph() {
@@ -62,12 +62,12 @@ public class EventGraph {
         this.collectionId = collectionId;
     }
 
-    public String getAppName() {
-        return appName;
+    public String getSubmittingApp() {
+        return submittingApp;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setSubmittingApp(String submittingApp) {
+        this.submittingApp = submittingApp;
     }
 
     public Context getContext() {

@@ -1,6 +1,5 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.bson.types.ObjectId;
@@ -22,11 +21,10 @@ public class CollectionManagerImpl implements CollectionManager {
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
      */
-    public Collection addCollection(String name, String description, List<String> apps) {
+    public Collection addCollection(String name, String description) {
         Collection collection=new Collection();
         collection.setName(name);
         collection.setDescription(description);
-        collection.setApps(apps);
         return collectionRepo.save(collection);
     }
     
@@ -46,13 +44,12 @@ public class CollectionManagerImpl implements CollectionManager {
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#editCollection(java.lang.String, java.lang.String, java.lang.String, java.util.List)
      */
     @Override
-    public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, InvalidObjectIdException {
+    public Collection editCollection(String id, String name, String description) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
 
         if (Objects.nonNull(collection)) {
             collection.setName(name);
             collection.setDescription(description);
-            collection.setApps(apps);
             return collectionRepo.save(collection);
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
