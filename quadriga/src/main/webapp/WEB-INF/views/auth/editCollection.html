@@ -84,6 +84,7 @@ $(document).ready(function() {
 			<div id="applicationList" class="list-group">
 			    <i id="spinner" class="fas fa-spinner fa-spin"></i>
 			</div>
+            <span th:if="${#fields.hasErrors('apps')}" class = "error" th:errors=*{apps}></span>
 			<div style="padding-top: 20px;">
 				<button id="editCollectionButton" class="btn primary-btn">Edit Collection</button>
 			</div>

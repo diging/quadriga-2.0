@@ -1,9 +1,5 @@
 package edu.asu.diging.quadriga.web;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
+import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
@@ -24,9 +19,6 @@ public class AddCollectionController {
 
     @Autowired
     private CollectionManager collectionManager;
-
-    @Autowired
-    private CitesphereConnector citesphereConnector;
 
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.GET)
     public String get(Model model) {
@@ -40,19 +32,13 @@ public class AddCollectionController {
             return "auth/addCollection";
         }
         
-        List<CitesphereAppInfo> citesphereApps = citesphereConnector.getCitesphereApps();
-        HashSet<String> appSet = new HashSet<String>(
-                citesphereApps.stream().map(app -> app.getClientId()).collect(Collectors.toList()));
-        
-        for (String clientId : collectionForm.getApps()) {
-            if (!appSet.contains(clientId)) {
-                model.addAttribute("collectionForm", collectionForm);
-                return "auth/addCollection";
-            }
+        try {
+            collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription(),
+                    collectionForm.getApps());
+        } catch (CitesphereAppNotFoundException e) {
+            result.rejectValue("apps", "error.collectionForm", e.getMessage());
+            return "auth/addCollection";
         }
-        
-        collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription(),
-                collectionForm.getApps());
 
         redirectAttrs.addFlashAttribute("show_alert", true);
         redirectAttrs.addFlashAttribute("alert_type", "success");

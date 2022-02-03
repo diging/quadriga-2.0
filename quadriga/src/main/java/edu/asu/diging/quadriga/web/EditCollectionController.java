@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
+import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
@@ -78,16 +79,6 @@ public class EditCollectionController {
         if (bindingResult.hasErrors()) {
             return "auth/editCollection";
         }
-        
-        List<CitesphereAppInfo> citesphereApps = citesphereConnector.getCitesphereApps();
-        HashSet<String> appSet = new HashSet<String>(
-                citesphereApps.stream().map(app -> app.getClientId()).collect(Collectors.toList()));
-        for (String clientId : collectionForm.getApps()) {
-            if (!appSet.contains(clientId)) {
-                model.addAttribute("collectionForm", collectionForm);
-                return "auth/addCollection";
-            }
-        }
 
         try {
             collectionManager.editCollection(id, collectionForm.getName(), collectionForm.getDescription(), collectionForm.getApps());
@@ -98,6 +89,9 @@ public class EditCollectionController {
             return "redirect:/auth/collections";
         } catch (CollectionNotFoundException e) {
             return "error404Page";
+        } catch (CitesphereAppNotFoundException e) {
+            bindingResult.rejectValue("apps", "error.collectionForm", e.getMessage());
+            return "auth/editCollection";
         }
        
 
