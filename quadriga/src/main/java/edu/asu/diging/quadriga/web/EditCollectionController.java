@@ -1,9 +1,6 @@
 package edu.asu.diging.quadriga.web;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -16,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
@@ -35,9 +30,6 @@ public class EditCollectionController {
 
     @Autowired
     private CollectionManager collectionManager;
-    
-    @Autowired
-    private CitesphereConnector citesphereConnector;
 
     /**
      * Request handler for getting the "Edit collections" view
