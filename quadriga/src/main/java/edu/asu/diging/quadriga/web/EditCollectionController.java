@@ -66,7 +66,7 @@ public class EditCollectionController {
      * @return
      */
     @RequestMapping(value = "/auth/collections/{id}/edit", method = RequestMethod.POST)
-    public String edit(Model model, @PathVariable String id, @Valid CollectionForm collectionForm,
+    public String edit(@PathVariable String id, @Valid CollectionForm collectionForm,
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "auth/editCollection";

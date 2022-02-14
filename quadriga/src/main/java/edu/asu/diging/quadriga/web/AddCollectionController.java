@@ -27,7 +27,7 @@ public class AddCollectionController {
     }
 
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.POST)
-    public String add(Model model, @Valid CollectionForm collectionForm, BindingResult result, RedirectAttributes redirectAttrs) {
+    public String add(@Valid CollectionForm collectionForm, BindingResult result, RedirectAttributes redirectAttrs) {
         if (result.hasErrors()) {
             return "auth/addCollection";
         }
