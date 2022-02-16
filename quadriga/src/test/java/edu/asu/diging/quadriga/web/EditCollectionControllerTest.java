@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.impl.CollectionManagerImpl;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
@@ -47,7 +48,7 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_getCollection_success() {
+    public void test_getCollection_success() throws InvalidObjectIdException {
         ObjectId objectId = new ObjectId();
         Model model = new ConcurrentModel();
         Collection collection = new Collection();
@@ -69,7 +70,7 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_getCollection_noCollectionFound() {
+    public void test_getCollection_noCollectionFound() throws InvalidObjectIdException {
         ObjectId objectId = new ObjectId();
         Model model = new ConcurrentModel();
 
@@ -84,7 +85,7 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_editCollection_success() throws CollectionNotFoundException, CitesphereAppNotFoundException {
+    public void test_editCollection_success() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
         ObjectId objectId = new ObjectId();
         CollectionForm collectionForm = new CollectionForm();
         collectionForm.setId(objectId.toString());
@@ -124,7 +125,7 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_editCollection_nullCollection() throws CollectionNotFoundException, CitesphereAppNotFoundException  {
+    public void test_editCollection_nullCollection() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException  {
         ObjectId objectId = new ObjectId();
         CollectionForm collectionForm = new CollectionForm();
         collectionForm.setId(objectId.toString());

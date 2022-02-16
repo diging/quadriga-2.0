@@ -13,6 +13,7 @@ import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
@@ -52,16 +53,19 @@ public class CollectionManagerImpl implements CollectionManager {
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#findCollection(java.lang.String)
      */
     @Override
-    public Collection findCollection(String id) {
-        return collectionRepo.findById(new ObjectId(id)).orElse(null);
+    public Collection findCollection(String id) throws InvalidObjectIdException {
+        try {
+            return collectionRepo.findById(new ObjectId(id)).orElse(null);
+        } catch(IllegalArgumentException e) {
+            throw new InvalidObjectIdException(e);
+        }
     }
-
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#editCollection(java.lang.String, java.lang.String, java.lang.String, java.util.List)
      */
     @Override
-    public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, CitesphereAppNotFoundException {
+    public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
 
         if (Objects.nonNull(collection)) {
@@ -81,14 +85,15 @@ public class CollectionManagerImpl implements CollectionManager {
             collection.setApps(apps);
             return collectionRepo.save(collection);
         } else {
-            throw new CollectionNotFoundException();
+            throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
     
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#deleteCollection(java.lang.String)
      */
-    public void deleteCollection(String id) throws CollectionNotFoundException {
+    @Override
+    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
         
         if(Objects.nonNull(collection)) {
@@ -97,7 +102,7 @@ public class CollectionManagerImpl implements CollectionManager {
             // If it is linked to a network, we will archive the collection.
             collectionRepo.delete(collection);
         } else {
-            throw new CollectionNotFoundException();
+            throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
 
