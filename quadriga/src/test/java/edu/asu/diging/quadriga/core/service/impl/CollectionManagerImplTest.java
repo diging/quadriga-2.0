@@ -371,5 +371,45 @@ public class CollectionManagerImplTest {
                 ()  -> managerToTest.editCollection(objectId.toString(), EDITED_NAME, EDITED_DESC, EDITED_APPS));
 
     }
+    
+    @Test(expected = CitesphereAppNotFoundException.class)
+    public void test_editCollection_noAppFoundForClientId() throws CollectionNotFoundException, InvalidObjectIdException, CitesphereAppNotFoundException {
+        Collection existingCollection = new Collection();
+        ObjectId id = new ObjectId();
+        existingCollection.setId(id);
+        existingCollection.setName(COLLECTION_NAME);
+        existingCollection.setDescription(COLLECTION_DESC);
+        existingCollection.setApps(COLLECTION_APPS);
+
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
+
+        String editedName = EDITED_NAME;
+        String editedDescription = EDITED_DESC;
+        List<String> editedApps = new ArrayList<>(EDITED_APPS);
+
+        Collection editedCollection = new Collection();
+        editedCollection.setId(id);
+        editedCollection.setName(editedName);
+        editedCollection.setDescription(editedDescription);
+        editedCollection.setApps(editedApps);
+
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(new ArrayList<>());
+        Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
+
+            @Override
+            public boolean matches(Collection arg0) {
+                return (arg0.getName().equals(editedName) && arg0.getDescription().equals(editedDescription));
+            }
+
+        }))).thenReturn(editedCollection);
+
+        Collection updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription, editedApps);
+        Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
+        Assert.assertEquals(editedName, updatedCollection.getName());
+        Assert.assertEquals(editedDescription, updatedCollection.getDescription());
+        for(String app : updatedCollection.getApps()) {
+            Assert.assertTrue(EDITED_APPS.contains(app));
+        }
+    }
 
 }
