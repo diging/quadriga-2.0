@@ -24,4 +24,6 @@ public interface EventGraphService {
      * @throws InvalidObjectIdException if the collectionId contains non-hexadecimal characters
      */
     public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId);
+
+	public long groupEventGraphsBySourceUri(ObjectId collectionId);
 }

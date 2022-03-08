@@ -18,6 +18,14 @@ public class PredicateManagerImpl implements PredicateManager {
     @Override
     public List<Predicate> findByMappedTripleGroupId(String mappedTripleGroupId) {
         return predicateRepository.findByMappedTripleGroupId(mappedTripleGroupId).orElse(null);
+
     }
 
+	@Override
+	public int countPredicatesByMappedTripleGroup(String mappedTripleGroupId) {
+		return predicateRepository.countPredicatesByMappedTripleGroup(mappedTripleGroupId);
+	}
+
+   
+    
 }

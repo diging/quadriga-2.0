@@ -63,7 +63,7 @@ public class AddNetworkApiController {
         // First we check whether a quadruple is present in request body
         if (quadruple == null) {
             logger.error("Quadruple not present in network submission request for collectionId: "  + collectionId);
-            return HttpStatus.NO_CONTENT;
+            return HttpStatus.BAD_REQUEST;
         }
         
         // Next, we check whether a collection and mappedTripleGroup is present
@@ -76,7 +76,7 @@ public class AddNetworkApiController {
                 return HttpStatus.NOT_FOUND;
             }
         } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
-            logger.error(e.getMessage());
+            logger.error("Couldn't submit network", e);
             return HttpStatus.NOT_FOUND;
         }
 
@@ -88,7 +88,7 @@ public class AddNetworkApiController {
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
             e.setContext(quadruple.getGraph().getMetadata().getContext());
 
-            /**
+            /** FIXME:
              * A new story will later be created to get info about just one app from citesphere using OAuth token.
              * This app's name should be stored in eventGraph instead of the client id
              * Until that story is done, we need to store clientId instead of appName

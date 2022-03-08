@@ -14,4 +14,6 @@ public interface PredicateManager {
      */
     public List<Predicate> findByMappedTripleGroupId(String mappedTripleGroupId);
     
+    public int countPredicatesByMappedTripleGroup(String mappedTripleGroupId);
+    
 }

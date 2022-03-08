@@ -1,13 +1,27 @@
 package edu.asu.diging.quadriga.web;
 
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
+
 import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.CountOperation;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.UnwindOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +55,9 @@ public class DisplayCollectionController {
     @Autowired
     private PredicateManager predicateManager;
     
+    @Autowired
+    MongoTemplate mongoTemplate;
+    
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/auth/collections/{id}", method = RequestMethod.GET)
@@ -50,15 +67,16 @@ public class DisplayCollectionController {
         try {
             collection = collectionManager.findCollection(id);
             if(collection == null) {
+            	logger.error("Couldn't find collection: ", id);
                 return "error404Page";
             }
         } catch (InvalidObjectIdException e) {
             return "error404Page";
         }
         
-        ObjectId collectionId = collection.getId();
+       
         
-        List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(collectionId);
+        List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(collection.getId());
         
         if(!eventGraphs.isEmpty()) {
             // We get last network submission info by getting the last EventGraph which will be a part of the last network
@@ -72,11 +90,14 @@ public class DisplayCollectionController {
         model.addAttribute("creationTime", collection.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
         
         // One network may have multiple eventGraphs, but all of them will have same sourceURI in the context
-        // This sourceURI will be used to group eventGraphs together that belong to the same network
-        model.addAttribute("numberOfSubmittedNetworks", eventGraphs.stream().collect(Collectors.groupingBy(event -> event.getContext().getSourceUri())).size());
+        // This sourceURI will be used to group eventGraphs together that belong to the same network        
+        
+        long groupedEventGraphsCount = eventGraphService.groupEventGraphsBySourceUri(collection.getId());
+       
+        model.addAttribute("numberOfSubmittedNetworks", groupedEventGraphsCount);
         
         // Get default mappings from Concepts
-        model.addAttribute("defaultMappings", getNumberOfDefaultMappings(collectionId.toString()));
+        model.addAttribute("defaultMappings", getNumberOfDefaultMappings(collection.getId().toString()));
         
         return "auth/displayCollection";
         
@@ -97,14 +118,14 @@ public class DisplayCollectionController {
     private int getNumberOfDefaultMappings(String collectionId) {
         try {
             MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
-            if(mappedTripleGroup != null) {
-                List<Predicate> predicates = predicateManager.findByMappedTripleGroupId(mappedTripleGroup.get_id().toString());
-                if(predicates != null && !predicates.isEmpty()) {
-                    return predicates.size();
-                }
+            if(mappedTripleGroup != null) {            	
+            	
+            	return predicateManager.countPredicatesByMappedTripleGroup(mappedTripleGroup.get_id().toString());
+            	
             }
+            
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            logger.error(e.getMessage());
+        	logger.error("Couldn't find number of default mappings for collection: ",collectionId,e.getMessage());
         }
         return 0;
     }
