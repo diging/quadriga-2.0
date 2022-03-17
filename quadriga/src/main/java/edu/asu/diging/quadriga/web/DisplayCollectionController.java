@@ -1,27 +1,14 @@
 package edu.asu.diging.quadriga.web;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.unwind;
-
 import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.CountOperation;
-import org.springframework.data.mongodb.core.aggregation.GroupOperation;
-import org.springframework.data.mongodb.core.aggregation.LookupOperation;
-import org.springframework.data.mongodb.core.aggregation.MatchOperation;
-import org.springframework.data.mongodb.core.aggregation.UnwindOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -119,13 +106,13 @@ public class DisplayCollectionController {
         try {
             MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
             if(mappedTripleGroup != null) {            	
-            	
-            	return predicateManager.countPredicatesByMappedTripleGroup(mappedTripleGroup.get_id().toString());
-            	
+
+                return predicateManager.countPredicatesByMappedTripleGroup(mappedTripleGroup.get_id().toString());
+
             }
-            
+
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-        	logger.error("Couldn't find number of default mappings for collection: ",collectionId,e.getMessage());
+            logger.error("Couldn't find number of default mappings for collection: ",collectionId,e.getMessage());
         }
         return 0;
     }
