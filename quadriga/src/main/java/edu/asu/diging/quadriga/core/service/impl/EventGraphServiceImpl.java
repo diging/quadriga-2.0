@@ -59,6 +59,6 @@ public class EventGraphServiceImpl implements EventGraphService {
         }
         return result.getMappedResults().get(0).getInteger("total");
 
-	}
+    }
     
 }

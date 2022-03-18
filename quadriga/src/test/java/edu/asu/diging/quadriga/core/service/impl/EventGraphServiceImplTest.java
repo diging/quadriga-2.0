@@ -109,7 +109,7 @@ public class EventGraphServiceImplTest {
         Mockito.when(aggregationResultsMock.getMappedResults()).thenReturn(mappedResult);
         Mockito.when(mongoTemplate.getCollectionName(eq(EventGraph.class))).thenReturn("EVENT_GRAPH");
         Mockito.when(mongoTemplate.aggregate(any(Aggregation.class), any(String.class), eq(Document.class)))
-        .thenReturn(aggregationResultsMock);
+            .thenReturn(aggregationResultsMock);
         long totalCount = eventGraphServiceImpl.groupEventGraphsBySourceUri(collectionObjectId);
 
         //Both the event graphs belong to the group since the sourceUri is same. 
