@@ -21,11 +21,9 @@ public class PredicateManagerImpl implements PredicateManager {
 
     }
 
-	@Override
+    @Override
 	public int countPredicatesByMappedTripleGroup(String mappedTripleGroupId) {
-		return predicateRepository.countPredicatesByMappedTripleGroup(mappedTripleGroupId);
-	}
-
-   
-    
+        return predicateRepository.countPredicatesByMappedTripleGroup(mappedTripleGroupId);
+    }
+ 
 }

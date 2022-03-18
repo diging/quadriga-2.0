@@ -105,10 +105,8 @@ public class DisplayCollectionController {
     private int getNumberOfDefaultMappings(String collectionId) {
         try {
             MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
-            if(mappedTripleGroup != null) {            	
-
+            if(mappedTripleGroup != null) {    
                 return predicateManager.countPredicatesByMappedTripleGroup(mappedTripleGroup.get_id().toString());
-
             }
 
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {

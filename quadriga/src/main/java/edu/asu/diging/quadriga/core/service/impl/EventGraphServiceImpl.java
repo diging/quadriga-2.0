@@ -45,20 +45,20 @@ public class EventGraphServiceImpl implements EventGraphService {
     }
 
     @Override
-	public long groupEventGraphsBySourceUri(ObjectId collectionId) {
-		UnwindOperation unwind = unwind("context");
-		GroupOperation group = Aggregation.group("context.sourceUri");
-		MatchOperation match= match(Criteria.where("collectionId").is(collectionId));
-		CountOperation count  = Aggregation.count().as("total");
-    	Aggregation agg = newAggregation(unwind, match, group, count);
-    	AggregationResults<Document> result = mongoTemplate.aggregate(
-    			agg, mongoTemplate.getCollectionName(EventGraph.class), Document.class);
-    	
-    	if (result.getMappedResults().isEmpty()) {
+    public long groupEventGraphsBySourceUri(ObjectId collectionId) {
+        UnwindOperation unwind = unwind("context");
+        GroupOperation group = Aggregation.group("context.sourceUri");
+        MatchOperation match= match(Criteria.where("collectionId").is(collectionId));
+        CountOperation count  = Aggregation.count().as("total");
+        Aggregation agg = newAggregation(unwind, match, group, count);
+        AggregationResults<Document> result = mongoTemplate.aggregate(
+                agg, mongoTemplate.getCollectionName(EventGraph.class), Document.class);
+
+        if (result.getMappedResults().isEmpty()) {
             return 0;
         }
-    	return result.getMappedResults().get(0).getInteger("total");
-		
+        return result.getMappedResults().get(0).getInteger("total");
+
 	}
     
 }
