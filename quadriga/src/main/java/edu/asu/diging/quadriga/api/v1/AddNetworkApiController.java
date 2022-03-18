@@ -88,7 +88,7 @@ public class AddNetworkApiController {
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
             e.setContext(quadruple.getGraph().getMetadata().getContext());
 
-            /** 
+            /**
              * A new story will later be created to get info about just one app from citesphere using OAuth token.
              * This app's name should be stored in eventGraph instead of the client id
              * Until that story is done, we need to store clientId instead of appName
