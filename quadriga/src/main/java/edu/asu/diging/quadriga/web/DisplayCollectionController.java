@@ -8,7 +8,6 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,9 +41,6 @@ public class DisplayCollectionController {
     @Autowired
     private PredicateManager predicateManager;
     
-    @Autowired
-    MongoTemplate mongoTemplate;
-    
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/auth/collections/{id}", method = RequestMethod.GET)
@@ -58,6 +54,7 @@ public class DisplayCollectionController {
                 return "error404Page";
             }
         } catch (InvalidObjectIdException e) {
+            logger.error("Couldn't find collection ", e);
             return "error404Page";
         }
         
@@ -76,12 +73,11 @@ public class DisplayCollectionController {
         model.addAttribute("description", collection.getDescription());
         model.addAttribute("creationTime", collection.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
         
-        // One network may have multiple eventGraphs, but all of them will have same sourceURI in the context
-        // This sourceURI will be used to group eventGraphs together that belong to the same network        
+    
         
-        long groupedEventGraphsCount = eventGraphService.groupEventGraphsBySourceUri(collection.getId());
+        long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());
        
-        model.addAttribute("numberOfSubmittedNetworks", groupedEventGraphsCount);
+        model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
         
         // Get default mappings from Concepts
         model.addAttribute("defaultMappings", getNumberOfDefaultMappings(collection.getId().toString()));
@@ -110,7 +106,7 @@ public class DisplayCollectionController {
             }
 
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            logger.error("Couldn't find number of default mappings for collection: ",collectionId,e.getMessage());
+            logger.error("Couldn't find number of default mappings for collection ",e);
         }
         return 0;
     }

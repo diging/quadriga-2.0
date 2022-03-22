@@ -17,12 +17,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import edu.asu.diging.quadriga.api.v1.model.Context;
+
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
+import edu.asu.diging.quadriga.core.model.Context;
 import edu.asu.diging.quadriga.core.model.EventGraph;
+import edu.asu.diging.quadriga.core.mongo.EventGraphDao;
+import edu.asu.diging.quadriga.core.mongo.impl.EventGraphDaoImpl;
 
 
 
@@ -35,7 +40,10 @@ public class EventGraphServiceImplTest {
     private EventGraphServiceImpl eventGraphServiceImpl;
     
     @Mock
-    MongoTemplate mongoTemplate;
+    private MongoTemplate mongoTemplate;
+    
+    @InjectMocks
+    private EventGraphDaoImpl eventGraphDaoImpl;
 
     @Before
     public void setUp() {
@@ -110,7 +118,8 @@ public class EventGraphServiceImplTest {
         Mockito.when(mongoTemplate.getCollectionName(eq(EventGraph.class))).thenReturn("EVENT_GRAPH");
         Mockito.when(mongoTemplate.aggregate(any(Aggregation.class), any(String.class), eq(Document.class)))
             .thenReturn(aggregationResultsMock);
-        long totalCount = eventGraphServiceImpl.groupEventGraphsBySourceUri(collectionObjectId);
+        
+        long totalCount = eventGraphDaoImpl.groupEventGraphsBySourceUri(collectionObjectId);
 
         //Both the event graphs belong to the group since the sourceUri is same. 
         Assert.assertEquals(totalCount, 1);

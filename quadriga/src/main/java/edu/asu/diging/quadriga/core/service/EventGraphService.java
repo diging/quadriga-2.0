@@ -30,5 +30,5 @@ public interface EventGraphService {
      * @param collectionId
      * @return total count
      */
-    public long groupEventGraphsBySourceUri(ObjectId collectionId);
+    public long getNumberOfSubmittedNetworks(ObjectId collectionId);
 }

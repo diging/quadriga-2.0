@@ -18,7 +18,7 @@ public class Collection {
     private String name;
     private String description;
     private OffsetDateTime creationTime;
-    
+
     public Collection() {
         this.creationTime = OffsetDateTime.now();
     }
@@ -51,4 +51,7 @@ public class Collection {
         return creationTime;
     }
 
+    public void setCreationTime(OffsetDateTime creationTime) {
+        this.creationTime = creationTime;
+    }
 }

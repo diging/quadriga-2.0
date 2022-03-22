@@ -4,7 +4,6 @@ import java.time.OffsetDateTime;
 
 import org.bson.types.ObjectId;
 
-import edu.asu.diging.quadriga.api.v1.model.Context;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 
 public class EventGraph {

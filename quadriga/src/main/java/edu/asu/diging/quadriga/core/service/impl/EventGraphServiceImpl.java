@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
 import edu.asu.diging.quadriga.core.model.EventGraph;
+import edu.asu.diging.quadriga.core.mongo.EventGraphDao;
+import edu.asu.diging.quadriga.core.mongo.impl.EventGraphDaoImpl;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
@@ -29,8 +31,10 @@ public class EventGraphServiceImpl implements EventGraphService {
     @Autowired
     private EventGraphRepository repo;
     
+    
     @Autowired
-    MongoTemplate mongoTemplate;
+    private EventGraphDao eventGraphDao;
+
     
     @Override
     public void saveEventGraphs(List<EventGraph> events) {
@@ -44,21 +48,14 @@ public class EventGraphServiceImpl implements EventGraphService {
         return repo.findByCollectionIdOrderByCreationTimeDesc(collectionId).orElse(null);
     }
 
+    
     @Override
-    public long groupEventGraphsBySourceUri(ObjectId collectionId) {
-        UnwindOperation unwind = unwind("context");
-        GroupOperation group = Aggregation.group("context.sourceUri");
-        MatchOperation match= match(Criteria.where("collectionId").is(collectionId));
-        CountOperation count  = Aggregation.count().as("total");
-        Aggregation agg = newAggregation(unwind, match, group, count);
-        AggregationResults<Document> result = mongoTemplate.aggregate(
-                agg, mongoTemplate.getCollectionName(EventGraph.class), Document.class);
-
-        if (result.getMappedResults().isEmpty()) {
-            return 0;
-        }
-        return result.getMappedResults().get(0).getInteger("total");
-
+    public long getNumberOfSubmittedNetworks(ObjectId collectionId) {
+        
+        // One network may have multiple eventGraphs, but all of them will have same sourceURI in the context
+        // This sourceURI will be used to group eventGraphs together that belong to the same network   
+        
+        return eventGraphDao.groupEventGraphsBySourceUri(collectionId);
     }
     
 }
