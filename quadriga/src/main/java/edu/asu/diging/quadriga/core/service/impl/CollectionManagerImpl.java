@@ -30,18 +30,8 @@ public class CollectionManagerImpl implements CollectionManager {
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
      */
-    public Collection addCollection(String name, String description, List<String> apps) throws CitesphereAppNotFoundException {
-        List<CitesphereAppInfo> citesphereApps = citesphereConnector.getCitesphereApps();
-        HashSet<String> appSet = new HashSet<String>(
-                citesphereApps.stream().map(app -> app.getClientId()).collect(Collectors.toList()));
-        
-        if (apps != null) {
-            for (String clientId : apps) {
-                if (!appSet.contains(clientId)) {
-                    throw new CitesphereAppNotFoundException("No Citesphere App found with client id " + clientId);
-                }
-            }
-        }
+    public Collection addCollection(String name, String description, List<String> apps) throws CitesphereAppNotFoundException {   
+        validateApps(apps);      
         Collection collection = new Collection();
         collection.setName(name);
         collection.setDescription(description);
@@ -49,9 +39,6 @@ public class CollectionManagerImpl implements CollectionManager {
         return collectionRepo.save(collection);
     }
 
-    /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#findCollection(java.lang.String)
-     */
     @Override
     public Collection findCollection(String id) throws InvalidObjectIdException {
         try {
@@ -68,18 +55,8 @@ public class CollectionManagerImpl implements CollectionManager {
     public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
 
-        if (Objects.nonNull(collection)) {
-            List<CitesphereAppInfo> citesphereApps = citesphereConnector.getCitesphereApps();
-            HashSet<String> appSet = new HashSet<String>(
-                    citesphereApps.stream().map(app -> app.getClientId()).collect(Collectors.toList()));
-            
-            if (apps != null) {
-                for (String clientId : apps) {
-                    if (!appSet.contains(clientId)) {
-                        throw new CitesphereAppNotFoundException("No Citesphere App found with client id " + clientId);
-                    }
-                }
-            }
+        if (Objects.nonNull(collection)) {    
+            validateApps(apps);
             collection.setName(name);
             collection.setDescription(description);
             collection.setApps(apps);
@@ -106,4 +83,22 @@ public class CollectionManagerImpl implements CollectionManager {
         }
     }
 
+    /**
+     * Validates the list of apps by verifying the client ids from citesphere. 
+     * 
+     * @param apps
+     * @throws CitesphereAppNotFoundException
+     */
+    private void validateApps(List<String> apps) throws CitesphereAppNotFoundException {
+        List<CitesphereAppInfo> citesphereApps = citesphereConnector.getCitesphereApps();
+        HashSet<String> appSet = new HashSet<String>(
+                citesphereApps.stream().map(app -> app.getClientId()).collect(Collectors.toList()));
+        if (apps != null) {
+            for (String clientId : apps) {
+                if (!appSet.contains(clientId)) {
+                    throw new CitesphereAppNotFoundException("No Citesphere App found with client id " + clientId);
+                }
+            }
+        }
+    }
 }

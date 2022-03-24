@@ -90,8 +90,10 @@ public class EditCollectionController {
             redirectAttributes.addFlashAttribute("show_alert", true);
             return "redirect:/auth/collections";
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+            logger.error("Couldn't edit collection", e);
             return "error404Page";
         } catch (CitesphereAppNotFoundException e) {
+            logger.error("Couldn't edit collection", e);
             bindingResult.rejectValue("apps", "error.collectionForm", e.getMessage());
             return "auth/editCollection";
         }

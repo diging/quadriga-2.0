@@ -2,6 +2,8 @@ package edu.asu.diging.quadriga.web;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
 @Controller
 public class AddCollectionController {
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CollectionManager collectionManager;
@@ -37,6 +40,7 @@ public class AddCollectionController {
                     collectionForm.getApps());
         } catch (CitesphereAppNotFoundException e) {
             result.rejectValue("apps", "error.collectionForm", e.getMessage());
+            logger.error("Couldn't add collection",e);
             return "auth/addCollection";
         }
 
