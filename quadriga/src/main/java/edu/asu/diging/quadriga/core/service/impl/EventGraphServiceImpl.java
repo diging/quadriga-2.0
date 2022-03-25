@@ -51,11 +51,9 @@ public class EventGraphServiceImpl implements EventGraphService {
     
     @Override
     public long getNumberOfSubmittedNetworks(ObjectId collectionId) {
+                
+        return eventGraphDao.countEventGraphsByCollectionId(collectionId);
         
-        // One network may have multiple eventGraphs, but all of them will have same sourceURI in the context
-        // This sourceURI will be used to group eventGraphs together that belong to the same network   
-        
-        return eventGraphDao.groupEventGraphsBySourceUri(collectionId);
     }
     
 }

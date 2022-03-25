@@ -14,12 +14,12 @@ public class EventGraph {
     private OffsetDateTime creationTime;
     private ObjectId collectionId;
     private String submittingApp;
-    private Context context;
+    private ObjectId networkId;
     
     public EventGraph() {
         this.creationTime = OffsetDateTime.now();
     }
-    
+
     public EventGraph(CreationEvent root) {
         this.rootEvent = root;
         this.creationTime = OffsetDateTime.now();
@@ -68,13 +68,12 @@ public class EventGraph {
     public void setSubmittingApp(String submittingApp) {
         this.submittingApp = submittingApp;
     }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
     
+    public ObjectId getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(ObjectId networkId) {
+        this.networkId = networkId;
+    }
 }

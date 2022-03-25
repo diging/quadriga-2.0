@@ -33,12 +33,10 @@ public class EventGraphDaoImpl implements EventGraphDao {
      * @return total count
      */
     @Override
-    public long groupEventGraphsBySourceUri(Object collectionId) {
-        UnwindOperation unwind = unwind("context"); 
-        GroupOperation group = Aggregation.group("context.sourceUri");
+    public long countEventGraphsByCollectionId(Object collectionId) {
         MatchOperation match= match(Criteria.where("collectionId").is(collectionId));
         CountOperation count  = Aggregation.count().as("total");
-        Aggregation agg = newAggregation(unwind, match, group, count);
+        Aggregation agg = newAggregation(match, count);
 
         AggregationResults<Document> result = mongoTemplate.aggregate(
                 agg, mongoTemplate.getCollectionName(EventGraph.class), Document.class);

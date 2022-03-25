@@ -24,7 +24,6 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
-import edu.asu.diging.quadriga.core.model.Context;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.mongo.EventGraphDao;
 import edu.asu.diging.quadriga.core.mongo.impl.EventGraphDaoImpl;
@@ -88,27 +87,23 @@ public class EventGraphServiceImplTest {
 
         EventGraph eventGraph1 = new EventGraph();
         ObjectId eventGraphObjectId1 = new ObjectId();
-        Context context1= new Context();
-        context1.setSourceUri("uri1");
+ 
 
         eventGraph1.setId(eventGraphObjectId1);
         eventGraph1.setCollectionId(collectionObjectId);
-        eventGraph1.setContext(context1);
 
         EventGraph eventGraph2 = new EventGraph();
         ObjectId eventGraphObjectId2 = new ObjectId();
-        Context context2= new Context();
-        context2.setSourceUri("uri1");
+
         eventGraph2.setId(eventGraphObjectId2);
         eventGraph2.setCollectionId(collectionObjectId);
-        eventGraph2.setContext(context2);
 
         List<EventGraph> eventGraphs = new ArrayList<EventGraph>();
         eventGraphs.add(eventGraph2);
         eventGraphs.add(eventGraph1);
 
         Document doc1= new Document();
-        doc1.put("total", 1);
+        doc1.put("total", 2);
         List<Document> mappedResult= new ArrayList<Document>();
         mappedResult.add(doc1);
 
@@ -119,10 +114,10 @@ public class EventGraphServiceImplTest {
         Mockito.when(mongoTemplate.aggregate(any(Aggregation.class), any(String.class), eq(Document.class)))
             .thenReturn(aggregationResultsMock);
         
-        long totalCount = eventGraphDaoImpl.groupEventGraphsBySourceUri(collectionObjectId);
+        long totalCount = eventGraphDaoImpl.countEventGraphsByCollectionId(collectionObjectId);
 
         //Both the event graphs belong to the group since the sourceUri is same. 
-        Assert.assertEquals(totalCount, 1);
+        Assert.assertEquals(totalCount, 2);
     }
 
 }
