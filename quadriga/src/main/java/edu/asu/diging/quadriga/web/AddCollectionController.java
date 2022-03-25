@@ -30,7 +30,7 @@ public class AddCollectionController {
         if (result.hasErrors()) {
             return "auth/addCollection";
         }
-        
+
         collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription());
 
         redirectAttrs.addFlashAttribute("show_alert", true);

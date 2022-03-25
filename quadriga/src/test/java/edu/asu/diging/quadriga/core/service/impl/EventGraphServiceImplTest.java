@@ -50,7 +50,7 @@ public class EventGraphServiceImplTest {
     }
 
     @Test
-    public void test_findAllEventGraphsByCollectionId_success() throws InterruptedException {
+    public void test_findLatestEventGraphByCollectionId_success() throws InterruptedException {
         ObjectId collectionObjectId = new ObjectId();
 
         EventGraph eventGraph1 = new EventGraph();
@@ -70,19 +70,18 @@ public class EventGraphServiceImplTest {
         eventGraphs.add(eventGraph2);
         eventGraphs.add(eventGraph1);
 
-        Mockito.when(eventGraphRepository.findByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
+        Mockito.when(eventGraphRepository.findFirstByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
                 .thenReturn(Optional.of(eventGraphs));
         
-        List<EventGraph> foundEventGraphs = eventGraphServiceImpl.findAllEventGraphsByCollectionId(collectionObjectId);
+        List<EventGraph> foundEventGraphs = eventGraphServiceImpl.findLatestEventGraphByCollectionId(collectionObjectId);
         
         // The latest, i.e. EventGraph2, will be the 1st one on the list
         Assert.assertEquals(eventGraphObjectId2, foundEventGraphs.get(0).getId());
-        Assert.assertEquals(eventGraphObjectId1, foundEventGraphs.get(1).getId());
     }
     
     
     @Test
-    public void test_groupEventGraphsBySourceUri_success() throws InterruptedException {
+    public void test_countEventGraphsBy_success() throws InterruptedException {
         ObjectId collectionObjectId = new ObjectId();
 
         EventGraph eventGraph1 = new EventGraph();
