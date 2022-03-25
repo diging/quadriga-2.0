@@ -1,7 +1,5 @@
 package edu.asu.diging.quadriga.api.v1.model;
 
-import edu.asu.diging.quadriga.api.v1.model.Context;
-
 public class NodeData {
 
 	private String label;
