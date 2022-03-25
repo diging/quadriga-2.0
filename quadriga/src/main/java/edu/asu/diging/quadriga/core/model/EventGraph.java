@@ -14,7 +14,6 @@ public class EventGraph {
     private OffsetDateTime creationTime;
     private ObjectId collectionId;
     private String submittingApp;
-    private ObjectId networkId;
     
     public EventGraph() {
         this.creationTime = OffsetDateTime.now();
@@ -53,6 +52,10 @@ public class EventGraph {
         return creationTime;
     }
     
+    public void setCreationTime(OffsetDateTime creationTime) {
+        this.creationTime = creationTime;
+    }
+    
     public ObjectId getCollectionId() {
         return collectionId;
     }
@@ -69,11 +72,4 @@ public class EventGraph {
         this.submittingApp = submittingApp;
     }
     
-    public ObjectId getNetworkId() {
-        return networkId;
-    }
-
-    public void setNetworkId(ObjectId networkId) {
-        this.networkId = networkId;
-    }
 }

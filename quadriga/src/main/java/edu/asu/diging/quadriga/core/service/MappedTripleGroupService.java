@@ -15,7 +15,7 @@ import edu.asu.diging.quadriga.core.model.MappedTripleType;
  *
  */
 public interface MappedTripleGroupService {
-    
+
     public MappedTripleGroup add(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException;
 
@@ -23,7 +23,7 @@ public interface MappedTripleGroupService {
             throws InvalidObjectIdException, CollectionNotFoundException;
 
     public MappedTripleGroup getById(String mappedTripleGroupId) throws InvalidObjectIdException;
-    
+
     public MappedTripleGroup updateName(String mappedTripleGroupId, String name)
             throws InvalidObjectIdException, MappedTripleGroupNotFoundException;
     
