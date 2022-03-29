@@ -40,7 +40,7 @@ public class ConceptCacheServiceImpl implements ConceptCacheService {
 
     @Override
     public void deleteConceptCacheByUri(String uri) {
-        if (uri != null && !uri.isBlank()) {
+        if (uri != null && !uri.isEmpty()) {
             conceptCacheRepository.deleteById(uri);
         }
     }

@@ -10,6 +10,7 @@ import edu.asu.diging.quadriga.core.data.MappedTripleGroupRepository;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.exceptions.MappedTripleGroupNotFoundException;
+import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
@@ -18,13 +19,14 @@ import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 @Service
 public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
     
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private MappedTripleGroupRepository mappedTripleGroupRepository;
 
     @Autowired
     private CollectionManager collectionManager;
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 
     /**
      * Converts the given collectionId into an ObjectId and persists a
@@ -35,28 +37,49 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
      * @return the persisted MappedTripleGroup object
      * @throws InvalidObjectIdException    if collectionId couldn't be converted to
      *                                     ObjectId
-     * @throws CollectionNotFoundException if collection with given collectionId
-     *                                     does't exist
      */
     @Override
     public MappedTripleGroup add(String collectionId, MappedTripleType mappedTripleType)
-            throws InvalidObjectIdException, CollectionNotFoundException {
+            throws InvalidObjectIdException {
         
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
         
-        mappedTripleGroup.setCollectionId(collectionManager.getCollection(collectionId).getId());
+        try {
+            mappedTripleGroup.setCollectionId(new ObjectId(collectionId));
+        } catch(IllegalArgumentException e) {
+            throw new InvalidObjectIdException(e);
+        }
         mappedTripleGroup.setMappedTripleType(mappedTripleType);
         
         return mappedTripleGroupRepository.save(mappedTripleGroup);
     }
-    
+
+    /**
+     * This method first checks whether a collection with the given collectionId
+     * exists.
+     * 
+     * If yes, it finds a MappedTripleGroup entry in the database with this
+     * collectionId and the MappedTripleType.
+     * 
+     * @param collectionId used to look for the MappedTripleGroup entry
+     * @param mappedTripleType is the group type to be looked for in the database
+     * @return the MappedTripleGroup entry that was found, else null
+     * @throws InvalidObjectIdException    if collectionId couldn't be converted to
+     *                                     ObjectId
+     * @throws CollectionNotFoundException if collection with given collectionId
+     *                                     doesn't exist
+     */
     @Override
     public MappedTripleGroup findByCollectionIdAndMappingType(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException {
+        Collection collection = collectionManager.findCollection(collectionId);
+        
+        if(collection == null) {
+            throw new CollectionNotFoundException("Couldn't find collection for id: " + collectionId);
+        }
+        
         return mappedTripleGroupRepository
-                .findByCollectionIdAndMappedTripleType(collectionManager
-                        .getCollection(collectionId)
-                        .getId(), mappedTripleType)
+                .findByCollectionIdAndMappedTripleType(collection.getId(), mappedTripleType)
                 .orElse(null);
     }
 

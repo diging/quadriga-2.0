@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.model;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+
 import javax.persistence.Id;
 
 import org.bson.types.ObjectId;
@@ -20,7 +21,7 @@ public class Collection {
     private String description;
     private OffsetDateTime creationTime;
     private List<String> apps;
-    
+
     public Collection() {
         this.creationTime = OffsetDateTime.now();
     }
@@ -52,13 +53,8 @@ public class Collection {
     public OffsetDateTime getCreationTime() {
         return creationTime;
     }
-    
-    public List<String> getApps() {
-        return apps;
-    }
 
-    public void setApps(List<String> apps) {
-        this.apps = apps;
+    public void setCreationTime(OffsetDateTime creationTime) {
+        this.creationTime = creationTime;
     }
-
 }

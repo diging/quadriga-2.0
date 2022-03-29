@@ -22,21 +22,14 @@ public interface EventGraphService {
      * @param pageable used to specify page number and size per page
      * @return a list of eventGraphs in descending order
      */
-    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId);
+    public List<EventGraph> findLatestEventGraphByCollectionId(ObjectId collectionId);
     
     /**
-     * Finds the latest eventGraph mapped to a collection in the descending order of creation time
-     * 
-     * @param collectionId is the id used to finds the latest eventGraph
-     * @return the latest eventGraph
-     * @throws InvalidObjectIdException if the collectionId contains non-hexadecimal characters
+     * Groups the event graphs mapped to a collection by source uri and returns the total count. 
+     * @param collectionId
+     * @return total count
      */
-    public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId);
-    
-    /**
-     * Finds event graphs by sourceURI
-     * 
-     * @param sourceURI used for searrching eventGraph
-     */
-    public List<EventGraph> findEventGraphsBySourceURI(String sourceURI);
+    public long getNumberOfSubmittedNetworks(ObjectId collectionId);
+
+    public List<EventGraph>  findAllEventGraphsByCollectionId(ObjectId collectionId);
 }
