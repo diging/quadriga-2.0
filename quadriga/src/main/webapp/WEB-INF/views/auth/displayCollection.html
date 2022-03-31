@@ -59,13 +59,13 @@
 		    	<th scope="row" th:text="${stat.count + pageNumber * size}"></th>
 		    	<td>
 		    		<span>
-						Graph for text submitted by <span  th:text="${network.creator}"></span>
+						Graph for text submitted by <span  th:text="${network.context.creator}"></span>
 						from <span th:text="${network.appName}"></span>
 					</span>
 				</td>
 				<td><span th:text="${#temporals.format(network.creationTime, 'MM/dd/yyyy hh:mm a')}"></span></td>
 				<td>
-					<a th:href="@{/auth/collections/{collectionid}/network/(collectionid=${collection.id}, sourceURI=${network.sourceURI})}">
+					<a th:href="@{/auth/collections/{collectionid}/network/(collectionid=${collection.id}, sourceUri=${network.context.sourceUri})}">
 						Visualize
 					</a>
 				</td>

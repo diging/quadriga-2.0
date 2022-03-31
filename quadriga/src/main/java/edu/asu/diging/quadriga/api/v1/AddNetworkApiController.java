@@ -86,7 +86,8 @@ public class AddNetworkApiController {
         eventGraphs.forEach(e -> {
             e.setCollectionId(new ObjectId(collectionId));
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
-            /**
+            e.setContext(quadruple.getGraph().getMetadata().getContext());
+         /**
              * FIXME:
              * 
              * A new story will later be created to get info about just one app from citesphere using OAuth token.
@@ -95,7 +96,7 @@ public class AddNetworkApiController {
              * We can't store clientId yet as it depends on story Q20-3
              * After merging story Q20-3, this needs to be changed to tokenInfo.getClientId()
              */
-            e.setSubmittingApp("AppName");
+            e.setAppName("AppName");
         });
         eventGraphService.saveEventGraphs(eventGraphs);
 

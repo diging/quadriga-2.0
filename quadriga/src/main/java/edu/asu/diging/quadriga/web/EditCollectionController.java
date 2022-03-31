@@ -32,7 +32,7 @@ public class EditCollectionController {
     
     @Autowired
     private CollectionManager collectionManager;
-//    
+//   FIXME: 
 //    @Autowired
 //    private CitesphereConnector citesphereConnector;
     

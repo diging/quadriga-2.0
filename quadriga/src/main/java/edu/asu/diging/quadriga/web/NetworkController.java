@@ -30,10 +30,10 @@ public class NetworkController {
 
     @RequestMapping(value = "/auth/collections/{collectionId}/network/")
     public String get(@PathVariable String collectionId,
-            @RequestParam(value = "sourceURI", required = true) String sourceURI, Model model) {
+            @RequestParam(value = "sourceUri", required = true) String sourceUri, Model model) {
 
-        if (!isSourceUriValid(sourceURI)) {
-            logger.error("Invalid sourceUri: " + sourceURI);
+        if (!isSourceUriValid(sourceUri)) {
+            logger.error("Invalid sourceUri: " + sourceUri);
             return "error404Page";
         }
 
@@ -41,15 +41,15 @@ public class NetworkController {
         List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(new ObjectId(collectionId));
         
         if (eventGraphs == null) {
-            logger.error("No network found for sourceUri: " + sourceURI);
+            logger.error("No network found for sourceUri: " + sourceUri);
             return "error404Page";
         }
 
         model.addAttribute("elements", graphCreationService.createGraph(eventGraphs));
-        model.addAttribute("sourceURI", sourceURI);
-        //FIXME:
-//        model.addAttribute("creator", eventGraphs.get(0).getContext().getCreator());
-//        model.addAttribute("appName", eventGraphs.get(0).getAppName());
+        model.addAttribute("sourceURI", sourceUri);
+
+        model.addAttribute("creator", eventGraphs.get(0).getContext().getCreator());
+        model.addAttribute("appName", eventGraphs.get(0).getAppName());
         model.addAttribute("creationTime", eventGraphs.get(0).getCreationTime());
         return "auth/displayNetwork";
     }

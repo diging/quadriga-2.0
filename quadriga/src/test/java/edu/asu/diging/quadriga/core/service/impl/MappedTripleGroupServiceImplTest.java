@@ -74,11 +74,7 @@ public class MappedTripleGroupServiceImplTest {
             throws InvalidObjectIdException, CollectionNotFoundException {
         Collection collection = new Collection();
         ObjectId objectId = new ObjectId();
-<<<<<<< HEAD
-        Mockito.when(collectionManager.getCollection(objectId.toString())).thenThrow(new CollectionNotFoundException());
-        Assert.assertThrows(CollectionNotFoundException.class,
-                () -> mappedTripleGroupServiceImpl.add(objectId.toString(), MappedTripleType.DEFAULT_MAPPING));
-=======
+
         collection.setId(objectId);
 
         String name = "mappedTripleGroup1";
@@ -97,7 +93,6 @@ public class MappedTripleGroupServiceImplTest {
         Assert.assertEquals(mappedTripleGroup.getCollectionId(), foundMappedTripleGroup.getCollectionId());
         Assert.assertEquals(MappedTripleType.DEFAULT_MAPPING, foundMappedTripleGroup.getMappedTripleType());
         Assert.assertEquals(name, foundMappedTripleGroup.getName());
->>>>>>> 11c7322d598ec6e633ccd6db2888c939ed235076
     }
 
     @Test
