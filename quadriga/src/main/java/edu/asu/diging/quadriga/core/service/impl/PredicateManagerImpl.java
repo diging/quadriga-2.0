@@ -22,7 +22,7 @@ public class PredicateManagerImpl implements PredicateManager {
     }
 
     @Override
-	public int countPredicatesByMappedTripleGroup(String mappedTripleGroupId) {
+    public int countPredicatesByMappedTripleGroup(String mappedTripleGroupId) {
         return predicateRepository.countPredicatesByMappedTripleGroup(mappedTripleGroupId);
     }
  
