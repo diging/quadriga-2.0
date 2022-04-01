@@ -60,13 +60,11 @@ public class DisplayCollectionController {
         
        
         
-        EventGraph eventGraph = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
+        EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         
-        if(eventGraph!=null ) {
-            // We get last network submission info by getting the last EventGraph which will be a part of the last network
-            EventGraph lastNetwork = eventGraph;
-            model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
-            model.addAttribute("lastNetworkSubmittedBy", lastNetwork.getSubmittingApp());
+        if( latestNetwork!=null ) {
+            model.addAttribute("lastNetworkSubmittedAt", latestNetwork.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
+            model.addAttribute("lastNetworkSubmittedBy", latestNetwork.getSubmittingApp());
         }
         
         model.addAttribute("collectionName", collection.getName());

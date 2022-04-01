@@ -70,13 +70,13 @@ public class EventGraphServiceImplTest {
         eventGraphs.add(eventGraph2);
         eventGraphs.add(eventGraph1);
 
-//        Mockito.when(eventGraphRepository.findFirstByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
-//                .thenReturn(Optional.of(eventGraphs));
-//        
-//        List<EventGraph> foundEventGraphs = eventGraphServiceImpl.findLatestEventGraphByCollectionId(collectionObjectId);
-//        
+        Mockito.when(eventGraphRepository.findFirstByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
+                .thenReturn(Optional.of(eventGraph2));
+       
+        EventGraph foundEventGraph = eventGraphServiceImpl.findLatestEventGraphByCollectionId(collectionObjectId);
+        
         // The latest, i.e. EventGraph2, will be the 1st one on the list
-//        Assert.assertEquals(eventGraphObjectId2, foundEventGraphs.get(0).getId());
+        Assert.assertEquals(eventGraphObjectId2, foundEventGraph.getId());
     }
     
     
