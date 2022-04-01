@@ -23,7 +23,7 @@ public interface EventGraphService {
      * @return a list of eventGraphs in descending order
      * @throws InvalidObjectIdException if the collectionId contains non-hexadecimal characters
      */
-    public List<EventGraph> findLatestEventGraphByCollectionId(ObjectId collectionId);
+    public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId);
     
     /**
      * Groups the event graphs mapped to a collection by source uri and returns the total count. 

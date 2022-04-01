@@ -19,10 +19,6 @@ public class Collection {
     private String description;
     private OffsetDateTime creationTime;
 
-    public Collection() {
-        this.creationTime = OffsetDateTime.now();
-    }
-
     public ObjectId getId() {
         return _id;
     }
