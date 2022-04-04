@@ -27,11 +27,6 @@ $(function() {
             }
         });
     });
-    
-    $(".list-group-item").click(function() {
-    	var checkbox = $(this).find(".checkbox");
-    	checkbox.prop("checked", !checkbox.prop("checked"))
-    });
 });
 
 $(document).ready(function() {
@@ -46,12 +41,8 @@ $(document).ready(function() {
 			spinner.hide();
 			data.forEach(function(app) {
 			    var item = $('<div href="#" class="list-group-item app" data-client-id="'+ app.clientId +'">');
-			    item.append('<strong>'+ app.name +'</strong><input title="Select" type="checkbox" class="checkbox pull-right"/><br>');
+			    item.append('<label for="'+ app.clientId +'"><strong>'+ app.name +'</strong></label><input id="'+ app.clientId +'" title="Select" type="checkbox" class="checkbox pull-right"/><br>');
 			    item.append('<small class=description>'+ app.description +'</small></div>');
-			    item.on('click', function() {
-				var checkbox = $(this).find(".checkbox");
-				checkbox.prop("checked", !checkbox.prop("checked"))
-			    });
 			    item.find(".checkbox").prop("checked", selectedApps != null && selectedApps.includes(app.clientId));
 			    container.append(item);
 			});
