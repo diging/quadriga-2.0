@@ -2,7 +2,9 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 
 public interface CollectionManager {
@@ -14,7 +16,7 @@ public interface CollectionManager {
      * @param apps list of citesphere apps attached to the collection
      * @return the saved collection
      */
-    public Collection addCollection(String name, String description, List<String> apps);
+    public Collection addCollection(String name, String description, List<String> apps) throws CitesphereAppNotFoundException;
     
     /**
      * Finds a collection from the collection table by id
@@ -22,7 +24,7 @@ public interface CollectionManager {
      * @return Collection Instance that is found from the database
      * 
      **/
-    public Collection findCollection(String id);
+    public Collection findCollection(String id) throws InvalidObjectIdException;
     
     /**
      * 
@@ -34,12 +36,12 @@ public interface CollectionManager {
      * @return Collection Instance that is updated in database
      * @throws CollectionNotFoundException in case the collection for the given id is missing
      */
-    public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException;
+    public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException;
     
     /**
      * Deletes a collection from collection table by id
      * @param id used to look up the collection in database
      */
-    public void deleteCollection(String id) throws CollectionNotFoundException;
-    
+    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
+
 }

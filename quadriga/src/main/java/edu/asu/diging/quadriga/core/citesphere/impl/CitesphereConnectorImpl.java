@@ -9,6 +9,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -84,6 +85,7 @@ public class CitesphereConnectorImpl implements CitesphereConnector, Authenticat
      * @see edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector#getCitesphereApps()
      */
     @Override
+    @Cacheable(value = "citesphereApps")
     public List<CitesphereAppInfo> getCitesphereApps() throws HttpClientErrorException {
         String appUrl = citesphereBaseUrl + citesphereAppsEndpoint;
 

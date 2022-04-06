@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
+import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
@@ -31,8 +34,7 @@ public class EditCollectionController {
     @Autowired
     private CollectionManager collectionManager;
     
-    @Autowired
-    private CitesphereConnector citesphereConnector;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Request handler for getting the "Edit collections" view
@@ -44,19 +46,22 @@ public class EditCollectionController {
      */
     @RequestMapping(value = "/auth/collections/{id}/edit", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
-        Collection collection = collectionManager.findCollection(id);
-
-        if (Objects.nonNull(collection)) {
-            CollectionForm collectionForm = new CollectionForm();
-            collectionForm.setId(id);
-            collectionForm.setName(collection.getName());
-            collectionForm.setDescription(collection.getDescription());
-            collectionForm.setApps(collection.getApps());
-            
-            model.addAttribute("citesphereApps", citesphereConnector.getCitesphereApps());
-            model.addAttribute("collectionForm", collectionForm);
-            return "auth/editCollection";
-        } else {
+        Collection collection;
+        try {
+            collection = collectionManager.findCollection(id);
+            if (Objects.nonNull(collection)) {
+                CollectionForm collectionForm = new CollectionForm();
+                collectionForm.setId(id);
+                collectionForm.setName(collection.getName());
+                collectionForm.setDescription(collection.getDescription());
+                collectionForm.setApps(collection.getApps());
+                model.addAttribute("collectionForm", collectionForm);
+                return "auth/editCollection";
+            } else {
+                return "error404Page";
+            }
+        } catch (InvalidObjectIdException e) {
+            logger.error("Couldn't edit collection", e);
             return "error404Page";
         }
     }
@@ -84,8 +89,13 @@ public class EditCollectionController {
             redirectAttributes.addFlashAttribute("alert_msg", "Collection has been edited.");
             redirectAttributes.addFlashAttribute("show_alert", true);
             return "redirect:/auth/collections";
-        } catch (CollectionNotFoundException e) {
+        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+            logger.error("Couldn't edit collection", e);
             return "error404Page";
+        } catch (CitesphereAppNotFoundException e) {
+            logger.error("Couldn't edit collection", e);
+            bindingResult.rejectValue("apps", "error.collectionForm", e.getMessage());
+            return "auth/editCollection";
         }
        
 
