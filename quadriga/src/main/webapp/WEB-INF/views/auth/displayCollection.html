@@ -11,12 +11,16 @@
 		<h2><span th:text="${collectionName}"></span></h2>
 		<h4>Description: <span th:text="${description}"></span></h4>
 		<div style="margin-top: 20px">
-			<p>Collection creation time: <span th:text="${#temporals.format(creationTime, 'MM/dd/yyyy hh:mm a')}"></span></p>
+				
+	   		<p >Collection creation time: <span class = "date" th:text="${#temporals.format(creationTime, 'MM/dd/yyyy hh:mm a ')}"></span></p> 
+ 		
+			 			
+			
 			<h4 th:if="${numberOfSubmittedNetworks eq 0}">No networks submitted to this collection yet!</h4>
 			
 			<p th:if="${numberOfSubmittedNetworks gt 0}">Number of submitted networks: <span th:text="${numberOfSubmittedNetworks}"></span></p>
 			<p th:if="${numberOfSubmittedNetworks gt 0}">
-				Last network submitted time: <span th:text="${#temporals.format(lastNetworkSubmittedAt, 'MM/dd/yyyy hh:mm a')}"></span>
+				Last network submitted time: <span class = "date" th:text="${#temporals.format(lastNetworkSubmittedAt, 'MM/dd/yyyy hh:mm a')}"></span>
 			</p>
 			<p th:if="${numberOfSubmittedNetworks gt 0}">
 				Last network submitted by: <span th:text="${lastNetworkSubmittedBy}"></span>
