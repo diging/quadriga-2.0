@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 import org.bson.types.ObjectId;
@@ -23,6 +24,7 @@ public class CollectionManagerImpl implements CollectionManager {
      */
     public Collection addCollection(String name, String description) {
         Collection collection=new Collection();
+        collection.setCreationTime(OffsetDateTime.now());
         collection.setName(name);
         collection.setDescription(description);
         return collectionRepo.save(collection);

@@ -17,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.support.RequestContext;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
@@ -82,13 +84,14 @@ public class DisplayCollectionController {
 
         model.addAttribute("size", size);
 
-        List<EventGraph> eventGraph = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
+        EventGraph eventGraph = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         
-        if(!eventGraph.isEmpty()) {
+        if(eventGraph != null) {
             // We get last network submission info by getting the last EventGraph which will be a part of the last network
-            EventGraph lastNetwork = eventGraph.get(0);
+            EventGraph lastNetwork = eventGraph;
             model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
             model.addAttribute("lastNetworkSubmittedBy", lastNetwork.getAppName());
+
         }
 
         // Get all EventGraphs for this collection
@@ -138,9 +141,9 @@ public class DisplayCollectionController {
         
         model.addAttribute("collectionName", collection.getName());
         model.addAttribute("description", collection.getDescription());
-        model.addAttribute("creationTime", collection.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
-        
-    
+                
+        model.addAttribute("creationTime", collection.getCreationTime());
+
         
         
         // Get default mappings from Concepts

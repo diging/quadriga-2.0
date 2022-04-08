@@ -22,10 +22,6 @@ public class Collection {
     private OffsetDateTime creationTime;
     private List<String> apps;
 
-    public Collection() {
-        this.creationTime = OffsetDateTime.now();
-    }
-
     public ObjectId getId() {
         return _id;
     }

@@ -22,7 +22,7 @@ public interface EventGraphService {
      * @param pageable used to specify page number and size per page
      * @return a list of eventGraphs in descending order
      */
-    public List<EventGraph> findLatestEventGraphByCollectionId(ObjectId collectionId);
+    public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId);
     
     /**
      * Groups the event graphs mapped to a collection by source uri and returns the total count. 
