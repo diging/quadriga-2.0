@@ -17,7 +17,6 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import edu.asu.diging.quadriga.config.web.ApiAuthenticationDetailsSource;
 import edu.asu.diging.quadriga.config.web.CitesphereTokenFilter;
-import edu.asu.diging.quadriga.core.citesphere.impl.CitesphereConnectorImpl;
 import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
 
 @Configuration
@@ -86,7 +85,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
         protected void configure(HttpSecurity httpSecurity) throws Exception {
             CitesphereTokenFilter citesphereTokenFilter = new CitesphereTokenFilter("/api/v1/**");
             citesphereTokenFilter.setAuthenticationManager(authenticationManager());
-
+            
             httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                     .antMatcher("/api/v1/**").addFilterBefore(citesphereTokenFilter, BasicAuthenticationFilter.class)
                     .csrf().disable();
@@ -96,10 +95,10 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
         public ApiAuthenticationDetailsSource authenticationDetailsSource() {
             return new ApiAuthenticationDetailsSource();
         }
-
+        
         @Bean
-        public CitesphereConnectorImpl citesphereConnectorImpl() {
-            return new CitesphereConnectorImpl();
+        public CitesphereAuthenticationProvider authenticationProvider() {
+            return new CitesphereAuthenticationProvider();
         }
 
     }
