@@ -87,7 +87,7 @@ public class EventGraphServiceImplTest {
     public void test_findLatestEventGraphByCollectionId_failure() {
         ObjectId collectionObjectId = new ObjectId();
 
-        Mockito.when(eventGraphRepository.findByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
+        Mockito.when(eventGraphRepository.findFirstByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
                 .thenReturn(Optional.ofNullable(null));
 
         Assert.assertNull(eventGraphServiceImpl.findLatestEventGraphByCollectionId(collectionObjectId));

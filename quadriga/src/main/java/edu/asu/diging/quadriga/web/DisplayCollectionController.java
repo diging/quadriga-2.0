@@ -98,53 +98,21 @@ public class DisplayCollectionController {
         List<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId());
 
         long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());
-       
+
         model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
-        
-        // if (!eventGraphsList.isEmpty()) {
-        //     // Latest EventGraph will be for the last network submitted
-        //     EventGraph lastNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
-        //     model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
-        //     model.addAttribute("lastNetworkSubmittedBy", lastNetwork.getAppName());
-            
-            // Every EventGraph with same sourceURI belongs to the same network
-            // Group all EventGraphs with the same sourceURI together to get all networks
-            // Map<String, List<EventGraph>> groupedEventGraphs = groupEventGraphs(eventGraphsList);
-            // List<Network> networks = new ArrayList<>();
-            
-            // groupedEventGraphs.forEach((sourceURI, eventGraphsInNetwork) -> {
-            //     Network network = new Network();
-            //     network.setSourceURI(sourceURI);
-            //     // The EventGraph that has the oldest creation date & time will be the network's creation date & time
-            //     EventGraph firstEventGraph = Collections.min(eventGraphsInNetwork, (eventGraph1, eventGraph2) -> eventGraph1
-            //             .getCreationTime().compareTo(eventGraph2.getCreationTime()));
-            //     network.setCreationTime(firstEventGraph.getCreationTime().atZoneSameInstant(ZoneId.systemDefault()));
-            //     network.setCreator(firstEventGraph.getContext().getCreator());
-            //     network.setAppName(firstEventGraph.getAppName());
-            //     networks.add(network);
-            // });
-            
-            // Sort networks as per the creation time
-            // networks.sort((network1, network2) -> network2.getCreationTime().compareTo(network1.getCreationTime()));
-            
-            // Add pagination to the networks as per determined page number and size
-            // model.addAttribute("networks", networks.subList(page * size, Math.min(networks.size(), page * size + size)));
-           model.addAttribute("networks", eventGraphsList);
-           
-           model.addAttribute("totalPages", eventGraphsList.size() % 10 == 0 ? (eventGraphsList.size()/size) : (eventGraphsList.size()/size + 1));
-            model.addAttribute("pageNumber", page);
-            model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
-        
-       
-        
-   
-        
+
+
+        model.addAttribute("networks", eventGraphsList.subList(page * size, Math.min(eventGraphsList.size(), page * size + size)));
+
+        model.addAttribute("totalPages", eventGraphsList.size() % 10 == 0 ? (eventGraphsList.size()/size) : (eventGraphsList.size()/size + 1));
+        model.addAttribute("pageNumber", page);
+        model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
         model.addAttribute("collectionName", collection.getName());
         model.addAttribute("description", collection.getDescription());
-                
+
         model.addAttribute("creationTime", collection.getCreationTime());
 
-        
+
         
         // Get default mappings from Concepts
         model.addAttribute("defaultMappings", getNumberOfDefaultMappings(collection.getId().toString()));
@@ -177,9 +145,4 @@ public class DisplayCollectionController {
         }
         return 0;
     }
-    
-//    private Map<String, List<EventGraph>> groupEventGraphs(List<EventGraph> eventGraphs) {
-//        return eventGraphs.stream().collect(Collectors.groupingBy(eventGraph -> eventGraph.getContext().getSourceUri()));
-//    }
-
 }
