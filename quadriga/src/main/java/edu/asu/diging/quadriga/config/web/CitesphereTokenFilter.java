@@ -15,8 +15,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereToken;
-
 /**
  * This class acts as a filter to check whether the request has a bearer
  * authorization token in its header and authenticates the request.

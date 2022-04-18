@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.core.model.citesphere;
+package edu.asu.diging.quadriga.core.users;
 
 import java.util.List;
 

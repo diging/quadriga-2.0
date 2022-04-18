@@ -11,9 +11,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.config.web.CitesphereToken;
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereToken;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereUser;
+import edu.asu.diging.quadriga.core.users.CitesphereUser;
 
 public class CitesphereAuthenticationProvider implements AuthenticationProvider {
 

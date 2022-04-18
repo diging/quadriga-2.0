@@ -82,13 +82,13 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
         String appUrl = citesphereBaseUrl + citesphereAppsEndpoint;
 
         try {
-            return restTemplate.exchange(appUrl, HttpMethod.GET, generateCheckTokenEntity(),
+            return restTemplate.exchange(appUrl, HttpMethod.GET, generateTokenEntity(),
                     new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
                     }).getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() == HttpStatus.UNAUTHORIZED) {
                 currentAccessToken = getAccessToken();
-                return restTemplate.exchange(appUrl, HttpMethod.GET, generateCheckTokenEntity(),
+                return restTemplate.exchange(appUrl, HttpMethod.GET, generateTokenEntity(),
                         new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
                         }).getBody();
             }
@@ -117,7 +117,7 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
         TokenInfo tokenInfo = null;
         
         try {
-            tokenInfo = restTemplate.postForObject(checkTokenUrl, generateCheckTokenEntity(), TokenInfo.class, new Object[] {});
+            tokenInfo = restTemplate.postForObject(checkTokenUrl, generateTokenEntity(), TokenInfo.class, new Object[] {});
         } catch (HttpClientErrorException e1) {
             
             if (e1.getStatusCode() == HttpStatus.UNAUTHORIZED) {
@@ -126,7 +126,7 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
                 // so we generate a new access token and we again try to call checkToken URL
                 currentAccessToken = getAccessToken();
                 try {
-                    tokenInfo = restTemplate.postForObject(checkTokenUrl, generateCheckTokenEntity(), TokenInfo.class, new Object[] {});
+                    tokenInfo = restTemplate.postForObject(checkTokenUrl, generateTokenEntity(), TokenInfo.class, new Object[] {});
                 }  catch(HttpClientErrorException e2) {
 
                     //  If we again get an unauthorized exception, we will just throw an OAuthException
@@ -152,7 +152,7 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
      * 
      * @return an HTTP Entity
      */
-    private HttpEntity<String> generateCheckTokenEntity() {
+    private HttpEntity<String> generateTokenEntity() {
         if (currentAccessToken == null) {
             currentAccessToken = getAccessToken();
         }

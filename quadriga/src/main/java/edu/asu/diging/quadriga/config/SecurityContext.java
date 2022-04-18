@@ -19,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import edu.asu.diging.quadriga.config.web.ApiAuthenticationDetailsSource;
 import edu.asu.diging.quadriga.config.web.CitesphereTokenFilter;
 import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
 
@@ -109,11 +108,6 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
             httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                     .antMatcher("/api/v1/**").addFilterBefore(citesphereTokenFilter, BasicAuthenticationFilter.class)
                     .csrf().disable();
-        }
-
-        @Bean
-        public ApiAuthenticationDetailsSource authenticationDetailsSource() {
-            return new ApiAuthenticationDetailsSource();
         }
         
         @Bean

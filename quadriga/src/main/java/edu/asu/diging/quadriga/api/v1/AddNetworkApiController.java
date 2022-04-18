@@ -77,10 +77,7 @@ public class AddNetworkApiController {
         if (quadruple == null) {
             return HttpStatus.NO_CONTENT;
         }
-        
-        // the flow will reach  here  only when the citesphere token is present, valid and active
 
-        // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
         eventGraphs.forEach(e -> {

@@ -1,15 +1,17 @@
-package edu.asu.diging.quadriga.core.model.citesphere;
+package edu.asu.diging.quadriga.config.web;
 
 import java.util.Collection;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+import edu.asu.diging.quadriga.core.users.CitesphereUser;
+
 /**
  * The Citesphere Token that represents the authenticated token received by quadriga
  * and the principal user, authorities that were returned as a response from Citesphere
  * 
- * Based on <a hreaf = "https://github.com/diging/giles-eco-giles-web/blob/develop/giles-eco/src/main/java/edu/asu/diging/gilesecosystem/web/config/CitesphereToken.java"></a>
+ * Based on <a href = "https://github.com/diging/giles-eco-giles-web/blob/develop/giles-eco/src/main/java/edu/asu/diging/gilesecosystem/web/config/CitesphereToken.java"></a>
  *
  */
 public class CitesphereToken extends AbstractAuthenticationToken {
