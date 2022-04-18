@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.client.HttpClientErrorException;
 
-import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.config.web.TokenInfo;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 

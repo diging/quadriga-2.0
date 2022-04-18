@@ -10,7 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.config.web.TokenInfo;
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.Collection;
