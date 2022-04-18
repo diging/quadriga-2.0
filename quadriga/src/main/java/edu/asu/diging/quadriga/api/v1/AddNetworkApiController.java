@@ -78,6 +78,7 @@ public class AddNetworkApiController {
             return HttpStatus.NO_CONTENT;
         }
 
+        // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
         eventGraphs.forEach(e -> {
