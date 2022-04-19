@@ -15,9 +15,7 @@ public class EventGraph {
     private ObjectId collectionId;
     private String submittingApp;
     
-    public EventGraph() {
-   
-    }
+    public EventGraph() {}
 
     public EventGraph(CreationEvent root) {
         this.rootEvent = root;
