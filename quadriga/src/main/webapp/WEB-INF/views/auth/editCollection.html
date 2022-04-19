@@ -1,6 +1,59 @@
 <html layout:decorate="~{layouts/main}">
 <head>
 <title>Quadriga 2.0</title>
+<style> 
+.description {
+    width:95%
+}
+#applicationList {
+    max-height:250px;
+}
+.list-group {
+    overflow: auto;
+}
+</style>
+<script th:inline="javascript">
+$(function() {
+    $("#editCollectionButton").click(function() {
+        var index = 0;
+        $(".app").each(function() {
+            if($(this).find('.checkbox').is(':checked')) {
+                var appClientId = $("<input>");
+                appClientId.attr("type", "hidden");
+                appClientId.attr("name", "apps[" + index + "]");
+                appClientId.attr("value", $(this).attr("data-client-id"));
+                $("#applications").append(appClientId);
+                index++;
+            }
+        });
+    });
+});
+
+$(document).ready(function() {
+	var container = $('#applicationList');
+	var spinner = $('#spinner');
+	var selectedApps = [[${collectionForm.getApps()}]];
+	$.ajax({
+		'url': [[@{|/citesphere/apps|}]],
+		'type': "GET",
+		async: true,
+		'success': function(data) {
+			spinner.hide();
+			data.forEach(function(app) {
+			    var item = $('<div href="#" class="list-group-item app" data-client-id="'+ app.clientId +'">');
+			    item.append('<label for="'+ app.clientId +'"><strong>'+ app.name +'</strong></label><input id="'+ app.clientId +'" title="Select" type="checkbox" class="checkbox pull-right"/><br>');
+			    item.append('<small class=description>'+ app.description +'</small></div>');
+			    item.find(".checkbox").prop("checked", selectedApps != null && selectedApps.includes(app.clientId));
+			    container.append(item);
+			});
+		},
+		'error': function(data) {
+			spinner.hide();
+			container.append('<span class="text-danger">Error fetching apps from citesphere</span>');
+		}
+	});
+});
+</script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -17,8 +70,14 @@
 			<br>
 			<label>Description:</label>
 			<input th:field="*{description}" class="form-control input-sm"></input>
+			<br>
+			<label>Applications:</label> <div id="applications" type="hidden"></div>
+            <span th:if="${#fields.hasErrors('apps')}" class = "error" th:errors=*{apps}></span>
+			<div id="applicationList" class="list-group">
+			    <i id="spinner" class="fas fa-spinner fa-spin"></i>
+			</div>
 			<div style="padding-top: 20px;">
-				<button class="btn primary-btn">Edit Collection</button>
+				<button id="editCollectionButton" class="btn primary-btn">Edit Collection</button>
 			</div>
 		</form>
 

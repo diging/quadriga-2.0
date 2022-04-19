@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
@@ -49,21 +50,19 @@ public class EditCollectionController {
 
         try {
             collection = collectionManager.findCollection(id);
+            if (Objects.nonNull(collection)) {
+                CollectionForm collectionForm = new CollectionForm();
+                collectionForm.setId(id);
+                collectionForm.setName(collection.getName());
+                collectionForm.setDescription(collection.getDescription());
+                collectionForm.setApps(collection.getApps());
+                model.addAttribute("collectionForm", collectionForm);
+                return "auth/editCollection";
+            } else {
+                return "error404Page";
+            }
         } catch (InvalidObjectIdException e) {
             logger.error("Couldn't edit collection", e);
-            return "error404Page";
-        }
-        if (Objects.nonNull(collection)) {
-            
-            CollectionForm collectionForm = new CollectionForm();
-            collectionForm.setId(id);
-            collectionForm.setName(collection.getName());
-            collectionForm.setDescription(collection.getDescription());
-
-            model.addAttribute("collectionForm", collectionForm);
-            
-            return "auth/editCollection";
-        } else {
             return "error404Page";
         }
     }
@@ -85,14 +84,19 @@ public class EditCollectionController {
         }
 
         try {
-            collectionManager.editCollection(id, collectionForm.getName(), collectionForm.getDescription());
+            collectionManager.editCollection(id, collectionForm.getName(), collectionForm.getDescription(), collectionForm.getApps());
             
             redirectAttributes.addFlashAttribute("alert_type", "success");
             redirectAttributes.addFlashAttribute("alert_msg", "Collection has been edited.");
             redirectAttributes.addFlashAttribute("show_alert", true);
             return "redirect:/auth/collections";
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+            logger.error("Couldn't edit collection", e);
             return "error404Page";
+        } catch (CitesphereAppNotFoundException e) {
+            logger.error("Couldn't edit collection", e);
+            bindingResult.rejectValue("apps", "error.collectionForm", e.getMessage());
+            return "auth/editCollection";
         }
        
 

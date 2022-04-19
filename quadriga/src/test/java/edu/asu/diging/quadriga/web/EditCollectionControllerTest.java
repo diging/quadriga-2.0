@@ -1,6 +1,12 @@
 package edu.asu.diging.quadriga.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+<<<<<<< HEAD
+=======
+import java.util.List;
+
+>>>>>>> develop
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +23,7 @@ import org.springframework.validation.MapBindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
+import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
@@ -27,6 +34,7 @@ public class EditCollectionControllerTest {
     
     public static final String COLLECTION_NAME = "Collection name";
     public static final String COLLECTION_DESC = "Collection description";
+    public static final List<String> COLLECTION_APPS = new ArrayList<>();
     public static final String EDIT_COLLECTION = "auth/editCollection";
     public static final String REDIRECT_SHOW_COLLECTION = "redirect:/auth/collections";
     public static final String ERROR_PAGE = "error404Page";
@@ -39,7 +47,7 @@ public class EditCollectionControllerTest {
     
     @Before
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.initMocks(this);        
     }
 
     @Test
@@ -50,6 +58,7 @@ public class EditCollectionControllerTest {
         collection.setId(objectId);
         collection.setName(COLLECTION_NAME);
         collection.setDescription(COLLECTION_DESC);
+        collection.setApps(COLLECTION_APPS);
 
         Mockito.when(collectionManager.findCollection(objectId.toString())).thenReturn(collection);
 
@@ -79,17 +88,18 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_editCollection_success() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_editCollection_success() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
         ObjectId objectId = new ObjectId();
         CollectionForm collectionForm = new CollectionForm();
         collectionForm.setId(objectId.toString());
         collectionForm.setName(COLLECTION_NAME);
         collectionForm.setDescription(COLLECTION_DESC);
+        collectionForm.setApps(COLLECTION_APPS);
         
         RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
         BindingResult bindingResult = new MapBindingResult(new HashMap<String, String>(), null);
 
-        Mockito.when(collectionManager.editCollection(objectId.toString(), COLLECTION_NAME, COLLECTION_DESC)).thenReturn(new Collection());
+        Mockito.when(collectionManager.editCollection(objectId.toString(), COLLECTION_NAME, COLLECTION_DESC, COLLECTION_APPS)).thenReturn(new Collection());
 
         String view = editCollectionController.edit(objectId.toString(), collectionForm, bindingResult,
                 redirectAttributes);
@@ -118,17 +128,18 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_editCollection_nullCollection() throws CollectionNotFoundException, InvalidObjectIdException  {
+    public void test_editCollection_nullCollection() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException  {
         ObjectId objectId = new ObjectId();
         CollectionForm collectionForm = new CollectionForm();
         collectionForm.setId(objectId.toString());
         collectionForm.setName(COLLECTION_NAME);
         collectionForm.setDescription(COLLECTION_DESC);
+        collectionForm.setApps(COLLECTION_APPS);
         
         RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
         BindingResult bindingResult = new MapBindingResult(new HashMap<String, String>(), null);
 
-        Mockito.when(collectionManager.editCollection(objectId.toString(), COLLECTION_NAME, COLLECTION_DESC))
+        Mockito.when(collectionManager.editCollection(objectId.toString(), COLLECTION_NAME, COLLECTION_DESC, COLLECTION_APPS))
             .thenThrow(new CollectionNotFoundException("Collection not found!"));
 
         String view = editCollectionController.edit(objectId.toString(), collectionForm, bindingResult,

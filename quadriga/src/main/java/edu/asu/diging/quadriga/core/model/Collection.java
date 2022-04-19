@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.model;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import javax.persistence.Id;
 
 import org.bson.types.ObjectId;
@@ -14,10 +15,15 @@ public class Collection {
 
     @Id
     private ObjectId _id;
-    
+
     private String name;
     private String description;
     private OffsetDateTime creationTime;
+
+    /**
+     * List of Client Ids for Citesphere Apps which are associated with the collection
+     */
+    private List<String> apps;
 
     public ObjectId getId() {
         return _id;
@@ -42,7 +48,7 @@ public class Collection {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public OffsetDateTime getCreationTime() {
         return creationTime;
     }
@@ -50,4 +56,13 @@ public class Collection {
     public void setCreationTime(OffsetDateTime creationTime) {
         this.creationTime = creationTime;
     }
+
+    public List<String> getApps() {
+        return apps;
+    }
+
+    public void setApps(List<String> apps) {
+        this.apps = apps;
+    }
+
 }
