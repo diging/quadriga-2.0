@@ -68,11 +68,11 @@ public class DisplayCollectionController {
             model.addAttribute("lastNetworkSubmittedAt", latestNetwork.getCreationTime());
             model.addAttribute("lastNetworkSubmittedBy", latestNetwork.getSubmittingApp());
         }
-        
-        model.addAttribute("collectionName", collection.getName());
-        model.addAttribute("description", collection.getDescription());
-                
-        model.addAttribute("creationTime", collection.getCreationTime());
+        model.addAttribute("collection", collection);
+//        model.addAttribute("collectionName", collection.getName());
+//        model.addAttribute("description", collection.getDescription());
+//                
+//        model.addAttribute("creationTime", collection.getCreationTime());
 
         
         long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());

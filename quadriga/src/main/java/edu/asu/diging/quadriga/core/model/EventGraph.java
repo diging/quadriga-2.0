@@ -16,12 +16,11 @@ public class EventGraph {
     private String submittingApp;
     
     public EventGraph() {
-        this.creationTime = OffsetDateTime.now();
+   
     }
 
     public EventGraph(CreationEvent root) {
         this.rootEvent = root;
-        this.creationTime = OffsetDateTime.now();
     }
     
     public ObjectId getId() {

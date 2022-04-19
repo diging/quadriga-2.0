@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.api.v1;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,7 +83,12 @@ public class AddNetworkApiController {
 
         // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
-        List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
+        List<EventGraph> eventGraphs = events.stream().map(e ->  {
+            EventGraph eventGraph = new EventGraph(e);
+            eventGraph.setCreationTime(OffsetDateTime.now());
+            return eventGraph;
+        }).collect(Collectors.toList());
+
         eventGraphs.forEach(e -> {
             e.setCollectionId(new ObjectId(collectionId));
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
