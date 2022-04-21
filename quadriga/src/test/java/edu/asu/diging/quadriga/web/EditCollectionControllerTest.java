@@ -44,7 +44,7 @@ public class EditCollectionControllerTest {
     
     @Before
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this);        
     }
 
     @Test
