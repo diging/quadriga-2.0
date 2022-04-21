@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -27,23 +26,15 @@ import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
 public class SecurityContext extends WebSecurityConfigurerAdapter {
     
     @Configuration
-    @Order(1)
+    @Order(2)
     public static class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         
         @Autowired
         private UserDetailsService userManager;
         
-        @Bean
-        public DaoAuthenticationProvider authProvider() {
-            DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-            authProvider.setUserDetailsService(userManager);
-            authProvider.setPasswordEncoder(passwordEncoder());
-            return authProvider;
-        }
-        
         public void configure(AuthenticationManagerBuilder builder)
                 throws Exception {
-            builder.authenticationProvider(authProvider());
+            builder.userDetailsService(userManager);
         }
 
         @Override
@@ -97,7 +88,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
     }
     
     @Configuration
-    @Order(2)
+    @Order(1)
     public class ApiV1WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
