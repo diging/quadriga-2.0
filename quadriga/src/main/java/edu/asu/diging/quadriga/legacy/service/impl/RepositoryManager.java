@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.legacy.service.impl;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +39,12 @@ public class RepositoryManager implements IRepositoryManager {
 
         creationEventList = xmlToObject.parseXML(xml);
         List<EventGraph> flattenedlist = creationEventList.stream().flatMap(List::stream)
-                .map(event -> new EventGraph(event)).collect(Collectors.toList());
+                .map(event -> {
+                    EventGraph eventGraph = new EventGraph(event);
+                    eventGraph.setCreationTime(OffsetDateTime.now());
+                    return eventGraph;
+                }).collect(Collectors.toList());
+                
         elementDao.saveEventGraphs(flattenedlist);
 
         return creationEventList.stream().flatMap(Collection::stream).map(e -> e.getId()).collect(Collectors.toList());

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -93,7 +94,7 @@ public class MongoConfig {
     enum OffsetDateTimeReadConverter implements Converter<String, OffsetDateTime> {
         INSTANCE;
         public OffsetDateTime convert(String source) {
-            return OffsetDateTime.parse(source);
+            return !StringUtils.isEmpty(source) ? OffsetDateTime.parse(source) : null;
         }
     }
     

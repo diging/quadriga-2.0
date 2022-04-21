@@ -2,7 +2,7 @@
 <head>
 <title>Quadriga 2.0</title>
 <style> 
-.textOfSub {
+.description {
     width:95%
 }
 #applicationList {
@@ -12,7 +12,7 @@
     overflow: auto;
 }
 </style>
-<script type="text/javascript">
+<script th:inline="javascript">
 $(function() {
     $("#editCollectionButton").click(function() {
         var index = 0;
@@ -27,11 +27,31 @@ $(function() {
             }
         });
     });
-    
-    $(".list-group-item").click(function() {
-    	var checkbox = $(this).find(".checkbox");
-    	checkbox.prop("checked", !checkbox.prop("checked"))
-    });
+});
+
+$(document).ready(function() {
+	var container = $('#applicationList');
+	var spinner = $('#spinner');
+	var selectedApps = [[${collectionForm.getApps()}]];
+	$.ajax({
+		'url' : [[@{|/citesphere/apps|}]],
+		'type' : "GET",
+		'async' : true,
+		'success': function(data) {
+			spinner.hide();
+			data.forEach(function(app) {
+			    var item = $('<div href="#" class="list-group-item app" data-client-id="'+ app.clientId +'">');
+			    item.append('<label for="'+ app.clientId +'"><strong>'+ app.name +'</strong></label><input id="'+ app.clientId +'" title="Select" type="checkbox" class="checkbox pull-right"/><br>');
+			    item.append('<small class=description>'+ app.description +'</small></div>');
+			    item.find(".checkbox").prop("checked", selectedApps != null && selectedApps.includes(app.clientId));
+			    container.append(item);
+			});
+		},
+		'error': function(data) {
+			spinner.hide();
+			container.append('<span class="text-danger">Error fetching apps from citesphere</span>');
+		}
+	});
 });
 </script>
 </head>
@@ -52,13 +72,9 @@ $(function() {
 			<input th:field="*{description}" class="form-control input-sm"></input>
 			<br>
 			<label>Applications:</label> <div id="applications" type="hidden"></div>
+            <span th:if="${#fields.hasErrors('apps')}" class = "error" th:errors=*{apps}></span>
 			<div id="applicationList" class="list-group">
-			    <div th:each="entry,loop : ${citesphereApps}">
-			        <div href="#" class="list-group-item app" th:data-client-id="${entry.clientId}">
-			            <strong>[[${entry.name}]]</strong><input title="Select" type="checkbox" class="checkbox pull-right" th:checked="${collectionForm.getApps() != null && collectionForm.getApps().contains(entry.clientId)}"/><br>
-			            <small class=textOfSub>[[${entry.description}]]</small>
-			        </div>
-			    </div>
+			    <i id="spinner" class="fas fa-spinner fa-spin"></i>
 			</div>
 			<div style="padding-top: 20px;">
 				<button id="editCollectionButton" class="btn primary-btn">Edit Collection</button>

@@ -16,6 +16,7 @@ public class Concept {
     
     private String uri;
     private String label;
+    
     private String mappedTripleGroupId;
     
     @Relationship(type = "PREDICATE")

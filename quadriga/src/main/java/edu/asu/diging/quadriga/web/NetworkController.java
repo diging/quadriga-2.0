@@ -45,8 +45,9 @@ public class NetworkController {
 
         model.addAttribute("elements", graphCreationService.createGraph(eventGraphs));
         model.addAttribute("sourceURI", sourceURI);
-        model.addAttribute("creator", eventGraphs.get(0).getContext().getCreator());
-        model.addAttribute("appName", eventGraphs.get(0).getAppName());
+        //TODO: to be uncommented after pulling in story/Q20-19
+//        model.addAttribute("creator", eventGraphs.get(0).getContext().getCreator());
+        model.addAttribute("appName", eventGraphs.get(0).getSubmittingApp());
         model.addAttribute("creationTime", eventGraphs.get(0).getCreationTime());
         return "auth/displayNetwork";
     }

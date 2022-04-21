@@ -15,15 +15,15 @@ public class Collection {
 
     @Id
     private ObjectId _id;
-    
+
     private String name;
     private String description;
     private OffsetDateTime creationTime;
+
+    /**
+     * List of Client Ids for Citesphere Apps which are associated with the collection
+     */
     private List<String> apps;
-    
-    public Collection() {
-        this.creationTime = OffsetDateTime.now();
-    }
 
     public ObjectId getId() {
         return _id;
@@ -48,11 +48,15 @@ public class Collection {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public OffsetDateTime getCreationTime() {
         return creationTime;
     }
-    
+
+    public void setCreationTime(OffsetDateTime creationTime) {
+        this.creationTime = creationTime;
+    }
+
     public List<String> getApps() {
         return apps;
     }

@@ -15,6 +15,7 @@ public class Predicate {
 
     private String relationship;
     private String label;
+    
     private String mappedTripleGroupId;
     
     @StartNode

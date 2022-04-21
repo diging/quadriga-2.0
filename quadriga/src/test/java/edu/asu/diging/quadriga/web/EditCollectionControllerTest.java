@@ -3,7 +3,6 @@ package edu.asu.diging.quadriga.web;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,11 +19,10 @@ import org.springframework.validation.MapBindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
-import edu.asu.diging.quadriga.core.citesphere.impl.CitesphereConnectorImpl;
+import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.impl.CollectionManagerImpl;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
@@ -36,20 +34,16 @@ public class EditCollectionControllerTest {
     public static final String EDIT_COLLECTION = "auth/editCollection";
     public static final String REDIRECT_SHOW_COLLECTION = "redirect:/auth/collections";
     public static final String ERROR_PAGE = "error404Page";
-    public static final List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
 
     @Mock
     private CollectionManagerImpl collectionManager;
-    
-    @Mock
-    private CitesphereConnectorImpl citesphereConnector;
 
     @InjectMocks
     private EditCollectionController editCollectionController;
     
     @Before
     public void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.initMocks(this);        
     }
 
     @Test
@@ -63,7 +57,6 @@ public class EditCollectionControllerTest {
         collection.setApps(COLLECTION_APPS);
 
         Mockito.when(collectionManager.findCollection(objectId.toString())).thenReturn(collection);
-        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
 
         String view = editCollectionController.get(objectId.toString(), model);
 
@@ -81,7 +74,6 @@ public class EditCollectionControllerTest {
         Model model = new ConcurrentModel();
 
         Mockito.when(collectionManager.findCollection(objectId.toString())).thenReturn(null);
-        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
 
         String view = editCollectionController.get(objectId.toString(), model);
 
@@ -92,7 +84,7 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_editCollection_success() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_editCollection_success() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
         ObjectId objectId = new ObjectId();
         CollectionForm collectionForm = new CollectionForm();
         collectionForm.setId(objectId.toString());
@@ -132,7 +124,7 @@ public class EditCollectionControllerTest {
     }
 
     @Test
-    public void test_editCollection_nullCollection() throws CollectionNotFoundException, InvalidObjectIdException  {
+    public void test_editCollection_nullCollection() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException  {
         ObjectId objectId = new ObjectId();
         CollectionForm collectionForm = new CollectionForm();
         collectionForm.setId(objectId.toString());

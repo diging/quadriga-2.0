@@ -39,4 +39,11 @@ public interface EventGraphService {
      * @param sourceURI used for searrching eventGraph
      */
     public List<EventGraph> findEventGraphsBySourceURI(String sourceURI);
+        
+    /**
+     * Groups the event graphs mapped to a collection by source uri and returns the total count. 
+     * @param collectionId
+     * @return total count
+     */
+    public long getNumberOfSubmittedNetworks(ObjectId collectionId);
 }
