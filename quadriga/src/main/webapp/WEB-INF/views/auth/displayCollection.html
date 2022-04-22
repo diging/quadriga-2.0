@@ -17,11 +17,11 @@
 			<h4 th:if="${numberOfSubmittedNetworks eq 0}">No networks submitted to this collection yet!</h4>
 			
 			<p th:if="${numberOfSubmittedNetworks gt 0}">Number of submitted networks: <span th:text="${numberOfSubmittedNetworks}"></span></p>
-			<p th:if="${numberOfSubmittedNetworks gt 0 and lastNetworkSubmittedAt !=null}">
-				Last network submitted time: <span class = "date" th:if="${lastNetworkSubmittedAt} != null" th:text="${#temporals.format(lastNetworkSubmittedAt, 'MM/dd/yyyy hh:mm a')}"></span>
+			<p th:if="${numberOfSubmittedNetworks gt 0 and latestNetwork.creationTime !=null}">
+				Last network submitted time: <span class = "date" th:if="${latestNetwork.creationTime} != null" th:text="${#temporals.format(latestNetwork.creationTime, 'MM/dd/yyyy hh:mm a')}"></span>
 			</p>
-			<p th:if="${numberOfSubmittedNetworks gt 0 and lastNetworkSubmittedBy!=null}">
-				Last network submitted by: <span th:text="${lastNetworkSubmittedBy}"></span>
+			<p th:if="${numberOfSubmittedNetworks gt 0 and latestNetwork.submittingApp!=null}">
+				Last network submitted by: <span th:text="${latestNetwork.submittingApp}"></span>
 			</p>
 		</div>
 		<table class="table table-responsive table-striped table-sm" style="margin-top: 20px">

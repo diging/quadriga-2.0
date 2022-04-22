@@ -61,8 +61,8 @@ public class DisplayCollectionController {
         EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         
         if( latestNetwork!=null ) {
-            model.addAttribute("lastNetworkSubmittedAt", latestNetwork.getCreationTime());
-            model.addAttribute("lastNetworkSubmittedBy", latestNetwork.getSubmittingApp());
+            model.addAttribute("latestNetwork",latestNetwork);
+
         }
         model.addAttribute("collection", collection);
         
