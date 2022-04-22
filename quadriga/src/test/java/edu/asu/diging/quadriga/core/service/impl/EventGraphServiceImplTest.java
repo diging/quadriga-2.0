@@ -126,7 +126,7 @@ public class EventGraphServiceImplTest {
     
     
     @Test
-    public void test_countZeroEventGraphsBy_success() throws InterruptedException {
+    public void test_countEventGraphsBy_zeroEventGraphs() throws InterruptedException {
         ObjectId collectionObjectId = new ObjectId();
 
         Document doc1= new Document();

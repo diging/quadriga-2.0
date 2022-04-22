@@ -39,11 +39,7 @@ public class RepositoryManager implements IRepositoryManager {
 
         creationEventList = xmlToObject.parseXML(xml);
         List<EventGraph> flattenedlist = creationEventList.stream().flatMap(List::stream)
-                .map(event -> {
-                    EventGraph eventGraph = new EventGraph(event);
-                    eventGraph.setCreationTime(OffsetDateTime.now());
-                    return eventGraph;
-                }).collect(Collectors.toList());
+                .map(event ->new EventGraph(event)).collect(Collectors.toList());
                 
         elementDao.saveEventGraphs(flattenedlist);
 

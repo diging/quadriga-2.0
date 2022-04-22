@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 
@@ -31,4 +32,11 @@ public interface EventGraphService {
      * @return total count
      */
     public long getNumberOfSubmittedNetworks(ObjectId collectionId);
+    
+    /**
+     * Maps the network to events and saves it in the database
+     * @param graph
+     * @param collectionId
+     */
+    public void mapNetworkAndSave(Graph graph, String collectionId);
 }

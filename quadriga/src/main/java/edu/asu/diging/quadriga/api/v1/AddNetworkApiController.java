@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
@@ -34,9 +35,6 @@ import edu.asu.diging.quadriga.core.service.NetworkMapper;
 public class AddNetworkApiController {
     
     private Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private NetworkMapper networkMapper;
 
     @Autowired
     private EventGraphService eventGraphService;
@@ -81,29 +79,8 @@ public class AddNetworkApiController {
             return HttpStatus.NOT_FOUND;
         }
 
-        // save network
-        List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
-        List<EventGraph> eventGraphs = events.stream().map(e ->  {
-            EventGraph eventGraph = new EventGraph(e);
-            eventGraph.setCreationTime(OffsetDateTime.now());
-            return eventGraph;
-        }).collect(Collectors.toList());
-
-        eventGraphs.forEach(e -> {
-            e.setCollectionId(new ObjectId(collectionId));
-            e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
-            /**
-             * FIXME:
-             * 
-             * A new story will later be created to get info about just one app from citesphere using OAuth token.
-             * This app's name should be stored in eventGraph instead of the client id
-             * Until that story is done, we need to store clientId instead of appName
-             * We can't store clientId yet as it depends on story Q20-3
-             * After merging story Q20-3, this needs to be changed to tokenInfo.getClientId()
-             */
-            e.setSubmittingApp("AppName");
-        });
-        eventGraphService.saveEventGraphs(eventGraphs);
+        eventGraphService.mapNetworkAndSave(quadruple.getGraph(), collectionId);
+ 
 
         try {
             // The new MappedTripleGroup's Id has to be added to Concepts and Predicates
@@ -115,5 +92,7 @@ public class AddNetworkApiController {
         return HttpStatus.ACCEPTED;
 
     }
+
+  
 
 }
