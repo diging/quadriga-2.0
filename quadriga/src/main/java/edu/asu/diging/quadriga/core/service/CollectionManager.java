@@ -45,4 +45,20 @@ public interface CollectionManager {
      */
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
 
+    /**
+     * This method returns the number of default mappings present in the collection
+     * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
+     * To get this number of default mappings, this method will check how many 'Predicates' have
+     * this mappedTripleGroupId linked to them
+     * This is because every default mapping has one predicate
+     * So, if the MappedTripleGroupId is present on n predicates, this collection
+     * must have n defaultMappings 
+     * 
+     * @param collectionId used to find mappedTripleGroupId
+     * @return the number of default mappings
+     */
+    public int getNumberOfDefaultMappings(String collectionId);
+    
+   
+
 }

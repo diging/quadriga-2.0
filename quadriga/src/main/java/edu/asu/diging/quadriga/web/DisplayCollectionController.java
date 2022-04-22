@@ -37,11 +37,7 @@ public class DisplayCollectionController {
     @Autowired
     private EventGraphService eventGraphService;
     
-    @Autowired
-    private MappedTripleGroupService mappedTripleGroupService;
-    
-    @Autowired
-    private PredicateManager predicateManager;
+   
     
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -75,35 +71,10 @@ public class DisplayCollectionController {
         model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
         
         // Get default mappings from Concepts
-        model.addAttribute("defaultMappings", getNumberOfDefaultMappings(collection.getId().toString()));
+        model.addAttribute("defaultMappings", collectionManager.getNumberOfDefaultMappings(collection.getId().toString()));
         
         return "auth/displayCollection";
         
-    }
-    
-    /**
-     * This method returns the number of default mappings present in the collection
-     * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
-     * To get this number of default mappings, this method will check how many 'Predicates' have
-     * this mappedTripleGroupId linked to them
-     * This is because every default mapping has one predicate
-     * So, if the MappedTripleGroupId is present on n predicates, this collection
-     * must have n defaultMappings 
-     * 
-     * @param collectionId used to find mappedTripleGroupId
-     * @return the number of default mappings
-     */
-    private int getNumberOfDefaultMappings(String collectionId) {
-        try {
-            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
-            if(mappedTripleGroup != null) {    
-                return predicateManager.countPredicatesByMappedTripleGroup(mappedTripleGroup.get_id().toString());
-            }
-
-        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            logger.error("Couldn't find number of default mappings for collection ",e);
-        }
-        return 0;
     }
 
 }
