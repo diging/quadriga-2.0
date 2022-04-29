@@ -92,6 +92,11 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
     public class ApiV1WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.ignoring().antMatchers("/api/v1/collections");
+        }
+        
+        @Override
         protected void configure(HttpSecurity httpSecurity) throws Exception {
             CitesphereTokenFilter citesphereTokenFilter = new CitesphereTokenFilter("/api/v1/**");
             citesphereTokenFilter.setAuthenticationManager(authenticationManager());

@@ -56,6 +56,8 @@ public class CollectionManagerImplTest {
         
         COLLECTION_APPS_2.add("app1");
         COLLECTION_APPS_2.add("app3");
+        
+        EDITED_APPS.add("app4");
 
         CitesphereAppInfo app1 = new CitesphereAppInfo();
         app1.setClientId("app1");
@@ -173,7 +175,7 @@ public class CollectionManagerImplTest {
     public void test_getCollections_success() {
         String clientId = "app1";
         
-        Mockito.when(collectionRepo.findByAppsContaining(clientId)).thenReturn(collections);
+        Mockito.when(collectionRepo.findByAppsIsNullOrAppsContaining(clientId)).thenReturn(collections);
         
         List<Collection> response = managerToTest.getCollections(clientId);
         
@@ -186,7 +188,7 @@ public class CollectionManagerImplTest {
     public void test_getCollections_empty() {
         String clientId = "app5";
         
-        Mockito.when(collectionRepo.findByAppsContaining(clientId)).thenReturn(new ArrayList<>());
+        Mockito.when(collectionRepo.findByAppsIsNullOrAppsContaining(clientId)).thenReturn(new ArrayList<>());
         
         List<Collection> response = managerToTest.getCollections(clientId);
         

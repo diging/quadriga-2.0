@@ -27,26 +27,23 @@ public class GetCollectionsApiController {
 
     @GetMapping("/api/v1/collections")
     ResponseEntity<List<Collection>> getCollections(
-            @RequestHeader(name = "Authorization", required = true) String authHeader) {
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
 
         String token = getTokenFromHeader(authHeader);
         if (token == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(collectionManager.getCollections(null), HttpStatus.OK);
         }
 
         TokenInfo tokenInfo;
         try {
             tokenInfo = citesphereConnector.getTokenInfo(token);
-            // either token info wasn't returned by citesphere or the token has expired
             if (tokenInfo == null || !tokenInfo.isActive()) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
             return new ResponseEntity<>(collectionManager.getCollections(tokenInfo.getClient_id()), HttpStatus.OK);
         } catch (OAuthException e) {
-            // we got unauth twice (using existing access token and re-generated one)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (BadCredentialsException e) {
-            // Token is invalid
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
