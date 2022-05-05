@@ -73,7 +73,7 @@ public class EventGraphServiceImpl implements EventGraphService {
              * We can't store clientId yet as it depends on story Q20-3
              * After merging story Q20-3, this needs to be changed to tokenInfo.getClientId()
              */
-            e.setSubmittingApp("AppName");
+            e.setAppName("AppName");
         });
         saveEventGraphs(eventGraphs); 
     }

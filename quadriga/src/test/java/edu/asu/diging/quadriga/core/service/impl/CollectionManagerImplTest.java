@@ -278,10 +278,6 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
-<<<<<<< HEAD
-
-=======
->>>>>>> 56d66358b6b3e5912e44de70f42ec2e391a5bcb4
         for(String app : updatedCollection.getApps()) {
             Assert.assertTrue(EDITED_APPS.contains(app));
         }
