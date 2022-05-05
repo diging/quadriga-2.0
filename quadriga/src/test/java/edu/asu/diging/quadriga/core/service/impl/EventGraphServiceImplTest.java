@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -56,12 +57,14 @@ public class EventGraphServiceImplTest {
         ObjectId collectionObjectId = new ObjectId();
 
         EventGraph eventGraph1 = new EventGraph();
+        eventGraph1.setCreationTime(OffsetDateTime.now());
         ObjectId eventGraphObjectId1 = new ObjectId();
 
         eventGraph1.setId(eventGraphObjectId1);
         eventGraph1.setCollectionId(collectionObjectId);
 
         EventGraph eventGraph2 = new EventGraph();
+        eventGraph2.setCreationTime(OffsetDateTime.now());
         ObjectId eventGraphObjectId2 = new ObjectId();
 
         eventGraph2.setId(eventGraphObjectId2);
@@ -120,6 +123,7 @@ public class EventGraphServiceImplTest {
         ObjectId collectionObjectId = new ObjectId();
 
         EventGraph eventGraph1 = new EventGraph();
+        eventGraph1.setCreationTime(OffsetDateTime.now());
         ObjectId eventGraphObjectId1 = new ObjectId();
  
 
@@ -127,6 +131,7 @@ public class EventGraphServiceImplTest {
         eventGraph1.setCollectionId(collectionObjectId);
 
         EventGraph eventGraph2 = new EventGraph();
+        eventGraph2.setCreationTime(OffsetDateTime.now());
         ObjectId eventGraphObjectId2 = new ObjectId();
 
         eventGraph2.setId(eventGraphObjectId2);
@@ -150,8 +155,31 @@ public class EventGraphServiceImplTest {
         
         long totalCount = eventGraphDaoImpl.countEventGraphsByCollectionId(collectionObjectId);
 
-        //Both the event graphs belong to the group since the sourceUri is same. 
+        //Both the event graphs belong to the group. 
         Assert.assertEquals(totalCount, 2);
+    }
+    
+    
+    @Test
+    public void test_countEventGraphsBy_zeroEventGraphs() throws InterruptedException {
+        ObjectId collectionObjectId = new ObjectId();
+
+        Document doc1= new Document();
+        doc1.put("total", 0);
+        List<Document> mappedResult= new ArrayList<Document>();
+        mappedResult.add(doc1);
+
+        AggregationResults<Document> aggregationResultsMock = mock(AggregationResults.class);
+                  
+        Mockito.when(aggregationResultsMock.getMappedResults()).thenReturn(mappedResult);
+        Mockito.when(mongoTemplate.getCollectionName(eq(EventGraph.class))).thenReturn("EVENT_GRAPH");
+        Mockito.when(mongoTemplate.aggregate(any(Aggregation.class), any(String.class), eq(Document.class)))
+            .thenReturn(aggregationResultsMock);
+        
+        long totalCount = eventGraphDaoImpl.countEventGraphsByCollectionId(collectionObjectId);
+
+        //Zero event graphs.
+        Assert.assertEquals(totalCount, 0);
     }
 
 }

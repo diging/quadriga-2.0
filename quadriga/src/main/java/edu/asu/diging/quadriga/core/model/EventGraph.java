@@ -15,14 +15,12 @@ public class EventGraph {
     private ObjectId collectionId;
     private String appName;
     private Context context;
-
-    public EventGraph() {
-        this.creationTime = OffsetDateTime.now();
-    }
+    private String submittingApp;
+    
+    public EventGraph() {}
 
     public EventGraph(CreationEvent root) {
         this.rootEvent = root;
-        this.creationTime = OffsetDateTime.now();
     }
     
     public ObjectId getId() {

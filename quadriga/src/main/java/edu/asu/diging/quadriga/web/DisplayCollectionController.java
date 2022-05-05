@@ -48,6 +48,7 @@ public class DisplayCollectionController {
     @Autowired
     private PredicateManager predicateManager;
     
+    
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/auth/collections/{collectionId}", method = RequestMethod.GET)
@@ -84,22 +85,16 @@ public class DisplayCollectionController {
 
         model.addAttribute("size", size);
 
-        EventGraph eventGraph = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
+        EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         
-        if(eventGraph != null) {
-            // We get last network submission info by getting the last EventGraph which will be a part of the last network
-            EventGraph lastNetwork = eventGraph;
-            model.addAttribute("lastNetworkSubmittedAt", lastNetwork.getCreationTime());
-            model.addAttribute("lastNetworkSubmittedBy", lastNetwork.getAppName());
+        model.addAttribute("latestNetwork", latestNetwork);
 
-        }
 
         // Get all EventGraphs for this collection
         List<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId());
 
-        long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());
 
-        model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
+        long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());
 
 
         model.addAttribute("networks", eventGraphsList.subList(page * size, Math.min(eventGraphsList.size(), page * size + size)));
@@ -107,42 +102,14 @@ public class DisplayCollectionController {
         model.addAttribute("totalPages", eventGraphsList.size() % 10 == 0 ? (eventGraphsList.size()/size) : (eventGraphsList.size()/size + 1));
         model.addAttribute("pageNumber", page);
         model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
-        model.addAttribute("collectionName", collection.getName());
-        model.addAttribute("description", collection.getDescription());
-
-        model.addAttribute("creationTime", collection.getCreationTime());
-
-
+        model.addAttribute("collection", collection);
         
         // Get default mappings from Concepts
-        model.addAttribute("defaultMappings", getNumberOfDefaultMappings(collection.getId().toString()));
+        model.addAttribute("defaultMappings", collectionManager.getNumberOfDefaultMappings(collection.getId().toString()));
         
         return "auth/displayCollection";
 
     }
 
-    /**
-     * This method returns the number of default mappings present in the collection
-     * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
-     * To get this number of default mappings, this method will check how many 'Predicates' have
-     * this mappedTripleGroupId linked to them
-     * This is because every default mapping has one predicate
-     * So, if the MappedTripleGroupId is present on n predicates, this collection
-     * must have n defaultMappings 
-     * 
-     * @param collectionId used to find mappedTripleGroupId
-     * @return the number of default mappings
-     */
-    private int getNumberOfDefaultMappings(String collectionId) {
-        try {
-            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
-            if(mappedTripleGroup != null) {    
-                return predicateManager.countPredicatesByMappedTripleGroup(mappedTripleGroup.get_id().toString());
-            }
 
-        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            logger.error("Couldn't find number of default mappings for collection ",e);
-        }
-        return 0;
-    }
 }

@@ -2,12 +2,15 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +20,12 @@ import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
+import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
+import edu.asu.diging.quadriga.core.service.PredicateManager;
 
 @Service
 public class CollectionManagerImpl implements CollectionManager {
@@ -28,6 +35,15 @@ public class CollectionManagerImpl implements CollectionManager {
     
     @Autowired
     private CollectionRepository collectionRepo;
+
+    
+    @Autowired
+    private MappedTripleGroupService mappedTripleGroupService;
+    
+    @Autowired
+    private PredicateManager predicateManager;
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
 
     /* (non-Javadoc)
@@ -42,8 +58,7 @@ public class CollectionManagerImpl implements CollectionManager {
         collection.setApps(apps);
         return collectionRepo.save(collection);
     }
-    
- 
+
     @Override
     public Collection findCollection(String id) throws InvalidObjectIdException {
         try {
@@ -117,5 +132,31 @@ public class CollectionManagerImpl implements CollectionManager {
                 }
             }
         }
+    }
+    
+    /**
+     * This method returns the number of default mappings present in the collection
+     * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
+     * To get this number of default mappings, this method will check how many 'Predicates' have
+     * this mappedTripleGroupId linked to them
+     * This is because every default mapping has one predicate
+     * So, if the MappedTripleGroupId is present on n predicates, this collection
+     * must have n defaultMappings 
+     * 
+     * @param collectionId used to find mappedTripleGroupId
+     * @return the number of default mappings
+     */
+    @Override
+    public int getNumberOfDefaultMappings(String collectionId) {
+        try {
+            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            if(mappedTripleGroup != null) {    
+                return predicateManager.countPredicatesByMappedTripleGroup(mappedTripleGroup.get_id().toString());
+            }
+
+        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+            logger.error("Couldn't find number of default mappings for collection ",e);
+        }
+        return 0;
     }
 }
