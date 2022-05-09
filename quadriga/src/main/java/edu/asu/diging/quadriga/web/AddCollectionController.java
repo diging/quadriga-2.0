@@ -40,22 +40,7 @@ public class AddCollectionController {
     	
     	SimpleUser user = (SimpleUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     	
-    	// Get the set of apps that are accessible by the user
-        Set<String> userAppClientIds = simpleUserAppService.findByUsername(user.getUsername())
-        		.stream()
-        		.map(userApp -> userApp.getAppClientId())
-        		.collect(Collectors.toSet());
-        
-        // Get all apps from citesphere and filter them to only display apps accessible by the user
-        List<CitesphereAppInfo> apps = new ArrayList<>();
-        
-        if(!userAppClientIds.isEmpty()) {
-	        apps = citesphereConnector.getCitesphereApps()
-	        		.stream()
-	        		.filter(app -> userAppClientIds.contains(app.getClientId()))
-	        		.collect(Collectors.toList());
-        }
-        
+    	List<CitesphereAppInfo> apps = simpleUserAppService.getAccessibleCitesphereApps(user);
         
         model.addAttribute("collectionForm", new CollectionForm());
         model.addAttribute("citesphereApps", apps);

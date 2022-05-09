@@ -3,7 +3,9 @@ package edu.asu.diging.quadriga.core.service;
 import java.util.List;
 
 import edu.asu.diging.quadriga.core.exceptions.UserAppNotFoundException;
+import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
+import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 public interface SimpleUserAppService {
 
@@ -42,4 +44,11 @@ public interface SimpleUserAppService {
      */
     public void delete(String username, String appClientId) throws UserAppNotFoundException;
     
+    /**
+     * 
+     * @param user
+     * @return
+     */
+    public List<CitesphereAppInfo> getAccessibleCitesphereApps(SimpleUser user) ;
+
 }
