@@ -13,6 +13,10 @@ public class Collection {
     
     private String name;
     private String description;
+    
+    /**
+     * List of Client Ids for Citesphere Apps which are associated with the collection
+     */
     private List<String> apps;
 
     public ObjectId getId() {

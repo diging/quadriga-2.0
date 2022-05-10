@@ -28,7 +28,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.token.Tokens;
 
-import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.config.web.TokenInfo;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 
 @RunWith(MockitoJUnitRunner.class)

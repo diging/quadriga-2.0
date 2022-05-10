@@ -3,6 +3,9 @@ package edu.asu.diging.quadriga.api.v1;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,24 +19,27 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
-import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
-import edu.asu.diging.quadriga.core.citesphere.impl.CitesphereConnectorImpl;
+import edu.asu.diging.quadriga.config.web.TokenInfo;
+import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
-import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
-import edu.asu.diging.quadriga.core.model.MappedCollection;
+import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
-import edu.asu.diging.quadriga.core.service.MappedCollectionService;
+import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
 
 @Controller
 public class AddNetworkApiController {
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private NetworkMapper networkMapper;
@@ -45,13 +51,13 @@ public class AddNetworkApiController {
     private MappedTripleService mappedTripleService;
 
     @Autowired
-    private CitesphereConnectorImpl citesphereConnectorImpl;
+    private MappedTripleGroupService mappedTripleGroupService;
 
     @Autowired
     private CollectionManager collectionManager;
-
+    
     @Autowired
-    private MappedCollectionService mappedCollectionService;
+    private CitesphereConnector citesphereConnector;
 
     /**
      * The method parse given Json from the post request body and add Network
@@ -68,13 +74,17 @@ public class AddNetworkApiController {
     public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
 
-        MappedCollection mappedCollection;
+        // Every time a new network is submitted, the triple in that network has to be added as the
+        // default MappedTripleGroup for given collectionId
+        MappedTripleGroup mappedTripleGroup;
         try {
-            mappedCollection = mappedCollectionService.findOrAddMappedCollectionByCollectionId(collectionId);
-            if (mappedCollection == null) {
+            mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            if(mappedTripleGroup == null) {
+                logger.error("Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
                 return HttpStatus.NOT_FOUND;
             }
-        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+        } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
+            logger.error("Couldn't submit network", e);
             return HttpStatus.NOT_FOUND;
         }
 
@@ -86,7 +96,7 @@ public class AddNetworkApiController {
         TokenInfo tokenInfo = null;
         try {
             if (token != null) {
-                tokenInfo = citesphereConnectorImpl.getTokenInfo(token);
+                tokenInfo = citesphereConnector.getTokenInfo(token);
             }
             Collection collection = collectionManager.findCollection(collectionId);
             // either token info wasn't returned by citesphere or the token has expired
@@ -108,19 +118,18 @@ public class AddNetworkApiController {
             return HttpStatus.NOT_FOUND;
         }
 
-        // the flow will reach here only when token is either present, valid and active or not required
-
         // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
         eventGraphs.forEach(e -> {
-            e.setCollectionId(mappedCollection.getCollectionId());
+            e.setCollectionId(new ObjectId(collectionId));
             e.setDefaultMapping(quadruple.getGraph().getMetadata().getDefaultMapping());
         });
         eventGraphService.saveEventGraphs(eventGraphs);
 
         try {
-            mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedCollection);
+            // The new MappedTripleGroup's Id has to be added to Concepts and Predicates
+            mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedTripleGroup);
         } catch (NodeNotFoundException e1) {
             return HttpStatus.BAD_REQUEST;
         }
@@ -128,16 +137,7 @@ public class AddNetworkApiController {
         return HttpStatus.ACCEPTED;
 
     }
-
-    /**
-     * This method will check and get a token that should be present in the
-     * Authorization Header of the add network request
-     * 
-     * The token will be in the form of "Bearer xxxxxxx"
-     * 
-     * @param authHeader is the header to be checked
-     * @return
-     */
+    
     private String getTokenFromHeader(String authHeader) {
         String token;
 
