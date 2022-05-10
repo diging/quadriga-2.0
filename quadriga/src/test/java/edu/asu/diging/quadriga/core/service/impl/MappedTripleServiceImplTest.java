@@ -29,7 +29,7 @@ public class MappedTripleServiceImplTest {
     @Mock
     private PredicateRepository predicateRepo;
 
-    private String collectionId;
+    private String mappedTripleGroupId;
     private Concept source;
     private Concept target;
     private Predicate predicate;
@@ -46,22 +46,22 @@ public class MappedTripleServiceImplTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        collectionId = "123456";
+        mappedTripleGroupId = "123456";
 
         source = new Concept();
-        source.setMappedCollectionId(collectionId);
+        source.setMappedTripleGroupId(mappedTripleGroupId);
         source.setLabel(SOURCE_LABEL);
         source.setUri(SOURCE_URI);
 
         target = new Concept();
-        target.setMappedCollectionId(collectionId);
+        target.setMappedTripleGroupId(mappedTripleGroupId);
         target.setLabel(TARGET_LABEL);
         target.setUri(TARGET_URI);
 
         predicate = new Predicate();
         predicate.setLabel(PREDICATE_LABEL);
         predicate.setRelationship(PREDICATE_URI);
-        predicate.setMappedCollectionId(collectionId);
+        predicate.setMappedTripleGroupId(mappedTripleGroupId);
         predicate.setSource(source);
         predicate.setTarget(target);
 
@@ -71,9 +71,9 @@ public class MappedTripleServiceImplTest {
 
     @Test
     public void test_getMappedTriples_success() {
-        Mockito.when(predicateRepo.findByMappedCollectionId(collectionId)).thenReturn(collectionPredicates);
+        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId)).thenReturn(collectionPredicates);
 
-        List<Triple> triples = serviceToTest.getMappedTriples(collectionId);
+        List<Triple> triples = serviceToTest.getMappedTriples(mappedTripleGroupId);
         Assert.assertEquals(1, triples.size());
         Triple triple = triples.get(0);
 
@@ -92,9 +92,9 @@ public class MappedTripleServiceImplTest {
 
     @Test
     public void test_getMappedTriples_empty() {
-        Mockito.when(predicateRepo.findByMappedCollectionId(collectionId)).thenReturn(new ArrayList<>());
+        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId)).thenReturn(new ArrayList<>());
 
-        List<Triple> triples = serviceToTest.getMappedTriples(collectionId);
+        List<Triple> triples = serviceToTest.getMappedTriples(mappedTripleGroupId);
         Assert.assertEquals(0, triples.size());
     }
 }

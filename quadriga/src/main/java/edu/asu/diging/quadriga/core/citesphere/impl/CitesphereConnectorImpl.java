@@ -8,6 +8,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -32,7 +33,7 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 
-import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.config.web.TokenInfo;
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
@@ -76,17 +77,18 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
      * @see edu.asu.diging.quadriga.core.citesphere.ICitesphereConnector#getCitesphereApps()
      */
     @Override
+    @Cacheable(value = "citesphereApps")
     public List<CitesphereAppInfo> getCitesphereApps() throws HttpClientErrorException {
         String appUrl = citesphereBaseUrl + citesphereAppsEndpoint;
 
         try {
-            return restTemplate.exchange(appUrl, HttpMethod.GET, generateCheckTokenEntity(),
+            return restTemplate.exchange(appUrl, HttpMethod.GET, generateTokenEntity(),
                     new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
                     }).getBody();
         } catch (HttpClientErrorException ex) {
             if (ex.getStatusCode() == HttpStatus.UNAUTHORIZED) {
                 currentAccessToken = getAccessToken();
-                return restTemplate.exchange(appUrl, HttpMethod.GET, generateCheckTokenEntity(),
+                return restTemplate.exchange(appUrl, HttpMethod.GET, generateTokenEntity(),
                         new ParameterizedTypeReference<List<CitesphereAppInfo>>() {
                         }).getBody();
             }
@@ -94,18 +96,8 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
         }
     }
     
-    /**
-     * This method accepts a token from Vogon and sends it to Citesphere's "check_token"
-     * end point for token validation using an access token
-     * This access token is used by quadriga to talk to citesphere
-     * 
-     * If Citesphere responds with unauthorized HTTP exception, we try to re-generate
-     * the access token, in case it is expired.
-     * 
-     * @param token is the one we receive from Vogon to check the validity
-     * @return the token response received from citesphere
-     * @throws BadCredentialsException if token/access token is invalid
-     * @throws OAuthException if request is unauthorized because of the token/access token
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.citesphere.CitesphereConnector#getTokenInfo(java.lang.String)
      */
     @Override
     public TokenInfo getTokenInfo(String token) throws BadCredentialsException, OAuthException {
@@ -115,7 +107,7 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
         TokenInfo tokenInfo = null;
         
         try {
-            tokenInfo = restTemplate.postForObject(checkTokenUrl, generateCheckTokenEntity(), TokenInfo.class, new Object[] {});
+            tokenInfo = restTemplate.postForObject(checkTokenUrl, generateTokenEntity(), TokenInfo.class, new Object[] {});
         } catch (HttpClientErrorException e1) {
             
             if (e1.getStatusCode() == HttpStatus.UNAUTHORIZED) {
@@ -124,7 +116,7 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
                 // so we generate a new access token and we again try to call checkToken URL
                 currentAccessToken = getAccessToken();
                 try {
-                    tokenInfo = restTemplate.postForObject(checkTokenUrl, generateCheckTokenEntity(), TokenInfo.class, new Object[] {});
+                    tokenInfo = restTemplate.postForObject(checkTokenUrl, generateTokenEntity(), TokenInfo.class, new Object[] {});
                 }  catch(HttpClientErrorException e2) {
 
                     //  If we again get an unauthorized exception, we will just throw an OAuthException
@@ -150,7 +142,7 @@ public class CitesphereConnectorImpl implements CitesphereConnector {
      * 
      * @return an HTTP Entity
      */
-    private HttpEntity<String> generateCheckTokenEntity() {
+    private HttpEntity<String> generateTokenEntity() {
         if (currentAccessToken == null) {
             currentAccessToken = getAccessToken();
         }

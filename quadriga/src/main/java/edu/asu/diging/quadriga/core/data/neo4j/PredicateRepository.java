@@ -8,5 +8,5 @@ import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 
 public interface PredicateRepository extends Neo4jRepository<Predicate, Long> {
 
-    List<Predicate> findByMappedCollectionId(String mappedCollectionId);
+    List<Predicate> findByMappedTripleGroupId(String mappedTripleGroupId);
 }

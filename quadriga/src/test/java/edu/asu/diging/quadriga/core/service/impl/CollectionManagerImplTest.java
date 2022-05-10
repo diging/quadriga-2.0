@@ -15,10 +15,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
+import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 
 public class CollectionManagerImplTest {
     
@@ -29,15 +32,32 @@ public class CollectionManagerImplTest {
     public static final String EDITED_NAME = "Edited name";
     public static final String EDITED_DESC = "Edited description";
     public static final List<String> EDITED_APPS = new ArrayList<>();
+    public static final List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
+    
     @Mock
     private CollectionRepository collectionRepo;
 
     @InjectMocks
     private CollectionManagerImpl managerToTest;
+    
+    @Mock
+    private CitesphereConnector citesphereConnector;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        
+        CitesphereAppInfo app1 = new CitesphereAppInfo();
+        app1.setClientId("app1");
+        citesphereApps.add(app1);
+        
+        CitesphereAppInfo app2 = new CitesphereAppInfo();
+        app2.setClientId("app2");
+        citesphereApps.add(app2);
+        
+        CitesphereAppInfo app3 = new CitesphereAppInfo();
+        app3.setClientId("app3");
+        citesphereApps.add(app3);
         
         COLLECTION_APPS.add("app1");
         COLLECTION_APPS.add("app2");
@@ -47,7 +67,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_addCollection_success() {
+    public void test_addCollection_success() throws CitesphereAppNotFoundException {
 
         String name = "name";
         String desc = "description";
@@ -57,6 +77,8 @@ public class CollectionManagerImplTest {
         savedCollection.setName(name);
         savedCollection.setDescription(desc);
         savedCollection.setApps(COLLECTION_APPS);
+        
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
@@ -134,7 +156,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_success() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_editCollection_success() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
@@ -155,6 +177,7 @@ public class CollectionManagerImplTest {
         editedCollection.setDescription(editedDescription);
         editedCollection.setApps(editedApps);
 
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
@@ -174,7 +197,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_nullDescription() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_editCollection_nullDescription() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
@@ -195,6 +218,7 @@ public class CollectionManagerImplTest {
         editedCollection.setDescription(editedDescription);
         editedCollection.setApps(editedApps);
 
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
@@ -214,7 +238,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_nullName() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_editCollection_nullName() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
@@ -223,6 +247,7 @@ public class CollectionManagerImplTest {
         existingCollection.setDescription(COLLECTION_DESC);
         existingCollection.setApps(COLLECTION_APPS);
 
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = null;
@@ -254,7 +279,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_nullNameAndDescription() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_editCollection_nullNameAndDescription() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
@@ -263,6 +288,7 @@ public class CollectionManagerImplTest {
         existingCollection.setDescription(COLLECTION_DESC);
         existingCollection.setApps(COLLECTION_APPS);
 
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = null;
@@ -294,7 +320,7 @@ public class CollectionManagerImplTest {
     }
 
     @Test
-    public void test_editCollection_blankNameAndDescription() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_editCollection_blankNameAndDescription() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
 
         Collection existingCollection = new Collection();
         ObjectId id = new ObjectId();
@@ -303,6 +329,7 @@ public class CollectionManagerImplTest {
         existingCollection.setDescription(COLLECTION_DESC);
         existingCollection.setApps(COLLECTION_APPS);
 
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = BLANK;
@@ -336,11 +363,29 @@ public class CollectionManagerImplTest {
     @Test
     public void test_editCollection_noCollectionFoundForId() throws CollectionNotFoundException {
         ObjectId objectId = new ObjectId();
+        
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.findById(objectId)).thenReturn(Optional.ofNullable(null));
 
         Assert.assertThrows(CollectionNotFoundException.class,
                 ()  -> managerToTest.editCollection(objectId.toString(), EDITED_NAME, EDITED_DESC, EDITED_APPS));
 
+    }
+    
+    @Test(expected = CitesphereAppNotFoundException.class)
+    public void test_editCollection_noAppFoundForClientId() throws CollectionNotFoundException, InvalidObjectIdException, CitesphereAppNotFoundException {
+        Collection existingCollection = new Collection();
+        ObjectId id = new ObjectId();
+        existingCollection.setId(id);
+        existingCollection.setName(COLLECTION_NAME);
+        existingCollection.setDescription(COLLECTION_DESC);
+        existingCollection.setApps(COLLECTION_APPS);
+
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
+
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(new ArrayList<>());
+
+        managerToTest.editCollection(id.toString(), EDITED_NAME, EDITED_DESC, new ArrayList<>(EDITED_APPS));
     }
 
 }

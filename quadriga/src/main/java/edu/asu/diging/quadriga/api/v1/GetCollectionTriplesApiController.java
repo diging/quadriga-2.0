@@ -16,15 +16,16 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.asu.diging.quadriga.api.v1.model.TokenInfo;
+import edu.asu.diging.quadriga.config.web.TokenInfo;
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.exceptions.OAuthException;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.quadriga.core.model.MappedCollection;
+import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
-import edu.asu.diging.quadriga.core.service.MappedCollectionService;
+import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 
 @Controller
@@ -42,7 +43,7 @@ public class GetCollectionTriplesApiController {
     private MappedTripleService mappedTripleService;
 
     @Autowired
-    private MappedCollectionService mappedCollectionService;
+    private MappedTripleGroupService mappedTripleGroupService;
 
     @GetMapping(value = "/api/v1/collection/{collectionId}/triples", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getTriples(@PathVariable("collectionId") String collectionId,
@@ -50,7 +51,6 @@ public class GetCollectionTriplesApiController {
         try {
 
             Collection collection = collectionManager.findCollection(collectionId);
-            MappedCollection mappedCollection;
 
             if (collection.getApps() != null && !collection.getApps().isEmpty()) {
 
@@ -63,13 +63,17 @@ public class GetCollectionTriplesApiController {
                 }
             }
 
-            mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId);
+            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
+                if(mappedTripleGroup == null) {
+                    logger.error("Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.setSerializationInclusion(Include.NON_NULL);
 
             return new ResponseEntity<>(mapper.writeValueAsString(
-                    mappedTripleService.getMappedTriples(mappedCollection.get_id().toString())), HttpStatus.OK);
+                    mappedTripleService.getMappedTriples(mappedTripleGroup.get_id().toString())), HttpStatus.OK);
 
         } catch (OAuthException e) {
             // we got unauth twice (using existing access token and re-generated one)
