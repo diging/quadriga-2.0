@@ -59,16 +59,6 @@ public class AddNetworkApiController {
     @Autowired
     private CitesphereConnector citesphereConnector;
 
-    /**
-     * The method parse given Json from the post request body and add Network
-     * instance to the database
-     * 
-     * @param request
-     * @param response
-     * @param xml
-     * @param accept
-     * @return
-     */
     @ResponseBody
     @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId,
@@ -99,26 +89,19 @@ public class AddNetworkApiController {
                 tokenInfo = citesphereConnector.getTokenInfo(token);
             }
             Collection collection = collectionManager.findCollection(collectionId);
-            // either token info wasn't returned by citesphere or the token has expired
             if (collection.getApps() != null && !collection.getApps().isEmpty() && (tokenInfo == null
                     || !tokenInfo.isActive() || !collection.getApps().contains(tokenInfo.getClient_id()))) {
                 return HttpStatus.UNAUTHORIZED;
             }
 
         } catch (OAuthException e) {
-
-            // we got unauth twice (using existing access token and re-generated one)
             return HttpStatus.UNAUTHORIZED;
         } catch (BadCredentialsException e) {
-
-            // Token is invalid
             return HttpStatus.FORBIDDEN;
         } catch (InvalidObjectIdException e) {
-            // No such collection found
             return HttpStatus.NOT_FOUND;
         }
 
-        // save network
         List<CreationEvent> events = networkMapper.mapNetworkToEvents(quadruple.getGraph());
         List<EventGraph> eventGraphs = events.stream().map(e -> new EventGraph(e)).collect(Collectors.toList());
         eventGraphs.forEach(e -> {
