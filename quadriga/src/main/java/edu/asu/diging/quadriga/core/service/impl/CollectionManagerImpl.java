@@ -53,7 +53,7 @@ public class CollectionManagerImpl implements CollectionManager {
      */
     @Override
     public List<Collection> getCollections(String app) {
-        return collectionRepo.findByAppsIsNullOrAppsContaining(app);
+        return collectionRepo.findByAppsContaining(app);
     }
 
     /* (non-Javadoc)

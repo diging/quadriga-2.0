@@ -175,7 +175,7 @@ public class CollectionManagerImplTest {
     public void test_getCollections_success() {
         String clientId = "app1";
         
-        Mockito.when(collectionRepo.findByAppsIsNullOrAppsContaining(clientId)).thenReturn(collections);
+        Mockito.when(collectionRepo.findByAppsContaining(clientId)).thenReturn(collections);
         
         List<Collection> response = managerToTest.getCollections(clientId);
         
@@ -188,7 +188,7 @@ public class CollectionManagerImplTest {
     public void test_getCollections_empty() {
         String clientId = "app5";
         
-        Mockito.when(collectionRepo.findByAppsIsNullOrAppsContaining(clientId)).thenReturn(new ArrayList<>());
+        Mockito.when(collectionRepo.findByAppsContaining(clientId)).thenReturn(new ArrayList<>());
         
         List<Collection> response = managerToTest.getCollections(clientId);
         
