@@ -90,11 +90,6 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
     @Configuration
     @Order(1)
     public class ApiV1WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-        @Override
-        public void configure(WebSecurity web) throws Exception {
-            web.ignoring().antMatchers("/api/v1/collection/*/network/add");
-        }
         
         @Override
         protected void configure(HttpSecurity httpSecurity) throws Exception {
