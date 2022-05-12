@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.web;
 import java.util.List;
 
 import org.apache.commons.validator.routines.UrlValidator;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,22 +30,24 @@ public class NetworkController {
 
     @RequestMapping(value = "/auth/collections/{collectionId}/network/")
     public String get(@PathVariable String collectionId,
-            @RequestParam(value = "sourceURI", required = true) String sourceURI, Model model) {
+            @RequestParam(value = "sourceUri", required = true) String sourceUri, Model model) {
 
-        if (!isSourceUriValid(sourceURI)) {
-            logger.error("Invalid sourceUri: " + sourceURI);
+        if (!isSourceUriValid(sourceUri)) {
+            logger.error("Invalid sourceUri: " + sourceUri);
             return "error404Page";
         }
 
-        List<EventGraph> eventGraphs = eventGraphService.findEventGraphsBySourceURI(sourceURI);
-
+        // List<EventGraph> eventGraphs = eventGraphService.findEventGraphsBySourceURI(sourceURI);
+        List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(new ObjectId(collectionId));
+        
         if (eventGraphs == null) {
-            logger.error("No network found for sourceUri: " + sourceURI);
+            logger.error("No network found for sourceUri: " + sourceUri);
             return "error404Page";
         }
 
         model.addAttribute("elements", graphCreationService.createGraph(eventGraphs));
-        model.addAttribute("sourceURI", sourceURI);
+        model.addAttribute("sourceURI", sourceUri);
+
         model.addAttribute("creator", eventGraphs.get(0).getContext().getCreator());
         model.addAttribute("appName", eventGraphs.get(0).getAppName());
         model.addAttribute("creationTime", eventGraphs.get(0).getCreationTime());

@@ -3,6 +3,8 @@ package edu.asu.diging.quadriga.core.service;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+
+import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 
@@ -22,21 +24,26 @@ public interface EventGraphService {
      * @param pageable used to specify page number and size per page
      * @return a list of eventGraphs in descending order
      */
-    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId);
-    
-    /**
-     * Finds the latest eventGraph mapped to a collection in the descending order of creation time
-     * 
-     * @param collectionId is the id used to finds the latest eventGraph
-     * @return the latest eventGraph
-     * @throws InvalidObjectIdException if the collectionId contains non-hexadecimal characters
-     */
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId);
     
     /**
-     * Finds event graphs by sourceURI
-     * 
-     * @param sourceURI used for searrching eventGraph
+     * Groups the event graphs mapped to a collection by source uri and returns the total count. 
+     * @param collectionId
+     * @return total count
      */
-    public List<EventGraph> findEventGraphsBySourceURI(String sourceURI);
+    public long getNumberOfSubmittedNetworks(ObjectId collectionId);
+
+    /**
+     * Returns all event graphs by collection id
+     * @param collectionId
+     * @return
+     */
+    public List<EventGraph>  findAllEventGraphsByCollectionId(ObjectId collectionId);
+    
+    /**
+     * Maps the network to events and saves it in the database
+     * @param graph
+     * @param collectionId
+     */
+    public void mapNetworkAndSave(Graph graph, String collectionId);
 }

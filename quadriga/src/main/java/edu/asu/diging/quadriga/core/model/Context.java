@@ -1,14 +1,14 @@
-package edu.asu.diging.quadriga.api.v1.model;
+package edu.asu.diging.quadriga.core.model;
 
 public class Context {
 
-	private String creator;
+    private String creator;
 
-	private String creationTime;
+    private String creationTime;
 
-	private String creationPlace;
+    private String creationPlace;
 
-	private String sourceUri;
+    private String sourceUri;
 
     public String getCreator() {
         return creator;

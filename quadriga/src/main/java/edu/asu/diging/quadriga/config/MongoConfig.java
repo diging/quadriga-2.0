@@ -3,8 +3,12 @@ package edu.asu.diging.quadriga.config;
 import java.net.UnknownHostException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,9 +19,11 @@ import org.springframework.data.convert.WritingConverter;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
+import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
+import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
+import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.stereotype.Component;
-
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.MongoCredential;
@@ -68,25 +74,34 @@ public class MongoConfig {
     }
 
     @Bean
-    public MongoTemplate mongoTemplate() throws UnknownHostException {
-        return new MongoTemplate(mongoDbFactory());
+    public MongoTemplate mongoTemplate(@Qualifier("mongoDbFactory") MongoDatabaseFactory mongoDbFactory) throws UnknownHostException {
+        MappingMongoConverter converter = new MappingMongoConverter(
+                new DefaultDbRefResolver(mongoDbFactory), new MongoMappingContext());
+        converter.setCustomConversions(customConversions());
+        converter.afterPropertiesSet();
+        return new MongoTemplate(mongoDbFactory, converter);
     }
     
     @WritingConverter
-    @Component
-    class OffsetDateTimeWriteConverter implements Converter<OffsetDateTime, String> {
-        @Override
+    enum OffsetDateTimeWriteConverter implements Converter<OffsetDateTime, String> {
+        INSTANCE;
         public String convert(OffsetDateTime source) {
             return source.toInstant().atZone(ZoneOffset.UTC).toString();
         }
     }
 
     @ReadingConverter
-    @Component
-    class OffsetDateTimeReadConverter implements Converter<String, OffsetDateTime> {
-        @Override
+    enum OffsetDateTimeReadConverter implements Converter<String, OffsetDateTime> {
+        INSTANCE;
         public OffsetDateTime convert(String source) {
-            return OffsetDateTime.parse(source);
+            return !StringUtils.isEmpty(source) ? OffsetDateTime.parse(source) : null;
         }
+    }
+    
+    public MongoCustomConversions customConversions() {
+        List<Converter<?, ?>> converters = new ArrayList<>();
+        converters.add(OffsetDateTimeWriteConverter.INSTANCE);
+        converters.add(OffsetDateTimeReadConverter.INSTANCE);
+        return new MongoCustomConversions(converters);
     }
 }

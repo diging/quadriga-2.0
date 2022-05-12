@@ -11,15 +11,17 @@
 		<h2><span th:text="${collection.name}"></span></h2>
 		<h4>Description: <span th:text="${collection.description}"></span></h4>
 		<div style="margin-top: 20px">
-			<p>Collection creation time: <span th:text="${#temporals.format(collection.creationTime, 'MM/dd/yyyy hh:mm a')}"></span></p>
+				
+	   		<p th:if="${collection.creationTime != null}" >Collection creation time: <span class = "date"  th:text="${#temporals.format(collection.creationTime, 'MM/dd/yyyy hh:mm a ')}"></span></p> 
+ 		
 			<h4 th:if="${numberOfSubmittedNetworks eq 0}">No networks submitted to this collection yet!</h4>
 			
 			<p th:if="${numberOfSubmittedNetworks gt 0}">Number of submitted networks: <span th:text="${numberOfSubmittedNetworks}"></span></p>
-			<p th:if="${numberOfSubmittedNetworks gt 0}">
-				Last network submitted time: <span th:text="${#temporals.format(lastNetworkSubmittedAt, 'MM/dd/yyyy hh:mm a')}"></span>
+			<p th:if="${numberOfSubmittedNetworks gt 0 and latestNetwork.creationTime !=null}">
+				Last network submitted time: <span class = "date" th:if="${latestNetwork.creationTime} != null" th:text="${#temporals.format(latestNetwork.creationTime, 'MM/dd/yyyy hh:mm a')}"></span>
 			</p>
-			<p th:if="${numberOfSubmittedNetworks gt 0}">
-				Last network submitted by: <span th:text="${lastNetworkSubmittedBy}"></span>
+			<p th:if="${numberOfSubmittedNetworks gt 0 and latestNetwork.submittingApp!=null}">
+				Last network submitted by: <span th:text="${latestNetwork.submittingApp}"></span>
 			</p>
 		</div>
 		
@@ -39,7 +41,7 @@
 					<td><b>Default Mappings</b></td>
 					<td><b><span th:text="${defaultMappings}"></span></b></td>
 				</tr>
-				<!-- Once the functionality to add other mappings is added, all exterrnal mappings should be listed here -->
+				<!-- Once the functionality to add other mappings is added, all external mappings should be listed here -->
 			</tbody>
 		</table>
 		
@@ -59,14 +61,14 @@
 		    	<th scope="row" th:text="${stat.count + pageNumber * size}"></th>
 		    	<td>
 		    		<span>
-						Graph for text submitted by <span  th:text="${network.creator}"></span>
+						Graph for text submitted by <span  th:text="${network.context.creator}"></span>
 						from <span th:text="${network.appName}"></span>
 					</span>
 				</td>
 				<td><span th:text="${#temporals.format(network.creationTime, 'MM/dd/yyyy hh:mm a')}"></span></td>
 				<td>
-					<a th:href="@{/auth/collections/{collectionid}/network/(collectionid=${collection.id}, sourceURI=${network.sourceURI})}">
-						Visualize,
+					<a th:href="@{/auth/collections/{collectionid}/network/(collectionid=${collection.id}, sourceUri=${network.context.sourceUri})}">
+						Visualize
 					</a>
                     <a th:href="@{/auth/collections/{collectionid}/explore/(collectionid=${collection.id})}">
                         Explore

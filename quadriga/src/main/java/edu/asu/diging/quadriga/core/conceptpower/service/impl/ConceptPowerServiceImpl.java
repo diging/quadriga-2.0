@@ -80,12 +80,56 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         // Before returning, we need to check if we've updated ConceptCache or not
         // If no diff was found, conceptCache won't be updated and 'lastUpdated' would stay the same
         boolean updated = false;
+        
+        updated = updateConceptCache(conceptCache, conceptCacheOld, uri);
+        
+        updated = updated || updateConceptType(conceptCache,conceptCacheOld);
+       
+        return updated ? conceptCache : conceptCacheOld;
+    }
 
+    /**
+     * Updates Concept Type
+     * @param conceptCache
+     * @param conceptCacheOld
+     * @return
+     */
+    private boolean updateConceptType(ConceptCache conceptCache, ConceptCache conceptCacheOld) {
+        if(conceptCache != null && conceptCache.getConceptType() != null) {
+
+            ConceptType conceptType = conceptCache.getConceptType();
+            ConceptType conceptTypeOld = null;
+
+            if(conceptCacheOld != null) {
+                conceptTypeOld = conceptCacheOld.getConceptType();
+            }
+
+            // ConceptPower returned a concept type and either no conceptType entry exists in the DB
+            // or if one exists, it is different from the current conceptType entry
+            if (conceptType != null && (conceptTypeOld == null || conceptTypeOld.compareTo(conceptType) != 0)) {
+               
+                conceptCache.setConceptType(conceptType);
+                conceptTypeService.saveConceptType(conceptType);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Updates Concept cache
+     * @param conceptCache
+     * @param conceptCacheOld
+     * @param uri
+     * @return
+     */
+    private boolean updateConceptCache(ConceptCache conceptCache, ConceptCache conceptCacheOld, String uri) {
+        
         // ConceptPower returned a concept and either no conceptCache entry exists in the DB
         // or if one exists, it is different from the current conceptCache entry
         if (conceptCache != null && (conceptCacheOld == null || conceptCacheOld.compareTo(conceptCache) != 0)) {
             
-            updated = true;
+           
             
             conceptCacheService.saveConceptCache(conceptCache);
             
@@ -94,34 +138,16 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
                             .stream()
                             .filter(alternativeUri -> alternativeUri != null)
                             .filter(nonNullAlternativeUri -> !nonNullAlternativeUri.equals(conceptCache.getUri()))
-                            .forEach(alternativeUriValue -> conceptCacheService.deleteConceptCacheByUri(alternativeUriValue)));                    
+                            .forEach(alternativeUriValue -> conceptCacheService.deleteConceptCacheByUri(alternativeUriValue)));  
+            return true;
             
         } else if(conceptCache == null) {
             logger.error("ConceptPower did not return any concept entries for uri: " + uri);
+           
         }
-        
-        if(conceptCache != null && conceptCache.getConceptType() != null) {
-            
-            ConceptType conceptType = conceptCache.getConceptType();
-            ConceptType conceptTypeOld = null;
-            
-            if(conceptCacheOld != null) {
-                conceptTypeOld = conceptCacheOld.getConceptType();
-            }
-            
-            // ConceptPower returned a concept type and either no conceptType entry exists in the DB
-            // or if one exists, it is different from the current conceptType entry
-            if (conceptType != null && (conceptTypeOld == null || conceptTypeOld.compareTo(conceptType) != 0)) {
-                updated = true;
-                conceptCache.setConceptType(conceptType);
-                conceptTypeService.saveConceptType(conceptType);
-            }
-        }
-        
-        return updated ? conceptCache : conceptCacheOld;
+        return false;
     }
 
-    
     @Override
     public ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
         // If we get multiple ConceptPower entries in the reply, we use the first one
