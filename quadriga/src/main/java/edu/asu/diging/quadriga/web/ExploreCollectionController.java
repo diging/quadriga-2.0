@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.quadriga.core.model.MappedCollection;
+import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.Triple;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
-import edu.asu.diging.quadriga.core.service.MappedCollectionService;
+import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.web.model.GraphElements;
 
@@ -35,7 +36,7 @@ public class ExploreCollectionController {
     private CollectionManager collectionManager;
 
     @Autowired
-    private MappedCollectionService mappedCollectionService;
+    private MappedTripleGroupService mappedTripleGroupService;
 
     @Autowired
     private MappedTripleService mappedTripleService;
@@ -59,8 +60,8 @@ public class ExploreCollectionController {
             @RequestParam(value = "uri", required = true) String uri,
             @RequestParam(value = "ignoreList", required = false, defaultValue = "{}") List<String> ignoreList)
             throws InvalidObjectIdException, CollectionNotFoundException {
-        MappedCollection mappedCollection = mappedCollectionService.findMappedCollectionByCollectionId(collectionId);
-        List<Triple> triples = mappedTripleService.getTriplesByUri(mappedCollection.get_id().toString(),
+        MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
+        List<Triple> triples = mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                 processUri(uri), ignoreList);
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         return new ResponseEntity<>(graphElements, HttpStatus.OK);

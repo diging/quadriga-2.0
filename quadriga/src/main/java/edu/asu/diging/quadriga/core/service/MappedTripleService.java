@@ -14,10 +14,10 @@ public interface MappedTripleService {
 
     /**
      * Retrieves the mapped triples for the given collection id
-     * @param mappedCollectionId Mapped Collection Id for which the triples are to be fetched
+     * @param mappedTripleGroupId Mapped Triple Group Id for which the triples are to be fetched
      * @return the retrieved Triples
      */
-    List<Triple> getMappedTriples(String mappedCollectionId);
+    List<Triple> getMappedTriples(String mappedTripleGroupId);
 
     /**
      * Retrieves the mapped triples for concept with the given uri and excluding the ones containing concept from the ignoreList
