@@ -1,15 +1,12 @@
 package edu.asu.diging.quadriga.web;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,14 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
+import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
-import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
-import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 /**
  * This controller enables users to edit their collections
@@ -38,9 +33,8 @@ public class EditCollectionController {
 
     @Autowired
     private CollectionManager collectionManager;
-   
-    @Autowired
-    private SimpleUserAppService simpleUserAppService;
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Request handler for getting the "Edit collections" view
@@ -52,23 +46,22 @@ public class EditCollectionController {
      */
     @RequestMapping(value = "/auth/collections/{id}/edit", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
-        Collection collection = collectionManager.findCollection(id);
-
-        if (Objects.nonNull(collection)) {
-            CollectionForm collectionForm = new CollectionForm();
-            collectionForm.setId(id);
-            collectionForm.setName(collection.getName());
-            collectionForm.setDescription(collection.getDescription());
-            collectionForm.setApps(collection.getApps());
-            
-            SimpleUser user = (SimpleUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        	
-            List<CitesphereAppInfo> apps = simpleUserAppService.getAccessibleCitesphereApps(user);
-        
-            model.addAttribute("citesphereApps", apps);
-            model.addAttribute("collectionForm", collectionForm);
-            return "auth/editCollection";
-        } else {
+        Collection collection;
+        try {
+            collection = collectionManager.findCollection(id);
+            if (Objects.nonNull(collection)) {
+                CollectionForm collectionForm = new CollectionForm();
+                collectionForm.setId(id);
+                collectionForm.setName(collection.getName());
+                collectionForm.setDescription(collection.getDescription());
+                collectionForm.setApps(collection.getApps());
+                model.addAttribute("collectionForm", collectionForm);
+                return "auth/editCollection";
+            } else {
+                return "error404Page";
+            }
+        } catch (InvalidObjectIdException e) {
+            logger.error("Couldn't edit collection", e);
             return "error404Page";
         }
     }
@@ -96,8 +89,13 @@ public class EditCollectionController {
             redirectAttributes.addFlashAttribute("alert_msg", "Collection has been edited.");
             redirectAttributes.addFlashAttribute("show_alert", true);
             return "redirect:/auth/collections";
-        } catch (CollectionNotFoundException e) {
+        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+            logger.error("Couldn't edit collection", e);
             return "error404Page";
+        } catch (CitesphereAppNotFoundException e) {
+            logger.error("Couldn't edit collection", e);
+            bindingResult.rejectValue("apps", "error.collectionForm", e.getMessage());
+            return "auth/editCollection";
         }
        
 

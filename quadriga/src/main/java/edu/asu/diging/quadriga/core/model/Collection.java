@@ -14,6 +14,10 @@ public class Collection {
     private String name;
     private String description;
     private String username;
+    
+    /**
+     * List of Client Ids for Citesphere Apps which are associated with the collection
+     */
     private List<String> apps;
 
     public ObjectId getId() {
@@ -39,14 +43,6 @@ public class Collection {
     public void setDescription(String description) {
         this.description = description;
     }
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
     
     public List<String> getApps() {
         return apps;
@@ -55,5 +51,13 @@ public class Collection {
     public void setApps(List<String> apps) {
         this.apps = apps;
     }
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
 }
