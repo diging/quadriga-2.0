@@ -90,8 +90,8 @@ public class CollectionManagerImpl implements CollectionManager {
     }
 
 	@Override
-	public Page<Collection> findByAppsIn(List<String> apps, Pageable pageable) {
-		return collectionRepo.findByAppsIn(apps, pageable);
+	public Page<Collection> findCollections(String username, List<String> apps, Pageable pageable) {
+		return collectionRepo.findByUsernameOrAppsIn(username, apps, pageable);
 	}
 
     /**

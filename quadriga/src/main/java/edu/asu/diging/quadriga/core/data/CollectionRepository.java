@@ -13,6 +13,6 @@ import edu.asu.diging.quadriga.core.model.Collection;
 @Repository
 public interface CollectionRepository extends MongoRepository<Collection, ObjectId>{
 	
-	Page<Collection> findByAppsIn(List<String> apps, Pageable pageable);
+	Page<Collection> findByUsernameOrAppsIn(String username, List<String> apps, Pageable pageable);
 	
 }

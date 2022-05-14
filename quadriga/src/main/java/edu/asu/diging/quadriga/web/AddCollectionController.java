@@ -1,7 +1,5 @@
 package edu.asu.diging.quadriga.web;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -16,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
-import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
@@ -28,19 +24,10 @@ public class AddCollectionController {
 
     @Autowired
     private CollectionManager collectionManager;
-    
-    @Autowired
-    private SimpleUserAppService simpleUserAppService;
 
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.GET)
     public String get(Model model) {
-    	
-    	SimpleUser user = (SimpleUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	
-    	List<CitesphereAppInfo> apps = simpleUserAppService.getAccessibleCitesphereApps(user);
-        
         model.addAttribute("collectionForm", new CollectionForm());
-        model.addAttribute("citesphereApps", apps);
         return "auth/addCollection";
     }
 

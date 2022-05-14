@@ -53,6 +53,6 @@ public interface CollectionManager {
      * @param apps is a list of apps to be searched
      * @return a list of collections
      */
-    public Page<Collection> findByAppsIn(List<String> apps, Pageable pageable);
+    public Page<Collection> findCollections(String username, List<String> apps, Pageable pageable);
 
 }
