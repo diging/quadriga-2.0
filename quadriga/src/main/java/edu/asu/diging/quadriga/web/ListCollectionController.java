@@ -59,7 +59,7 @@ public class ListCollectionController {
             model.addAttribute("username", simpleUser.getUsername());
         }
 
-        return "auth/showcollection";
+        return "auth/showcollections";
     }
 
 }

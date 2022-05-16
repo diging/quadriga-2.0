@@ -33,7 +33,7 @@ public class CollectionManagerImplTest {
     public static final String EDITED_DESC = "Edited description";
     public static final List<String> EDITED_APPS = new ArrayList<>();
     public static final List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
-    
+
     @Mock
     private CollectionRepository collectionRepo;
 
@@ -45,7 +45,7 @@ public class CollectionManagerImplTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         
         CitesphereAppInfo app1 = new CitesphereAppInfo();
         app1.setClientId("app1");
@@ -165,7 +165,6 @@ public class CollectionManagerImplTest {
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
         existingCollection.setApps(COLLECTION_APPS);
-
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = EDITED_NAME;
@@ -192,6 +191,7 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
+
         for(String app : updatedCollection.getApps()) {
             Assert.assertTrue(EDITED_APPS.contains(app));
         }
@@ -310,6 +310,7 @@ public class CollectionManagerImplTest {
             }
 
         }))).thenReturn(updatedCollection);
+
 
         updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription, editedApps);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
