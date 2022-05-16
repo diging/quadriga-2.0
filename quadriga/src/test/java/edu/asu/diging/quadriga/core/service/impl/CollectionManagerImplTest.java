@@ -45,7 +45,7 @@ public class CollectionManagerImplTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         
         CitesphereAppInfo app1 = new CitesphereAppInfo();
         app1.setClientId("app1");
