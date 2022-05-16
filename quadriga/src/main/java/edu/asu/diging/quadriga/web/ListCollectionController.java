@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,18 +32,16 @@ public class ListCollectionController {
 
     @RequestMapping(value = "/auth/collections", method = RequestMethod.GET)
     public String list(@RequestParam(defaultValue = "1", required = false, value = "page") String page,
-            @RequestParam(defaultValue = "20", required = false, value = "size") String size, Model model) {
-    	
-    	SimpleUser simpleUser = (SimpleUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    	
-    	List<SimpleUserApp> userApps = simpleUserAppService.findByUsername(simpleUser.getUsername());
-    	List<String> clientIds = null;
-    	
-    	if(userApps != null) {
-    		clientIds = userApps.stream()
-    				.map(userApp -> userApp.getAppClientId())
-    				.collect(Collectors.toList());
-    	}
+            @RequestParam(defaultValue = "20", required = false, value = "size") String size, Model model, Authentication authentication) {
+
+        SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
+
+        List<SimpleUserApp> userApps = simpleUserAppService.findByUsername(simpleUser.getUsername());
+        List<String> clientIds = null;
+
+        if (userApps != null) {
+            clientIds = userApps.stream().map(userApp -> userApp.getAppClientId()).collect(Collectors.toList());
+        }
 
         Integer pageInt = 0;
         Integer sizeInt = 20;
@@ -54,11 +52,13 @@ public class ListCollectionController {
         } catch (NumberFormatException ex) {
             logger.warn("Trying to access invalid page number: " + page);
         }
-        
-        if(clientIds != null) {
-            model.addAttribute("collections", collectionManager.findCollections(simpleUser.getUsername(), clientIds, PageRequest.of(pageInt, sizeInt)));
+
+        if (clientIds != null) {
+            model.addAttribute("collections", collectionManager.findCollections(simpleUser.getUsername(), clientIds,
+                    PageRequest.of(pageInt, sizeInt)));
+            model.addAttribute("username", simpleUser.getUsername());
         }
-        
+
         return "auth/showcollection";
     }
 
