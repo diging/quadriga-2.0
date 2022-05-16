@@ -30,11 +30,11 @@ import edu.asu.diging.quadriga.web.forms.CollectionForm;
  */
 @Controller
 public class EditCollectionController {
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CollectionManager collectionManager;
-    
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Request handler for getting the "Edit collections" view
@@ -46,7 +46,8 @@ public class EditCollectionController {
      */
     @RequestMapping(value = "/auth/collections/{id}/edit", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
-        Collection collection;
+        Collection collection = null;
+
         try {
             collection = collectionManager.findCollection(id);
             if (Objects.nonNull(collection)) {

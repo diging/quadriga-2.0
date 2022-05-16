@@ -8,7 +8,6 @@ import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 
 public interface CollectionManager {
-
     /**
      * Saves a collection in database with the given details
      * @param name collection name
@@ -35,13 +34,31 @@ public interface CollectionManager {
      * @param apps list of citesphere apps attached to the collection
      * @return Collection Instance that is updated in database
      * @throws CollectionNotFoundException in case the collection for the given id is missing
+     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
     public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException;
     
     /**
      * Deletes a collection from collection table by id
      * @param id used to look up the collection in database
+     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
+
+    /**
+     * This method returns the number of default mappings present in the collection
+     * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
+     * To get this number of default mappings, this method will check how many 'Predicates' have
+     * this mappedTripleGroupId linked to them
+     * This is because every default mapping has one predicate
+     * So, if the MappedTripleGroupId is present on n predicates, this collection
+     * must have n defaultMappings 
+     * 
+     * @param collectionId used to find mappedTripleGroupId
+     * @return the number of default mappings
+     */
+    public int getNumberOfDefaultMappings(String collectionId);
+    
+   
 
 }
