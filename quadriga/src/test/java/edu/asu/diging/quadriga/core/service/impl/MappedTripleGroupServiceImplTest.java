@@ -74,7 +74,6 @@ public class MappedTripleGroupServiceImplTest {
             throws InvalidObjectIdException, CollectionNotFoundException {
         Collection collection = new Collection();
         ObjectId objectId = new ObjectId();
-
         collection.setId(objectId);
 
         String name = "mappedTripleGroup1";
