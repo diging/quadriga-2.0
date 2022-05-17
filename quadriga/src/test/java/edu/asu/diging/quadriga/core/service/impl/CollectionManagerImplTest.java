@@ -35,7 +35,6 @@ public class CollectionManagerImplTest {
     public static final List<Collection> collections = new ArrayList<>();
     public static final Collection collection1 = new Collection();
     public static final Collection collection2 = new Collection();
-    public static final List<String> EDITED_APPS = new ArrayList<>();
     public static final List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
 
     @Mock
@@ -56,8 +55,6 @@ public class CollectionManagerImplTest {
         
         COLLECTION_APPS_2.add("app1");
         COLLECTION_APPS_2.add("app3");
-        
-        EDITED_APPS.add("app4");
 
         CitesphereAppInfo app1 = new CitesphereAppInfo();
         app1.setClientId("app1");
@@ -427,7 +424,7 @@ public class CollectionManagerImplTest {
 
         Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(new ArrayList<>());
 
-        managerToTest.editCollection(id.toString(), EDITED_NAME, EDITED_DESC, new ArrayList<>(EDITED_APPS));
+        managerToTest.editCollection(id.toString(), EDITED_NAME, EDITED_DESC, new ArrayList<>(COLLECTION_APPS_2));
     }
 
 }
