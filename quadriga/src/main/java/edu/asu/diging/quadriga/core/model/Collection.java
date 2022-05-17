@@ -1,7 +1,6 @@
 package edu.asu.diging.quadriga.core.model;
 
 import java.time.OffsetDateTime;
-
 import java.util.List;
 import javax.persistence.Id;
 
@@ -49,7 +48,7 @@ public class Collection {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public OffsetDateTime getCreationTime() {
         return creationTime;
     }

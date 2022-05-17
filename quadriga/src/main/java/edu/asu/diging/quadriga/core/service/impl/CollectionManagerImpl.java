@@ -35,7 +35,6 @@ public class CollectionManagerImpl implements CollectionManager {
     
     @Autowired
     private CollectionRepository collectionRepo;
-
     
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
@@ -59,6 +58,10 @@ public class CollectionManagerImpl implements CollectionManager {
         return collectionRepo.save(collection);
     }
 
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#findCollection(java.lang.String)
+     */
     @Override
     public Collection findCollection(String id) throws InvalidObjectIdException {
         try {

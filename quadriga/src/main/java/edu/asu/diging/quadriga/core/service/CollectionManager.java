@@ -8,7 +8,6 @@ import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 
 public interface CollectionManager {
-    
     /**
      * Saves a collection in database with the given details
      * @param name collection name
@@ -43,9 +42,9 @@ public interface CollectionManager {
     /**
      * Deletes a collection from collection table by id
      * @param id used to look up the collection in database
+     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
-
     
     /**
      * This method checks whether a collection with given collectionId exists and

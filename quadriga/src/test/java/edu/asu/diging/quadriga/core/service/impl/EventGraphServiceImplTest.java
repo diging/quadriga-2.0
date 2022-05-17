@@ -19,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -75,7 +74,6 @@ public class EventGraphServiceImplTest {
         eventGraphs.add(eventGraph2);
         eventGraphs.add(eventGraph1);
 
-
         Mockito.when(eventGraphRepository.findFirstByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
                 .thenReturn(Optional.of(eventGraph2));
        
@@ -95,28 +93,6 @@ public class EventGraphServiceImplTest {
 
         Assert.assertNull(eventGraphServiceImpl.findLatestEventGraphByCollectionId(collectionObjectId));
     }
-    
-//    @Test
-//    public void test_findEventGraphsBySourceURI_success() {
-//        ObjectId collectionObjectId = new ObjectId();
-//
-//        EventGraph eventGraph = new EventGraph();
-//        ObjectId eventGraphObjectId1 = new ObjectId();
-//
-//        eventGraph.setId(eventGraphObjectId1);
-//        eventGraph.setCollectionId(collectionObjectId);
-//        
-//        String sourceURI = "http://handle.net/234";
-//        
-//        List<EventGraph> eventGraphs = new ArrayList<>();
-//        eventGraphs.add(eventGraph);
-//        
-//        Mockito.when(eventGraphRepository.findByContextSourceUri(sourceURI)).thenReturn(Optional.of(eventGraphs));
-//        
-//        List<EventGraph> foundEventGraphs = eventGraphServiceImpl.findEventGraphsBySourceURI(sourceURI);
-//        Assert.assertEquals(eventGraphs.get(0).getId(), foundEventGraphs.get(0).getId());
-//    }
-    
     
     @Test
     public void test_countEventGraphsBy_success() throws InterruptedException {
