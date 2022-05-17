@@ -37,7 +37,7 @@ public class CollectionManagerImplTest {
     public static final Collection collection2 = new Collection();
     public static final List<String> EDITED_APPS = new ArrayList<>();
     public static final List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
-    
+
     @Mock
     private CollectionRepository collectionRepo;
 
@@ -231,6 +231,7 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
+
         for(String app : updatedCollection.getApps()) {
             Assert.assertTrue(COLLECTION_APPS_2.contains(app));
         }
@@ -349,6 +350,7 @@ public class CollectionManagerImplTest {
             }
 
         }))).thenReturn(updatedCollection);
+
 
         updatedCollection = managerToTest.editCollection(id.toString(), editedName, editedDescription, editedApps);
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());

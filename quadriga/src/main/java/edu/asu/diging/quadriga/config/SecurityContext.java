@@ -90,7 +90,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
     @Configuration
     @Order(1)
     public class ApiV1WebSecurityConfig extends WebSecurityConfigurerAdapter {
-        
+
         @Override
         protected void configure(HttpSecurity httpSecurity) throws Exception {
             CitesphereTokenFilter citesphereTokenFilter = new CitesphereTokenFilter("/api/v1/**");
