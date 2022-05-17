@@ -15,6 +15,7 @@ public interface CollectionManager {
      * Saves a collection in database with the given details
      * @param name collection name
      * @param description collection description
+     * @param username user name of the creator
      * @param apps list of citesphere apps attached to the collection
      * @return the saved collection
      */
@@ -51,6 +52,7 @@ public interface CollectionManager {
     /**
      * Finds all collections that have at least one of the app listed in the apps argument
      * 
+     * @param username user for which the collections are to be searched
      * @param apps is a list of apps to be searched
      * @return a list of collections
      */

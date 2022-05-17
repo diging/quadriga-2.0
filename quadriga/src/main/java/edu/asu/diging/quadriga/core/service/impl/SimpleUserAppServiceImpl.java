@@ -32,21 +32,33 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     @Autowired
     private SimpleUserAppRepository simpleUserAppRepository;
     
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#save(edu.asu.diging.quadriga.core.model.users.SimpleUserApp)
+     */
     @Override
     public SimpleUserApp save(SimpleUserApp simpleUserApp) {
         return simpleUserAppRepository.save(simpleUserApp);
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#findByUsername(java.lang.String)
+     */
     @Override
     public List<SimpleUserApp> findByUsername(String username) {
         return simpleUserAppRepository.findByUsername(username);
     }
     
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#findByUsernameAndAppClientId(java.lang.String, java.lang.String)
+     */
     @Override
     public SimpleUserApp findByUsernameAndAppClientId(String username, String appClientId) {
         return simpleUserAppRepository.findByUsernameAndAppClientId(username, appClientId);
     }
     
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#delete(java.lang.String, java.lang.String)
+     */
     @Override
     public void delete(String username, String appClientId) throws UserAppNotFoundException {
     	SimpleUserApp simpleUserApp = findByUsernameAndAppClientId(username, appClientId);
@@ -59,6 +71,9 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     }
     
     
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#getAccessibleCitesphereApps(edu.asu.diging.simpleusers.core.model.impl.SimpleUser)
+     */
     @Override
     public  List<CitesphereAppInfo> getAccessibleCitesphereApps(SimpleUser user) {
         // Get the set of apps that are accessible by the user

@@ -19,7 +19,6 @@ public interface SimpleUserAppService {
     
     /**
      * Finds list of all SimpleUserApp objects with the provided username
-     * E.g. if username U1 has apps {A1, A2, A3}, will return {(U1, A1), {U1, A2}, (U1, A3)}
      * 
      * @param username is the username to be searched
      * @return a list of SimpleUserApps with provided username
@@ -45,9 +44,9 @@ public interface SimpleUserAppService {
     public void delete(String username, String appClientId) throws UserAppNotFoundException;
     
     /**
-     * 
-     * @param user
-     * @return
+     * Retrieves citesphere apps that the user has access to
+     * @param user user for which the app are to be retrieved
+     * @return List of the apps
      */
     public List<CitesphereAppInfo> getAccessibleCitesphereApps(SimpleUser user) ;
 
