@@ -54,6 +54,7 @@ public interface CollectionManager {
      * 
      * @param username user for which the collections are to be searched
      * @param apps is a list of apps to be searched
+     * @param pageable requested page details
      * @return a list of collections
      */
     public Page<Collection> findCollections(String username, List<String> apps, Pageable pageable);

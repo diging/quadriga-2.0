@@ -18,7 +18,7 @@ public interface SimpleUserAppService {
     public SimpleUserApp save(SimpleUserApp simpleUserApp);
     
     /**
-     * Finds list of all SimpleUserApp objects with the provided username
+     * Finds list of all apps that the user has access to
      * 
      * @param username is the username to be searched
      * @return a list of SimpleUserApps with provided username
@@ -26,19 +26,19 @@ public interface SimpleUserAppService {
     public List<SimpleUserApp> findByUsername(String username);
     
     /**
-     * Finds a SimpleUser object from the database by querying on the provided username and appClientId
+     * Finds and returns the app with the given username and app Client Id
      * 
      * @param username is the username to be searched
      * @param appClientId is the appClientId to be searched
-     * @return a SimpleUserApp object with the provided username and appClientId
+     * @return app with the provided username and appClientId
      */
     public SimpleUserApp findByUsernameAndAppClientId(String username, String appClientId);
     
     /**
-     * Deletes a SimpleUserApp entity from the database by querying on the username and appClientId
+     * Deletes the app with given username and app Client Id
      * 
      * @param username is the username to be searched
-     * @param appClientId is the appClientId to be searched
+     * @param appClientId is the app Client Id to be searched
      * @throws UserAppNotFoundException is no user + app combination was found to be removed
      */
     public void delete(String username, String appClientId) throws UserAppNotFoundException;
@@ -48,6 +48,6 @@ public interface SimpleUserAppService {
      * @param user user for which the app are to be retrieved
      * @return List of the apps
      */
-    public List<CitesphereAppInfo> getAccessibleCitesphereApps(SimpleUser user) ;
+    public List<CitesphereAppInfo> getCitesphereApps(SimpleUser user) ;
 
 }

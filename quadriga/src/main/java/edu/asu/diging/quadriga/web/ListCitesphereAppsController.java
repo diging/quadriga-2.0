@@ -22,6 +22,6 @@ public class ListCitesphereAppsController {
     @GetMapping("/citesphere/apps")
     public ResponseEntity<List<CitesphereAppInfo>> getCitesphereApps(Authentication authentication) {
         SimpleUser user = (SimpleUser) authentication.getPrincipal();
-        return new ResponseEntity<>(simpleUserAppService.getAccessibleCitesphereApps(user), HttpStatus.OK);
+        return new ResponseEntity<>(simpleUserAppService.getCitesphereApps(user), HttpStatus.OK);
     }
 }

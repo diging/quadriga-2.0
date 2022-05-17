@@ -5,7 +5,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,13 +32,13 @@ public class AddCollectionController {
     }
 
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.POST)
-    public String add(@Valid CollectionForm collectionForm, BindingResult result, RedirectAttributes redirectAttrs) {
+    public String add(@Valid CollectionForm collectionForm, BindingResult result, RedirectAttributes redirectAttrs, Authentication authentication) {
         if (result.hasErrors()) {
             return "auth/addCollection";
         }
 
         try {
-            SimpleUser user = (SimpleUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            SimpleUser user = (SimpleUser) authentication.getPrincipal();
             collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription(),
                     user.getUsername(), collectionForm.getApps());
         } catch (CitesphereAppNotFoundException e) {

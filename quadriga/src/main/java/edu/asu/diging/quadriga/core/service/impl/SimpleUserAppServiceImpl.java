@@ -69,13 +69,12 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     		throw new UserAppNotFoundException();
     	}
     }
-    
-    
+
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#getAccessibleCitesphereApps(edu.asu.diging.simpleusers.core.model.impl.SimpleUser)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#getCitesphereApps(edu.asu.diging.simpleusers.core.model.impl.SimpleUser)
      */
     @Override
-    public  List<CitesphereAppInfo> getAccessibleCitesphereApps(SimpleUser user) {
+    public  List<CitesphereAppInfo> getCitesphereApps(SimpleUser user) {
         // Get the set of apps that are accessible by the user
         Set<String> userAppClientIds = findByUsername(user.getUsername())
                 .stream()
