@@ -2,6 +2,36 @@
 <head>
 	<title>Quadriga 2.0</title>
 	<link rel="stylesheet" th:href="@{/resources/static/css/admin/user/apps.css}" type="text/css" />
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            var container = $('#applicationList');
+            var userApps = [[${userApps}]];
+            var username = [[${username}]];
+            var url = [[@{|/admin/user/${username}/app/|}]];
+            $.ajax({
+                'url': [[@{|/citesphere/apps|}]],
+                'type': "GET",
+                async: true,
+                'success': function(data) {
+                    data.forEach(function(app) {
+                        var item = $('<tr>');
+                        item.append('<td>'+ app.clientId +'</td><td>'+ app.name +'</td><td>'+ app.description +'</td>');
+                        if (userApps && userApps.includes(app.clientId)) {
+                            item.append('<td><a href="'+url+app.clientId+'/revoke" class="revoke-action"><i class="fas fa-times-circle action-icon"></i>Revoke</a></td>');
+	                 } else {
+	                        item.append('<td><a href="'+url+app.clientId+'/assign" class="assign-action"><i class="fas fa-check-circle action-icon"></i>Assign</a></td>');
+	                 }
+                        item.append('</tr>');
+                        container.append(item);
+                    });
+                    
+                },
+                'error': function(data) {
+                    container.append('<span class="text-danger">Error fetching apps from citesphere</span>');
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -16,25 +46,7 @@
 						<th>Action</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr th:each="app: ${apps}">
-						<td th:text="${app.clientId}"></td>
-						<td th:text="${app.name}"></td>
-						<td th:text="${app.description}"></td>
-						<td>
-							<a th:href="@{|/admin/user/${username}/app/${app.clientId}/assign|}"
-								th:unless="${#sets.contains(userApps, app.clientId)}"
-								class="assign-action">
-								<i class="fas fa-check-circle action-icon"></i>Assign
-							</a>
-							<a th:href="@{|/admin/user/${username}/app/${app.clientId}/revoke|}"
-								th:if="${#sets.contains(userApps, app.clientId)}"
-								class="revoke-action">
-								<i class="fas fa-times-circle action-icon"></i>Revoke
-							</a>
-						</td>
-					</tr>
-				</tbody>
+				<tbody id="applicationList"></tbody>
 			</table>
 		</div>
 	</div>

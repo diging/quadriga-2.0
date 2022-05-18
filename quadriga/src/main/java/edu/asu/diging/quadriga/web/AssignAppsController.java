@@ -11,16 +11,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
+
 import edu.asu.diging.quadriga.core.exceptions.UserAppNotFoundException;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 
 @Controller
 public class AssignAppsController {
-
-    @Autowired
-    private CitesphereConnector citesphereConnector;
 
     @Autowired
     private SimpleUserAppService simpleUserAppService;
@@ -34,7 +31,6 @@ public class AssignAppsController {
         simpleUserAppService.findByUsername(username).forEach(userApp -> userApps.add(userApp.getAppClientId()));
 
         model.addAttribute("username", username);
-        model.addAttribute("apps", citesphereConnector.getCitesphereApps());
         model.addAttribute("userApps", userApps);
 
         return "admin/user/apps";
