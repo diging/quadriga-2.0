@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.data.SimpleUserAppRepository;
-import edu.asu.diging.quadriga.core.exceptions.UserAppNotFoundException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
@@ -59,29 +58,15 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     /*
      * (non-Javadoc)
      * 
-     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#
-     * findByUsernameAndAppClientId(java.lang.String, java.lang.String)
-     */
-    @Override
-    public SimpleUserApp findByUsernameAndAppClientId(String username, String appClientId) {
-        return simpleUserAppRepository.findByUsernameAndAppClientId(username, appClientId);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see
      * edu.asu.diging.quadriga.core.service.SimpleUserAppService#delete(java.lang.
      * String, java.lang.String)
      */
     @Override
-    public void delete(String username, String appClientId) throws UserAppNotFoundException {
-        SimpleUserApp simpleUserApp = findByUsernameAndAppClientId(username, appClientId);
-
-        if (simpleUserApp != null) {
-            simpleUserAppRepository.delete(simpleUserApp);
-        } else {
-            throw new UserAppNotFoundException();
+    public void delete(String username, String appClientId) {
+        SimpleUserApp userApp = simpleUserAppRepository.findByUsernameAndAppClientId(username, appClientId);
+        if (userApp != null) {
+            simpleUserAppRepository.delete(userApp);
         }
     }
 

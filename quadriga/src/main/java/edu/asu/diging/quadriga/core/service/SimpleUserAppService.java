@@ -2,7 +2,6 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
-import edu.asu.diging.quadriga.core.exceptions.UserAppNotFoundException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
@@ -26,22 +25,12 @@ public interface SimpleUserAppService {
     public List<SimpleUserApp> findByUsername(String username);
     
     /**
-     * Finds and returns the app with the given username and app Client Id
-     * 
-     * @param username is the username to be searched
-     * @param appClientId is the appClientId to be searched
-     * @return app with the provided username and appClientId
-     */
-    public SimpleUserApp findByUsernameAndAppClientId(String username, String appClientId);
-    
-    /**
      * Deletes the app with given username and app Client Id
      * 
      * @param username is the username to be searched
      * @param appClientId is the app Client Id to be searched
-     * @throws UserAppNotFoundException is no user + app combination was found to be removed
      */
-    public void delete(String username, String appClientId) throws UserAppNotFoundException;
+    public void delete(String username, String appClientId);
     
     /**
      * Retrieves citesphere apps that the user has access to
