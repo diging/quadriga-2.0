@@ -1,8 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.time.OffsetDateTime;
-import java.util.Objects;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -96,8 +94,13 @@ public class CollectionManagerImpl implements CollectionManager {
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
         
-        if(Objects.nonNull(collection)) {
-            
+        if (Objects.nonNull(collection)) {
+            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(id, MappedTripleType.DEFAULT_MAPPING);
+            if (mappedTripleGroup != null) {
+                collection.setArchived(true);
+                collectionRepo.save(collection);
+                return;
+            }
             // Once networks are linked with collections, only empty collections will be deleted
             // If it is linked to a network, we will archive the collection.
             collectionRepo.delete(collection);
