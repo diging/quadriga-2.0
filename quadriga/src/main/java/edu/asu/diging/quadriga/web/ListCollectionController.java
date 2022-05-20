@@ -31,7 +31,7 @@ public class ListCollectionController {
             size = Integer.parseInt(request.getParameter("size"));
         }
 
-        model.addAttribute("collections", collectionRepo.findAll(PageRequest.of(page, size)));
+        model.addAttribute("collections", collectionRepo.findByIsArchived(false, PageRequest.of(page, size)));
         return "auth/showcollections";
     }
 
