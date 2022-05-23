@@ -21,7 +21,10 @@ import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
+import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 
 public class CollectionManagerImplTest {
     
@@ -42,6 +45,9 @@ public class CollectionManagerImplTest {
     
     @Mock
     private CitesphereConnector citesphereConnector;
+    
+    @Mock
+    private MappedTripleGroupService mappedTripleGroupService;
 
     @Before
     public void setUp() {
@@ -108,6 +114,7 @@ public class CollectionManagerImplTest {
         collection.setDescription(desc);
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
+        Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType(id.toString(), MappedTripleType.DEFAULT_MAPPING)).thenReturn(null);
         Mockito.doNothing().when(collectionRepo).delete(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
@@ -115,6 +122,29 @@ public class CollectionManagerImplTest {
                 return (arg0.getName().equals(name) && arg0.getDescription().equals(desc));
             }
         }));
+        
+        managerToTest.deleteCollection(id.toString());
+    }
+    
+    @Test
+    public void test_deleteCollection_archived() throws CollectionNotFoundException, InvalidObjectIdException {
+        String name = "name";
+        String desc = "description";
+        Collection collection = new Collection();
+        ObjectId id = new ObjectId();
+        collection.setId(id);
+        collection.setName(name);
+        collection.setDescription(desc);
+        
+        Collection response = new Collection();
+        collection.setId(id);
+        collection.setName(name);
+        collection.setDescription(desc);
+        collection.setArchived(true);
+        
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
+        Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType(id.toString(), MappedTripleType.DEFAULT_MAPPING)).thenReturn(new MappedTripleGroup());
+        Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(response);
         
         managerToTest.deleteCollection(id.toString());
     }
