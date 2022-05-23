@@ -5,10 +5,10 @@
 <body>
 	<div layout:fragment="content">
 		<h2>My Collections</h2>
-		<div th:if="${collections.empty}">No Collections available</div>
         <a th:href="@{/auth/archived-collections}">
-            <span class="fas fa-archive pull-right"></span>
+            <i class="fas fa-archive pull-right" title="View archived collections" style="padding-right:15px;"></i><br>
         </a>
+		<div th:if="${collections.empty}">No Collections available</div>
 		<div action="#" th:action="@{/auth/collections}" method="GET">
 			<ul class="list-group">
 				<li th:each="collection: ${collections}"

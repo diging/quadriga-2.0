@@ -4,9 +4,9 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <a class ="btn btn-primary btn-nav" style="font-size:10px;" th:href="@{/auth/collections}">Back</a>
+        <a class ="btn btn-primary btn-nav" th:href="@{/auth/collections}"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back</a>
         <h2>Archived Collections</h2>
-        <div th:if="${collections.empty}">No Collections available</div>
+        <div th:if="${collections.empty}">No Archived Collections available</div>
         <div action="#" th:action="@{/auth/archived-collections}" method="GET">
             <ul class="list-group">
                 <li th:each="collection: ${collections}"
