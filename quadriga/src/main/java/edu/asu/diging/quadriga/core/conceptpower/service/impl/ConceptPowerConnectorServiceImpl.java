@@ -60,8 +60,7 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
                 }
             }
         } catch (RestClientException e) {
-            logger.error(e.getMessage());
-            logger.error("Could not get concept for URI: " + conceptURI);
+            logger.error("Could not get concept for URI: " + conceptURI, e);
             if (conceptPowerURL == null || conceptPowerURL.equals("")) {
                 logger.error("ConceptPowerURL was found to be blank or null");
             }

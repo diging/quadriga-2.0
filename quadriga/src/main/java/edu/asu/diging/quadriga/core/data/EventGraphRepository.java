@@ -12,9 +12,6 @@ import edu.asu.diging.quadriga.core.model.EventGraph;
 public interface EventGraphRepository extends MongoRepository<EventGraph, ObjectId> {
     
     public Optional<List<EventGraph>> findByCollectionId(ObjectId collectionId);
-    
-    @Query(value = "{'context.sourceUri': ?0}")
-    public Optional<List<EventGraph>> findByContextSourceUri(String sourceURI);
 
     public Optional<EventGraph> findFirstByCollectionIdOrderByCreationTimeDesc(ObjectId collectionId);
     

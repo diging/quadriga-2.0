@@ -37,11 +37,10 @@ public class NetworkController {
             return "error404Page";
         }
 
-        // List<EventGraph> eventGraphs = eventGraphService.findEventGraphsBySourceURI(sourceURI);
         List<EventGraph> eventGraphs = eventGraphService.findAllEventGraphsByCollectionId(new ObjectId(collectionId));
         
         if (eventGraphs == null) {
-            logger.error("No network found for sourceUri: " + sourceUri);
+            logger.error("No network found for collectionId: " + collectionId);
             return "error404Page";
         }
 

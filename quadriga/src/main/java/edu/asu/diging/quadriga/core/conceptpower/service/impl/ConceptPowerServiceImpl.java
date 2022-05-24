@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
@@ -34,6 +35,9 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
 
     @Autowired
     private ConceptPowerConnectorService conceptPowerConnectorService;
+    
+    @Value("${conceptCacheUpdateInterval}")
+    private Integer conceptCacheIntervalDuration;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -42,7 +46,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
 
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
 
-        if (conceptCache == null || ChronoUnit.DAYS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= 2) {
+        if (conceptCache == null || ChronoUnit.HOURS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= conceptCacheIntervalDuration) {
             conceptCache = saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
         }
         return conceptCache;
@@ -78,9 +82,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         
         // Before returning, we need to check if we've updated ConceptCache or not
         // If no diff was found, conceptCache won't be updated and 'lastUpdated' would stay the same
-        boolean updated = false;
-        
-        updated = updateConceptCache(conceptCache, conceptCacheOld, uri);
+        boolean updated = updateConceptCache(conceptCache, conceptCacheOld, uri);
         
         updated = updated || updateConceptType(conceptCache,conceptCacheOld);
        
