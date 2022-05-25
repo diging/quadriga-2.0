@@ -17,6 +17,9 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -92,17 +95,18 @@ public class DisplayCollectionController {
         EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         
         model.addAttribute("latestNetwork", latestNetwork);
+        
+        Pageable paging = PageRequest.of(page, size);
 
         // Get all EventGraphs for this collection
-        List<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId());
+        Page<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), paging);
 
 
         long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());
 
 
-        model.addAttribute("networks", eventGraphsList.subList(page * size, Math.min(eventGraphsList.size(), page * size + size)));
-
-        model.addAttribute("totalPages", eventGraphsList.size() % 10 == 0 ? (eventGraphsList.size()/size) : (eventGraphsList.size()/size + 1));
+        model.addAttribute("networks", eventGraphsList.getContent());
+        model.addAttribute("totalPages", eventGraphsList.getTotalPages());
         model.addAttribute("pageNumber", page);
         model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
         model.addAttribute("collection", collection);

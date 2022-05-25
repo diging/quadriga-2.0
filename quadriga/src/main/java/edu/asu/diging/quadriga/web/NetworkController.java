@@ -48,7 +48,7 @@ public class NetworkController {
         model.addAttribute("sourceURI", sourceUri);
 
         model.addAttribute("creator", eventGraphs.get(0).getContext().getCreator());
-        model.addAttribute("appName", eventGraphs.get(0).getAppName());
+        model.addAttribute("appName", eventGraphs.get(0).getSubmittingApp());
         model.addAttribute("creationTime", eventGraphs.get(0).getCreationTime());
         return "auth/displayNetwork";
     }
