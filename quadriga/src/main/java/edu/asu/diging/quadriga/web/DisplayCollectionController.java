@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -59,7 +60,7 @@ public class DisplayCollectionController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/auth/collections/{collectionId}", method = RequestMethod.GET)
-    public String get(HttpServletRequest request, @PathVariable String collectionId, Model model) {
+    public String get( @RequestParam(required = false) Integer page , @RequestParam(required = false) Integer  size, @PathVariable String collectionId, Model model) {
 
         // Get collection details
         Collection collection;
@@ -77,26 +78,26 @@ public class DisplayCollectionController {
         model.addAttribute("collection", collection);
 
         // Determine page number and size for network pagination
-        int page = 0;
-        int size = 10;
+        int pageNumber = 0;
+        int sizeLimit = 10;
 
-        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
-            page = Integer.parseInt(request.getParameter("page")) - 1;
-            page = page < 0 ? 0 : page;
+        if (page != null) {
+            pageNumber = page - 1;
+            pageNumber = pageNumber < 0 ? 0 : pageNumber;
         }
 
-        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
-            size = Integer.parseInt(request.getParameter("size"));
-            size = size < 1 ? 10 : size;
+        if (size != null) {
+            sizeLimit = size;
+            sizeLimit = sizeLimit < 1 ? 10 : sizeLimit;
         }
 
-        model.addAttribute("size", size);
+        model.addAttribute("size", sizeLimit);
 
         EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         
         model.addAttribute("latestNetwork", latestNetwork);
         
-        Pageable paging = PageRequest.of(page, size);
+        Pageable paging = PageRequest.of(pageNumber, sizeLimit);
 
         // Get all EventGraphs for this collection
         Page<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), paging);
@@ -107,7 +108,7 @@ public class DisplayCollectionController {
 
         model.addAttribute("networks", eventGraphsList.getContent());
         model.addAttribute("totalPages", eventGraphsList.getTotalPages());
-        model.addAttribute("pageNumber", page);
+        model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
         model.addAttribute("collection", collection);
         
