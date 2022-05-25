@@ -37,7 +37,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
     private ConceptPowerConnectorService conceptPowerConnectorService;
     
     @Value("${conceptCacheUpdateInterval}")
-    private Integer conceptCacheIntervalDuration;
+    private Integer conceptCacheUpdateInterval;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -46,7 +46,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
 
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
 
-        if (conceptCache == null || ChronoUnit.HOURS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= conceptCacheIntervalDuration) {
+        if (conceptCache == null || ChronoUnit.HOURS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= conceptCacheUpdateInterval) {
             conceptCache = saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
         }
         return conceptCache;

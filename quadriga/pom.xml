@@ -46,7 +46,7 @@
         <citesphere.client.secret></citesphere.client.secret>
         
         <conceptpower.base.url></conceptpower.base.url>
-		<conceptpower.id.url></conceptpower.id.url>
+        <conceptpower.id.url></conceptpower.id.url>
 
         <log.level>info</log.level>
 
