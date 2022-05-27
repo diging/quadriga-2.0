@@ -21,12 +21,12 @@ public class GetCollectionsApiController {
     private CollectionManager collectionManager;
 
     @GetMapping("/api/v1/collections")
-    ResponseEntity<List<Collection>> getCollections(
-            @RequestHeader(name = "Authorization", required = false) String authHeader, Authentication authentication) {
+    public ResponseEntity<List<Collection>> getCollections(
+            @RequestHeader(name = "Authorization", required = false) String authHeader, Authentication authentication, TokenInfo tokenInfo) {
         if (!(authentication.getDetails() instanceof TokenInfo)) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        TokenInfo tokenInfo = (TokenInfo) authentication.getDetails();
+//        TokenInfo tokenInfo = (TokenInfo) authentication.getDetails();
         return new ResponseEntity<>(collectionManager.getCollections(tokenInfo.getClient_id()), HttpStatus.OK);
     }
 
