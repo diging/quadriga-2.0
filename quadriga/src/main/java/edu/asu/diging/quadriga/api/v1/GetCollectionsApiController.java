@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 
+import edu.asu.diging.quadriga.aspect.annotation.InjectToken;
 import edu.asu.diging.quadriga.config.web.TokenInfo;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
@@ -20,13 +20,12 @@ public class GetCollectionsApiController {
     @Autowired
     private CollectionManager collectionManager;
 
+    @InjectToken
     @GetMapping("/api/v1/collections")
-    public ResponseEntity<List<Collection>> getCollections(
-            @RequestHeader(name = "Authorization", required = false) String authHeader, Authentication authentication, TokenInfo tokenInfo) {
-        if (!(authentication.getDetails() instanceof TokenInfo)) {
-            return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<List<Collection>> getCollections(Authentication authentication, TokenInfo tokenInfo) {
+        if (tokenInfo == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-//        TokenInfo tokenInfo = (TokenInfo) authentication.getDetails();
         return new ResponseEntity<>(collectionManager.getCollections(tokenInfo.getClient_id()), HttpStatus.OK);
     }
 

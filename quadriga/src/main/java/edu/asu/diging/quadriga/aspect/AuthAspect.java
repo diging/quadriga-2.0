@@ -2,8 +2,6 @@ package edu.asu.diging.quadriga.aspect;
 
 import java.util.Arrays;
 
-import javax.security.sasl.AuthenticationException;
-
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,22 +14,25 @@ import edu.asu.diging.quadriga.config.web.TokenInfo;
 @Aspect
 @Configuration
 public class AuthAspect {
+    
+    public static final String AUTH_PARAM = "authentication";
+    public static final String TOKEN_PARAM = "tokenInfo";
 
-    @Around("execution(* edu.asu.diging.quadriga.api.v1.GetCollectionsApiController.getCollections(..))")
+    @Around("execution(@edu.asu.diging.quadriga.aspect.annotation.InjectToken * *.*(..))")
     public Object authAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
-        int authIndex = getIndexOf(joinPoint, "authentication");
-        int tokenIndex = getIndexOf(joinPoint, "tokenInfo");
+        int authIndex = getIndexOf(joinPoint, AUTH_PARAM);
+        int tokenIndex = getIndexOf(joinPoint, TOKEN_PARAM);
 
         if (authIndex >= 0 && tokenIndex >= 0) {
             Authentication authentication = (Authentication) args[authIndex];
-            if (authentication.getDetails() instanceof TokenInfo) {
+            if (authentication != null && authentication.getDetails() instanceof TokenInfo) {
                 args[tokenIndex] = authentication.getDetails();
             }
-            return joinPoint.proceed(args);
-        } else {
-            throw new AuthenticationException();
+        } else if (tokenIndex >= 0) {
+            args[tokenIndex] = null;
         }
+        return joinPoint.proceed(args);
     }
 
     private int getIndexOf(ProceedingJoinPoint joinPoint, String argName) {
