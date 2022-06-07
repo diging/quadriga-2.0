@@ -14,16 +14,13 @@ import edu.asu.diging.quadriga.config.web.TokenInfo;
 public class AuthAspect {
 
     @Pointcut("execution(@edu.asu.diging.quadriga.aspect.annotation.InjectToken * *(..))")
-    public void annotatedMethod() {
-    }
+    public void annotatedMethod() {}
 
     @Pointcut("execution(* *(.., org.springframework.security.core.Authentication, ..))")
-    public void authenticationParamMethod() {
-    }
+    public void authenticationParamMethod() {}
 
     @Pointcut("execution(* *(.., edu.asu.diging.quadriga.config.web.TokenInfo, ..))")
-    public void tokenParamMethod() {
-    }
+    public void tokenParamMethod() {}
 
     @Around("annotatedMethod() && authenticationParamMethod() && tokenParamMethod()")
     public Object authAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -35,6 +32,8 @@ public class AuthAspect {
             Authentication authentication = (Authentication) args[authIndex];
             if (authentication != null && authentication.getDetails() instanceof TokenInfo) {
                 args[tokenIndex] = authentication.getDetails();
+            } else {
+                args[tokenIndex] = null;
             }
         } else if (tokenIndex >= 0) {
             args[tokenIndex] = null;
@@ -42,7 +41,7 @@ public class AuthAspect {
         return joinPoint.proceed(args);
     }
 
-    private <T> int getIndexOf(Object[] args, Class<?> classType) {
+    private int getIndexOf(Object[] args, Class<?> classType) {
         for (int i = 0; i < args.length; i++) {
             if (classType.isAssignableFrom(args[i].getClass())) {
                 return i;
