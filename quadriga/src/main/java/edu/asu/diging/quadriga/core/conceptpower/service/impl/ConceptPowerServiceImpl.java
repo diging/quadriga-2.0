@@ -27,6 +27,8 @@ import edu.asu.diging.quadriga.core.conceptpower.service.ConceptTypeService;
 @Service
 public class ConceptPowerServiceImpl implements ConceptPowerService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private ConceptCacheService conceptCacheService;
 
@@ -38,8 +40,6 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
     
     @Value("${conceptCacheUpdateInterval}")
     private Integer conceptCacheUpdateInterval;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public ConceptCache getConceptByUri(String uri) {

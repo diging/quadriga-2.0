@@ -27,9 +27,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Table(name = "conceptpower_concept_cache")
 public class ConceptCache implements Serializable, Comparable<ConceptCache> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 6260562492095202271L;
 
     @Id

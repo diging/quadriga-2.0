@@ -77,27 +77,18 @@ public class DisplayCollectionController {
 
         model.addAttribute("collection", collection);
 
-        // Determine page number and size for network pagination
-        int pageNumber = 0;
-        int sizeLimit = 10;
+//      Determine page number and size for network pagination      
+        page = (page == null || page < 0) ? 0 : page - 1;
+        size = (size == null || size < 1) ? 10 : size;
+        
 
-        if (page != null) {
-            pageNumber = page - 1;
-            pageNumber = pageNumber < 0 ? 0 : pageNumber;
-        }
-
-        if (size != null) {
-            sizeLimit = size;
-            sizeLimit = sizeLimit < 1 ? 10 : sizeLimit;
-        }
-
-        model.addAttribute("size", sizeLimit);
+        model.addAttribute("size", size);
 
         EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         
         model.addAttribute("latestNetwork", latestNetwork);
         
-        Pageable paging = PageRequest.of(pageNumber, sizeLimit);
+        Pageable paging = PageRequest.of(page, size);
 
         // Get all EventGraphs for this collection
         Page<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), paging);
@@ -108,7 +99,7 @@ public class DisplayCollectionController {
 
         model.addAttribute("networks", eventGraphsList.getContent());
         model.addAttribute("totalPages", eventGraphsList.getTotalPages());
-        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageNumber", page);
         model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
         model.addAttribute("collection", collection);
         

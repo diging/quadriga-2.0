@@ -24,15 +24,15 @@ import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerConnectorSe
 @PropertySource({ "classpath:config.properties" })
 public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Value("${conceptpower_base_url}")
     private String conceptPowerBaseURL;
 
-    @Value("${conceptpower_id_url}")
-    private String conceptPowerIdURL;
+    @Value("${conceptpower_id_endpoint}")
+    private String conceptPowerIdEndpoint;
 
     private RestTemplate restTemplate;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public ConceptPowerConnectorServiceImpl() {
         restTemplate = new RestTemplate();
@@ -43,7 +43,7 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
         Map<String, String> pathVariables = new HashMap<>();
         pathVariables.put("concept_uri", conceptURI);
 
-        String conceptPowerURL = conceptPowerBaseURL + conceptPowerIdURL;
+        String conceptPowerURL = conceptPowerBaseURL + conceptPowerIdEndpoint;
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
@@ -60,10 +60,7 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
                 }
             }
         } catch (RestClientException e) {
-            logger.error("Could not get concept for URI: " + conceptURI, e);
-            if (conceptPowerURL == null || conceptPowerURL.equals("")) {
-                logger.error("ConceptPowerURL was found to be blank or null");
-            }
+            logger.error("Could not get concept for URI: " + conceptURI + " at URL: " + conceptPowerURL, e);
         }
 
         return null;
