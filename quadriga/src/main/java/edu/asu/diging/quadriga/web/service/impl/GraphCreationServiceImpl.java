@@ -29,10 +29,10 @@ import edu.asu.diging.quadriga.web.service.GraphCreationService;
 @Service
 public class GraphCreationServiceImpl implements GraphCreationService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private ConceptPowerService conceptPowerService;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public GraphElements createGraph(List<EventGraph> eventGraphs) {
