@@ -1,7 +1,9 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,8 +102,11 @@ public class MappedTripleServiceImpl implements MappedTripleService {
      */
     @Override
     public List<Triple> getMappedTriples(String mappedTripleGroupId) {
-        List<Predicate> predicates = predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId);
-        return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
+        Optional<List<Predicate>> predicates = predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId);
+        if (predicates.isPresent()) {
+            return predicates.get().stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     private Triple toTriple(Predicate predicate) {

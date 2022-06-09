@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -71,7 +72,7 @@ public class MappedTripleServiceImplTest {
 
     @Test
     public void test_getMappedTriples_success() {
-        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId)).thenReturn(collectionPredicates);
+        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId)).thenReturn(Optional.of(collectionPredicates));
 
         List<Triple> triples = serviceToTest.getMappedTriples(mappedTripleGroupId);
         Assert.assertEquals(1, triples.size());
@@ -92,7 +93,7 @@ public class MappedTripleServiceImplTest {
 
     @Test
     public void test_getMappedTriples_empty() {
-        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId)).thenReturn(new ArrayList<>());
+        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId)).thenReturn(Optional.of(new ArrayList<>()));
 
         List<Triple> triples = serviceToTest.getMappedTriples(mappedTripleGroupId);
         Assert.assertEquals(0, triples.size());

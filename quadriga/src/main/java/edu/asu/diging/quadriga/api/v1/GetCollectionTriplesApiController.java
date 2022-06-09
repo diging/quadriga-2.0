@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.asu.diging.quadriga.aspect.annotation.InjectToken;
 import edu.asu.diging.quadriga.config.web.TokenInfo;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
@@ -39,14 +40,13 @@ public class GetCollectionTriplesApiController {
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
 
+    @InjectToken
     @GetMapping(value = "/api/v1/collection/{collectionId}/triples", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getTriples(@PathVariable("collectionId") String collectionId,
-            Authentication authentication) {
+            Authentication authentication, TokenInfo tokenInfo) {
         try {
 
             Collection collection = collectionManager.findCollection(collectionId);
-
-            TokenInfo tokenInfo = (TokenInfo) authentication.getDetails();
 
             // either token info wasn't returned by citesphere or the token has expired
             if (tokenInfo == null || collection.getApps() == null || collection.getApps().isEmpty()
