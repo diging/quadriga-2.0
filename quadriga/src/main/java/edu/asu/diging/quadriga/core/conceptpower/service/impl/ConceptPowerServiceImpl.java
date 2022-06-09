@@ -45,7 +45,8 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
     public ConceptCache getConceptByUri(String uri) {
 
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
-
+        
+        conceptCacheUpdateInterval=0;
         if (conceptCache == null || ChronoUnit.HOURS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= conceptCacheUpdateInterval) {
             conceptCache = saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
         }
@@ -165,14 +166,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
             conceptCache.setDeleted(conceptEntry.getDeleted() == null ? false : conceptEntry.getDeleted());
             conceptCache.setCreatorId(conceptEntry.getCreatorId());
             conceptCache.setWord(conceptEntry.getLemma());
-
-            if(conceptEntry.getConceptUri() != null) {
-                // get last part of URI = id
-                int index = conceptEntry.getConceptUri().lastIndexOf("/");
-                if (index != -1) {
-                    conceptCache.setId(conceptEntry.getConceptUri().substring(index + 1));
-                }
-            }
+            conceptCache.setId(conceptEntry.getId());
 
             if (conceptEntry.getWordnetId() != null && !conceptEntry.getWordnetId().trim().equals("")) {
                 conceptCache.setWordNetIds(Arrays.asList(conceptEntry.getWordnetId().split(",")));
