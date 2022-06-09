@@ -15,7 +15,7 @@ import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 
 @Controller
-public class GetCollectionsApiController {
+public class CollectionsApiControlller {
 
     @Autowired
     private CollectionManager collectionManager;
