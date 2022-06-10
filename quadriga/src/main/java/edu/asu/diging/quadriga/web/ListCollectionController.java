@@ -32,7 +32,7 @@ public class ListCollectionController {
         }
 
         model.addAttribute("collections", collectionRepo.findAll(PageRequest.of(page, size)));
-        return "auth/showcollection";
+        return "auth/showcollections";
     }
 
 }
