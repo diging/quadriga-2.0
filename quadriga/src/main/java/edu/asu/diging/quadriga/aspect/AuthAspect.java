@@ -16,27 +16,23 @@ public class AuthAspect {
     @Pointcut("execution(@edu.asu.diging.quadriga.aspect.annotation.InjectToken * *(..))")
     public void annotatedMethod() {}
 
-    @Pointcut("execution(* *(.., org.springframework.security.core.Authentication, ..))")
-    public void authenticationParamMethod() {}
-
     @Pointcut("execution(* *(.., edu.asu.diging.quadriga.config.web.TokenInfo, ..))")
     public void tokenParamMethod() {}
 
-    @Around("annotatedMethod() && authenticationParamMethod() && tokenParamMethod()")
+    @Around("annotatedMethod() && tokenParamMethod()")
     public Object authAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         int authIndex = getIndexOf(args, Authentication.class);
         int tokenIndex = getIndexOf(args, TokenInfo.class);
 
-        if (authIndex >= 0 && tokenIndex >= 0) {
-            Authentication authentication = (Authentication) args[authIndex];
-            if (authentication != null && authentication.getDetails() instanceof TokenInfo) {
-                args[tokenIndex] = authentication.getDetails();
-            } else {
-                args[tokenIndex] = null;
-            }
-        } else if (tokenIndex >= 0) {
+        if (tokenIndex >= 0) {
             args[tokenIndex] = null;
+            if (authIndex >= 0) {
+                Authentication authentication = (Authentication) args[authIndex];
+                if (authentication != null && authentication.getDetails() instanceof TokenInfo) {
+                    args[tokenIndex] = authentication.getDetails();
+                }
+            }
         }
         return joinPoint.proceed(args);
     }
