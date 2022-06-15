@@ -5,6 +5,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 import edu.asu.diging.quadriga.config.web.TokenInfo;
@@ -29,9 +31,13 @@ public class AuthAspect {
             args[tokenIndex] = null;
             if (authIndex >= 0) {
                 Authentication authentication = (Authentication) args[authIndex];
-                if (authentication != null && authentication.getDetails() instanceof TokenInfo) {
+                if (authentication.getDetails() instanceof TokenInfo) {
                     args[tokenIndex] = authentication.getDetails();
                 }
+            }
+
+            if (args[tokenIndex] == null) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
         }
         return joinPoint.proceed(args);

@@ -23,9 +23,6 @@ public class CollectionsApiControlller {
     @InjectToken
     @GetMapping("/api/v1/collections")
     public ResponseEntity<List<Collection>> getCollections(Authentication authentication, TokenInfo tokenInfo) {
-        if (tokenInfo == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
         return new ResponseEntity<>(collectionManager.getCollections(tokenInfo.getClient_id()), HttpStatus.OK);
     }
 
