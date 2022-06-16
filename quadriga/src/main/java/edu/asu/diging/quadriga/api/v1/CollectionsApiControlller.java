@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -22,7 +21,7 @@ public class CollectionsApiControlller {
 
     @InjectToken
     @GetMapping("/api/v1/collections")
-    public ResponseEntity<List<Collection>> getCollections(Authentication authentication, TokenInfo tokenInfo) {
+    public ResponseEntity<List<Collection>> getCollections(TokenInfo tokenInfo) {
         return new ResponseEntity<>(collectionManager.getCollections(tokenInfo.getClient_id()), HttpStatus.OK);
     }
 
