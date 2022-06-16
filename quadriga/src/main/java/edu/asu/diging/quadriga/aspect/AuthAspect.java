@@ -28,7 +28,7 @@ public class AuthAspect {
     public void tokenParamMethod() {}
 
     /**
-     * Injects the token info from security context in the method parameter of same class.
+     * Injects token info from the security context into the method parameter of same class type.
      * This aspect is wired for the method annotated with {@link InjectToken} and has a method parameter of type {@link TokenInfo}
      * @param joinPoint Contains data regarding the method signature and arguments passed
      * @return Updated method args containing the token info
