@@ -1,6 +1,6 @@
 package edu.asu.diging.quadriga.core.model.events.pattern;
 
-public class RelationEventPattern extends BaseEventPattern {
+public class RelationEventPattern extends CreationEventPattern {
 
     private CreationEventPattern subject;
 
