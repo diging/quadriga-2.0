@@ -1,15 +1,15 @@
-package edu.asu.diging.quadriga.aspect;
+package edu.asu.diging.quadriga.core.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
-import edu.asu.diging.quadriga.aspect.annotation.InjectToken;
 import edu.asu.diging.quadriga.config.web.TokenInfo;
+import edu.asu.diging.quadriga.core.aspect.annotation.InjectToken;
 import edu.asu.diging.quadriga.core.exceptions.TokenNotFoundException;
 
 /**
@@ -18,10 +18,10 @@ import edu.asu.diging.quadriga.core.exceptions.TokenNotFoundException;
  *
  */
 @Aspect
-@Configuration
+@Component
 public class AuthAspect {
 
-    @Pointcut("execution(@edu.asu.diging.quadriga.aspect.annotation.InjectToken * *(..))")
+    @Pointcut("execution(@edu.asu.diging.quadriga.core.aspect.annotation.InjectToken * *(..))")
     public void annotatedMethod() {}
 
     @Pointcut("execution(* *(.., edu.asu.diging.quadriga.config.web.TokenInfo, ..))")

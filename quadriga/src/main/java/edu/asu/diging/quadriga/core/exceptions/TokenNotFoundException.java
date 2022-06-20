@@ -1,6 +1,6 @@
 package edu.asu.diging.quadriga.core.exceptions;
 
-public class TokenNotFoundException extends Exception {
+public class TokenNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = -1722030829513272540L;
 

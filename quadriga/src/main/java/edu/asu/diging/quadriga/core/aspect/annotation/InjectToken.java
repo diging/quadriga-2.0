@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.aspect.annotation;
+package edu.asu.diging.quadriga.core.aspect.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
