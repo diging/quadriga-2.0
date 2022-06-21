@@ -1,0 +1,61 @@
+package edu.asu.diging.quadriga.core.model.conceptpower;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class ConceptpowerConceptType {
+
+    @JsonProperty("type_id")
+    private String typeId;
+    @JsonProperty("type_uri")
+    private String typeUri;
+    @JsonProperty("type_name")
+    private String typeName;
+
+    public String getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
+    }
+
+    public String getTypeUri() {
+        return typeUri;
+    }
+
+    public void setTypeUri(String typeUri) {
+        this.typeUri = typeUri;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getId() {
+        return typeId;
+    }
+
+    public void setId(String id) {
+        this.typeId = id;
+    }
+
+    public String getUri() {
+        return typeUri;
+    }
+
+    public void setUri(String uri) {
+        this.typeUri = uri;
+    }
+
+    public String getName() {
+        return typeName;
+    }
+
+    public void setName(String name) {
+        this.typeName = name;
+    }
+}
