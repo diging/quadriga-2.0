@@ -24,7 +24,6 @@ public class ConceptEntry {
     private String similarTo;
     @JsonProperty("synonym_ids")
     private String synonymIds;
-    private List<String> wordnetIds;
 
     private ConceptpowerConceptType type;
     private List<ConceptpowerAlternativeId> alternativeIds;
@@ -133,14 +132,6 @@ public class ConceptEntry {
 
     public void setAlternativeIds(List<ConceptpowerAlternativeId> alternativeIds) {
         this.alternativeIds = alternativeIds;
-    }
-
-    public List<String> getWordnetIds() {
-        return wordnetIds;
-    }
-
-    public void setWordnetIds(List<String> wordnetIds) {
-        this.wordnetIds = wordnetIds;
     }
 
     public String getCreatorId() {
