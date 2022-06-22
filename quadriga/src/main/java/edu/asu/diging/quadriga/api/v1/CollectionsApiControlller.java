@@ -9,8 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import edu.asu.diging.quadriga.aspect.annotation.InjectToken;
 import edu.asu.diging.quadriga.config.web.TokenInfo;
+import edu.asu.diging.quadriga.core.aspect.annotation.InjectToken;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 
