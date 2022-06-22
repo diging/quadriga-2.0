@@ -26,6 +26,13 @@ public interface CollectionManager {
     public Collection findCollection(String id) throws InvalidObjectIdException;
     
     /**
+     * Retrieves the collections which the app has access to
+     * @param app App for which the collections are to be retrieved
+     * @return the found collections
+     */
+    public List<Collection> getCollections(String app);
+    
+    /**
      * 
      * Edits an existing Collection and updates it in the db
      * @param id of the collection that needs to be updated

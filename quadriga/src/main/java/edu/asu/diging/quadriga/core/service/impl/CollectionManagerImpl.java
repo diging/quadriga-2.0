@@ -1,8 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.time.OffsetDateTime;
-import java.util.Objects;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -69,6 +67,14 @@ public class CollectionManagerImpl implements CollectionManager {
         } catch(IllegalArgumentException e) {
             throw new InvalidObjectIdException(e);
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.CollectionManager#getCollections(java.lang.String)
+     */
+    @Override
+    public List<Collection> getCollections(String app) {
+        return collectionRepo.findByAppsContaining(app);
     }
 
     /* (non-Javadoc)
