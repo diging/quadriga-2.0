@@ -27,8 +27,6 @@ import edu.asu.diging.quadriga.core.service.PredicateManager;
 
 @Service
 public class CollectionManagerImpl implements CollectionManager {
-    
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CitesphereConnector citesphereConnector;
@@ -41,9 +39,11 @@ public class CollectionManagerImpl implements CollectionManager {
     
     @Autowired
     private PredicateManager predicateManager;
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
+     * @see edu.asu.diging.quadriga.core.service.CollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
      */
     public Collection addCollection(String name, String description, List<String> apps) throws CitesphereAppNotFoundException {   
         validateApps(apps);      
@@ -55,9 +55,8 @@ public class CollectionManagerImpl implements CollectionManager {
         return collectionRepo.save(collection);
     }
 
-    
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#findCollection(java.lang.String)
+     * @see edu.asu.diging.quadriga.core.service.CollectionManager#findCollection(java.lang.String)
      */
     @Override
     public Collection findCollection(String id) throws InvalidObjectIdException {
@@ -93,7 +92,7 @@ public class CollectionManagerImpl implements CollectionManager {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#deleteCollection(java.lang.String)
      */
