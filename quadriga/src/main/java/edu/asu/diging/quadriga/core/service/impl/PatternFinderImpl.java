@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.GraphPattern;
+import edu.asu.diging.quadriga.core.conceptpower.ConceptpowerConnector;
 import edu.asu.diging.quadriga.core.model.EventGraph;
+import edu.asu.diging.quadriga.core.model.conceptpower.ConceptEntry;
+import edu.asu.diging.quadriga.core.model.conceptpower.ConceptpowerResponse;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
@@ -21,6 +24,9 @@ public class PatternFinderImpl implements PatternFinder {
 
     @Autowired
     private PatternMapper patternMapper;
+
+    @Autowired
+    private ConceptpowerConnector conceptpowerConnector;
 
     @Override
     public List<Graph> findGraphsWithPattern(GraphPattern pattern, EventGraph eventGraph) {
@@ -75,8 +81,17 @@ public class PatternFinderImpl implements PatternFinder {
                 && doesMatchPattern(graphNode.getRelation().getPredicate(), patternNode.getPredicate());
     }
 
-    private boolean matchConceptType(String graphNodeInterpretation, String patternNodeInterpretation) {
-        return true;
+    private boolean matchConceptType(String graphNodeInterpretation, String patternConceptType) {
+        ConceptEntry conceptEntry = conceptpowerConnector.getConceptEntry(graphNodeInterpretation);
+        if (conceptEntry != null) {
+            return conceptEntry.getType().getUri().equals(patternConceptType);
+        }
+        ConceptpowerResponse similarEntries = conceptpowerConnector.findConceptEntryEqualTo(graphNodeInterpretation);
+        if (similarEntries != null && similarEntries.getConceptEntries() != null
+                && !similarEntries.getConceptEntries().isEmpty()) {
+            return similarEntries.getConceptEntries().get(0).getType().getUri().equals(patternConceptType);
+        }
+        return false;
     }
 
 }

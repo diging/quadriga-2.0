@@ -21,7 +21,7 @@ import edu.asu.diging.quadriga.core.service.TriFunction;
 
 @Service
 public class PatternMapperImpl implements PatternMapper {
-    
+
     private Map<String, TriFunction<String, PatternNodeData, GraphPattern, CreationEventPattern>> creationMethods;
 
     public PatternMapperImpl() {
@@ -32,10 +32,10 @@ public class PatternMapperImpl implements PatternMapper {
 
     @Override
     public CreationEventPattern mapPattern(GraphPattern graphPattern) {
-        List<Entry<String, PatternNodeData>> startNodes = graphPattern.getNodes().entrySet().stream()
-                .filter(node -> graphPattern.getEdges().stream().noneMatch(edge -> edge.getTarget().equals(node.getKey())))
+        List<Entry<String, PatternNodeData>> startNodes = graphPattern.getNodes().entrySet().stream().filter(
+                node -> graphPattern.getEdges().stream().noneMatch(edge -> edge.getTarget().equals(node.getKey())))
                 .collect(Collectors.toList());
-        
+
         if (startNodes.size() != 1) {
             return null;
         }
@@ -44,44 +44,48 @@ public class PatternMapperImpl implements PatternMapper {
         CreationEventPattern root = createGraph(key, node, graphPattern);
         return root;
     }
-    
+
     private CreationEventPattern createGraph(String nodeId, PatternNodeData node, GraphPattern graphPattern) {
-        TriFunction<String, PatternNodeData, GraphPattern, CreationEventPattern> method = creationMethods.get(node.getType());
+        TriFunction<String, PatternNodeData, GraphPattern, CreationEventPattern> method = creationMethods
+                .get(node.getType());
         return method.apply(nodeId, node, graphPattern);
     }
-    
-    private CreationEventPattern createRelationEventPattern(String nodeId, PatternNodeData node, GraphPattern graphPattern) {
+
+    private CreationEventPattern createRelationEventPattern(String nodeId, PatternNodeData node,
+            GraphPattern graphPattern) {
         RelationEventPattern relationPatternNode = new RelationEventPattern();
-        
+
         Optional<Edge> subject = graphPattern.getEdges().stream().filter(
                 e -> e.getSource().equals(nodeId) && e.getRelation().equals(NetworkConstants.RELATION_TYPE_SUBJECT))
                 .findFirst();
         if (subject.isPresent()) {
-            relationPatternNode.setSubject(
-                    createGraph(subject.get().getTarget(), graphPattern.getNodes().get(subject.get().getTarget()), graphPattern));
+            relationPatternNode.setSubject(createGraph(subject.get().getTarget(),
+                    graphPattern.getNodes().get(subject.get().getTarget()), graphPattern));
         }
 
         Optional<Edge> predicate = graphPattern.getEdges().stream().filter(
                 e -> e.getSource().equals(nodeId) && e.getRelation().equals(NetworkConstants.RELATION_TYPE_PREDICATE))
                 .findFirst();
         if (predicate.isPresent()) {
-            relationPatternNode.setPredicate((AppellationEventPattern)
-                    createGraph(predicate.get().getTarget(), graphPattern.getNodes().get(predicate.get().getTarget()), graphPattern));
+            relationPatternNode.setPredicate((AppellationEventPattern) createGraph(predicate.get().getTarget(),
+                    graphPattern.getNodes().get(predicate.get().getTarget()), graphPattern));
         }
 
         Optional<Edge> object = graphPattern.getEdges().stream().filter(
                 e -> e.getSource().equals(nodeId) && e.getRelation().equals(NetworkConstants.RELATION_TYPE_OBJECT))
                 .findFirst();
         if (object.isPresent()) {
-            relationPatternNode.setObject(
-                    createGraph(object.get().getTarget(), graphPattern.getNodes().get(object.get().getTarget()), graphPattern));
+            relationPatternNode.setObject(createGraph(object.get().getTarget(),
+                    graphPattern.getNodes().get(object.get().getTarget()), graphPattern));
         }
-        
+
         return relationPatternNode;
     }
-    
-    private CreationEventPattern createNodeEventPattern(String nodeId, PatternNodeData node, GraphPattern graphPattern) {
+
+    private CreationEventPattern createNodeEventPattern(String nodeId, PatternNodeData node,
+            GraphPattern graphPattern) {
         AppellationEventPattern patternNode = new AppellationEventPattern();
+        patternNode.setId(nodeId);
         patternNode.setConceptType(node.getConceptType());
         patternNode.setInterpretation(node.getInterpretation());
         return patternNode;
