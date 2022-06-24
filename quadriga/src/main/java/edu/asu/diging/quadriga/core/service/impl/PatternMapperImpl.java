@@ -54,6 +54,7 @@ public class PatternMapperImpl implements PatternMapper {
     private CreationEventPattern createRelationEventPattern(String nodeId, PatternNodeData node,
             GraphPattern graphPattern) {
         RelationEventPattern relationPatternNode = new RelationEventPattern();
+        relationPatternNode.setId(nodeId);
 
         Optional<Edge> subject = graphPattern.getEdges().stream().filter(
                 e -> e.getSource().equals(nodeId) && e.getRelation().equals(NetworkConstants.RELATION_TYPE_SUBJECT))
