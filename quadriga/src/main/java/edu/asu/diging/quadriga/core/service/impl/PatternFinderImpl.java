@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.GraphPattern;
@@ -26,6 +27,7 @@ import edu.asu.diging.quadriga.core.model.events.pattern.RelationEventPattern;
 import edu.asu.diging.quadriga.core.service.PatternFinder;
 import edu.asu.diging.quadriga.core.service.PatternMapper;
 
+@Service
 public class PatternFinderImpl implements PatternFinder {
 
     @Autowired
