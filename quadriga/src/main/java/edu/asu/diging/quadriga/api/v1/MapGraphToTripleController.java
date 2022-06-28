@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.GraphPattern;
@@ -41,6 +42,7 @@ public class MapGraphToTripleController {
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
 
+    @ResponseBody
     @PostMapping(value = "/api/v1/collection/{collectionId}/network/map")
     public HttpStatus mapPatternToTriples(@PathVariable String collectionId,
             @RequestBody GraphPatternList graphPatternList) {

@@ -17,6 +17,7 @@ import edu.asu.diging.quadriga.api.v1.model.NodeMetadata;
 import edu.asu.diging.quadriga.core.conceptpower.ConceptpowerConnector;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.conceptpower.ConceptEntry;
+import edu.asu.diging.quadriga.core.model.conceptpower.ConceptpowerAlternativeId;
 import edu.asu.diging.quadriga.core.model.conceptpower.ConceptpowerResponse;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
@@ -124,13 +125,15 @@ public class PatternFinderImpl implements PatternFinder {
 
     private boolean matchAppellationNodes(AppellationEvent graphNode, AppellationEventPattern patternNode) {
 
-        if (patternNode.getConceptType() != null && !patternNode.getConceptType().isEmpty() && matchConceptType(
-                graphNode.getTerm().getInterpretation().getSourceURI(), patternNode.getConceptType())) {
+        if (patternNode.getConceptType() != null && !patternNode.getConceptType().isEmpty()
+                && !matchConceptType(graphNode.getTerm().getInterpretation().getSourceURI(),
+                        patternNode.getConceptType())) {
             return false;
         }
 
         if (patternNode.getInterpretation() != null && !patternNode.getInterpretation().isEmpty()
-                && !patternNode.getInterpretation().equals(graphNode.getTerm().getInterpretation().getSourceURI())) {
+                && !matchInterpretation(graphNode.getTerm().getInterpretation().getSourceURI(),
+                        patternNode.getInterpretation())) {
             return false;
         }
 
@@ -143,15 +146,36 @@ public class PatternFinderImpl implements PatternFinder {
                 && doesMatchPattern(graphNode.getRelation().getPredicate(), patternNode.getPredicate());
     }
 
-    private boolean matchConceptType(String graphNodeInterpretation, String patternConceptType) {
+    private boolean matchInterpretation(String graphNodeInterpretation, String patternNodeInterpretation) {
+        if (graphNodeInterpretation.equals(patternNodeInterpretation)) {
+            return true;
+        }
+
         ConceptEntry conceptEntry = conceptpowerConnector.getConceptEntry(graphNodeInterpretation);
         if (conceptEntry != null) {
+            for (ConceptpowerAlternativeId alternativeId : conceptEntry.getAlternativeIds()) {
+                if (alternativeId.getConceptUri().equals(patternNodeInterpretation)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean matchConceptType(String graphNodeInterpretation, String patternConceptType) {
+        ConceptEntry conceptEntry = conceptpowerConnector.getConceptEntry(graphNodeInterpretation);
+        if (conceptEntry != null && conceptEntry.getType() != null) {
             return conceptEntry.getType().getUri().equals(patternConceptType);
         }
         ConceptpowerResponse similarEntries = conceptpowerConnector.findConceptEntryEqualTo(graphNodeInterpretation);
         if (similarEntries != null && similarEntries.getConceptEntries() != null
                 && !similarEntries.getConceptEntries().isEmpty()) {
-            return similarEntries.getConceptEntries().get(0).getType().getUri().equals(patternConceptType);
+            for (ConceptEntry concept : similarEntries.getConceptEntries()) {
+                if (concept.getType() != null) {
+                    return concept.getType().getUri().equals(patternConceptType);
+                }
+            }
         }
         return false;
     }

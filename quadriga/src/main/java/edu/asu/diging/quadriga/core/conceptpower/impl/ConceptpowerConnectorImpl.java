@@ -38,10 +38,18 @@ public class ConceptpowerConnectorImpl implements ConceptpowerConnector {
 
     @Override
     public ConceptEntry getConceptEntry(String id) {
-        ConceptpowerResponse concepts = restTemplate.getForObject(
-                String.format("%s%s%s", conceptpowerBaseUrl, conceptpowerConceptUrl, id), ConceptpowerResponse.class);
-        if (concepts.getConceptEntries() != null && !concepts.getConceptEntries().isEmpty()) {
-            return concepts.getConceptEntries().get(0);
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
+        HttpEntity<?> entity = new HttpEntity<Object>(requestHeaders);
+        
+        ResponseEntity<ConceptpowerResponse> response = restTemplate.exchange(
+                String.format("%s%s%s", conceptpowerBaseUrl, conceptpowerConceptUrl, id), HttpMethod.GET, entity, ConceptpowerResponse.class);
+        
+        if (response.getStatusCode() == HttpStatus.OK) {
+            ConceptpowerResponse concepts = response.getBody();
+            if (concepts.getConceptEntries() != null && !concepts.getConceptEntries().isEmpty()) {
+                return concepts.getConceptEntries().get(0);
+            }
         }
         return null;
     }
