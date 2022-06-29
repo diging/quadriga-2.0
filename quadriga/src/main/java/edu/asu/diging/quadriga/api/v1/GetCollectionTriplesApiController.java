@@ -46,16 +46,15 @@ public class GetCollectionTriplesApiController {
 
             Collection collection = collectionManager.findCollection(collectionId);
 
-            if (tokenInfo == null || collection.getApps() == null || collection.getApps().isEmpty()
+            if (collection.getApps() == null || collection.getApps().isEmpty()
                     || !collection.getApps().contains(tokenInfo.getClient_id())) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
-            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.get(collectionId,
-                    MappedTripleType.DEFAULT_MAPPING);
+            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService
+                    .findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
             if (mappedTripleGroup == null) {
-                logger.error(
-                        "Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
+                logger.error("Couldn't find MappedTripleGroup entry for collectionId: " + collectionId);
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
