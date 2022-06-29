@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +14,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.asu.diging.quadriga.aspect.annotation.InjectToken;
 import edu.asu.diging.quadriga.config.web.TokenInfo;
+import edu.asu.diging.quadriga.core.aspect.annotation.InjectToken;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
@@ -42,13 +41,11 @@ public class GetCollectionTriplesApiController {
 
     @InjectToken
     @GetMapping(value = "/api/v1/collection/{collectionId}/triples", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getTriples(@PathVariable("collectionId") String collectionId,
-            Authentication authentication, TokenInfo tokenInfo) {
+    public ResponseEntity<String> getTriples(@PathVariable("collectionId") String collectionId, TokenInfo tokenInfo) {
         try {
 
             Collection collection = collectionManager.findCollection(collectionId);
 
-            // either token info wasn't returned by citesphere or the token has expired
             if (tokenInfo == null || collection.getApps() == null || collection.getApps().isEmpty()
                     || !collection.getApps().contains(tokenInfo.getClient_id())) {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
