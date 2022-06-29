@@ -17,9 +17,11 @@ import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.GraphPattern;
 import edu.asu.diging.quadriga.api.v1.model.GraphPatternList;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
@@ -57,9 +59,9 @@ public class MapGraphToTripleController {
             try {
                 mappedTripleGroup = mappedTripleGroupService.getById(graphPattern.getMappedTripleGroupId());
                 if (mappedTripleGroup == null) {
-                    return HttpStatus.NOT_FOUND;
+                    mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
                 }
-            } catch (InvalidObjectIdException e) {
+            } catch (InvalidObjectIdException | CollectionNotFoundException e) {
                 logger.error("Couldn't submit network", e);
                 return HttpStatus.NOT_FOUND;
             }
