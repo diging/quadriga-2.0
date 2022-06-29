@@ -88,15 +88,6 @@ public class AddNetworkApiController {
             return HttpStatus.NOT_FOUND;
         }
 
-        try {
-            Collection collection = collectionManager.findCollection(collectionId);
-            if (tokenInfo == null || collection.getApps() == null || collection.getApps().isEmpty()
-                    || !collection.getApps().contains(tokenInfo.getClient_id())) {
-                return HttpStatus.UNAUTHORIZED;
-            }
-        } catch (InvalidObjectIdException e) {
-            return HttpStatus.NOT_FOUND;
-        }
         eventGraphService.mapNetworkAndSave(quadruple.getGraph(), collectionId);
  
         try {

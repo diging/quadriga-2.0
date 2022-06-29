@@ -13,7 +13,7 @@ public interface MappedTripleService {
     Predicate storeMappedGraph(Graph graph, MappedTripleGroup mappedTripleGroup) throws NodeNotFoundException;
     
     /**
-     * Retrieves the mapped triples for the given collection id
+     * Retrieves the mapped triples for the given triple group id
      * @param mappedTripleGroupId Group Id for which the triples are to be fetched
      * @return the retrieved Triples
      */

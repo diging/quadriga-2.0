@@ -1,5 +1,10 @@
 package edu.asu.diging.quadriga.core.model;
 
+/**
+ * Holds the data of a mapped triple extracted from the submitted network.
+ * @author Maulik Limbadiya
+ *
+ */
 public class Triple {
     
     private TripleElement subject;
