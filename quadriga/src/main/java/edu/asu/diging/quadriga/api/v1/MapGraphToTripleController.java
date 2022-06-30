@@ -57,20 +57,21 @@ public class MapGraphToTripleController {
         for (GraphPattern graphPattern : graphPatternList.getPatternMappings()) {
             MappedTripleGroup mappedTripleGroup;
             try {
-                mappedTripleGroup = mappedTripleGroupService.getById(graphPattern.getMappedTripleGroupId());
-                if (mappedTripleGroup == null) {
+                if (graphPattern.getMappedTripleGroupId() != null && !graphPattern.getMappedTripleGroupId().isEmpty()) {
+                    mappedTripleGroup = mappedTripleGroupService.getById(graphPattern.getMappedTripleGroupId());
+                } else {
                     mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
                 }
             } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-                logger.error("Couldn't submit network", e);
+                logger.error("No collection found with id {}", collectionId, e);
                 return HttpStatus.NOT_FOUND;
             }
+            
             List<Graph> extractedGraphs = patternFinder.findGraphsWithPattern(graphPattern, eventGraph);
             for (Graph extractedGraph : extractedGraphs) {
                 try {
                     mappedTripleService.storeMappedGraph(extractedGraph, mappedTripleGroup);
                 } catch (NodeNotFoundException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }

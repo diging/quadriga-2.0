@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
@@ -30,6 +31,9 @@ import edu.asu.diging.quadriga.core.service.PatternMapper;
 
 @Service
 public class PatternFinderImpl implements PatternFinder {
+
+    @Value("${conceptpower_id_keyword}")
+    private String conceptpowerKeyword;
 
     @Autowired
     private PatternMapper patternMapper;
@@ -164,20 +168,50 @@ public class PatternFinderImpl implements PatternFinder {
     }
 
     private boolean matchConceptType(String graphNodeInterpretation, String patternConceptType) {
-        ConceptEntry conceptEntry = conceptpowerConnector.getConceptEntry(graphNodeInterpretation);
-        if (conceptEntry != null && conceptEntry.getType() != null) {
-            return conceptEntry.getType().getUri().equals(patternConceptType);
-        }
-        ConceptpowerResponse similarEntries = conceptpowerConnector.findConceptEntryEqualTo(graphNodeInterpretation);
-        if (similarEntries != null && similarEntries.getConceptEntries() != null
-                && !similarEntries.getConceptEntries().isEmpty()) {
-            for (ConceptEntry concept : similarEntries.getConceptEntries()) {
-                if (concept.getType() != null) {
-                    return concept.getType().getUri().equals(patternConceptType);
-                }
+        if (graphNodeInterpretation.contains(conceptpowerKeyword)) {
+            ConceptEntry conceptEntry = conceptpowerConnector.getConceptEntry(graphNodeInterpretation);
+            if (conceptEntry != null && conceptEntry.getType() != null) {
+                return conceptEntry.getType().getUri().equals(patternConceptType);
             }
+        } else {
+            graphNodeInterpretation = normalizeUri(graphNodeInterpretation);
+            String nextInterpretation = getNextFormat(graphNodeInterpretation);
+            do {
+                ConceptpowerResponse similarEntries = conceptpowerConnector
+                        .findConceptEntryEqualTo(graphNodeInterpretation);
+                if (similarEntries != null && similarEntries.getConceptEntries() != null
+                        && !similarEntries.getConceptEntries().isEmpty()) {
+                    for (ConceptEntry concept : similarEntries.getConceptEntries()) {
+                        if (concept.getType() != null) {
+                            return concept.getType().getUri().equals(patternConceptType);
+                        }
+                    }
+                }
+                graphNodeInterpretation = nextInterpretation;
+                nextInterpretation = getNextFormat(graphNodeInterpretation);
+            } while (!nextInterpretation.equals(graphNodeInterpretation));
+
         }
         return false;
+    }
+
+    private String normalizeUri(String uri) {
+        uri = uri.replaceFirst("https", "http");
+        uri = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
+        return uri;
+    }
+
+    private String getNextFormat(String uri) {
+        boolean containsHttps = uri.startsWith("https");
+        boolean endsWithSeparator = uri.endsWith("/");
+
+        if (!endsWithSeparator) {
+            return uri + "/";
+        } else if (!containsHttps) {
+            return uri.replaceFirst("http", "https");
+        }
+
+        return uri;
     }
 
 }
