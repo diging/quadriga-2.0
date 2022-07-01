@@ -1,22 +1,22 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
+import edu.asu.diging.quadriga.api.v1.model.MappedTriplesPage;
 import edu.asu.diging.quadriga.api.v1.model.NodeData;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
-import edu.asu.diging.quadriga.core.model.Triple;
 import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.mapped.Concept;
 import edu.asu.diging.quadriga.core.model.mapped.Predicate;
@@ -101,20 +101,23 @@ public class MappedTripleServiceImpl implements MappedTripleService {
      * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getMappedTriples(java.lang.String)
      */
     @Override
-    public List<Triple> getMappedTriples(String mappedTripleGroupId) {
-        Optional<List<Predicate>> predicates = predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId);
+    public MappedTriplesPage getMappedTriples(String mappedTripleGroupId, int page, int pageSize) {
+        MappedTriplesPage triplePage = new MappedTriplesPage();
+        Optional<Page<Predicate>> predicates = predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId, PageRequest.of(page-1, pageSize));
         if (predicates.isPresent()) {
-            return predicates.get().stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
+            triplePage.setTriples(predicates.get().stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList()));
+            triplePage.setCurrentPage(predicates.get().getNumber() + 1);
+            triplePage.setTotalPages(predicates.get().getTotalPages());
         }
-        return new ArrayList<>();
+        return triplePage;
     }
 
-    private Triple toTriple(Predicate predicate) {
+    private DefaultMapping toTriple(Predicate predicate) {
         if (predicate == null) {
             return null;
         }
 
-        Triple triple = new Triple();
+        DefaultMapping triple = new DefaultMapping();
         triple.setSubject(toTripleElement(predicate.getSource()));
         triple.setObject(toTripleElement(predicate.getTarget()));
         triple.setPredicate(toTripleElement(predicate));
