@@ -49,30 +49,32 @@ public class MapGraphToTripleController {
     public HttpStatus mapPatternToTriples(@PathVariable String collectionId,
             @RequestBody GraphPatternList graphPatternList) {
 
-        EventGraph eventGraph = eventGraphService.findLatestEventGraphByCollectionId(new ObjectId(collectionId));
-        if (eventGraph == null) {
+        List<EventGraph> eventGraphs = eventGraphService.getEventGraphs(new ObjectId(collectionId));
+        if (eventGraphs == null) {
             return HttpStatus.NOT_FOUND;
         }
 
-        for (GraphPattern graphPattern : graphPatternList.getPatternMappings()) {
-            MappedTripleGroup mappedTripleGroup;
-            try {
-                if (graphPattern.getMappedTripleGroupId() != null && !graphPattern.getMappedTripleGroupId().isEmpty()) {
-                    mappedTripleGroup = mappedTripleGroupService.getById(graphPattern.getMappedTripleGroupId());
-                } else {
-                    mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
-                }
-            } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-                logger.error("No collection found with id {}", collectionId, e);
-                return HttpStatus.NOT_FOUND;
-            }
-            
-            List<Graph> extractedGraphs = patternFinder.findGraphsWithPattern(graphPattern, eventGraph);
-            for (Graph extractedGraph : extractedGraphs) {
+        for (EventGraph eventGraph : eventGraphs) {
+            for (GraphPattern graphPattern : graphPatternList.getPatternMappings()) {
+                MappedTripleGroup mappedTripleGroup;
                 try {
-                    mappedTripleService.storeMappedGraph(extractedGraph, mappedTripleGroup);
-                } catch (NodeNotFoundException e) {
-                    e.printStackTrace();
+                    if (graphPattern.getMappedTripleGroupId() != null && !graphPattern.getMappedTripleGroupId().isEmpty()) {
+                        mappedTripleGroup = mappedTripleGroupService.getById(graphPattern.getMappedTripleGroupId());
+                    } else {
+                        mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
+                    }
+                } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+                    logger.error("No collection found with id {}", collectionId, e);
+                    return HttpStatus.NOT_FOUND;
+                }
+                
+                List<Graph> extractedGraphs = patternFinder.findGraphsWithPattern(graphPattern, eventGraph);
+                for (Graph extractedGraph : extractedGraphs) {
+                    try {
+                        mappedTripleService.storeMappedGraph(extractedGraph, mappedTripleGroup);
+                    } catch (NodeNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

@@ -71,5 +71,13 @@ public class EventGraphServiceImpl implements EventGraphService {
         });
         saveEventGraphs(eventGraphs); 
     }
+
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.EventGraphService#getEventGraphs(org.bson.types.ObjectId)
+     */
+    @Override
+    public List<EventGraph> getEventGraphs(ObjectId collectionId) {
+        return repo.findByCollectionId(collectionId).orElse(null);
+    }
     
 }

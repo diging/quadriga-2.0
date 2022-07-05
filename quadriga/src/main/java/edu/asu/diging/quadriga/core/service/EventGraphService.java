@@ -27,6 +27,13 @@ public interface EventGraphService {
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId);
     
     /**
+     * Retrieves all eventGraphs mapped to a collection
+     * @param collectionId Id of the collection
+     * @return a list of all eventGraphs mapped to the collection
+     */
+    public List<EventGraph> getEventGraphs(ObjectId collectionId);
+    
+    /**
      * Groups the event graphs mapped to a collection by source uri and returns the total count. 
      * @param collectionId
      * @return total count
