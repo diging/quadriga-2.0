@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import edu.asu.diging.quadriga.api.v1.model.Quadruple;
 import edu.asu.diging.quadriga.config.web.TokenInfo;
 import edu.asu.diging.quadriga.core.aspect.annotation.InjectToken;
+import edu.asu.diging.quadriga.core.aspect.annotation.VerifyCollectionAccess;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
-import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
-import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
@@ -40,9 +39,6 @@ public class AddNetworkApiController {
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
 
-    @Autowired
-    private CollectionManager collectionManager;
-
     /**
      * The method parse given Json from the post request body and add Network
      * instance to the database
@@ -54,19 +50,10 @@ public class AddNetworkApiController {
      * @return
      */
     @InjectToken
+    @VerifyCollectionAccess
     @ResponseBody
     @RequestMapping(value = "/api/v1/collection/{collectionId}/network/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpStatus processJson(@RequestBody Quadruple quadruple, @PathVariable String collectionId, TokenInfo tokenInfo) {
-
-        try {
-            Collection collection = collectionManager.findCollection(collectionId);
-            if (collection.getApps() == null || collection.getApps().isEmpty()
-                    || !collection.getApps().contains(tokenInfo.getClient_id())) {
-                return HttpStatus.UNAUTHORIZED;
-            }
-        } catch (InvalidObjectIdException e) {
-            return HttpStatus.NOT_FOUND;
-        }
         
         // First we check whether a quadruple is present in request body
         if (quadruple == null) {
