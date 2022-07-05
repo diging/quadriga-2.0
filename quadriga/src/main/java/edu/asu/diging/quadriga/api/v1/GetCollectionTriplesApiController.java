@@ -20,10 +20,8 @@ import edu.asu.diging.quadriga.core.aspect.annotation.InjectToken;
 import edu.asu.diging.quadriga.core.aspect.annotation.VerifyCollectionAccess;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
-import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
-import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 
@@ -31,9 +29,6 @@ import edu.asu.diging.quadriga.core.service.MappedTripleService;
 public class GetCollectionTriplesApiController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Autowired
-    private CollectionManager collectionManager;
 
     @Autowired
     private MappedTripleService mappedTripleService;
@@ -63,13 +58,6 @@ public class GetCollectionTriplesApiController {
 
         MappedTripleGroup mappedTripleGroup;
         try {
-            Collection collection = collectionManager.findCollection(collectionId);
-
-            if (collection.getApps() == null || collection.getApps().isEmpty()
-                    || !collection.getApps().contains(tokenInfo.getClient_id())) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
-
             mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId,
                     MappedTripleType.DEFAULT_MAPPING);
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
