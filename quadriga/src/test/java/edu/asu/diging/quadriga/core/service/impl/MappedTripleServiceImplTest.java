@@ -11,10 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
+import edu.asu.diging.quadriga.api.v1.model.MappedTriplesPage;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
-import edu.asu.diging.quadriga.core.model.Triple;
+import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.mapped.Concept;
 import edu.asu.diging.quadriga.core.model.mapped.Predicate;
@@ -34,8 +38,10 @@ public class MappedTripleServiceImplTest {
     private Concept source;
     private Concept target;
     private Predicate predicate;
-    private List<Predicate> collectionPredicates;
+    private Page<Predicate> collectionPredicates;
 
+    private static final int PAGE = 1;
+    private static final int PAGE_SIZE = 10;
     private static final String SOURCE_LABEL = "Albert Einstein";
     private static final String SOURCE_URI = "https://viaf.org/viaf/75121530/";
     private static final String TARGET_LABEL = "Elsa Einstein";
@@ -66,17 +72,21 @@ public class MappedTripleServiceImplTest {
         predicate.setSource(source);
         predicate.setTarget(target);
 
-        collectionPredicates = new ArrayList<>();
-        collectionPredicates.add(predicate);
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(predicate);
+
+        collectionPredicates = new PageImpl<>(predicates, PageRequest.of(PAGE - 1, PAGE_SIZE), 1);
     }
 
     @Test
     public void test_getMappedTriples_success() {
-        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId)).thenReturn(Optional.of(collectionPredicates));
+        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId, PageRequest.of(PAGE - 1, PAGE_SIZE)))
+                .thenReturn(Optional.of(collectionPredicates));
 
-        List<Triple> triples = serviceToTest.getMappedTriples(mappedTripleGroupId);
+        MappedTriplesPage triplesPage = serviceToTest.getMappedTriples(mappedTripleGroupId, PAGE, PAGE_SIZE);
+        List<DefaultMapping> triples = triplesPage.getTriples();
         Assert.assertEquals(1, triples.size());
-        Triple triple = triples.get(0);
+        DefaultMapping triple = triples.get(0);
 
         TripleElement subject = triple.getSubject();
         Assert.assertEquals(SOURCE_LABEL, subject.getLabel());
@@ -93,9 +103,11 @@ public class MappedTripleServiceImplTest {
 
     @Test
     public void test_getMappedTriples_empty() {
-        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId)).thenReturn(Optional.of(new ArrayList<>()));
+        Mockito.when(predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId, PageRequest.of(PAGE - 1, PAGE_SIZE)))
+                .thenReturn(Optional.of(new PageImpl<>(new ArrayList<>(), PageRequest.of(0, 1), 0)));
 
-        List<Triple> triples = serviceToTest.getMappedTriples(mappedTripleGroupId);
+        List<DefaultMapping> triples = serviceToTest.getMappedTriples(mappedTripleGroupId, PAGE, PAGE_SIZE)
+                .getTriples();
         Assert.assertEquals(0, triples.size());
     }
 }

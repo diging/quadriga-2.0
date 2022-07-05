@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * Method level annotation which verifies if the Citesphere App corresponding to
- * the authentication token has access to the collection being accessed. To be
- * used in conjunction with {@link InjectToken}. The method requires TokenInfo
- * and String containing collectionId as method parameters.
+ * the authentication token has access to the collection. To be used in
+ * conjunction with {@link InjectToken}. The method requires TokenInfo and
+ * String containing collectionId as method parameters.
  * 
  * @author Maulik Limbadiya
  *

@@ -31,11 +31,8 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     @Autowired
     private PredicateRepository predicateRepo;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.quadriga.core.service.impl.MappedTripleService#
-     * storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph, edu.asu.diging.quadriga.core.model.MappedTripleGroup)
      */
     @Override
     public Predicate storeMappedGraph(Graph graph, MappedTripleGroup mappedTripleGroup) throws NodeNotFoundException {
@@ -98,7 +95,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     }
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getMappedTriples(java.lang.String)
+     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getMappedTriples(java.lang.String, int, int)
      */
     @Override
     public MappedTriplesPage getMappedTriples(String mappedTripleGroupId, int page, int pageSize) {
