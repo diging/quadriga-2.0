@@ -7,6 +7,6 @@ public interface ConceptpowerConnector {
 
     ConceptEntry getConceptEntry(String id);
 
-    ConceptpowerResponse findConceptEntryEqualTo(String uri);
+    ConceptpowerResponse findConceptEqualTo(String uri);
 
 }

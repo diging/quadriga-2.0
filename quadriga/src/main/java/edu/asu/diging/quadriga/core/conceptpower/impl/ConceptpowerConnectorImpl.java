@@ -55,7 +55,7 @@ public class ConceptpowerConnectorImpl implements ConceptpowerConnector {
     }
 
     @Override
-    public ConceptpowerResponse findConceptEntryEqualTo(String uri) {
+    public ConceptpowerResponse findConceptEqualTo(String uri) {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
         HttpEntity<?> entity = new HttpEntity<Object>(requestHeaders);

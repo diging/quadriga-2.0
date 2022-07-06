@@ -22,10 +22,12 @@ import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
+import edu.asu.diging.quadriga.core.model.events.pattern.CreationEventPattern;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.PatternFinder;
+import edu.asu.diging.quadriga.core.service.PatternMapper;
 
 @Controller
 public class MapGraphToTripleController {
@@ -43,6 +45,9 @@ public class MapGraphToTripleController {
 
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
+    
+    @Autowired
+    private PatternMapper patternMapper;
 
     @ResponseBody
     @PostMapping(value = "/api/v1/collection/{collectionId}/network/map")
@@ -53,9 +58,10 @@ public class MapGraphToTripleController {
         if (eventGraphs == null) {
             return HttpStatus.NOT_FOUND;
         }
-
-        for (EventGraph eventGraph : eventGraphs) {
-            for (GraphPattern graphPattern : graphPatternList.getPatternMappings()) {
+        
+        for (GraphPattern graphPattern : graphPatternList.getPatternMappings()) {
+            CreationEventPattern patternRoot = patternMapper.mapPattern(graphPattern);
+            for (EventGraph eventGraph : eventGraphs) {
                 MappedTripleGroup mappedTripleGroup;
                 try {
                     if (graphPattern.getMappedTripleGroupId() != null && !graphPattern.getMappedTripleGroupId().isEmpty()) {
@@ -68,7 +74,7 @@ public class MapGraphToTripleController {
                     return HttpStatus.NOT_FOUND;
                 }
                 
-                List<Graph> extractedGraphs = patternFinder.findGraphsWithPattern(graphPattern, eventGraph);
+                List<Graph> extractedGraphs = patternFinder.findGraphsWithPattern(graphPattern.getMetadata(), patternRoot, eventGraph);
                 for (Graph extractedGraph : extractedGraphs) {
                     try {
                         mappedTripleService.storeMappedGraph(extractedGraph, mappedTripleGroup);
