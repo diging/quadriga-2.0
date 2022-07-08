@@ -1,10 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.GraphPattern;
+import edu.asu.diging.quadriga.core.data.JobRepository;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
@@ -34,8 +31,6 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Map<String, Job> taskTracker;
-
     @Autowired
     private PatternFinder patternFinder;
 
@@ -48,31 +43,17 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
     @Autowired
     private PatternMapper patternMapper;
 
-    public AsyncPatternProcessorImpl() {
-        taskTracker = new ConcurrentHashMap<>();
-    }
-
-    @Override
-    public List<String> processPatterns(String collectionId, List<GraphPattern> graphPattern,
-            List<EventGraph> networks) {
-        List<String> jobIds = new ArrayList<>();
-        for (GraphPattern pattern : graphPattern) {
-            String jobId = UUID.randomUUID().toString();
-
-            processPattern(jobId, collectionId, pattern, networks);
-
-            Job job = new Job();
-            job.setId(jobId);
-            taskTracker.put(jobId, job);
-            jobIds.add(jobId);
-        }
-        return jobIds;
-    }
+    @Autowired
+    private JobRepository jobRepository;
 
     @Async
-    private void processPattern(String jobId, String collectionId, GraphPattern graphPattern,
-            List<EventGraph> networks) {
+    @Override
+    public void processPattern(String jobId, String collectionId, GraphPattern graphPattern, List<EventGraph> networks) {
 
+        Job job = jobRepository.findById(jobId).orElse(null);
+        job.setStatus(JobStatus.PROCESSING);
+        jobRepository.save(job);
+        
         CreationEventPattern patternRoot = patternMapper.mapPattern(graphPattern);
         for (EventGraph network : networks) {
             MappedTripleGroup mappedTripleGroup;
@@ -83,7 +64,9 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
                     mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
                 }
             } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-                logger.error("No collection found with id {}", collectionId, e);
+                logger.error("No collection found with id {} while processing job {}", collectionId, job.getId(), e);
+                job.setStatus(JobStatus.FAILURE);
+                jobRepository.save(job);
                 return;
             }
 
@@ -93,24 +76,14 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
                 try {
                     mappedTripleService.storeMappedGraph(extractedGraph, mappedTripleGroup);
                 } catch (NodeNotFoundException e) {
-                    e.printStackTrace();
+                    logger.error("Error mapping a triple for job {}", job.getId(), e);
                 }
             }
+            job.setProcessedNetworks(job.getProcessedNetworks() + 1);
+            jobRepository.save(job);
         }
-
-    }
-
-    @Override
-    public Job getJobInfo(String jobId) {
-        return taskTracker.get(jobId);
-    }
-
-    @Override
-    public void removeJob(String jobId) {
-        Job job = taskTracker.get(jobId);
-        if (job.getStatus() != JobStatus.PROCESSING) {
-            taskTracker.remove(jobId);
-        }
+        job.setStatus(JobStatus.DONE);
+        jobRepository.save(job);
     }
 
 }
