@@ -21,10 +21,7 @@ public class ConceptFinderImpl implements ConceptFinder {
     @Override
     public ConceptEntry getConcept(String uri) {
         if (uri.contains(conceptpowerKeyword)) {
-            ConceptEntry conceptEntry = conceptpowerConnector.getConceptEntry(uri);
-            if (conceptEntry != null && conceptEntry.getType() != null) {
-                return conceptEntry;
-            }
+            return conceptpowerConnector.getConceptEntry(uri);
         } else {
             String currentUri = normalizeUri(uri);
             String nextUri = getNextFormat(currentUri);

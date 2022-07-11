@@ -49,7 +49,7 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
     @Async
     @Override
     public void processPattern(String jobId, String collectionId, GraphPattern graphPattern, List<EventGraph> networks) {
-
+        
         Job job = jobRepository.findById(jobId).orElse(null);
         job.setStatus(JobStatus.PROCESSING);
         jobRepository.save(job);
