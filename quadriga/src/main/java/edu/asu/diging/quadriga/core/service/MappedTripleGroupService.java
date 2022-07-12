@@ -29,5 +29,7 @@ public interface MappedTripleGroupService {
     
     public MappedTripleGroup get(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException;
+    
+    public MappedTripleGroup getByCollectionIdAndId(String collectionId, String mappedTripleGroupId) throws InvalidObjectIdException;
 
 }

@@ -148,4 +148,18 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         return mappedTripleGroup;
     }
 
+    @Override
+    public MappedTripleGroup getByCollectionIdAndId(String collectionId, String mappedTripleGroupId) throws InvalidObjectIdException {
+        ObjectId collectionObjectId;
+        ObjectId mappedTripleGroupObjectId;
+        try {
+            collectionObjectId = new ObjectId(collectionId);
+            mappedTripleGroupObjectId = new ObjectId(mappedTripleGroupId);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidObjectIdException("MappedTripleGroupId: " + mappedTripleGroupId, e);
+        }
+        return mappedTripleGroupRepository.findByIdAndCollectionId(mappedTripleGroupObjectId, collectionObjectId)
+                .orElse(null);
+    }
+
 }

@@ -48,28 +48,42 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
 
     @Async
     @Override
-    public void processPattern(String jobId, String collectionId, GraphPattern graphPattern, List<EventGraph> networks) {
-        
+    public void processPattern(String jobId, String collectionId, GraphPattern graphPattern,
+            List<EventGraph> networks) {
+
         Job job = jobRepository.findById(jobId).orElse(null);
         job.setStatus(JobStatus.PROCESSING);
         jobRepository.save(job);
-        
-        CreationEventPattern patternRoot = patternMapper.mapPattern(graphPattern);
-        for (EventGraph network : networks) {
-            MappedTripleGroup mappedTripleGroup;
-            try {
-                if (graphPattern.getMappedTripleGroupId() != null && !graphPattern.getMappedTripleGroupId().isEmpty()) {
-                    mappedTripleGroup = mappedTripleGroupService.getById(graphPattern.getMappedTripleGroupId());
-                } else {
-                    mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
-                }
-            } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-                logger.error("No collection found with id {} while processing job {}", collectionId, job.getId(), e);
-                job.setStatus(JobStatus.FAILURE);
-                jobRepository.save(job);
-                return;
-            }
 
+        CreationEventPattern patternRoot = patternMapper.mapPattern(graphPattern);
+        if (patternRoot == null) {
+            job.setStatus(JobStatus.FAILURE);
+            jobRepository.save(job);
+            return;
+        }
+        
+        MappedTripleGroup mappedTripleGroup;
+        try {
+            if (graphPattern.getMappedTripleGroupId() != null && !graphPattern.getMappedTripleGroupId().isEmpty()) {
+                mappedTripleGroup = mappedTripleGroupService.getByCollectionIdAndId(collectionId,
+                        graphPattern.getMappedTripleGroupId());
+                if (mappedTripleGroup == null) {
+                    job.setStatus(JobStatus.FAILURE);
+                    jobRepository.save(job);
+                    return;
+                }
+            } else {
+                mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            }
+        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+            logger.error("Invalid triple group id {} or collection id {} for job {}",
+                    graphPattern.getMappedTripleGroupId(), collectionId, job.getId(), e);
+            job.setStatus(JobStatus.FAILURE);
+            jobRepository.save(job);
+            return;
+        }
+
+        for (EventGraph network : networks) {
             List<Graph> extractedGraphs = patternFinder.findGraphsWithPattern(graphPattern.getMetadata(), patternRoot,
                     network);
             for (Graph extractedGraph : extractedGraphs) {
