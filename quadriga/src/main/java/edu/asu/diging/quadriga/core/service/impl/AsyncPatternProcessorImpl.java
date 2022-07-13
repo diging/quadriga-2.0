@@ -52,14 +52,15 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
             List<EventGraph> networks) {
 
         Job job = jobRepository.findById(jobId).orElse(null);
-        job.setStatus(JobStatus.PROCESSING);
-        jobRepository.save(job);
-
         CreationEventPattern patternRoot = patternMapper.mapPattern(graphPattern);
-        if (patternRoot == null) {
+        
+        if (job == null || patternRoot == null) {
             job.setStatus(JobStatus.FAILURE);
             jobRepository.save(job);
             return;
+        } else {
+            job.setStatus(JobStatus.PROCESSING);
+            jobRepository.save(job);
         }
         
         MappedTripleGroup mappedTripleGroup;
