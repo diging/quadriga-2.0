@@ -14,6 +14,9 @@ public class JobManagerImpl implements JobManager {
     @Autowired
     private JobRepository jobRepository;
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.JobManager#createJob(java.lang.String, java.lang.String, int)
+     */
     @Override
     public String createJob(String collectionId, String mappedTripleGroupId, int totalNetworks) {
         Job job = new Job();
@@ -26,6 +29,9 @@ public class JobManagerImpl implements JobManager {
         return job.getId();
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.JobManager#get(java.lang.String)
+     */
     @Override
     public Job get(String jobId) {
         return jobRepository.findById(jobId).orElse(null);

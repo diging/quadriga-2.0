@@ -14,19 +14,16 @@ public class Job {
 
     @Id
     @GeneratedValue(generator = "job_id_generator")
-    @GenericGenerator(name = "job_id_generator",    
-                    parameters = @Parameter(name = "prefix", value = "JOB"), 
-                    strategy = "edu.asu.diging.quadriga.core.data.IdGenerator"
-            )
+    @GenericGenerator(name = "job_id_generator", parameters = @Parameter(name = "prefix", value = "JOB"), strategy = "edu.asu.diging.quadriga.core.data.IdGenerator")
     private String id;
-    
+
     private String collectionId;
-    
+
     private String mappedTripleGroupId;
 
     @Enumerated(EnumType.STRING)
     private JobStatus status;
-    
+
     private int processedNetworks;
 
     private int totalNetworks;
@@ -46,7 +43,7 @@ public class Job {
     public void setStatus(JobStatus status) {
         this.status = status;
     }
-    
+
     public int getProcessedNetworks() {
         return processedNetworks;
     }

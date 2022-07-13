@@ -5,6 +5,11 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Holds the details of a concept retrieved from Conceptpower
+ * @author Maulik Limbadiya
+ *
+ */
 public class ConceptEntry {
 
     private String id;

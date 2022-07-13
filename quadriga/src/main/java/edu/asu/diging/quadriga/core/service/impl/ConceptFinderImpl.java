@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.conceptpower.ConceptpowerConnector;
@@ -10,6 +11,7 @@ import edu.asu.diging.quadriga.core.model.conceptpower.ConceptpowerResponse;
 import edu.asu.diging.quadriga.core.service.ConceptFinder;
 
 @Service
+@PropertySource("classpath:config.properties")
 public class ConceptFinderImpl implements ConceptFinder {
 
     @Value("${conceptpower_id_keyword}")
@@ -18,6 +20,9 @@ public class ConceptFinderImpl implements ConceptFinder {
     @Autowired
     private ConceptpowerConnector conceptpowerConnector;
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.ConceptFinder#getConcept(java.lang.String)
+     */
     @Override
     public ConceptEntry getConcept(String uri) {
         if (uri.contains(conceptpowerKeyword)) {
@@ -52,7 +57,8 @@ public class ConceptFinderImpl implements ConceptFinder {
         if (!endsWithSeparator) {
             return uri + "/";
         } else if (!containsHttps) {
-            return uri.replaceFirst("http", "https");
+            uri = uri.replaceFirst("http", "https");
+            uri = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
         }
 
         return uri;

@@ -36,15 +36,19 @@ public class ConceptpowerConnectorImpl implements ConceptpowerConnector {
         restTemplate = new RestTemplate();
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.conceptpower.ConceptpowerConnector#getConceptEntry(java.lang.String)
+     */
     @Override
     public ConceptEntry getConceptEntry(String id) {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setAccept(Arrays.asList(new MediaType[] { MediaType.APPLICATION_JSON }));
         HttpEntity<?> entity = new HttpEntity<Object>(requestHeaders);
-        
+
         ResponseEntity<ConceptpowerResponse> response = restTemplate.exchange(
-                String.format("%s%s%s", conceptpowerBaseUrl, conceptpowerConceptUrl, id), HttpMethod.GET, entity, ConceptpowerResponse.class);
-        
+                String.format("%s%s%s", conceptpowerBaseUrl, conceptpowerConceptUrl, id), HttpMethod.GET, entity,
+                ConceptpowerResponse.class);
+
         if (response.getStatusCode() == HttpStatus.OK) {
             ConceptpowerResponse concepts = response.getBody();
             if (concepts.getConceptEntries() != null && !concepts.getConceptEntries().isEmpty()) {
@@ -54,6 +58,9 @@ public class ConceptpowerConnectorImpl implements ConceptpowerConnector {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.conceptpower.ConceptpowerConnector#findConceptEqualTo(java.lang.String)
+     */
     @Override
     public ConceptpowerResponse findConceptEqualTo(String uri) {
         HttpHeaders requestHeaders = new HttpHeaders();
@@ -66,10 +73,9 @@ public class ConceptpowerConnectorImpl implements ConceptpowerConnector {
 
         if (response.getStatusCode() == HttpStatus.OK) {
             return response.getBody();
-        } else {
-            return null;
         }
 
+        return null;
     }
 
 }

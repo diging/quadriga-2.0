@@ -3,7 +3,7 @@ package edu.asu.diging.quadriga.api.v1.model;
 import java.util.List;
 import java.util.Map;
 
-public class GraphPattern {
+public class PatternMapping {
 
     private String mappedTripleGroupId;
     private Metadata metadata;

@@ -1,9 +1,8 @@
 package edu.asu.diging.quadriga.core.model.events.pattern;
 
-public class AppellationEventPattern extends CreationEventPattern {
+public class PatternAppellationEvent extends PatternCreationEvent {
 
     private String conceptType;
-    
     private String interpretation;
 
     public String getConceptType() {

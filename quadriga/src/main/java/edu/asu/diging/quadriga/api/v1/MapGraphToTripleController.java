@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import edu.asu.diging.quadriga.api.v1.model.GraphPattern;
-import edu.asu.diging.quadriga.api.v1.model.GraphPatternList;
+import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
+import edu.asu.diging.quadriga.api.v1.model.PatternMappingList;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.jobs.Job;
 import edu.asu.diging.quadriga.core.service.AsyncPatternProcessor;
@@ -35,7 +35,7 @@ public class MapGraphToTripleController {
 
     @PostMapping(value = "/api/v1/collection/{collectionId}/network/map")
     public ResponseEntity<List<String>> mapPatternToTriples(@PathVariable String collectionId,
-            @RequestBody GraphPatternList graphPatternList) {
+            @RequestBody PatternMappingList patternMappingList) {
 
         List<EventGraph> eventGraphs = eventGraphService.getEventGraphs(new ObjectId(collectionId));
         if (eventGraphs == null) {
@@ -43,14 +43,13 @@ public class MapGraphToTripleController {
         }
 
         List<String> jobIds = new ArrayList<>();
-        for (GraphPattern pattern : graphPatternList.getPatternMappings()) {
+        for (PatternMapping pattern : patternMappingList.getPatternMappings()) {
             String jobId = jobManager.createJob(collectionId, pattern.getMappedTripleGroupId(), eventGraphs.size());
-            jobIds.add(jobId);
             asyncPatternProcessor.processPattern(jobId, collectionId, pattern, eventGraphs);
+            jobIds.add(jobId);
         }
 
         return new ResponseEntity<>(jobIds, HttpStatus.OK);
-
     }
 
     @GetMapping(value = "/api/v1/job/{jobId}/status")

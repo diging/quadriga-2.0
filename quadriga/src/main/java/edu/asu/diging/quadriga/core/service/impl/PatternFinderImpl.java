@@ -20,9 +20,9 @@ import edu.asu.diging.quadriga.core.model.conceptpower.ConceptpowerAlternativeId
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
-import edu.asu.diging.quadriga.core.model.events.pattern.AppellationEventPattern;
-import edu.asu.diging.quadriga.core.model.events.pattern.CreationEventPattern;
-import edu.asu.diging.quadriga.core.model.events.pattern.RelationEventPattern;
+import edu.asu.diging.quadriga.core.model.events.pattern.PatternAppellationEvent;
+import edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent;
+import edu.asu.diging.quadriga.core.model.events.pattern.PatternRelationEvent;
 import edu.asu.diging.quadriga.core.service.ConceptFinder;
 import edu.asu.diging.quadriga.core.service.PatternFinder;
 
@@ -32,10 +32,13 @@ public class PatternFinderImpl implements PatternFinder {
     @Autowired
     private ConceptFinder conceptFinder;
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.PatternFinder#findGraphsWithPattern(edu.asu.diging.quadriga.api.v1.model.Metadata, edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent, edu.asu.diging.quadriga.core.model.EventGraph)
+     */
     @Override
-    public List<Graph> findGraphsWithPattern(Metadata patternMetaData, CreationEventPattern patternRoot,
+    public List<Graph> findGraphsWithPattern(Metadata patternMetaData, PatternCreationEvent patternRoot,
             EventGraph eventGraph) {
-        List<Graph> result = new ArrayList<>();
+        List<Graph> matchingSubNetworks = new ArrayList<>();
         Queue<CreationEvent> graphNodes = new LinkedList<>();
         graphNodes.add(eventGraph.getRootEvent());
         while (!graphNodes.isEmpty()) {
@@ -45,7 +48,7 @@ public class PatternFinderImpl implements PatternFinder {
                 subGraph.setMetadata(patternMetaData);
                 subGraph.setNodes(new HashMap<>());
                 extractGraph(subGraph, graphNode, patternRoot);
-                result.add(subGraph);
+                matchingSubNetworks.add(subGraph);
             }
             if (graphNode instanceof RelationEvent) {
                 RelationEvent relationNode = (RelationEvent) graphNode;
@@ -54,10 +57,10 @@ public class PatternFinderImpl implements PatternFinder {
                 graphNodes.add(relationNode.getRelation().getPredicate());
             }
         }
-        return result;
+        return matchingSubNetworks;
     }
 
-    private boolean doesMatchPattern(CreationEvent graphNode, CreationEventPattern patternNode) {
+    private boolean doesMatchPattern(CreationEvent graphNode, PatternCreationEvent patternNode) {
         if (patternNode == null) {
             return true;
         }
@@ -66,16 +69,16 @@ public class PatternFinderImpl implements PatternFinder {
             return false;
         }
 
-        if (graphNode instanceof RelationEvent && patternNode instanceof RelationEventPattern) {
-            return matchRelationNode((RelationEvent) graphNode, (RelationEventPattern) patternNode);
-        } else if (graphNode instanceof AppellationEvent && patternNode instanceof AppellationEventPattern) {
-            return matchAppellationNode((AppellationEvent) graphNode, (AppellationEventPattern) patternNode);
+        if (graphNode instanceof RelationEvent && patternNode instanceof PatternRelationEvent) {
+            return matchRelationNode((RelationEvent) graphNode, (PatternRelationEvent) patternNode);
+        } else if (graphNode instanceof AppellationEvent && patternNode instanceof PatternAppellationEvent) {
+            return matchAppellationNode((AppellationEvent) graphNode, (PatternAppellationEvent) patternNode);
         }
 
         return false;
     }
 
-    private boolean matchAppellationNode(AppellationEvent graphNode, AppellationEventPattern patternNode) {
+    private boolean matchAppellationNode(AppellationEvent graphNode, PatternAppellationEvent patternNode) {
 
         if (patternNode.getConceptType() != null && !patternNode.getConceptType().isEmpty()
                 && !matchConceptType(graphNode.getTerm().getInterpretation().getSourceURI(),
@@ -92,7 +95,7 @@ public class PatternFinderImpl implements PatternFinder {
         return true;
     }
 
-    private boolean matchRelationNode(RelationEvent graphNode, RelationEventPattern patternNode) {
+    private boolean matchRelationNode(RelationEvent graphNode, PatternRelationEvent patternNode) {
         return doesMatchPattern(graphNode.getRelation().getObject(), patternNode.getObject())
                 && doesMatchPattern(graphNode.getRelation().getSubject(), patternNode.getSubject())
                 && doesMatchPattern(graphNode.getRelation().getPredicate(), patternNode.getPredicate());
@@ -118,24 +121,24 @@ public class PatternFinderImpl implements PatternFinder {
     private boolean matchConceptType(String graphNodeInterpretation, String patternConceptType) {
         ConceptEntry concept = conceptFinder.getConcept(graphNodeInterpretation);
         if (concept != null && concept.getType() != null) {
-            return concept.getType().getUri().equals(patternConceptType);
+            return concept.getType().getTypeUri().equals(patternConceptType);
         }
         return false;
     }
 
-    private void extractGraph(Graph graph, CreationEvent graphNode, CreationEventPattern patternNode) {
+    private void extractGraph(Graph graph, CreationEvent graphNode, PatternCreationEvent patternNode) {
         if (patternNode == null) {
             return;
         }
 
         NodeData node = null;
         if (graphNode instanceof RelationEvent) {
-            RelationEvent relationGraphNode = (RelationEvent) graphNode;
-            RelationEventPattern relationPatternNode = (RelationEventPattern) patternNode;
-            extractGraph(graph, relationGraphNode.getRelation().getObject(), relationPatternNode.getObject());
-            extractGraph(graph, relationGraphNode.getRelation().getSubject(), relationPatternNode.getSubject());
-            extractGraph(graph, relationGraphNode.getRelation().getPredicate(), relationPatternNode.getPredicate());
-            node = createNodeData(relationGraphNode);
+            RelationEvent graphRelationNode = (RelationEvent) graphNode;
+            PatternRelationEvent patternRelationNode = (PatternRelationEvent) patternNode;
+            extractGraph(graph, graphRelationNode.getRelation().getObject(), patternRelationNode.getObject());
+            extractGraph(graph, graphRelationNode.getRelation().getSubject(), patternRelationNode.getSubject());
+            extractGraph(graph, graphRelationNode.getRelation().getPredicate(), patternRelationNode.getPredicate());
+            node = createNodeData(graphRelationNode);
         } else if (graphNode instanceof AppellationEvent) {
             node = createNodeData((AppellationEvent) graphNode);
         }
@@ -155,7 +158,6 @@ public class PatternFinderImpl implements PatternFinder {
         ConceptEntry concept = conceptFinder.getConcept(appellationEvent.getTerm().getInterpretation().getSourceURI());
         if (concept != null) {
             appellationNode.setLabel(concept.getLemma());
-
         } else {
             appellationNode.setLabel(appellationEvent.getTerm().getInterpretation().getSourceURI());
         }

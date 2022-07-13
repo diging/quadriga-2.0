@@ -34,28 +34,4 @@ public class ConceptpowerConceptType {
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
-
-    public String getId() {
-        return typeId;
-    }
-
-    public void setId(String id) {
-        this.typeId = id;
-    }
-
-    public String getUri() {
-        return typeUri;
-    }
-
-    public void setUri(String uri) {
-        this.typeUri = uri;
-    }
-
-    public String getName() {
-        return typeName;
-    }
-
-    public void setName(String name) {
-        this.typeName = name;
-    }
 }
