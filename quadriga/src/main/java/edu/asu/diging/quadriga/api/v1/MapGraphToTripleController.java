@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,9 @@ import edu.asu.diging.quadriga.core.service.JobManager;
 @Controller
 public class MapGraphToTripleController {
 
+    @Value("")
+    private String quadrigaBaseUri;
+    
     @Autowired
     private AsyncPatternProcessor asyncPatternProcessor;
 
@@ -34,7 +38,7 @@ public class MapGraphToTripleController {
     private JobManager jobManager;
 
     @PostMapping(value = "/api/v1/collection/{collectionId}/network/map")
-    public ResponseEntity<List<String>> mapPatternToTriples(@PathVariable String collectionId,
+    public ResponseEntity<List<JobPatternInfo>> mapPatternToTriples(@PathVariable String collectionId,
             @RequestBody PatternMappingList patternMappingList) {
 
         List<EventGraph> eventGraphs = eventGraphService.getEventGraphs(new ObjectId(collectionId));
@@ -42,19 +46,48 @@ public class MapGraphToTripleController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        List<String> jobIds = new ArrayList<>();
+        List<JobPatternInfo> jobInfos = new ArrayList<>();
         for (PatternMapping pattern : patternMappingList.getPatternMappings()) {
             String jobId = jobManager.createJob(collectionId, pattern.getMappedTripleGroupId(), eventGraphs.size());
             asyncPatternProcessor.processPattern(jobId, collectionId, pattern, eventGraphs);
-            jobIds.add(jobId);
+            JobPatternInfo jobInfo = new JobPatternInfo();
+            jobInfo.setJobId(jobId);
+            jobInfo.setTrack(quadrigaBaseUri + jobId);
+            jobInfos.add(jobInfo);
         }
 
-        return new ResponseEntity<>(jobIds, HttpStatus.OK);
+        return new ResponseEntity<>(jobInfos, HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/v1/job/{jobId}/status")
     public ResponseEntity<Job> getJobStatus(@PathVariable String jobId) {
         return new ResponseEntity<>(jobManager.get(jobId), HttpStatus.OK);
+    }
+    
+    class JobPatternInfo {
+        private String jobId;
+        private String track;
+        private String explore;
+        
+        public String getJobId() {
+            return jobId;
+        }
+        public void setJobId(String jobId) {
+            this.jobId = jobId;
+        }
+        public String getTrack() {
+            return track;
+        }
+        public void setTrack(String track) {
+            this.track = track;
+        }
+        public String getExplore() {
+            return explore;
+        }
+        public void setExplore(String explore) {
+            this.explore = explore;
+        }
+        
     }
 
 }
