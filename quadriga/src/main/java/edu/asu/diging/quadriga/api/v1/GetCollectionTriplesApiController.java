@@ -52,7 +52,7 @@ public class GetCollectionTriplesApiController {
             pageInt = Integer.parseInt(page);
             pageSizeInt = Integer.parseInt(pageSize);
         } catch (NumberFormatException e) {
-            logger.warn("Trying to access invalid page number: " + page);
+            logger.warn("Trying to access invalid page number: " + page, e);
 
         }
 
@@ -61,12 +61,12 @@ public class GetCollectionTriplesApiController {
             mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId,
                     MappedTripleType.DEFAULT_MAPPING);
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
-            logger.error("No collection found for id {}", collectionId);
+            logger.error("No collection found for id {}", collectionId, e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         if (mappedTripleGroup == null) {
-            logger.error("Couldn't find MappedTripleGroup entry for collectionId: " + collectionId);
+            logger.error("Couldn't find MappedTripleGroup entry for collectionId: {}", collectionId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
