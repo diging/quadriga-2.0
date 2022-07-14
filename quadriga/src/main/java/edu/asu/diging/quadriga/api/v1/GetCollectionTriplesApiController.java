@@ -30,6 +30,8 @@ public class GetCollectionTriplesApiController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static final String DEFAULT_MAPPING_KEYWORD = "default";
+    
     @Autowired
     private MappedTripleService mappedTripleService;
 
@@ -58,8 +60,12 @@ public class GetCollectionTriplesApiController {
 
         MappedTripleGroup mappedTripleGroup;
         try {
-            mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId,
-                    MappedTripleType.DEFAULT_MAPPING);
+            if (tripleGroupId.equals(DEFAULT_MAPPING_KEYWORD)) {
+                mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId,
+                        MappedTripleType.DEFAULT_MAPPING);
+            } else {
+                mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndId(collectionId, tripleGroupId);
+            }
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
             logger.error("No collection found for id {}", collectionId, e);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
