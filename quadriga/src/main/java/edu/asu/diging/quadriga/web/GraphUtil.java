@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.bson.types.ObjectId;
 
-import edu.asu.diging.quadriga.core.model.Triple;
+import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.web.model.GraphData;
 import edu.asu.diging.quadriga.web.model.GraphEdgeData;
@@ -18,7 +18,7 @@ import edu.asu.diging.quadriga.web.model.GraphNodeType;
 
 public class GraphUtil {
 
-    public static GraphElements mapToGraph(List<Triple> triples) {
+    public static GraphElements mapToGraph(List<DefaultMapping> triples) {
         Map<String, GraphNodeData> conceptNodeMap = new HashMap<>();
         List<GraphData> nodes = new ArrayList<>();
         List<GraphData> edges = new ArrayList<>();
