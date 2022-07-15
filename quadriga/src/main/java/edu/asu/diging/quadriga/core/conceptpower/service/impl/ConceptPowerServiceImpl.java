@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
@@ -27,6 +28,8 @@ import edu.asu.diging.quadriga.core.conceptpower.service.ConceptTypeService;
 @Service
 public class ConceptPowerServiceImpl implements ConceptPowerService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private ConceptCacheService conceptCacheService;
 
@@ -35,15 +38,17 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
 
     @Autowired
     private ConceptPowerConnectorService conceptPowerConnectorService;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    
+    @Value("${conceptCacheUpdateInterval}")
+    private Integer conceptCacheUpdateInterval;
 
     @Override
     public ConceptCache getConceptByUri(String uri) {
 
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
-
-        if (conceptCache == null || ChronoUnit.DAYS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= 2) {
+        
+        conceptCacheUpdateInterval=0;
+        if (conceptCache == null || ChronoUnit.HOURS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= conceptCacheUpdateInterval) {
             conceptCache = saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
         }
         return conceptCache;
@@ -79,9 +84,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         
         // Before returning, we need to check if we've updated ConceptCache or not
         // If no diff was found, conceptCache won't be updated and 'lastUpdated' would stay the same
-        boolean updated = false;
-        
-        updated = updateConceptCache(conceptCache, conceptCacheOld, uri);
+        boolean updated = updateConceptCache(conceptCache, conceptCacheOld, uri);
         
         updated = updated || updateConceptType(conceptCache,conceptCacheOld);
        
@@ -164,14 +167,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
             conceptCache.setDeleted(conceptEntry.getDeleted() == null ? false : conceptEntry.getDeleted());
             conceptCache.setCreatorId(conceptEntry.getCreatorId());
             conceptCache.setWord(conceptEntry.getLemma());
-
-            if(conceptEntry.getConceptUri() != null) {
-                // get last part of URI = id
-                int index = conceptEntry.getConceptUri().lastIndexOf("/");
-                if (index != -1) {
-                    conceptCache.setId(conceptEntry.getConceptUri().substring(index + 1));
-                }
-            }
+            conceptCache.setId(conceptEntry.getId());
 
             if (conceptEntry.getWordnetId() != null && !conceptEntry.getWordnetId().trim().equals("")) {
                 conceptCache.setWordNetIds(Arrays.asList(conceptEntry.getWordnetId().split(",")));

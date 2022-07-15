@@ -29,10 +29,10 @@ import edu.asu.diging.quadriga.web.service.GraphCreationService;
 @Service
 public class GraphCreationServiceImpl implements GraphCreationService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private ConceptPowerService conceptPowerService;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public GraphElements createGraph(List<EventGraph> eventGraphs) {
@@ -57,7 +57,9 @@ public class GraphCreationServiceImpl implements GraphCreationService {
     public String createNodesAndEdges(RelationEvent event, List<GraphData> graphNodes, List<GraphData> graphEdges,
             Map<String, GraphNodeData> uniqueNodes, String eventGraphId) {
         Relation relation = event.getRelation();
-        String predicateNodeId = null, subjectNodeId = null, objectNodeId = null;
+        String predicateNodeId = null;
+        String subjectNodeId = null;
+        String objectNodeId = null;
 
         if (relation.getPredicate() != null) {
             predicateNodeId = createPredicateNode(graphNodes, relation.getPredicate(), eventGraphId);

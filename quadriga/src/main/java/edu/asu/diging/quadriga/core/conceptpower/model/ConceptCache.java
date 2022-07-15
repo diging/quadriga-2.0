@@ -20,16 +20,13 @@ import org.hibernate.annotations.LazyCollectionOption;
  * This class represents the 'conceptpower_concept_cache' table present in the
  * database that stores cached concept data
  * 
- * @author poojakulkarni
+ * @author Digital Innovation Group
  *
  */
 @Entity
 @Table(name = "conceptpower_concept_cache")
 public class ConceptCache implements Serializable, Comparable<ConceptCache> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 6260562492095202271L;
 
     @Id

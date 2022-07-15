@@ -14,7 +14,7 @@ public class EventGraph {
     private OffsetDateTime creationTime;
     private ObjectId collectionId;
     private Context context;
-    
+
     private String submittingApp;
     
     public EventGraph() {}
@@ -70,7 +70,7 @@ public class EventGraph {
     public void setContext(Context context) {
         this.context = context;
     }
-    
+
     public String getSubmittingApp() {
         return submittingApp;
     }

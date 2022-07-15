@@ -24,7 +24,7 @@
 				Last network submitted by: <span th:text="${latestNetwork.submittingApp}"></span>
 			</p>
 		</div>
-		
+
 		<h3 style="margin-top: 20px">Mappings</h3>
 		
 		<table class="table table-responsive table-striped table-sm">
@@ -62,7 +62,7 @@
 		    	<td>
 		    		<span>
 						Graph for text submitted by <span  th:text="${network.context.creator}"></span>
-						from <span th:text="${network.appName}"></span>
+						from <span th:text="${network.submittingApp}"></span>
 					</span>
 				</td>
 				<td><span th:text="${#temporals.format(network.creationTime, 'MM/dd/yyyy hh:mm a')}"></span></td>

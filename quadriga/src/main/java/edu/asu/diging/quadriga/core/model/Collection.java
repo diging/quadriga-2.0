@@ -48,7 +48,7 @@ public class Collection {
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public OffsetDateTime getCreationTime() {
         return creationTime;
     }

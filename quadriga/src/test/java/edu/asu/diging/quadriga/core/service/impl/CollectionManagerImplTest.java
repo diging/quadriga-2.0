@@ -212,7 +212,6 @@ public class CollectionManagerImplTest {
         editedCollection.setId(id);
         editedCollection.setName(editedName);
         editedCollection.setDescription(editedDescription);
-
         editedCollection.setApps(editedApps);
 
         Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
@@ -271,7 +270,6 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
-
         for(String app : updatedCollection.getApps()) {
             Assert.assertTrue(COLLECTION_APPS_2.contains(app));
         }
@@ -396,7 +394,6 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(id.toString(), updatedCollection.getId().toString());
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
-
         for(String app : updatedCollection.getApps()) {
             Assert.assertTrue(COLLECTION_APPS_2.contains(app));
         }

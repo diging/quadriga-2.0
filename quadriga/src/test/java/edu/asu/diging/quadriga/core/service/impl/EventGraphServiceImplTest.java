@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -89,28 +92,6 @@ public class EventGraphServiceImplTest {
 
         Assert.assertNull(eventGraphServiceImpl.findLatestEventGraphByCollectionId(collectionObjectId));
     }
-    
-//    @Test
-//    public void test_findEventGraphsBySourceURI_success() {
-//        ObjectId collectionObjectId = new ObjectId();
-//
-//        EventGraph eventGraph = new EventGraph();
-//        ObjectId eventGraphObjectId1 = new ObjectId();
-//
-//        eventGraph.setId(eventGraphObjectId1);
-//        eventGraph.setCollectionId(collectionObjectId);
-//        
-//        String sourceURI = "http://handle.net/234";
-//        
-//        List<EventGraph> eventGraphs = new ArrayList<>();
-//        eventGraphs.add(eventGraph);
-//        
-//        Mockito.when(eventGraphRepository.findByContextSourceUri(sourceURI)).thenReturn(Optional.of(eventGraphs));
-//        
-//        List<EventGraph> foundEventGraphs = eventGraphServiceImpl.findEventGraphsBySourceURI(sourceURI);
-//        Assert.assertEquals(eventGraphs.get(0).getId(), foundEventGraphs.get(0).getId());
-//    }
-    
     
     @Test
     public void test_countEventGraphsBy_success() throws InterruptedException {

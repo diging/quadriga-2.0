@@ -13,9 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 @Table(name = "conceptpower_concept_type_cache")
 public class ConceptType implements Serializable, Comparable<ConceptType> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 4228339422371096758L;
 
     @Id

@@ -8,7 +8,7 @@ import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 
 public interface CollectionManager {
-    
+
     /**
      * Saves a collection in database with the given details
      * @param name collection name
@@ -81,5 +81,5 @@ public interface CollectionManager {
      * @return the number of default mappings
      */
     public int getNumberOfDefaultMappings(String collectionId);
-
+    
 }
