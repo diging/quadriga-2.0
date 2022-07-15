@@ -3,6 +3,8 @@ package edu.asu.diging.quadriga.core.data.neo4j;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.repository.query.Param;
@@ -21,9 +23,11 @@ public interface PredicateRepository extends Neo4jRepository<Predicate, Long> {
 
     List<Predicate> findBySourceUriAndMappedTripleGroupIdOrTargetUriAndMappedTripleGroupId(String sourceUri,
             String mappedTripleGroupId1, String targetUri, String mappedTripleGroupId2);
-    
+
     public Optional<List<Predicate>> findByMappedTripleGroupId(String mappedTripleGroupId);
-   
+    
+    public Optional<Page<Predicate>> findByMappedTripleGroupId(String mappedTripleGroupId, Pageable paging);
+
     @Query("MATCH (p{mappedTripleGroupId:$mappedTripleGroupId})-[r:PREDICATE]->() RETURN COUNT(p)")
     public int countPredicatesByMappedTripleGroup(@Param("mappedTripleGroupId") String mappedTripleGroupId);
 }

@@ -1,22 +1,23 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
+import edu.asu.diging.quadriga.api.v1.model.MappedTriplesPage;
 import edu.asu.diging.quadriga.api.v1.model.NodeData;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
-import edu.asu.diging.quadriga.core.model.Triple;
 import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.mapped.Concept;
 import edu.asu.diging.quadriga.core.model.mapped.Predicate;
@@ -31,11 +32,8 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     @Autowired
     private PredicateRepository predicateRepo;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.quadriga.core.service.impl.MappedTripleService#
-     * storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph, edu.asu.diging.quadriga.core.model.MappedTripleGroup)
      */
     @Override
     public Predicate storeMappedGraph(Graph graph, MappedTripleGroup mappedTripleGroup) throws NodeNotFoundException {
@@ -98,32 +96,35 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     }
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getMappedTriples(java.lang.String)
+     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getMappedTriples(java.lang.String, int, int)
      */
     @Override
-    public List<Triple> getMappedTriples(String mappedTripleGroupId) {
-        Optional<List<Predicate>> predicatesOpt = predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId);
-        if (predicatesOpt.isPresent()) {
-            return new ArrayList<>();
+    public MappedTriplesPage getMappedTriples(String mappedTripleGroupId, int page, int pageSize) {
+        MappedTriplesPage triplePage = new MappedTriplesPage();
+        Optional<Page<Predicate>> predicates = predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId, PageRequest.of(page-1, pageSize));
+        if (predicates.isPresent()) {
+            triplePage.setTriples(predicates.get().stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList()));
+            triplePage.setCurrentPage(predicates.get().getNumber() + 1);
+            triplePage.setTotalPages(predicates.get().getTotalPages());
         }
-        return predicatesOpt.get().stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
+        return triplePage;
     }
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getTriplesByUri(java.lang.String, java.lang.String, java.util.List)
      */
     @Override
-    public List<Triple> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList) {
+    public List<DefaultMapping> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList) {
         List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(uri, ignoreList, mappedTripleGroupId);
         return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
-    }
-    
-    private Triple toTriple(Predicate predicate) {
+    }    
+
+    private DefaultMapping toTriple(Predicate predicate) {
         if (predicate == null) {
             return null;
         }
 
-        Triple triple = new Triple();
+        DefaultMapping triple = new DefaultMapping();
         triple.setSubject(toTripleElement(predicate.getSource()));
         triple.setObject(toTripleElement(predicate.getTarget()));
         triple.setPredicate(toTripleElement(predicate));

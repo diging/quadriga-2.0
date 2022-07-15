@@ -81,5 +81,5 @@ public interface CollectionManager {
      * @return the number of default mappings
      */
     public int getNumberOfDefaultMappings(String collectionId);
-    
+
 }
