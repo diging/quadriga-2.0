@@ -44,7 +44,6 @@ public class EventGraphServiceImpl implements EventGraphService {
     
     @Override
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId) {
-
         return repo.findFirstByCollectionIdOrderByCreationTimeDesc(collectionId).orElse(null);
     }
 
@@ -64,7 +63,8 @@ public class EventGraphServiceImpl implements EventGraphService {
         eventGraphs.forEach(e -> {
             e.setCollectionId(new ObjectId(collectionId));
             e.setDefaultMapping(graph.getMetadata().getDefaultMapping());
-            /**
+
+            /*
              * FIXME:
              * 
              * A new story will later be created to get info about just one app from citesphere using OAuth token.
@@ -73,7 +73,7 @@ public class EventGraphServiceImpl implements EventGraphService {
              * We can't store clientId yet as it depends on story Q20-3
              * After merging story Q20-3, this needs to be changed to tokenInfo.getClientId()
              */
-            e.setAppName("AppName");
+            e.setSubmittingApp("AppName");
         });
         saveEventGraphs(eventGraphs); 
     }

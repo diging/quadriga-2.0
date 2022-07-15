@@ -6,7 +6,6 @@ import static org.mockito.Mockito.mock;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,16 +18,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
-import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
 import edu.asu.diging.quadriga.core.model.EventGraph;
-import edu.asu.diging.quadriga.core.mongo.EventGraphDao;
 import edu.asu.diging.quadriga.core.mongo.impl.EventGraphDaoImpl;
 
 
@@ -74,7 +69,6 @@ public class EventGraphServiceImplTest {
         List<EventGraph> eventGraphs = new ArrayList<EventGraph>();
         eventGraphs.add(eventGraph2);
         eventGraphs.add(eventGraph1);
-
 
         Mockito.when(eventGraphRepository.findFirstByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
                 .thenReturn(Optional.of(eventGraph2));

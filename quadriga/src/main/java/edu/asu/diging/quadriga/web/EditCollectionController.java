@@ -31,13 +31,10 @@ import edu.asu.diging.quadriga.web.forms.CollectionForm;
 @Controller
 public class EditCollectionController {
     
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private CollectionManager collectionManager;
-//   FIXME: 
-//    @Autowired
-//    private CitesphereConnector citesphereConnector;
-    
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Request handler for getting the "Edit collections" view

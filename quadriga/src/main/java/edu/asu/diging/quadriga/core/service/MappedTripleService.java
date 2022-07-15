@@ -26,5 +26,5 @@ public interface MappedTripleService {
      * @param ignoreList List of concept URIs to be ignored which are directly connected to the query concept
      * @return the retrieved Triples
      */
-    List<Triple> getTriplesByUri(String mappedCollectionId, String uri, List<String> ignoreList);
+    List<Triple> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList);
 }

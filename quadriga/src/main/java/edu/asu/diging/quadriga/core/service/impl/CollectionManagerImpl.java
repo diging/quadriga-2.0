@@ -33,7 +33,6 @@ public class CollectionManagerImpl implements CollectionManager {
     
     @Autowired
     private CollectionRepository collectionRepo;
-
     
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
@@ -45,7 +44,7 @@ public class CollectionManagerImpl implements CollectionManager {
 
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
+     * @see edu.asu.diging.quadriga.core.service.CollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
      */
     public Collection addCollection(String name, String description, List<String> apps) throws CitesphereAppNotFoundException {   
         validateApps(apps);      
@@ -68,6 +67,14 @@ public class CollectionManagerImpl implements CollectionManager {
             throw new InvalidObjectIdException(e);
         }
     }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.CollectionManager#getCollections(java.lang.String)
+     */
+    @Override
+    public List<Collection> getCollections(String app) {
+        return collectionRepo.findByAppsContaining(app);
+    }
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#editCollection(java.lang.String, java.lang.String, java.lang.String, java.util.List)
@@ -86,7 +93,7 @@ public class CollectionManagerImpl implements CollectionManager {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#deleteCollection(java.lang.String)
      */

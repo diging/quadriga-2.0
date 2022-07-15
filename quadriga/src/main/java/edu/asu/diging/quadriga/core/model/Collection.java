@@ -2,7 +2,6 @@ package edu.asu.diging.quadriga.core.model;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-
 import javax.persistence.Id;
 
 import org.bson.types.ObjectId;
@@ -20,7 +19,7 @@ public class Collection {
     private String name;
     private String description;
     private OffsetDateTime creationTime;
-    
+
     /**
      * List of Client Ids for Citesphere Apps which are associated with the collection
      */

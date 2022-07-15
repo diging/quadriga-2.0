@@ -78,11 +78,10 @@ public class DisplayCollectionController {
         }
 
         model.addAttribute("size", size);
-
+        
         EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         
         model.addAttribute("latestNetwork", latestNetwork);
-
 
         // Get all EventGraphs for this collection
         List<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId());
@@ -104,6 +103,5 @@ public class DisplayCollectionController {
         return "auth/displayCollection";
 
     }
-
 
 }

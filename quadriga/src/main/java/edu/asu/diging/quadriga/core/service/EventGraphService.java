@@ -21,8 +21,8 @@ public interface EventGraphService {
      * Finds all eventGraphs mapped to a collection in the descending order of creation time
      * 
      * @param collectionId is the id used to finds all eventGraphs
-     * @param pageable used to specify page number and size per page
      * @return a list of eventGraphs in descending order
+     * @throws InvalidObjectIdException if the collectionId contains non-hexadecimal characters
      */
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId);
     

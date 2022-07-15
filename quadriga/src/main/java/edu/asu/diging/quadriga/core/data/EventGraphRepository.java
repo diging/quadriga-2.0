@@ -20,5 +20,4 @@ public interface EventGraphRepository extends MongoRepository<EventGraph, Object
     
     public Optional<List<EventGraph>> findByCollectionIdOrderByCreationTimeAsc(ObjectId collectionId);
 
-
 }

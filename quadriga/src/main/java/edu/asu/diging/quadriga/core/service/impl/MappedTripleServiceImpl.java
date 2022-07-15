@@ -101,8 +101,8 @@ public class MappedTripleServiceImpl implements MappedTripleService {
      * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getMappedTriples(java.lang.String)
      */
     @Override
-    public List<Triple> getMappedTriples(String mappedCollectionId) {
-        Optional<List<Predicate>> predicatesOpt = predicateRepo.findByMappedTripleGroupId(mappedCollectionId);
+    public List<Triple> getMappedTriples(String mappedTripleGroupId) {
+        Optional<List<Predicate>> predicatesOpt = predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId);
         if (predicatesOpt.isPresent()) {
             return new ArrayList<>();
         }
@@ -113,8 +113,8 @@ public class MappedTripleServiceImpl implements MappedTripleService {
      * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getTriplesByUri(java.lang.String, java.lang.String, java.util.List)
      */
     @Override
-    public List<Triple> getTriplesByUri(String mappedCollectionId, String uri, List<String> ignoreList) {
-        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(uri, ignoreList, mappedCollectionId);
+    public List<Triple> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList) {
+        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(uri, ignoreList, mappedTripleGroupId);
         return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
     }
     

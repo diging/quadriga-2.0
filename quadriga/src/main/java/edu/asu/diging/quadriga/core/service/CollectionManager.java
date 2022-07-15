@@ -27,6 +27,13 @@ public interface CollectionManager {
     public Collection findCollection(String id) throws InvalidObjectIdException;
     
     /**
+     * Retrieves the collections which the app has access to
+     * @param app App for which the collections are to be retrieved
+     * @return the found collections
+     */
+    public List<Collection> getCollections(String app);
+    
+    /**
      * 
 
      * Edits an existing Collection and updates it in the db
@@ -43,9 +50,9 @@ public interface CollectionManager {
     /**
      * Deletes a collection from collection table by id
      * @param id used to look up the collection in database
+     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
-
     
     /**
      * This method checks whether a collection with given collectionId exists and
@@ -61,7 +68,6 @@ public interface CollectionManager {
      */
     public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException;
 
-
     /**
      * This method returns the number of default mappings present in the collection
      * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
@@ -75,5 +81,5 @@ public interface CollectionManager {
      * @return the number of default mappings
      */
     public int getNumberOfDefaultMappings(String collectionId);
-    
+
 }
