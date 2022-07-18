@@ -41,6 +41,10 @@
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
         <neo4j.database>quadriga</neo4j.database>
         
+        <quadriga.base.url></quadriga.base.url>
+        <quadriga.jobstatus.api></quadriga.jobstatus.api>
+        <quadriga.collectionpage.url></quadriga.collectionpage.url>
+        
         <citesphere.base.url></citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
         <citesphere.client.secret></citesphere.client.secret>

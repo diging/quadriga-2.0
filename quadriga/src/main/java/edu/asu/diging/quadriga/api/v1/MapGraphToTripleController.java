@@ -25,8 +25,14 @@ import edu.asu.diging.quadriga.core.service.JobManager;
 @Controller
 public class MapGraphToTripleController {
 
-    @Value("")
+    @Value("{quadriga_base_url}")
     private String quadrigaBaseUri;
+    
+    @Value("{quadriga_job_status_api}")
+    private String quadrigaJobStatusUri;
+    
+    @Value("{quadriga_collection_page}")
+    private String quadrigaCollectionPageUri;
     
     @Autowired
     private AsyncPatternProcessor asyncPatternProcessor;
@@ -52,7 +58,8 @@ public class MapGraphToTripleController {
             asyncPatternProcessor.processPattern(jobId, collectionId, pattern, eventGraphs);
             JobPatternInfo jobInfo = new JobPatternInfo();
             jobInfo.setJobId(jobId);
-            jobInfo.setTrack(quadrigaBaseUri + jobId);
+            jobInfo.setTrack(quadrigaBaseUri + quadrigaJobStatusUri + jobId);
+            jobInfo.setExplore(quadrigaBaseUri + quadrigaCollectionPageUri + collectionId);
             jobInfos.add(jobInfo);
         }
 
