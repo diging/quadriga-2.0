@@ -18,10 +18,12 @@ import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
+import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.PredicateManager;
 
@@ -36,6 +38,9 @@ public class CollectionManagerImpl implements CollectionManager {
     
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
+    
+    @Autowired
+    private EventGraphService eventGraphService;
     
     @Autowired
     private PredicateManager predicateManager;
@@ -101,8 +106,8 @@ public class CollectionManagerImpl implements CollectionManager {
         Collection collection = findCollection(id);
         
         if (Objects.nonNull(collection)) {
-            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(id, MappedTripleType.DEFAULT_MAPPING);
-            if (mappedTripleGroup != null) {
+            EventGraph eventGraph = eventGraphService.findLatestEventGraphByCollectionId(new ObjectId(id));
+            if (eventGraph != null) {
                 collection.setArchived(true);
                 collectionRepo.save(collection);
                 return;

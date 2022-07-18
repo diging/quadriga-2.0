@@ -21,10 +21,9 @@ import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
-import edu.asu.diging.quadriga.core.model.MappedTripleType;
+import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
-import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
+import edu.asu.diging.quadriga.core.service.EventGraphService;
 
 public class CollectionManagerImplTest {
     
@@ -50,7 +49,7 @@ public class CollectionManagerImplTest {
     private CitesphereConnector citesphereConnector;
     
     @Mock
-    private MappedTripleGroupService mappedTripleGroupService;
+    private EventGraphService eventGraphService;
 
     @Before
     public void setUp() {
@@ -127,7 +126,7 @@ public class CollectionManagerImplTest {
         collection.setDescription(desc);
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
-        Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType(id.toString(), MappedTripleType.DEFAULT_MAPPING)).thenReturn(null);
+        Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(null);
         Mockito.doNothing().when(collectionRepo).delete(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
@@ -156,7 +155,7 @@ public class CollectionManagerImplTest {
         collection.setArchived(true);
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
-        Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType(id.toString(), MappedTripleType.DEFAULT_MAPPING)).thenReturn(new MappedTripleGroup());
+        Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(new EventGraph());
         Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(response);
         
         managerToTest.deleteCollection(id.toString());
