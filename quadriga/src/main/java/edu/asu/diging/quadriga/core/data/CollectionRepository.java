@@ -15,4 +15,6 @@ public interface CollectionRepository extends MongoRepository<Collection, Object
 	
 	Page<Collection> findByUsernameOrAppsIn(String username, List<String> apps, Pageable pageable);
 	
+    List<Collection> findByAppsContaining(String app);
+    
 }
