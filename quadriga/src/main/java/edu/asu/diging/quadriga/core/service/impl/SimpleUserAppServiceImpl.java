@@ -31,36 +31,24 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     @Autowired
     private SimpleUserAppRepository simpleUserAppRepository;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.quadriga.core.service.SimpleUserAppService#save(edu.asu.diging
-     * .quadriga.core.model.users.SimpleUserApp)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#save(edu.asu.diging.quadriga.core.model.users.SimpleUserApp)
      */
     @Override
     public SimpleUserApp save(SimpleUserApp simpleUserApp) {
         return simpleUserAppRepository.save(simpleUserApp);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.quadriga.core.service.SimpleUserAppService#findByUsername(java
-     * .lang.String)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#findByUsername(java.lang.String)
      */
     @Override
     public List<SimpleUserApp> findByUsername(String username) {
         return simpleUserAppRepository.findByUsername(username);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.quadriga.core.service.SimpleUserAppService#delete(java.lang.
-     * String, java.lang.String)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#delete(java.lang.String, java.lang.String)
      */
     @Override
     public void delete(String username, String appClientId) {
@@ -70,12 +58,8 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.quadriga.core.service.SimpleUserAppService#getCitesphereApps(
-     * edu.asu.diging.simpleusers.core.model.impl.SimpleUser)
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#getCitesphereApps(edu.asu.diging.simpleusers.core.model.impl.SimpleUser)
      */
     @Override
     public List<CitesphereAppInfo> getCitesphereApps(SimpleUser user) {

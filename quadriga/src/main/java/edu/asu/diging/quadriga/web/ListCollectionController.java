@@ -50,7 +50,7 @@ public class ListCollectionController {
             pageInt = new Integer(page) - 1;
             sizeInt = new Integer(size);
         } catch (NumberFormatException ex) {
-            logger.warn("Trying to access invalid page number: " + page);
+            logger.warn("Trying to access invalid page number: " + page, ex);
         }
 
         if (clientIds != null) {

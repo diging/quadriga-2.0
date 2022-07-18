@@ -23,7 +23,6 @@ import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.impl.CollectionManagerImpl;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 
@@ -35,7 +34,6 @@ public class EditCollectionControllerTest {
     public static final String EDIT_COLLECTION = "auth/editCollection";
     public static final String REDIRECT_SHOW_COLLECTION = "redirect:/auth/collections";
     public static final String ERROR_PAGE = "error404Page";
-    public static final List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
 
     @Mock
     private CollectionManagerImpl collectionManager;

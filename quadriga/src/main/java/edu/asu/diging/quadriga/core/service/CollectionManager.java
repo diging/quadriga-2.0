@@ -57,7 +57,7 @@ public interface CollectionManager {
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
     
     /**
-     * Finds all collections that have at least one of the app listed in the apps argument
+     * Finds all collections that the given list of apps can access
      * 
      * @param username user for which the collections are to be searched
      * @param apps is a list of apps to be searched

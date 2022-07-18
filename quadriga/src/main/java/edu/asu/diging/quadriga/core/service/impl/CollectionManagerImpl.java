@@ -113,13 +113,13 @@ public class CollectionManagerImpl implements CollectionManager {
         }
     }
 
-	/* (non-Javadoc)
-	 * @see edu.asu.diging.quadriga.core.service.CollectionManager#findCollections(java.lang.String, java.util.List, org.springframework.data.domain.Pageable)
-	 */
-	@Override
-	public Page<Collection> findCollections(String username, List<String> apps, Pageable pageable) {
-		return collectionRepo.findByUsernameOrAppsIn(username, apps, pageable);
-	}
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.CollectionManager#findCollections(java.lang.String, java.util.List, org.springframework.data.domain.Pageable)
+     */
+    @Override
+    public Page<Collection> findCollections(String username, List<String> apps, Pageable pageable) {
+        return collectionRepo.findByUsernameOrAppsIn(username, apps, pageable);
+    }
 
     /**
      * Validates the list of apps by verifying the client ids from citesphere. 

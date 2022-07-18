@@ -9,7 +9,7 @@ import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 public interface SimpleUserAppService {
 
     /**
-     * Saves the simpleUser object in the database, that maps the provided user to the clientId
+     * Saves a mapping of the user and a client id
      * 
      * @param simpleUserApp is the entity to be persisted
      * @return the persisted entity
@@ -25,7 +25,7 @@ public interface SimpleUserAppService {
     public List<SimpleUserApp> findByUsername(String username);
     
     /**
-     * Deletes the app with given username and app Client Id
+     * Deletes the app with given username and app client id
      * 
      * @param username is the username to be searched
      * @param appClientId is the app Client Id to be searched

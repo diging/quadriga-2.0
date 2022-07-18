@@ -1,7 +1,7 @@
 <html layout:decorate="~{layouts/main}">
 <head>
-	<title>Quadriga 2.0</title>
-	<link rel="stylesheet" th:href="@{/resources/static/css/admin/user/apps.css}" type="text/css" />
+    <title>Quadriga 2.0</title>
+    <link rel="stylesheet" th:href="@{/resources/static/css/admin/user/apps.css}" type="text/css" />
     <script th:inline="javascript">
         $(document).ready(function() {
             var container = $('#applicationList');
@@ -34,21 +34,21 @@
     </script>
 </head>
 <body>
-	<div layout:fragment="content">
-		<h2>Assign apps to user <span th:text="${username}"></span></h2>
-		<div class="table-bordered table-responsive apps-table">
-			<table class="table table-hover">
-				<thead>
-					<tr>
-						<th>Client Id</th>
-						<th>Name</th>
-						<th>Description</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody id="applicationList"></tbody>
-			</table>
-		</div>
-	</div>
+    <div layout:fragment="content">
+        <h2>Assign apps to user <span th:text="${username}"></span></h2>
+        <div class="table-bordered table-responsive apps-table">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Client Id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="applicationList"></tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
