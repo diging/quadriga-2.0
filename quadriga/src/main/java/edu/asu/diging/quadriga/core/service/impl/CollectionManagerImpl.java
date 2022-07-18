@@ -105,7 +105,7 @@ public class CollectionManagerImpl implements CollectionManager {
     public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
         
-        if (Objects.nonNull(collection)) {
+        if (collection != null) {
             EventGraph eventGraph = eventGraphService.findLatestEventGraphByCollectionId(new ObjectId(id));
             if (eventGraph != null) {
                 collection.setArchived(true);
