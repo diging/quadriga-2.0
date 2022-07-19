@@ -7,7 +7,7 @@
         <a class ="btn btn-primary btn-nav" th:href="@{/auth/collections}"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back</a>
         <h2>Archived Collections</h2>
         <div th:if="${collections.empty}">No Archived Collections available</div>
-        <div action="#" th:action="@{/auth/archived-collections}" method="GET">
+        <div action="#" th:action="@{/auth/collections/archived}" method="GET">
             <ul class="list-group">
                 <li th:each="collection: ${collections}"
                     class="list-group-item clearfix">

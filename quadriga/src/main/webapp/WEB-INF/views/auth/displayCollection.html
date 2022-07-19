@@ -4,7 +4,7 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<a th:if="${collection.isArchived()}" th:href="@{/auth/archived-collections}" class="btn btn-primary btn-sm">
+		<a th:if="${collection.isArchived()}" th:href="@{/auth/collections/archived}" class="btn btn-primary btn-sm">
 		    <i class="fas fa-arrow-left" aria-hidden="true"></i>
 		    <span>Back to all collections</span>
 		</a>

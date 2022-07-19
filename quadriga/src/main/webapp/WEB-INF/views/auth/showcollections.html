@@ -5,7 +5,7 @@
 <body>
 	<div layout:fragment="content">
 		<h2>My Collections</h2>
-        <a th:href="@{/auth/archived-collections}">
+        <a th:href="@{/auth/collections/archived}">
             <i class="fas fa-archive pull-right" title="View archived collections" style="padding-right:15px;"></i><br>
         </a>
 		<div th:if="${collections.empty}">No Collections available</div>
