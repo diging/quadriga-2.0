@@ -29,10 +29,15 @@ public class ListArchivedCollectionController {
 
         try {
             pageInt = Integer.parseInt(page) - 1;
+        } catch (NumberFormatException e) {
+            logger.warn("Accessing invalid page", e);
+            pageInt = 0;
+        }
+        
+        try {
             sizeInt = Integer.parseInt(size);
         } catch (NumberFormatException e) {
-            logger.warn("Received invalid page or pageSize", e);
-            pageInt = 0;
+            logger.warn("Received invalid pageSize", e);
             sizeInt = 20;
         }
 
