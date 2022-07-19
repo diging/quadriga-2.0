@@ -2,7 +2,6 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -122,7 +121,7 @@ public class SimpleUserAppServiceImplTest {
 
         List<CitesphereAppInfo> response = simpleUserAppService.getCitesphereApps(SIMPLE_USER_1);
 
-        for (CitesphereAppInfo app : getOverlappingApps(citesphereApps, USER_APP_LIST)) {
+        for (CitesphereAppInfo app : citesphereApps) {
             Assert.assertTrue(response.stream().anyMatch(responseApp -> responseApp.getClientId().equals(app.getClientId())));
         }
     }
@@ -138,9 +137,8 @@ public class SimpleUserAppServiceImplTest {
 
         List<CitesphereAppInfo> response = simpleUserAppService.getCitesphereApps(SIMPLE_USER_1);
         
-        for (CitesphereAppInfo app : getOverlappingApps(citesphereApps, USER_APP_LIST)) {
-            Assert.assertTrue(response.stream().anyMatch(responseApp -> responseApp.getClientId().equals(app.getClientId())));
-        }
+        Assert.assertEquals(1, response.size());
+        Assert.assertTrue(response.get(0).getClientId().equals(CLIENT_ID_2));
     }
 
     @Test
@@ -153,17 +151,7 @@ public class SimpleUserAppServiceImplTest {
 
         List<CitesphereAppInfo> response = simpleUserAppService.getCitesphereApps(SIMPLE_USER_1);
         
-        for (CitesphereAppInfo app : getOverlappingApps(citesphereApps, USER_APP_LIST)) {
-            Assert.assertTrue(response.stream().anyMatch(responseApp -> responseApp.getClientId().equals(app.getClientId())));
-        }
-    }
-
-    private List<CitesphereAppInfo> getOverlappingApps(List<CitesphereAppInfo> citesphereApps,
-            List<SimpleUserApp> userApps) {
-        return citesphereApps.stream()
-                .filter(citesphereApp -> userApps.stream()
-                        .anyMatch(userApp -> citesphereApp.getClientId().equals(userApp.getAppClientId())))
-                .collect(Collectors.toList());
+        Assert.assertEquals(0, response.size());
     }
 
 }
