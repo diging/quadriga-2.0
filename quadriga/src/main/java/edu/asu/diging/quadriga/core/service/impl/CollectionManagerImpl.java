@@ -107,13 +107,12 @@ public class CollectionManagerImpl implements CollectionManager {
         
         if (collection != null) {
             EventGraph eventGraph = eventGraphService.findLatestEventGraphByCollectionId(new ObjectId(id));
+            // If networks are linked with the collection, archive it. Delete if it's empty.
             if (eventGraph != null) {
                 collection.setArchived(true);
                 collectionRepo.save(collection);
                 return;
             }
-            // Once networks are linked with collections, only empty collections will be deleted
-            // If it is linked to a network, we will archive the collection.
             collectionRepo.delete(collection);
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);

@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -13,18 +15,26 @@ import edu.asu.diging.quadriga.core.data.CollectionRepository;
 @Controller
 public class ListArchivedCollectionController {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private CollectionRepository collectionRepo;
 
-    @RequestMapping(value = "/auth/archived-collections", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/collections/archived", method = RequestMethod.GET)
     public String list(@RequestParam(value = "page", required = false, defaultValue = "1") String page,
             @RequestParam(value = "size", required = false, defaultValue = "20") String size, Model model) {
 
-        int pageInt = 0;
-        int sizeInt = 20;
+        int pageInt;
+        int sizeInt;
 
-        pageInt = Integer.parseInt(page) - 1;
-        sizeInt = Integer.parseInt(size);
+        try {
+            pageInt = Integer.parseInt(page) - 1;
+            sizeInt = Integer.parseInt(size);
+        } catch (NumberFormatException e) {
+            logger.warn("Received invalid page or pageSize", e);
+            pageInt = 0;
+            sizeInt = 20;
+        }
 
         model.addAttribute("collections", collectionRepo.findByIsArchived(true, PageRequest.of(pageInt, sizeInt)));
         return "auth/showArchivedCollections";
