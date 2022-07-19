@@ -43,14 +43,16 @@ public class ListCollectionController {
             clientIds = userApps.stream().map(userApp -> userApp.getAppClientId()).collect(Collectors.toList());
         }
 
-        Integer pageInt = 0;
-        Integer sizeInt = 20;
+        Integer pageInt;
+        Integer sizeInt;
 
         try {
             pageInt = new Integer(page) - 1;
             sizeInt = new Integer(size);
         } catch (NumberFormatException ex) {
             logger.warn("Trying to access invalid page number: " + page, ex);
+            pageInt = 0;
+            sizeInt = 20;
         }
 
         if (clientIds != null) {

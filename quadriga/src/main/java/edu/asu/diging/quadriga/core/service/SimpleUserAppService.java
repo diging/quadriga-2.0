@@ -10,11 +10,11 @@ public interface SimpleUserAppService {
 
     /**
      * Saves a mapping of the user and a client id
-     * 
-     * @param simpleUserApp is the entity to be persisted
-     * @return the persisted entity
+     * @param username username for the mapping
+     * @param clientId client id for the mapping
+     * @return the saved details
      */
-    public SimpleUserApp save(SimpleUserApp simpleUserApp);
+    public SimpleUserApp save(String username, String clientId);
     
     /**
      * Finds list of all apps that the user has access to

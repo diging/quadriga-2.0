@@ -1,7 +1,6 @@
 package edu.asu.diging.quadriga.web;
 
 import java.util.HashSet;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 
 @Controller
@@ -31,21 +29,13 @@ public class AssignAppsController {
         return "admin/user/apps";
     }
 
-    @RequestMapping(value = "/admin/user/{username}/app/{clientId}/assign", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/user/{username}/app/{clientId}/assign", method = RequestMethod.POST)
     public String assign(@PathVariable String username, @PathVariable String clientId) {
-
-        SimpleUserApp simpleUserApp = new SimpleUserApp();
-
-        simpleUserApp.setId(UUID.randomUUID().toString());
-        simpleUserApp.setUsername(username);
-        simpleUserApp.setAppClientId(clientId);
-
-        simpleUserAppService.save(simpleUserApp);
-
+        simpleUserAppService.save(username, clientId);
         return "redirect: /quadriga/admin/user/" + username + "/apps";
     }
 
-    @RequestMapping(value = "/admin/user/{username}/app/{clientId}/revoke", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/user/{username}/app/{clientId}/revoke", method = RequestMethod.POST)
     public String withdraw(@PathVariable String username, @PathVariable String clientId) {
         simpleUserAppService.delete(username, clientId);
         return "redirect: /quadriga/admin/user/" + username + "/apps";

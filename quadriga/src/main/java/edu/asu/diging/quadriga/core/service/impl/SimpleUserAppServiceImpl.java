@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,15 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     private SimpleUserAppRepository simpleUserAppRepository;
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#save(edu.asu.diging.quadriga.core.model.users.SimpleUserApp)
+     * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#save(java.lang.String, java.lang.String)
      */
     @Override
-    public SimpleUserApp save(SimpleUserApp simpleUserApp) {
+    public SimpleUserApp save(String username, String clientId) {
+        SimpleUserApp simpleUserApp = new SimpleUserApp();
+
+        simpleUserApp.setId(UUID.randomUUID().toString());
+        simpleUserApp.setUsername(username);
+        simpleUserApp.setAppClientId(clientId);
         return simpleUserAppRepository.save(simpleUserApp);
     }
 
