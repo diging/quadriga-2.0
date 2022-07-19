@@ -38,9 +38,9 @@ public class SimpleUserAppServiceImplTest {
     private SimpleUserApp USER_APP_1;
     private SimpleUserApp USER_APP_2;
     private List<SimpleUserApp> USER_APP_LIST;
-    CitesphereAppInfo APP_1;
-    CitesphereAppInfo APP_2;
-    CitesphereAppInfo APP_3;
+    private CitesphereAppInfo APP_1;
+    private CitesphereAppInfo APP_2;
+    private CitesphereAppInfo APP_3;
 
     @Before
     public void setUp() {
