@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Method level annotation to extract the Authentication Token Info and injecting into method variable.
- * The method requires Authentication details and TokenInfo method parameters.
+ * The method requires TokenInfo as one of the method parameter.
  * @author Maulik Limbadiya
  *
  */

@@ -19,5 +19,7 @@ import edu.asu.diging.quadriga.core.model.MappedTripleType;
 public interface MappedTripleGroupRepository extends MongoRepository<MappedTripleGroup, ObjectId> {
     
     public Optional<MappedTripleGroup> findByCollectionIdAndMappedTripleType(ObjectId collectionId, MappedTripleType mappedTripleType);
+    
+    public Optional<MappedTripleGroup> findBy_idAndCollectionId(ObjectId id, ObjectId collectionId);
 
 }
