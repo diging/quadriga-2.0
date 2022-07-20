@@ -102,7 +102,7 @@ public class CollectionManagerImpl implements CollectionManager {
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#deleteCollection(java.lang.String)
      */
     @Override
-    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
+    public Collection deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
         
         if (collection != null) {
@@ -111,9 +111,10 @@ public class CollectionManagerImpl implements CollectionManager {
             if (eventGraph != null) {
                 collection.setArchived(true);
                 collectionRepo.save(collection);
-                return;
+                return collection;
             }
             collectionRepo.delete(collection);
+            return null;
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }

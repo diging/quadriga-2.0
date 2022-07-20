@@ -48,9 +48,10 @@ public interface CollectionManager {
     /**
      * Deletes a collection from collection table by id
      * @param id used to look up the collection in database
+     * @return collection details if it is archived
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
-    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
+    public Collection deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
 
     /**
      * This method returns the number of default mappings present in the collection
