@@ -168,7 +168,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         } catch (IllegalArgumentException e) {
             throw new InvalidObjectIdException("MappedTripleGroupId: " + mappedTripleGroupId, e);
         }
-        return mappedTripleGroupRepository.findByIdAndCollectionId(mappedTripleGroupObjectId, collectionObjectId)
+        return mappedTripleGroupRepository.findBy_idAndCollectionId(mappedTripleGroupObjectId, collectionObjectId)
                 .orElse(null);
     }
 

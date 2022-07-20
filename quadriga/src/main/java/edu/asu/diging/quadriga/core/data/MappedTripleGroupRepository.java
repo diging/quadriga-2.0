@@ -20,6 +20,6 @@ public interface MappedTripleGroupRepository extends MongoRepository<MappedTripl
     
     public Optional<MappedTripleGroup> findByCollectionIdAndMappedTripleType(ObjectId collectionId, MappedTripleType mappedTripleType);
     
-    public Optional<MappedTripleGroup> findByIdAndCollectionId(ObjectId id, ObjectId collectionId);
+    public Optional<MappedTripleGroup> findBy_idAndCollectionId(ObjectId id, ObjectId collectionId);
 
 }
