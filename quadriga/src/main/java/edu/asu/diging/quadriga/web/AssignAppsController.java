@@ -17,7 +17,7 @@ public class AssignAppsController {
     @Autowired
     private SimpleUserAppService simpleUserAppService;
 
-    @RequestMapping(value = "/admin/user/{username}/apps", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/user/{username}/apps", method = {RequestMethod.GET})
     public String get(@PathVariable String username, Model model) {
 
         HashSet<String> userApps = new HashSet<>();
@@ -29,13 +29,14 @@ public class AssignAppsController {
         return "admin/user/apps";
     }
 
-    @RequestMapping(value = "/admin/user/{username}/app/{clientId}/assign", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/user/{username}/app/{clientId}/assign", method = RequestMethod.GET)
     public String assign(@PathVariable String username, @PathVariable String clientId) {
         simpleUserAppService.save(username, clientId);
+        System.out.println(simpleUserAppService.findByUsername(username).listIterator());
         return "redirect: /quadriga/admin/user/" + username + "/apps";
     }
 
-    @RequestMapping(value = "/admin/user/{username}/app/{clientId}/revoke", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/user/{username}/app/{clientId}/revoke", method = RequestMethod.GET)
     public String withdraw(@PathVariable String username, @PathVariable String clientId) {
         simpleUserAppService.delete(username, clientId);
         return "redirect: /quadriga/admin/user/" + username + "/apps";

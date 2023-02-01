@@ -23,6 +23,7 @@ import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.mapped.Predicate;
+import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
@@ -40,11 +41,23 @@ public class DisplayCollectionController {
    
     
     private Logger logger = LoggerFactory.getLogger(getClass());
+    @RequestMapping(value = "/auth/collections/{username}", method = RequestMethod.GET)
+      public String getCollections(@PathVariable String username, Model model) {
+        SimpleUserApp simpleUser;
+        Collection collection;
+        return "";
+        
+        
+        
+        
+        
+    }
 
     @RequestMapping(value = "/auth/collections/{id}", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
         
         Collection collection;
+        
         try {
             collection = collectionManager.findCollection(id);
             if(collection == null) {

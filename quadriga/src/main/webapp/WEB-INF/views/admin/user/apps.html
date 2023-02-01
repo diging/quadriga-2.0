@@ -17,9 +17,9 @@
                         var item = $('<tr>');
                         item.append('<td>'+ app.clientId +'</td><td>'+ app.name +'</td><td>'+ app.description +'</td>');
                         if (userApps && userApps.includes(app.clientId)) {
-                            item.append('<td><a href="'+url+app.clientId+'/revoke" class="revoke-action"><i class="fas fa-times-circle action-icon"></i>Revoke</a></td>');
+                            item.append('<td><form action="'+url+app.clientId+'/revoke" method="get" class="revoke-action"><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Revoke</form></td>');
 	                 } else {
-                         item.append('<td><a href="'+url+app.clientId+'/assign" class="assign-action"><i class="fas fa-check-circle action-icon"></i>Assign</a></td>');
+                         item.append('<td><form action="'+url+app.clientId+'/assign" method="get" class="revoke-action"><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Assign</form></td>');
 	                 }
                         item.append('</tr>');
                         container.append(item);
