@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
 import java.time.ZoneId;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+
+
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
@@ -28,6 +31,8 @@ import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.PredicateManager;
+import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
+
 
 @Controller
 public class DisplayCollectionController {
@@ -38,20 +43,14 @@ public class DisplayCollectionController {
     @Autowired
     private EventGraphService eventGraphService;
     
+    @Autowired
+    SimpleUserAppService simpleUserAppService;
+ 
    
     
     private Logger logger = LoggerFactory.getLogger(getClass());
-    @RequestMapping(value = "/auth/collections/{username}", method = RequestMethod.GET)
-      public String getCollections(@PathVariable String username, Model model) {
-        SimpleUserApp simpleUser;
-        Collection collection;
-        return "";
-        
-        
-        
-        
-        
-    }
+
+  
 
     @RequestMapping(value = "/auth/collections/{id}", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {

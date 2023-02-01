@@ -38,7 +38,6 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     @Override
     public SimpleUserApp save(String username, String clientId) {
         SimpleUserApp simpleUserApp = new SimpleUserApp();
-
         simpleUserApp.setId(UUID.randomUUID().toString());
         simpleUserApp.setUsername(username);
         simpleUserApp.setAppClientId(clientId);

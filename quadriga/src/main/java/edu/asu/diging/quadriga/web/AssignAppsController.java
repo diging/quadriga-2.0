@@ -2,12 +2,14 @@ package edu.asu.diging.quadriga.web;
 
 import java.util.HashSet;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 
@@ -32,7 +34,12 @@ public class AssignAppsController {
     @RequestMapping(value = "/admin/user/{username}/app/{clientId}/assign", method = RequestMethod.GET)
     public String assign(@PathVariable String username, @PathVariable String clientId) {
         simpleUserAppService.save(username, clientId);
-        System.out.println(simpleUserAppService.findByUsername(username).listIterator());
+        /*Iterator<SimpleUserApp> itr = simpleUserAppService.findByUsername(username).listIterator();
+        while(itr.hasNext())
+        {
+            SimpleUserApp s = itr.next();
+            System.out.println(s.getAppClientId()+' '+s.getUsername());
+        }*/
         return "redirect: /quadriga/admin/user/" + username + "/apps";
     }
 
