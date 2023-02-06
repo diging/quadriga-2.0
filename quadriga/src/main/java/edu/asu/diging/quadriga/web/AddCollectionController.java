@@ -41,6 +41,7 @@ public class AddCollectionController {
             SimpleUser user = (SimpleUser) authentication.getPrincipal();
             collectionManager.addCollection(collectionForm.getName(), collectionForm.getDescription(),
                     user.getUsername(), collectionForm.getApps());
+            
         } catch (CitesphereAppNotFoundException e) {
             result.rejectValue("apps", "error.collectionForm", e.getMessage());
             logger.error("Couldn't add collection",e);

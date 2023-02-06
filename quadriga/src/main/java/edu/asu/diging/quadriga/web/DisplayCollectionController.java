@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.web;
 
 import java.time.ZoneId;
 
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.PredicateManager;
-import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
+
 
 
 @Controller
@@ -43,8 +44,7 @@ public class DisplayCollectionController {
     @Autowired
     private EventGraphService eventGraphService;
     
-    @Autowired
-    SimpleUserAppService simpleUserAppService;
+ 
  
    
     
