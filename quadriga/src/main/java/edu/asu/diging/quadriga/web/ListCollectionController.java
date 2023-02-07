@@ -1,16 +1,14 @@
 package edu.asu.diging.quadriga.web;
 
 
-import java.util.ArrayList;
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-import edu.asu.diging.quadriga.core.model.Collection;
+
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
@@ -45,15 +43,7 @@ public class ListCollectionController {
         SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
 
         List<SimpleUserApp> userApps = simpleUserAppService.findByUsername(simpleUser.getUsername());
-        Iterator<SimpleUserApp> itr = simpleUserAppService.findByUsername(simpleUser.getUsername()).listIterator();
-        while(itr.hasNext())
-        {
-            SimpleUserApp s = itr.next();
-            System.out.println(s.getId()+' '+s.getUsername()+' '+s.getAppClientId());
-        }
-      
         
-      
         List<String> clientIds = null;
 
         if (userApps != null) {
@@ -78,25 +68,12 @@ public class ListCollectionController {
         }
 
         if (clientIds != null) {
-            List<Collection> c = new ArrayList<Collection>();
-            for(int i=0;i<userApps.size();i++)
-            {
-               
-                c.addAll(collectionManager.getCollections(userApps.get(i).getAppClientId()));  
-                
-            }
-           
-            Page<Collection> page1 = new PageImpl<Collection>(c,PageRequest.of(pageInt,sizeInt),c.size());
+            
             model.addAttribute("collections",collectionManager.findCollections(simpleUser.getUsername(), clientIds,
-                    PageRequest.of(pageInt, sizeInt)));
-            //model.addAttribute("collections",page1); 
+                    PageRequest.of(pageInt, sizeInt))); 
             model.addAttribute("username", simpleUser.getUsername());
         }
 
-       
-        
-        
-      
 
         return "auth/showcollections";
     }
