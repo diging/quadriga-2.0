@@ -77,6 +77,7 @@ public class CollectionManagerImpl implements CollectionManager {
     public List<Collection> getCollections(String app) {
         return collectionRepo.findByAppsContaining(app);
     }
+    
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#editCollection(java.lang.String, java.lang.String, java.lang.String, java.util.List)
@@ -119,6 +120,11 @@ public class CollectionManagerImpl implements CollectionManager {
     @Override
     public Page<Collection> findCollections(String username, List<String> apps, Pageable pageable) {
         return collectionRepo.findByUsernameOrAppsIn(username, apps, pageable);
+    }
+    @Override
+    public Page<Collection> findByAppsContaining(String username,List<String> apps, Pageable pageable)
+    {
+        return collectionRepo.findByAppsContaining(username,apps, pageable);
     }
 
     /**

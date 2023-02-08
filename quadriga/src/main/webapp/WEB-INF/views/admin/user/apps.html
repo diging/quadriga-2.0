@@ -1,7 +1,6 @@
 <html layout:decorate="~{layouts/main}">
 <head>
-	<meta name="_csrf" content = "$_csrf.token}"/>
-	<meta name="_csrf_header" content="${_csrf.headerName}"/>
+	
     <title>Quadriga 2.0</title>
     <link rel="stylesheet" th:href="@{/resources/static/css/admin/user/apps.css}" type="text/css" />
     <script th:inline="javascript">
@@ -11,7 +10,7 @@
             var userApps = [[${userApps}]];
             var username = [[${username}]];
             var url = [[@{|/admin/user/${username}/app/|}]];
-            var csrf_token = [[ ${csrfToken} ]]
+            var csrf_token = [[${csrfToken}]];
             $.ajax({
                 'url': [[@{|/citesphere/apps|}]],
                 'type': "GET",
@@ -24,9 +23,10 @@
                         var item = $('<tr>');
                         item.append('<td>'+ app.clientId +'</td><td>'+ app.name +'</td><td>'+ app.description +'</td>');
                         if (userApps && userApps.includes(app.clientId)) {
-                            item.append('<td><form action="'+url+app.clientId+'/revoke" method="post" class="revoke-action"><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Revoke<input type="hidden" name="_csrf" value='+csrf_token+' </form></td>');
+                        	console.log(csrf_token);
+                            item.append('<td><form action="'+url+app.clientId+'/revoke" method="post" class="revoke-action"><input type="hidden" name="_csrf" value="'+csrf_token+'"/><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Revoke </form></td>');
 	                 } else {
-                         item.append('<td><form action="'+url+app.clientId+'/assign" method="post" class="revoke-action"><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Assign<input type="hidden" name="_csrf" value='+csrf_token+'</form></td>');
+                         item.append('<td><form action="'+url+app.clientId+'/assign" method="post" class="revoke-action"><input type="hidden" name="_csrf" value="'+csrf_token+'"/><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Assign</form></td>');
 	                 }
                         item.append('</tr>');
                         container.append(item);
