@@ -72,7 +72,7 @@ public class ListCollectionController {
             List<Collection> collect = new ArrayList<Collection>(); 
             for(int i=0;i<userApps.size();i++)
             {
-                collect.addAll(collectionManager.getCollections(userApps.get(i).getAppClientId()));
+                collect.addAll(collectionManager.getCollections(clientIds.get(i)));
                 
             }
             for(int i=0;i<collect.size();i++)
@@ -82,9 +82,9 @@ public class ListCollectionController {
             }
             Page<Collection> page1 = new PageImpl<Collection>(collect,PageRequest.of(pageInt, sizeInt),collect.size());
             
-            /*model.addAttribute("collections",collectionManager.findByAppsContaining(simpleUser.getUsername(), clientIds,
+            /*model.addAttribute("collections",collectionManager.findCollections(simpleUser.getUsername(), clientIds,
                     PageRequest.of(pageInt, sizeInt))); */
-            model.addAttribute("collections",page1);
+            model.addAttribute("collections",collectionManager.getAllCollections(clientIds,PageRequest.of(pageInt, sizeInt)));
             
             model.addAttribute("username", simpleUser.getUsername());
         }

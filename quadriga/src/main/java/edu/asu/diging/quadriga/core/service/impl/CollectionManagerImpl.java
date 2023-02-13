@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -121,11 +123,17 @@ public class CollectionManagerImpl implements CollectionManager {
     public Page<Collection> findCollections(String username, List<String> apps, Pageable pageable) {
         return collectionRepo.findByUsernameOrAppsIn(username, apps, pageable);
     }
-    @Override
-    public Page<Collection> findByAppsContaining(String username,List<String> apps, Pageable pageable)
-    {
-        return collectionRepo.findByAppsContaining(username,apps, pageable);
-    }
+   @Override
+   public Page<Collection> getAllCollections(List<String> apps,Pageable pageable)
+   {
+       List<Collection> allCollections = new ArrayList<Collection>();
+       for(int i=0;i<apps.size();i++)
+       {
+           allCollections.addAll(collectionRepo.findByAppsContaining(apps.get(i)));
+       }
+       Page<Collection> page = new PageImpl<>(allCollections,pageable,allCollections.size());
+       return collectionRepo.findByAppsIn(apps, pageable);
+   }
 
     /**
      * Validates the list of apps by verifying the client ids from citesphere. 

@@ -80,7 +80,9 @@ public interface CollectionManager {
      */
     public int getNumberOfDefaultMappings(String collectionId);
 
-    public Page<Collection> findByAppsContaining(String username, List<String> apps, Pageable pageable);
+    public Page<Collection> getAllCollections(List<String> clientIds,Pageable pageable);
+
+   
     
    
 
