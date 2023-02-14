@@ -80,7 +80,6 @@ public interface CollectionManager {
      */
     public int getNumberOfDefaultMappings(String collectionId);
 
-    public Page<Collection> getAllCollections(List<String> clientIds,Pageable pageable);
 
    
     

@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 
 
+
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
+
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 
 @Controller

@@ -2,11 +2,12 @@ package edu.asu.diging.quadriga.core.data;
 
 import java.util.List;
 
+
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
+
 import org.springframework.stereotype.Repository;
 
 import edu.asu.diging.quadriga.core.model.Collection;
@@ -19,7 +20,7 @@ public interface CollectionRepository extends MongoRepository<Collection, Object
 
     List<Collection> findByAppsContaining(String app);
     
-    Page<Collection> findByAppsIn(List<String> apps,Pageable pageable);
+  
     
     
     
