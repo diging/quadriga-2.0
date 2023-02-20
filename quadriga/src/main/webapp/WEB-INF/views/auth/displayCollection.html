@@ -45,7 +45,7 @@
 			</tbody>
 		</table>
 		
-		<h3 style="margin-top: 25px">Networks</h3>
+		<h3 style="margin-top: 25px">Networks</h3><a th:href="@{/auth/collections/{collectionid}/explore/(collectionid=${collection.id})}">Explore</a>
 		
 		<table th:if="${numberOfSubmittedNetworks gt 0}" id="dtBasicExample" class="table table-responsive table-striped table-sm">
 		  <thead>
@@ -70,9 +70,7 @@
 					<a th:href="@{/auth/collections/{collectionid}/network/(collectionid=${collection.id}, sourceUri=${network.context.sourceUri})}">
 						Visualize
 					</a>
-                    <a th:href="@{/auth/collections/{collectionid}/explore/(collectionid=${collection.id})}">
-                        Explore
-                    </a>
+                    
 				</td>
 			</tr>
 		  </tbody>
