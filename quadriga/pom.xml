@@ -45,8 +45,8 @@
         <citesphere.client.id>OAUTHCLIENT40</citesphere.client.id>
         <citesphere.client.secret>1fef2d29-7d30-435e-9210-c56eb18131cf</citesphere.client.secret>
         
-        <conceptpower.base.url>https://diging-dev.asu.edu/conceptpower-review/</conceptpower.base.url>
-        <conceptpower.id.endpoint></conceptpower.id.endpoint>
+        <conceptpower.base.url>https://diging-dev.asu.edu/conceptpower-review/rest/</conceptpower.base.url>
+        <conceptpower.id.endpoint>https://chps.asu.edu/conceptpower/</conceptpower.id.endpoint>
         
         <log.level>info</log.level>
 
