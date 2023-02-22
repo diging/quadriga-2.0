@@ -21,5 +21,6 @@ public interface ConceptCacheRepository extends PagingAndSortingRepository<Conce
 
     @Query("SELECT c from ConceptCache c WHERE ?1 in elements(c.alternativeUris)")
     public List<ConceptCache> findConceptByAlternativeURI(String uri);
+    
 
 }

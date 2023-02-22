@@ -40,6 +40,7 @@ public class ExploreCollectionController {
 
     @Autowired
     private MappedTripleService mappedTripleService;
+    
 
     @RequestMapping(value = "/auth/collections/{collectionId}/explore")
     public String exploreTriples(@PathVariable String collectionId, Model model) {
@@ -63,6 +64,7 @@ public class ExploreCollectionController {
         MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
         List<DefaultMapping> triples = mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                 processUri(uri), ignoreList);
+        
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
