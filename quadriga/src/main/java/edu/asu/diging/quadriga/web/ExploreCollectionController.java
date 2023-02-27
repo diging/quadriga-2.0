@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.quadriga.core.conceptpower.data.ConceptCacheRepository;
+import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
+import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
+import edu.asu.diging.quadriga.core.model.mapped.Concept;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
@@ -41,6 +45,11 @@ public class ExploreCollectionController {
     @Autowired
     private MappedTripleService mappedTripleService;
     
+    @Autowired
+    private ConceptCacheRepository conceptCacheRepository;
+    
+    @Autowired
+    private ConceptRepository conceptRepository;
 
     @RequestMapping(value = "/auth/collections/{collectionId}/explore")
     public String exploreTriples(@PathVariable String collectionId, Model model) {
@@ -61,14 +70,32 @@ public class ExploreCollectionController {
             @RequestParam(value = "uri", required = true) String uri,
             @RequestParam(value = "ignoreList", required = false, defaultValue = "{}") List<String> ignoreList)
             throws InvalidObjectIdException, CollectionNotFoundException {
+        
+        ConceptCache conceptCache = conceptCacheRepository.findByUri(uri);
+        
         MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
         List<DefaultMapping> triples = mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
-                processUri(uri), ignoreList);
+                mapConceptUriToDatabaseUri(collectionId,conceptCache.getEqualTo()), ignoreList);
         
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
 
+    private String mapConceptUriToDatabaseUri(String collectionId,List<String> equalTo)
+    {
+        Concept c = conceptRepository.findByMappedTripleGroupId(collectionId);
+        
+        for(String i:equalTo)
+        {
+            if(i.equals(c.getUri()))
+                return processUri(i);
+        }
+        
+        return "None";
+        
+       
+        
+    }
     // Normalize the URI prefix and suffix
     private String processUri(String uri) {
         if (!uri.startsWith(URI_PREFIX)) {
