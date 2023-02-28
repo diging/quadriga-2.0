@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.quadriga.core.conceptpower.data.ConceptCacheRepository;
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
+import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
@@ -24,6 +26,7 @@ import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.mapped.Concept;
+import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
@@ -50,6 +53,9 @@ public class ExploreCollectionController {
     
     @Autowired
     private ConceptRepository conceptRepository;
+    
+    @Autowired
+    private PredicateRepository predicateRepository;
 
     @RequestMapping(value = "/auth/collections/{collectionId}/explore")
     public String exploreTriples(@PathVariable String collectionId, Model model) {
@@ -74,28 +80,30 @@ public class ExploreCollectionController {
         ConceptCache conceptCache = conceptCacheRepository.findByUri(uri);
         
         MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
+        System.out.println(collectionId+" "+mappedTripleGroup.getCollectionId().toString());
+        //System.out.println(uri+" "+mapConceptUriToDatabaseUri(collectionId,conceptCache.getEqualTo()));
         List<DefaultMapping> triples = mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
-                mapConceptUriToDatabaseUri(collectionId,conceptCache.getEqualTo()), ignoreList);
+                processUri(conceptCache.getEqualTo().get(0)), ignoreList);
         
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
 
-    private String mapConceptUriToDatabaseUri(String collectionId,List<String> equalTo)
+    /*private String mapConceptUriToDatabaseUri(String mappedTripleGroupId,List<String> equalTo)
     {
-        Concept c = conceptRepository.findByMappedTripleGroupId(collectionId);
+        Concept concept = conceptRepository.findByMappedTripleGroupId(mappedTripleGroupId);
         
         for(String i:equalTo)
         {
-            if(i.equals(c.getUri()))
-                return processUri(i);
+            if(i.equals(concept.getUri()))
+            return processUri(i);
         }
         
         return "None";
         
        
         
-    }
+    }*/
     // Normalize the URI prefix and suffix
     private String processUri(String uri) {
         if (!uri.startsWith(URI_PREFIX)) {

@@ -27,6 +27,7 @@ public interface PredicateRepository extends Neo4jRepository<Predicate, Long> {
     public Optional<List<Predicate>> findByMappedTripleGroupId(String mappedTripleGroupId);
     
     public Optional<Page<Predicate>> findByMappedTripleGroupId(String mappedTripleGroupId, Pageable paging);
+    
 
     @Query("MATCH (p{mappedTripleGroupId:$mappedTripleGroupId})-[r:PREDICATE]->() RETURN COUNT(p)")
     public int countPredicatesByMappedTripleGroup(@Param("mappedTripleGroupId") String mappedTripleGroupId);
