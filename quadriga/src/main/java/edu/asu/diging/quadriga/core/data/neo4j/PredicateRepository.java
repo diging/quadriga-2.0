@@ -16,7 +16,7 @@ import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 public interface PredicateRepository extends Neo4jRepository<Predicate, Long> {
 
     @Query("MATCH (p1:Concept)-[r]->(p2:Concept)"
-            + "WHERE r.mappedTripleGroupId = $mappedTripleGroupId AND (p1.uri=$uri OR p2.uri=$uri) AND NOT p1.uri IN $ignoreList AND NOT p2.uri IN $ignoreList "
+            + "WHERE r.mappedTripleGroupId = $mappedTripleGroupId AND (p1.uri=$uri OR p2.uri=$uri)"
             + "RETURN r;")
     List<Predicate> findBySourceUriOrTargetUriAndMappedTripleGroupId(@Param("uri") String uri, @Param("ignoreList") List<String> ignoreList,
             @Param("mappedTripleGroupId") String mappedTripleGroupId);

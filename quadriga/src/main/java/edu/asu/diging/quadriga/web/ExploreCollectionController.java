@@ -80,7 +80,7 @@ public class ExploreCollectionController {
         ConceptCache conceptCache = conceptCacheRepository.findByUri(uri);
         
         MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
-        System.out.println(collectionId+" "+mappedTripleGroup.getCollectionId().toString());
+        System.out.println(conceptCache.getEqualTo().get(0));
         //System.out.println(uri+" "+mapConceptUriToDatabaseUri(collectionId,conceptCache.getEqualTo()));
         List<DefaultMapping> triples = mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                 processUri(conceptCache.getEqualTo().get(0)), ignoreList);
