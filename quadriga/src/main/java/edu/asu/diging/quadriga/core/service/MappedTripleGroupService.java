@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.core.service;
 
+import org.bson.types.ObjectId;
+
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.exceptions.MappedTripleGroupNotFoundException;

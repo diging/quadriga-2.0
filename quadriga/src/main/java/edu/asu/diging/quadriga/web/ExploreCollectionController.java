@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.web;
 import java.util.List;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,11 +81,11 @@ public class ExploreCollectionController {
         ConceptCache conceptCache = conceptCacheRepository.findByUri(uri);
         
         MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
-        System.out.println(conceptCache.getEqualTo().get(0));
+        System.out.println(mappedTripleGroup.get_id());
         //System.out.println(uri+" "+mapConceptUriToDatabaseUri(collectionId,conceptCache.getEqualTo()));
         List<DefaultMapping> triples = mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                 processUri(conceptCache.getEqualTo().get(0)), ignoreList);
-        
+        System.out.println(triples.size());
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
