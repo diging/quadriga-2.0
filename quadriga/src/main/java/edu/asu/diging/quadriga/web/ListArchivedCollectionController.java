@@ -41,7 +41,7 @@ public class ListArchivedCollectionController {
             sizeInt = 20;
         }
 
-        model.addAttribute("collections", collectionRepo.findByIsArchived(true, PageRequest.of(pageInt, sizeInt)));
+        model.addAttribute("collections", collectionRepo.findByArchived(true, PageRequest.of(pageInt, sizeInt)));
         return "auth/showArchivedCollections";
     }
 

@@ -70,8 +70,8 @@ public class Collection {
         return archived;
     }
 
-    public void setArchived(boolean isArchived) {
-        this.archived = isArchived;
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
 }

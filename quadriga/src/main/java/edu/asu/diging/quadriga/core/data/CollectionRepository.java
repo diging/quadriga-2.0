@@ -13,7 +13,7 @@ import edu.asu.diging.quadriga.core.model.Collection;
 @Repository
 public interface CollectionRepository extends MongoRepository<Collection, ObjectId>{
 
-    Page<Collection> findByIsArchived(boolean isArchived, Pageable paging);
+    Page<Collection> findByArchived(boolean archived, Pageable paging);
 
     List<Collection> findByAppsContaining(String app);
     
