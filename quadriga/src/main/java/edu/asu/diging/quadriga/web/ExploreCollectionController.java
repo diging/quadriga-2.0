@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.quadriga.core.conceptpower.data.ConceptCacheRepository;
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
+import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
@@ -38,7 +39,7 @@ public class ExploreCollectionController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String URI_PREFIX = "http";
+    private static final String URI_PREFIX = "https";
 
     @Autowired
     private CollectionManager collectionManager;
@@ -50,13 +51,9 @@ public class ExploreCollectionController {
     private MappedTripleService mappedTripleService;
     
     @Autowired
-    private ConceptCacheRepository conceptCacheRepository;
+    private ConceptCacheService conceptCacheService;
     
-    @Autowired
-    private ConceptRepository conceptRepository;
-    
-    @Autowired
-    private PredicateRepository predicateRepository;
+   
 
     @RequestMapping(value = "/auth/collections/{collectionId}/explore")
     public String exploreTriples(@PathVariable String collectionId, Model model) {
@@ -78,21 +75,19 @@ public class ExploreCollectionController {
             @RequestParam(value = "ignoreList", required = false, defaultValue = "{}") List<String> ignoreList)
             throws InvalidObjectIdException, CollectionNotFoundException {
         
-        ConceptCache conceptCache = conceptCacheRepository.findByUri(uri);
+        ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
         
         MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
-        System.out.println(mappedTripleGroup.get_id());
-        //System.out.println(uri+" "+mapConceptUriToDatabaseUri(collectionId,conceptCache.getEqualTo()));
         List<DefaultMapping> triples = mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                 processUri(conceptCache.getEqualTo().get(0)), ignoreList);
-        System.out.println(triples.size());
+        
         GraphElements graphElements = GraphUtil.mapToGraph(triples);
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
 
-    /*private String mapConceptUriToDatabaseUri(String mappedTripleGroupId,List<String> equalTo)
+    private String mapConceptUriToDatabaseUri(String mappedTripleGroupId,List<String> equalTo)
     {
-        Concept concept = conceptRepository.findByMappedTripleGroupId(mappedTripleGroupId);
+        Concept concept = .findByMappedTripleGroupId(mappedTripleGroupId);
         
         for(String i:equalTo)
         {
@@ -104,14 +99,19 @@ public class ExploreCollectionController {
         
        
         
-    }*/
+    }
     // Normalize the URI prefix and suffix
     private String processUri(String uri) {
+        if (uri.startsWith("http"))
+        {
+            uri=uri.replace("http", "https");
+        }
         if (!uri.startsWith(URI_PREFIX)) {
             uri = "https://" + uri;
         }
-        if (uri.endsWith("/")) {
-            uri = uri.substring(0, uri.length() - 1);
+        
+        if (!uri.endsWith("/")) {
+            uri = uri+"/";
         }
         return uri;
     }
