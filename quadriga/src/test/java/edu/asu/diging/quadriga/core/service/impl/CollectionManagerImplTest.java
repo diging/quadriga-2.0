@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -158,7 +160,19 @@ public class CollectionManagerImplTest {
         Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(new EventGraph());
         Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(response);
         
-        managerToTest.deleteCollection(id.toString());
+        try{
+            managerToTest.deleteCollection(id.toString());
+        }
+        catch (CollectionNotFoundException e)
+        {
+            fail("Exception thrown during test execution: " + e.getMessage());
+            
+        }
+        catch(InvalidObjectIdException e)
+        {
+            fail("Exception thrown during test execution: " + e.getMessage());
+        }
+        
     }
     
     

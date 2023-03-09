@@ -19,7 +19,7 @@ public class Collection {
     private String name;
     private String description;
     private OffsetDateTime creationTime;
-    private boolean isArchived;
+    private boolean archived;
 
     /**
      * List of Client Ids for Citesphere Apps which are associated with the collection
@@ -67,11 +67,11 @@ public class Collection {
     }
     
     public boolean isArchived() {
-        return isArchived;
+        return archived;
     }
 
     public void setArchived(boolean isArchived) {
-        this.isArchived = isArchived;
+        this.archived = isArchived;
     }
 
 }
