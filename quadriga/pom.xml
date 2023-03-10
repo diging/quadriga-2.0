@@ -41,7 +41,7 @@
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
         <neo4j.database>quadriga2</neo4j.database>
         
-         <citesphere.base.url>https://diging-dev.asu.edu/citesphere-review/</citesphere.base.url>
+        <citesphere.base.url>https://diging-dev.asu.edu/citesphere-review/</citesphere.base.url>
         <citesphere.client.id>OAUTHCLIENT40</citesphere.client.id>
         <citesphere.client.secret>1fef2d29-7d30-435e-9210-c56eb18131cf</citesphere.client.secret>
         
