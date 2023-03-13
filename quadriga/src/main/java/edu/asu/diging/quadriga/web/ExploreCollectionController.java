@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,7 +94,7 @@ public class ExploreCollectionController {
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
 
-    /*private String mapConceptUriToDatabaseUri(String mappedTripleGroupId,List<String> equalTo)
+    private String mapConceptUriToDatabaseUri(String mappedTripleGroupId,List<String> equalTo)
     {
         Concept concept = conceptService.findByMappedTripleGroupId(mappedTripleGroupId);
         
@@ -104,21 +105,32 @@ public class ExploreCollectionController {
         }
         
         return "None";  
-    }*/
+    }
     
     // Normalize the URI prefix and suffix
-    private String processUri(String uri) {
-        /*if (uri.startsWith("http"))
+    private List<String> processUri(String uri) {
+        List<String> listOfUris = new ArrayList<>();
+        if (!uri.startsWith("http"))
         {
-            uri=uri.replace("http", "https");
-        }*/
-        if (!uri.startsWith(URI_PREFIX)) {
-            uri = "https://" + uri;
+            String uri1 =uri;
+            uri1 = uri1.replace("http", "https");
+            listOfUris.add(uri1);
+            if (uri.endsWith("/")) {
+                String uri2 = uri.replace((char) (uri.length() - 1), 'r');
+                listOfUris.add(uri2);
+            }
+        }
+        if (uri.startsWith(URI_PREFIX)) {
+            
+            listOfUris.add(uri);
+            if (uri.endsWith("/")) {
+                String uri2 = uri.replace((char) (uri.length() - 1), 'r');
+                listOfUris.add(uri2);
+            }
+            
         }
         
-        if (uri.endsWith("/")) {
-            uri = uri.replace((char) (uri.length() - 1), 'r');
-        }
+      
         return uri;
     }
 
