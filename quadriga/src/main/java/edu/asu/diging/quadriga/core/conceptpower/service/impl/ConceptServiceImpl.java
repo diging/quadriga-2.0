@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.core.conceptpower.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,8 @@ public class ConceptServiceImpl implements ConceptService{
     private ConceptRepository conceptRepository;
 
     @Override
-    public Concept findByMappedTripleGroupId(String mappedTripleGroupId) {
-        Concept concept = conceptRepository.findByMappedTripleGroupId(mappedTripleGroupId);
+    public List<Concept> findByMappedTripleGroupId(String mappedTripleGroupId) {
+        List<Concept> concept = conceptRepository.findByMappedTripleGroupId(mappedTripleGroupId);
         return concept;
     }
     
