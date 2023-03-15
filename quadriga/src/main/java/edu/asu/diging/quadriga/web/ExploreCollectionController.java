@@ -43,6 +43,7 @@ public class ExploreCollectionController {
     Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String URI_PREFIX = "http";
+    private static final String URI_PREFIX_1 = "https";
 
     @Autowired
     private CollectionManager collectionManager;
@@ -80,7 +81,6 @@ public class ExploreCollectionController {
             throws InvalidObjectIdException, CollectionNotFoundException {
         
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
-        System.out.println(processUri(conceptCache.getUri()));
         MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
         List<DefaultMapping> triples = mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                 mapConceptUriToDatabaseUri(mappedTripleGroup.get_id().toString(),conceptCache.getEqualTo()), ignoreList);
@@ -96,13 +96,10 @@ public class ExploreCollectionController {
         for(Concept i:concept)
         {
             conceptUris.add(i.getUri());
-            System.out.println(i.getUri());
-            
         }
         for(String i:equalTo)
         {
             List<String> listOfUris = processUri(i);
-            System.out.println(listOfUris);
             listOfUris.retainAll(conceptUris);
             if(!listOfUris.isEmpty())
                 return listOfUris.get(0);
@@ -112,33 +109,52 @@ public class ExploreCollectionController {
     }
     
     // Normalize the URI prefix and suffix
-    private List<String> processUri(String stringBuffer) {
+    private List<String> processUri(String uri) {
         List<String> listOfUris = new ArrayList<>();
-        StringBuffer stringBuffer = new StringBuffer(stringBuffer);
-        if (stringBuffer.startsWith("http"))
+        if(uri.startsWith(URI_PREFIX) && uri.endsWith("/"))
         {
-            String uri1 =stringBuffer;
-            uri1 = uri1.replace("http", "https");
-            if (stringBuffer.endsWith("/")) {
-                String uri2 = uri1.substring(0,(stringBuffer.length() - 1));
-                listOfUris.add(uri2);
-            }
-            else if (! stringBuffer.endsWith("/")) {
-                listOfUris.add(uri1);
-            }
+            listOfUris.add(uri);
+            listOfUris.add(uri.substring(0,uri.length()-1));
+            String uri1 = uri;
+            uri1 = uri1.replace(URI_PREFIX, URI_PREFIX_1);
+            listOfUris.add(uri1);
+            listOfUris.add(uri1.substring(0,uri1.length()-1));
         }
-        if (!stringBuffer.startsWith(URI_PREFIX)) {
-            
-            
-            if (stringBuffer.endsWith("/")) {
-                String uri2 = stringBuffer.substring(0,(stringBuffer.length() - 1));
-                listOfUris.add(uri2);
-            }
-            else if (!stringBuffer.endsWith("/")) {
-                listOfUris.add(stringBuffer);
-            }
+        else if (uri.startsWith(URI_PREFIX) && !uri.endsWith("/"))
+        {
+            listOfUris.add(uri);
+            listOfUris.add(uri+"/");
+            String uri1 = uri;
+            uri1 = uri1.replace(URI_PREFIX, URI_PREFIX_1);
+            listOfUris.add(uri1);
+            listOfUris.add(uri1+"/");
             
         }
+        else if(uri.startsWith(URI_PREFIX_1) && uri.endsWith("/"))
+        {
+            listOfUris.add(uri);
+            listOfUris.add(uri.substring(0,uri.length()-1));
+            String uri1 = uri;
+            uri1 = uri1.replace(URI_PREFIX_1, URI_PREFIX);
+            listOfUris.add(uri1);
+            listOfUris.add(uri1.substring(0,uri1.length()-1));
+            
+        }
+        else if(!uri.startsWith(URI_PREFIX_1) && !uri.endsWith("/"))
+        {
+            listOfUris.add(uri);
+            listOfUris.add(uri+"/");
+            String uri1 = uri;
+            uri1 = uri1.replace(URI_PREFIX_1, URI_PREFIX);
+            listOfUris.add(uri1);
+            listOfUris.add(uri1+"/");
+            
+        }
+        
+        
+        
+        
+        
         return listOfUris;
     }
 
