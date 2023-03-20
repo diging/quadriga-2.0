@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.bson.types.ObjectId;
@@ -105,7 +106,7 @@ public class ExploreCollectionController {
                 return listOfUris.get(0);
         }
         
-        return "None"; 
+        throw new NoSuchElementException(); 
     }
     
     // Normalize the URI prefix and suffix
@@ -149,12 +150,7 @@ public class ExploreCollectionController {
             listOfUris.add(uri1);
             listOfUris.add(uri1+"/");
             
-        }
-        
-        
-        
-        
-        
+        } 
         return listOfUris;
     }
 
