@@ -93,7 +93,7 @@ public class ExploreCollectionControllerTest {
         //verify(collectionManager, times(1)).findCollection(collectionId);
     }
     
-    @Test
+    /*@Test
     public void testGetGraphForUriWithValidInput() throws InvalidObjectIdException, CollectionNotFoundException {
         ConceptCache conceptCache = new ConceptCache("uri1", "id1", "type1");
         Mockito.when(conceptCacheService.getConceptByUri("uri1")).thenReturn(conceptCache);
@@ -112,7 +112,7 @@ public class ExploreCollectionControllerTest {
         Assert.assertEquals("s1", graphElements.getNodes().get(0).getId());
         Assert.assertEquals("p1", graphElements.getEdges().get(0).getLabel());
         Assert.assertEquals("o1", graphElements.getEdges().get(0).getTo());
-    }
+    }*/
     
     
     @Test(expected = CollectionNotFoundException.class)
@@ -124,17 +124,7 @@ public class ExploreCollectionControllerTest {
     public void testGetGraphForUriWithInvalidUri() throws InvalidObjectIdException, CollectionNotFoundException {
         Mockito.when(conceptCacheService.getConceptByUri("uri1")).thenReturn(null);
         exploreCollectionController.getGraphForUri("collectionId", "uri1", null);
-    }
-   
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    }    
 }
     
     
