@@ -149,29 +149,12 @@ public class CollectionManagerImplTest {
         collection.setId(id);
         collection.setName(name);
         collection.setDescription(desc);
-        
-        Collection response = new Collection();
-        collection.setId(id);
-        collection.setName(name);
-        collection.setDescription(desc);
-        collection.setArchived(true);
-        
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
         Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(new EventGraph());
-        Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(response);
-        
-        try{
-            managerToTest.deleteCollection(id.toString());
-        }
-        catch (CollectionNotFoundException e)
-        {
-            fail("Exception thrown during test execution: " + e.getMessage());
-            
-        }
-        catch(InvalidObjectIdException e)
-        {
-            fail("Exception thrown during test execution: " + e.getMessage());
-        }
+        Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(collection);
+        Collection actualResponse = managerToTest.deleteCollection(id.toString());
+        Assert.assertEquals(id,actualResponse.getId());
+        Assert.assertTrue(actualResponse.isArchived());
         
     }
     
