@@ -80,13 +80,25 @@ public class ExploreCollectionController {
             @RequestParam(value = "uri", required = true) String uri,
             @RequestParam(value = "ignoreList", required = false, defaultValue = "{}") List<String> ignoreList)
             throws InvalidObjectIdException, CollectionNotFoundException {
-        
+        GraphElements graphElements = new GraphElements();
+        try {
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
         MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
-        List<DefaultMapping> triples = mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
+        List<DefaultMapping> triples= mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                 mapConceptUriToDatabaseUri(mappedTripleGroup.get_id().toString(),conceptCache.getEqualTo()), ignoreList);
         
-        GraphElements graphElements = GraphUtil.mapToGraph(triples);
+
+        graphElements = GraphUtil.mapToGraph(triples);
+        
+        }
+        catch(InvalidObjectIdException e)
+        {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        catch(CollectionNotFoundException e)
+        {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
 
@@ -94,6 +106,7 @@ public class ExploreCollectionController {
     {
         List<Concept> concept = conceptService.findByMappedTripleGroupId(mappedTripleGroupId);
         List<String> conceptUris = new ArrayList<>();
+        try {
         for(Concept i:concept)
         {
             conceptUris.add(i.getUri());
@@ -105,8 +118,12 @@ public class ExploreCollectionController {
             if(!listOfUris.isEmpty())
                 return listOfUris.get(0);
         }
-        
-        throw new NoSuchElementException(); 
+        }
+        catch(NullPointerException e)
+        {
+            logger.error("Couldn't find concept", e);
+        }
+        return null;        
     }
     
     // Normalize the URI prefix and suffix
