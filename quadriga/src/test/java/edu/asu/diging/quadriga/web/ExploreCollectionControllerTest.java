@@ -124,7 +124,7 @@ public class ExploreCollectionControllerTest {
         Assert.assertEquals(org.springframework.http.HttpStatus.OK , response.getStatusCode());
         Assert.assertNotNull(response.getBody());
         GraphElements graphElements = response.getBody();
-        //Assert.assertEquals(1, graphElements.getNodes().size());
+        Assert.assertEquals(1, graphElements.getNodes().size());
         //Assert.assertEquals(1, graphElements.getEdges().size());
         //Assert.assertEquals("s1", graphElements.getNodes().get(0).getId());
         //Assert.assertEquals("p1", graphElements.getEdges().get(0).getLabel());
