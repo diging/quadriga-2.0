@@ -77,7 +77,7 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
         List<CitesphereAppInfo> apps = new ArrayList<>();
 
         if (!userAppClientIds.isEmpty()) {
-            apps = citesphereConnector.getCitesphereApps().stream()
+            return citesphereConnector.getCitesphereApps().stream()
                     .filter(app -> userAppClientIds.contains(app.getClientId())).collect(Collectors.toList());
         }
         return apps;

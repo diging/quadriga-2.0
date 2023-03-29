@@ -1,12 +1,5 @@
 package edu.asu.diging.quadriga.web;
 
-import java.time.ZoneId;
-
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,23 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.support.RequestContext;
-import org.springframework.web.servlet.support.RequestContextUtils;
-
-
-
-import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
-import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
-import edu.asu.diging.quadriga.core.model.MappedTripleType;
-import edu.asu.diging.quadriga.core.model.mapped.Predicate;
-import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
-import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
-import edu.asu.diging.quadriga.core.service.PredicateManager;
 
 
 

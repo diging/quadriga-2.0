@@ -29,7 +29,7 @@ public class DeleteCollectionController {
         try {
             SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
             Collection collection = collectionManager.findCollection(id);
-            if (!collection.getUsername().equals(simpleUser.getUsername())) {
+            if (!collection.getOwner().equals(simpleUser.getUsername())) {
                 redirectAttributes.addFlashAttribute("alert_type", "danger");
                 redirectAttributes.addFlashAttribute("alert_msg", "Only the owner can delete the collection.");
                 redirectAttributes.addFlashAttribute("show_alert", true);

@@ -23,7 +23,6 @@
                         var item = $('<tr>');
                         item.append('<td>'+ app.clientId +'</td><td>'+ app.name +'</td><td>'+ app.description +'</td>');
                         if (userApps && userApps.includes(app.clientId)) {
-                        	console.log(csrf_token);
                             item.append('<td><form action="'+url+app.clientId+'/revoke" method="post" class="revoke-action"><input type="hidden" name="_csrf" value="'+csrf_token+'"/><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Revoke </form></td>');
 	                 } else {
                          item.append('<td><form action="'+url+app.clientId+'/assign" method="post" class="revoke-action"><input type="hidden" name="_csrf" value="'+csrf_token+'"/><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Assign</form></td>');

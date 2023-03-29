@@ -19,7 +19,7 @@ public interface CollectionManager {
      * @param apps list of citesphere apps attached to the collection
      * @return the saved collection
      */
-    public Collection addCollection(String name, String description, String username, List<String> apps) throws CitesphereAppNotFoundException;
+    public Collection addCollection(String name, String description, String owner, List<String> apps) throws CitesphereAppNotFoundException;
     
     /**
      * Finds a collection from the collection table by id
@@ -64,7 +64,7 @@ public interface CollectionManager {
      * @param pageable requested page details
      * @return a list of collections
      */
-    public Page<Collection> findCollections(String username, List<String> apps, Pageable pageable);
+    public Page<Collection> findCollections(String owner, List<String> apps, Pageable pageable);
 
     /**
      * This method returns the number of default mappings present in the collection

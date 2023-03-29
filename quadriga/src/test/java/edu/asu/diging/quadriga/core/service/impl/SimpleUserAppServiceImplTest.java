@@ -83,7 +83,6 @@ public class SimpleUserAppServiceImplTest {
     public void test_findByUsername_success() {
         Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
         List<SimpleUserApp> response = simpleUserAppService.findByUsername(USER_1);
-        Assert.assertNotNull(response);
         Assert.assertNotEquals(0, response.size());
         for (SimpleUserApp app : response) {
             Assert.assertTrue(USER_APP_LIST.stream().anyMatch(userapp -> userapp.getId().equals(app.getId())));
@@ -102,13 +101,17 @@ public class SimpleUserAppServiceImplTest {
     public void test_delete_success() {
         Mockito.when(simpleUserAppRepository.findByUsernameAndAppClientId(USER_1, CLIENT_ID_1)).thenReturn(USER_APP_1);
         simpleUserAppService.delete(USER_1, CLIENT_ID_1);
+        Mockito.verify(simpleUserAppRepository).delete(USER_APP_1);
     }
     
     @Test
     public void test_delete_noEntry() {
         Mockito.when(simpleUserAppRepository.findByUsernameAndAppClientId(USER_1, CLIENT_ID_1)).thenReturn(null);
         simpleUserAppService.delete(USER_1, CLIENT_ID_1);
+        Mockito.verify(simpleUserAppRepository, Mockito.times(0)).delete(Mockito.any(SimpleUserApp.class));
     }
+        
+    
 
     @Test
     public void test_getCitesphereApps_allMatching() {

@@ -12,7 +12,7 @@ import org.hibernate.annotations.Parameter;
 /**
  * 
  * This class represents the table 'SimpleUserApp' in the database that stores
- * information about the citesphere apps assigned to users
+ * information about the citesphere apps assigned to users and maps them based on appClientId
  * 
  * @author poojakulkarni
  *
@@ -25,7 +25,12 @@ public class SimpleUserApp implements Serializable {
      * 
      */
     private static final long serialVersionUID = -8474699901885186804L;
+    /**
 
+    *A generator used to generate unique IDs for instances of the UserApp class.
+
+    */
+    
     @Id
     @GeneratedValue(generator = "userapp_id_generator")
     @GenericGenerator(name = "userapp_id_generator", parameters = @Parameter(name = "prefix", value = "UA"), strategy = "edu.asu.diging.quadriga.core.data.IdGenerator")

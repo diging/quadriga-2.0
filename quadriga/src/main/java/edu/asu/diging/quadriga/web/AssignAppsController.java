@@ -45,25 +45,9 @@ public class AssignAppsController {
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/admin/user/{username}/app/{clientId}/assign", method = RequestMethod.POST)
     public String assign(@PathVariable String username, @PathVariable String clientId,@RequestParam("_csrf") String csrfToken,HttpServletRequest request){
-        CsrfToken storedCsrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if(!storedCsrf.getToken().equals(csrfToken))
-        {
-            return "Not Authorized";
-        }
         simpleUserAppService.save(username, clientId);
-        return "redirect: /quadriga/admin/user/" + username + "/apps";
+        return "redirect:/admin/user/" + username + "/apps";
     }
-    @PreAuthorize("isAuthenticated()")
-    @RequestMapping(value = "/admin/user/{username}/app/{clientId}/revoke", method = RequestMethod.POST)
-    public String withdraw(@PathVariable String username, @PathVariable String clientId,@RequestParam("_csrf") String csrfToken,HttpServletRequest request ) {
-        CsrfToken storedCsrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-        if(!storedCsrf.getToken().equals(csrfToken))
-        {
-            return "Not Authorized";
-        }
-        
-        simpleUserAppService.delete(username, clientId);
-        return "redirect: /quadriga/admin/user/" + username + "/apps";
-    }
+    
 
 }

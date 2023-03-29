@@ -18,7 +18,7 @@ public class Collection {
 
     private String name;
     private String description;
-    private String username;
+    private String owner;
     
     private OffsetDateTime creationTime;
 
@@ -67,12 +67,12 @@ public class Collection {
         this.apps = apps;
     }
 
-    public String getUsername() {
-        return username;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
 }

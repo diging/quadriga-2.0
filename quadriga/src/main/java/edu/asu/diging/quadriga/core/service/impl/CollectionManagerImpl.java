@@ -50,13 +50,13 @@ public class CollectionManagerImpl implements CollectionManager {
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#addCollection(java.lang.String, java.lang.String, java.lang.String, java.util.List)
      */
-    public Collection addCollection(String name, String description, String username, List<String> apps) throws CitesphereAppNotFoundException {   
+    public Collection addCollection(String name, String description, String owner, List<String> apps) throws CitesphereAppNotFoundException {   
         validateApps(apps);      
         Collection collection = new Collection();
         collection.setCreationTime(OffsetDateTime.now());
         collection.setName(name);
         collection.setDescription(description);
-        collection.setUsername(username);
+        collection.setOwner(owner);
         collection.setApps(apps);
         return collectionRepo.save(collection);
     }
@@ -121,8 +121,8 @@ public class CollectionManagerImpl implements CollectionManager {
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#findCollections(java.lang.String, java.util.List, org.springframework.data.domain.Pageable)
      */
     @Override
-    public Page<Collection> findCollections(String username, List<String> apps, Pageable pageable) {
-        return collectionRepo.findByUsernameOrAppsIn(username, apps, pageable);
+    public Page<Collection> findCollections(String owner, List<String> apps, Pageable pageable) {
+        return collectionRepo.findByOwnerOrAppsIn(owner, apps, pageable);
     }
 
     /**

@@ -16,7 +16,7 @@ import edu.asu.diging.quadriga.core.model.Collection;
 public interface CollectionRepository extends MongoRepository<Collection, ObjectId>{
     
     
-    Page<Collection> findByUsernameOrAppsIn(String username, List<String> apps, Pageable pageable);
+    Page<Collection> findByOwnerOrAppsIn(String owner, List<String> apps, Pageable pageable);
 
     List<Collection> findByAppsContaining(String app);
     
