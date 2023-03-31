@@ -34,7 +34,7 @@ public class DeleteCollectionController {
                 redirectAttributes.addFlashAttribute("alert_msg", "Only the owner can delete the collection.");
                 redirectAttributes.addFlashAttribute("show_alert", true);
             } else {
-                collectionManager.deleteCollection(id);
+                collectionManager.deleteCollection(id,authentication);
                 redirectAttributes.addFlashAttribute("alert_type", "success");
                 redirectAttributes.addFlashAttribute("alert_msg", "Collection has been deleted.");
                 redirectAttributes.addFlashAttribute("show_alert", true);

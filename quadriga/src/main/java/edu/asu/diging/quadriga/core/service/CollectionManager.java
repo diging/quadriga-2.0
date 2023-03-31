@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
@@ -54,7 +55,7 @@ public interface CollectionManager {
      * @param id used to look up the collection in database
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
-    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
+    public void deleteCollection(String id,Authentication authentication) throws CollectionNotFoundException, InvalidObjectIdException;
     
     /**
      * Finds all collections that the given list of apps can access

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
@@ -29,6 +30,7 @@ import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.PredicateManager;
+import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 @Service
 public class CollectionManagerImpl implements CollectionManager {
@@ -104,9 +106,15 @@ public class CollectionManagerImpl implements CollectionManager {
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#deleteCollection(java.lang.String)
      */
     @Override
-    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
+    public void deleteCollection(String id,Authentication authentication) throws CollectionNotFoundException, InvalidObjectIdException,SecurityException {
         Collection collection = findCollection(id);
-        
+        SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
+        if (!collection.getOwner().equals(simpleUser.getUsername())) {
+        	//If someone other than the owner tries to delete,an exception is thrown
+        	throw new SecurityException();
+        	
+        }
+        else {
         if(Objects.nonNull(collection)) {
             
             // Once networks are linked with collections, only empty collections will be deleted
@@ -115,6 +123,7 @@ public class CollectionManagerImpl implements CollectionManager {
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
+       }
     }
 
     /* (non-Javadoc)
