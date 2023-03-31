@@ -20,11 +20,15 @@
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
         <hibernate.dialect>org.dialect.MySQL57Dialect</hibernate.dialect>
 
+
+        <hibernate.dialect>org.hibernate.dialect.MySQL57Dialect</hibernate.dialect>
+        
+
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.database.url>jdbc:mysql://localhost:3306/quadriga</db.database.url>
         <db.user>root</db.user>
         <db.password>shivani</db.password>
-
+        
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
