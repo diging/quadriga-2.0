@@ -74,12 +74,12 @@ public class ExploreCollectionController {
             throws InvalidObjectIdException,CollectionNotFoundException{
         GraphElements graphElements = new GraphElements();
         try {
-        ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
-        MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
-        List<DefaultMapping> triples= mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
-                mapConceptUriToDatabaseUri(mappedTripleGroup.get_id().toString(),conceptCache.getEqualTo()), ignoreList);
-        
-        graphElements = GraphUtil.mapToGraph(triples);
+            ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
+            MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            List<DefaultMapping> triples= mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
+                    mapConceptUriToDatabaseUri(mappedTripleGroup.get_id().toString(),conceptCache.getEqualTo()), ignoreList);
+            
+            graphElements = GraphUtil.mapToGraph(triples);
         }
         catch(InvalidObjectIdException e)
         {
@@ -97,17 +97,16 @@ public class ExploreCollectionController {
         List<Concept> concept = conceptService.findByMappedTripleGroupId(mappedTripleGroupId);
         List<String> conceptUris = new ArrayList<>();
         try {
-        for(Concept i:concept)
-        {
-            conceptUris.add(i.getUri());
-        }
-        for(String i:equalTo)
-        {
-            List<String> listOfUris = processUri(i);
-            listOfUris.retainAll(conceptUris);
-            if(!listOfUris.isEmpty())
-                return listOfUris.get(0);
-        }
+            for(Concept i:concept){
+                conceptUris.add(i.getUri());
+            }
+            for(String i:equalTo){
+                List<String> listOfUris = processUri(i);
+                listOfUris.retainAll(conceptUris);
+                if(!listOfUris.isEmpty()) {
+                    return listOfUris.get(0);
+                }
+            }
         }
         catch(NullPointerException e)
         {
