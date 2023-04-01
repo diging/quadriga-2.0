@@ -112,6 +112,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         return triplePage;
     }
 
+
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getTriplesByUri(java.lang.String, java.lang.String, java.util.List)
      */
@@ -136,7 +137,9 @@ public class MappedTripleServiceImpl implements MappedTripleService {
 
     private TripleElement toTripleElement(Concept concept) {
         TripleElement tripleElement = new TripleElement();
+
         tripleElement.setId(concept.getId());
+
         tripleElement.setLabel(concept.getLabel());
         tripleElement.setUri(concept.getUri());
         return tripleElement;
@@ -144,7 +147,9 @@ public class MappedTripleServiceImpl implements MappedTripleService {
 
     private TripleElement toTripleElement(Predicate predicate) {
         TripleElement tripleElement = new TripleElement();
+
         tripleElement.setId(predicate.getId());
+
         tripleElement.setLabel(predicate.getLabel());
         tripleElement.setUri(predicate.getRelationship());
         return tripleElement;

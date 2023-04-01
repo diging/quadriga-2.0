@@ -15,6 +15,7 @@ import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 @Repository
 public interface PredicateRepository extends Neo4jRepository<Predicate, Long> {
 
+
     @Query("MATCH (p1:Concept)-[r]->(p2:Concept)"
             + "WHERE r.mappedTripleGroupId = $mappedTripleGroupId AND (p1.uri=$uri OR p2.uri=$uri) AND NOT p1.uri IN $ignoreList AND NOT p2.uri IN $ignoreList"
             + " RETURN r;")
@@ -28,6 +29,11 @@ public interface PredicateRepository extends Neo4jRepository<Predicate, Long> {
     
     public Optional<Page<Predicate>> findByMappedTripleGroupId(String mappedTripleGroupId, Pageable paging);
     
+
+    public Optional<List<Predicate>> findByMappedTripleGroupId(String mappedTripleGroupId);
+    
+    public Optional<Page<Predicate>> findByMappedTripleGroupId(String mappedTripleGroupId, Pageable paging);
+
 
     @Query("MATCH (p{mappedTripleGroupId:$mappedTripleGroupId})-[r:PREDICATE]->() RETURN COUNT(p)")
     public int countPredicatesByMappedTripleGroup(@Param("mappedTripleGroupId") String mappedTripleGroupId);
