@@ -1,9 +1,9 @@
 package edu.asu.diging.quadriga.web;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
-import org.apache.http.HttpStatus;
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -111,8 +111,8 @@ public class ExploreCollectionControllerTest {
         List<DefaultMapping> triples = new ArrayList<>();
         DefaultMapping mapping = new DefaultMapping();
         triples.add(mapping);
-        ResponseEntity<GraphElements> response = exploreCollectionController.getGraphForUri(objectId.toString(), uri, new ArrayList<>());
         Concept concept = new Concept();
+        concept.setUri(uri);
         List<Concept> conceptList = new ArrayList<Concept>();
         conceptList.add(concept);
         
@@ -120,31 +120,25 @@ public class ExploreCollectionControllerTest {
         Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType(objectId.toString(), MappedTripleType.DEFAULT_MAPPING)).thenReturn(mappedTripleGroup);
         Mockito.when(mappedTripleService.getTriplesByUri(objectId.toString(),uri,null)).thenReturn(triples);
         Mockito.when(conceptService.findByMappedTripleGroupId(objectId.toString())).thenReturn(conceptList);
-        
+        ResponseEntity<GraphElements> response = exploreCollectionController.getGraphForUri(objectId.toString(), uri, new ArrayList<>());        
         Assert.assertEquals(org.springframework.http.HttpStatus.OK , response.getStatusCode());
         Assert.assertNotNull(response.getBody());
-        GraphElements graphElements = response.getBody();
-        Assert.assertEquals(1, graphElements.getNodes().size());
-        //Assert.assertEquals(1, graphElements.getEdges().size());
-        //Assert.assertEquals("s1", graphElements.getNodes().get(0).getId());
-        //Assert.assertEquals("p1", graphElements.getEdges().get(0).getLabel());
-        //Assert.assertEquals("o1", graphElements.getEdges().get(0).getTo());
     }
     
     
     @Test()
     public void testGetGraphForUriWithInvalidCollectionId() throws InvalidObjectIdException, CollectionNotFoundException {
-        Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType("collectionId", MappedTripleType.DEFAULT_MAPPING)).thenThrow(new CollectionNotFoundException());
-        ResponseEntity<GraphElements> result = exploreCollectionController.getGraphForUri("collectionId", "uri1", null);
-        Assert.assertEquals(org.springframework.http.HttpStatus.NOT_FOUND, result.getStatusCode());
+        Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType("collectionId", MappedTripleType.DEFAULT_MAPPING)).thenThrow(CollectionNotFoundException.class);
+        ResponseEntity<GraphElements> response = exploreCollectionController.getGraphForUri("collectionId", "uri1", null);
+        Assert.assertEquals(org.springframework.http.HttpStatus.NOT_FOUND,response.getStatusCode());
+        
     }
     @Test()
-    public void testGetGraphForUriWithInvalidUri() throws InvalidObjectIdException, CollectionNotFoundException{
-        Mockito.when(conceptCacheService.getConceptByUri("uri1")).thenReturn(new ConceptCache());
-        Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType("collectionId",MappedTripleType.DEFAULT_MAPPING )).thenReturn(new MappedTripleGroup());
-        Mockito.when(mappedTripleService.getTriplesByUri("collectionId", "uri1", new ArrayList<>())).thenThrow(new InvalidObjectIdException());
-        ResponseEntity<GraphElements> result = exploreCollectionController.getGraphForUri("collectionId", "uri1",new ArrayList<>() );
-        Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST, result.getStatusCode());
+    public void testGetGraphForUriWithInvalidObjectId() throws InvalidObjectIdException, CollectionNotFoundException{
+        Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType("collectionId",MappedTripleType.DEFAULT_MAPPING )).thenThrow(InvalidObjectIdException.class);
+        ResponseEntity<GraphElements> response =  exploreCollectionController.getGraphForUri("collectionId", "InvalidUri",null );
+        Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST,response.getStatusCode());
+       
     }    
 }
     

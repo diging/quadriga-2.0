@@ -72,7 +72,9 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
     @Override
     public MappedTripleGroup findByCollectionIdAndMappingType(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException {
-        Collection collection = collectionManager.findCollection(collectionId);
+        
+        Collection collection = new Collection();
+        collection = collectionManager.findCollection(collectionId);
         
         if(collection == null) {
             throw new CollectionNotFoundException("Couldn't find collection for id: " + collectionId);

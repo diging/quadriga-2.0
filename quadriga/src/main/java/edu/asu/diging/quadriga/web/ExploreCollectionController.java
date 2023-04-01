@@ -1,11 +1,8 @@
 package edu.asu.diging.quadriga.web;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
-import org.bson.types.ObjectId;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.quadriga.core.conceptpower.data.ConceptCacheRepository;
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptService;
-import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
-import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
@@ -31,11 +25,9 @@ import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.mapped.Concept;
-import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
-import edu.asu.diging.quadriga.core.service.PredicateManager;
 import edu.asu.diging.quadriga.web.model.GraphElements;
 
 @Controller
@@ -79,7 +71,7 @@ public class ExploreCollectionController {
     public ResponseEntity<GraphElements> getGraphForUri(@PathVariable String collectionId,
             @RequestParam(value = "uri", required = true) String uri,
             @RequestParam(value = "ignoreList", required = false, defaultValue = "{}") List<String> ignoreList)
-            throws InvalidObjectIdException, CollectionNotFoundException {
+            throws InvalidObjectIdException,CollectionNotFoundException{
         GraphElements graphElements = new GraphElements();
         try {
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
@@ -87,17 +79,15 @@ public class ExploreCollectionController {
         List<DefaultMapping> triples= mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                 mapConceptUriToDatabaseUri(mappedTripleGroup.get_id().toString(),conceptCache.getEqualTo()), ignoreList);
         
-
         graphElements = GraphUtil.mapToGraph(triples);
-        
         }
         catch(InvalidObjectIdException e)
         {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
         }
         catch(CollectionNotFoundException e)
         {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
