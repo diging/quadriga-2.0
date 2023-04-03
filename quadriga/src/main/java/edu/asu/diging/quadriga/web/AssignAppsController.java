@@ -42,7 +42,7 @@ public class AssignAppsController {
         model.addAttribute("csrfToken",csrfToken.getToken());
         return "admin/user/apps";
     }
-    @PreAuthorize("isAuthenticated()")
+    
     @RequestMapping(value = "/admin/user/{username}/app/{clientId}/assign", method = RequestMethod.POST)
     public String assign(@PathVariable String username, @PathVariable String clientId,@RequestParam("_csrf") String csrfToken,HttpServletRequest request){
         simpleUserAppService.save(username, clientId);

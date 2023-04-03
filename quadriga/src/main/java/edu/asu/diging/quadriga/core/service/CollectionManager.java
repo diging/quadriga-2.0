@@ -55,7 +55,7 @@ public interface CollectionManager {
      * @param id used to look up the collection in database
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
-    public void deleteCollection(String id,Authentication authentication) throws CollectionNotFoundException, InvalidObjectIdException;
+    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
     
     /**
      * Finds all collections that the given list of apps can access

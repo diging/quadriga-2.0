@@ -106,15 +106,14 @@ public class CollectionManagerImpl implements CollectionManager {
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#deleteCollection(java.lang.String)
      */
     @Override
-    public void deleteCollection(String id,Authentication authentication) throws CollectionNotFoundException, InvalidObjectIdException,SecurityException {
+    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException,SecurityException {
         Collection collection = findCollection(id);
-        SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
-        if (!collection.getOwner().equals(simpleUser.getUsername())) {
+        //SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
+        /*if (!collection.getOwner().equals(simpleUser.getUsername())) {
         	//If someone other than the owner tries to delete,an exception is thrown
         	throw new SecurityException();
         	
-        }
-        else {
+        }*/
         if(Objects.nonNull(collection)) {
             
             // Once networks are linked with collections, only empty collections will be deleted
@@ -123,7 +122,7 @@ public class CollectionManagerImpl implements CollectionManager {
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
-       }
+       
     }
 
     /* (non-Javadoc)

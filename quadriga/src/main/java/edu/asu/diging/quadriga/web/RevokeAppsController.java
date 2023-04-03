@@ -24,7 +24,6 @@ public class RevokeAppsController {
     @Autowired
     private SimpleUserAppService simpleUserAppService;
 
-    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/admin/user/{username}/app/{clientId}/revoke", method = RequestMethod.POST)
     public String withdraw(@PathVariable String username, @PathVariable String clientId,@RequestParam("_csrf") String csrfToken,HttpServletRequest request ) {
         simpleUserAppService.delete(username, clientId);
