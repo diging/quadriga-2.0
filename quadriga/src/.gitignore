@@ -1,0 +1,10 @@
+# Ignore Tomcat files
+*.war
+*.ear
+*.jar
+*.class
+/target/
+*.iml
+*.ipr
+*.iws
+/.idea/

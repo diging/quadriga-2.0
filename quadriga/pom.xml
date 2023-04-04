@@ -26,8 +26,8 @@
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.database.url>jdbc:mysql://localhost:3306/quadriga</db.database.url>
-        <db.user></db.user>
-        <db.password></db.password>
+        <db.user>root</db.user>
+        <db.password>shivani</db.password>
         
         <email.user></email.user>
         <email.password></email.password>
@@ -44,11 +44,11 @@
         <mongo.database.authdb>admin</mongo.database.authdb>
 
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
-        <neo4j.database></neo4j.database>
+        <neo4j.database>quadriga</neo4j.database>
         
         <citesphere.base.url>https://diging-dev.asu.edu/citesphere-review/</citesphere.base.url>
-        <citesphere.client.id></citesphere.client.id>
-        <citesphere.client.secret></citesphere.client.secret>
+        <citesphere.client.id>OAUTHCLIENT40</citesphere.client.id>
+        <citesphere.client.secret>8eaf546b-dce1-4d45-8bf5-bf12756a5d1d</citesphere.client.secret>
 
         <log.level>info</log.level>
 

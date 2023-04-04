@@ -112,7 +112,7 @@ public class CollectionManagerImpl implements CollectionManager {
             
             // Once networks are linked with collections, only empty collections will be deleted
             // If it is linked to a network, we will archive the collection.
-        	 if (!collection.getOwner().equals(simpleUser.getUsername())) {
+        	if (!collection.getOwner().equals(simpleUser.getUsername())) {
              	//If someone other than the owner tries to delete,an exception is thrown
              	throw new SecurityException();
              	
