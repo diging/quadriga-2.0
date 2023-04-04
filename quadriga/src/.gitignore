@@ -1,6 +1,7 @@
 # Ignore Tomcat files
 *.war
 *.ear
+*.sh
 *.jar
 *.class
 /target/
