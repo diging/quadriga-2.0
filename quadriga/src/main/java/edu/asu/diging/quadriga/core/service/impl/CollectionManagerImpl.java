@@ -116,11 +116,11 @@ public class CollectionManagerImpl implements CollectionManager {
              	//If someone other than the owner tries to delete,an exception is thrown
              	throw new SecurityException();
              	
-             }
+            }
             collectionRepo.delete(collection);
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
-        	}
+        }
         
        
     }
