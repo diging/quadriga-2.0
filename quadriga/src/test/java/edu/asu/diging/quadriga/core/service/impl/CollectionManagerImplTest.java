@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,8 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.Authentication;
-
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
@@ -23,6 +22,7 @@ import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
+import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 public class CollectionManagerImplTest {
     
@@ -121,6 +121,11 @@ public class CollectionManagerImplTest {
         collection.setId(id);
         collection.setName(name);
         collection.setDescription(desc);
+        collection.setOwner(name);
+        SimpleUser simpleUser = new SimpleUser();
+        simpleUser.setUsername(name);
+  
+        
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
         Mockito.doNothing().when(collectionRepo).delete(Mockito.argThat(new ArgumentMatcher<Collection>() {
@@ -131,7 +136,7 @@ public class CollectionManagerImplTest {
             }
         }));
         
-        managerToTest.deleteCollection(id.toString());
+        managerToTest.deleteCollection(id.toString(),simpleUser);
     }
     
     
@@ -145,11 +150,14 @@ public class CollectionManagerImplTest {
         collection.setId(id);
         collection.setName(name);
         collection.setDescription(desc);
+        collection.setOwner(name);
+        SimpleUser simpleUser = new SimpleUser();
+        simpleUser.setUsername(name);
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.ofNullable(null));
         
         Assert.assertThrows(CollectionNotFoundException.class,
-                ()  -> managerToTest.deleteCollection(id.toString()));
+                ()  -> managerToTest.deleteCollection(id.toString(),simpleUser));
     }
 
     @Test

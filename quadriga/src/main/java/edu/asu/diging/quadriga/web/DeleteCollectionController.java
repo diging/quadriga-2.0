@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,7 @@ public class DeleteCollectionController {
                 redirectAttributes.addFlashAttribute("alert_msg", "Only the owner can delete the collection.");
                 redirectAttributes.addFlashAttribute("show_alert", true);
             } else {
-                collectionManager.deleteCollection(id);
+                collectionManager.deleteCollection(id,simpleUser);
                 redirectAttributes.addFlashAttribute("alert_type", "success");
                 redirectAttributes.addFlashAttribute("alert_msg", "Collection has been deleted.");
                 redirectAttributes.addFlashAttribute("show_alert", true);

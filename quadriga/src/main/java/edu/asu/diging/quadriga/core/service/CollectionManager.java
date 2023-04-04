@@ -2,14 +2,14 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 public interface CollectionManager {
     /**
@@ -53,9 +53,10 @@ public interface CollectionManager {
     /**
      * Deletes a collection from collection table by id
      * @param id used to look up the collection in database
+     * @param authentication is used for knowing whether the user is the owner of the collection
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
-    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
+    public void deleteCollection(String id,SimpleUser simpleUser) throws CollectionNotFoundException, InvalidObjectIdException,SecurityException;
     
     /**
      * Finds all collections that the given list of apps can access

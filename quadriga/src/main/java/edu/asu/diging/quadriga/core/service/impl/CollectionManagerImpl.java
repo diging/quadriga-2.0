@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 import java.time.OffsetDateTime;
 
 
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
@@ -106,22 +106,22 @@ public class CollectionManagerImpl implements CollectionManager {
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#deleteCollection(java.lang.String)
      */
     @Override
-    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException,SecurityException {
+    public void deleteCollection(String id,SimpleUser simpleUser) throws CollectionNotFoundException, InvalidObjectIdException,SecurityException {
         Collection collection = findCollection(id);
-        //SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
-        /*if (!collection.getOwner().equals(simpleUser.getUsername())) {
-        	//If someone other than the owner tries to delete,an exception is thrown
-        	throw new SecurityException();
-        	
-        }*/
         if(Objects.nonNull(collection)) {
             
             // Once networks are linked with collections, only empty collections will be deleted
             // If it is linked to a network, we will archive the collection.
+        	 if (!collection.getOwner().equals(simpleUser.getUsername())) {
+             	//If someone other than the owner tries to delete,an exception is thrown
+             	throw new SecurityException();
+             	
+             }
             collectionRepo.delete(collection);
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
-        }
+        	}
+        
        
     }
 

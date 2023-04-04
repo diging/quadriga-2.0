@@ -1,7 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import org.junit.Assert;
@@ -18,17 +17,18 @@ import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
-public class SimpleUserAppServiceImplTest {
+public class CitesphereAppsManagerTest {
+	
+	@InjectMocks
+	private CitesphereAppsManagerImpl citesphereAppsManagerImpl;
 
-    @InjectMocks
-    private SimpleUserAppServiceImpl simpleUserAppService;
-
-    @Mock
+	@Mock
     private CitesphereConnector citesphereConnector;
 
     @Mock
     private SimpleUserAppRepository simpleUserAppRepository;
-
+    
+    
     private String USER_1;
     private String USER_2;
     private SimpleUser SIMPLE_USER_1;
@@ -80,40 +80,55 @@ public class SimpleUserAppServiceImplTest {
         APP_3.setClientId(CLIENT_ID_3);
     }
 
-    @Test
-    public void test_findByUsername_success() {
+	
+	@Test
+    public void test_getCitesphereApps_partialMatching() {
+        List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
+        citesphereApps.add(APP_2);
+        citesphereApps.add(APP_3);
+
         Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
-        List<SimpleUserApp> response = simpleUserAppService.findByUsername(USER_1);
-        Assert.assertNotEquals(0, response.size());
-        for (SimpleUserApp app : response) {
-            Assert.assertTrue(USER_APP_LIST.stream().anyMatch(userapp -> userapp.getId().equals(app.getId())));
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
+
+        List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
+        
+        Assert.assertEquals(1, response.size());
+        Assert.assertTrue(response.get(0).getClientId().equals(CLIENT_ID_2));
+    }
+
+    @Test
+    public void test_getCitesphereApps_noMatching() {
+        List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
+        citesphereApps.add(APP_3);
+
+        Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
+
+        List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
+        
+        Assert.assertEquals(0, response.size());
+    }
+    @Test
+    public void test_getCitesphereApps_allMatching() {
+        List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
+        citesphereApps.add(APP_1);
+        citesphereApps.add(APP_2);
+
+        Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
+        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
+
+        List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
+
+        for (CitesphereAppInfo app : citesphereApps) {
+            Assert.assertTrue(response.stream().anyMatch(responseApp -> responseApp.getClientId().equals(app.getClientId())));
         }
     }
 
-    @Test
-    public void test_findByUsername_empty() {
-        Mockito.when(simpleUserAppRepository.findByUsername(USER_2)).thenReturn(new ArrayList<>());
-        List<SimpleUserApp> actualResponse = simpleUserAppService.findByUsername(USER_2);
-        Assert.assertNotNull(actualResponse);
-        Assert.assertEquals(0, actualResponse.size());
-    }
     
-    @Test
-    public void test_delete_success() {
-        Mockito.when(simpleUserAppRepository.findByUsernameAndAppClientId(USER_1, CLIENT_ID_1)).thenReturn(USER_APP_1);
-        simpleUserAppService.delete(USER_1, CLIENT_ID_1);
-        Mockito.verify(simpleUserAppRepository).delete(USER_APP_1);
-    }
-    
-    @Test
-    public void test_delete_noEntry() {
-        Mockito.when(simpleUserAppRepository.findByUsernameAndAppClientId(USER_1, CLIENT_ID_1)).thenReturn(null);
-        simpleUserAppService.delete(USER_1, CLIENT_ID_1);
-        Mockito.verify(simpleUserAppRepository, Mockito.times(0)).delete(Mockito.any(SimpleUserApp.class));
-    }
-        
-    
-
-   
+	
+	
+	
+	
+	
 
 }

@@ -32,11 +32,7 @@ public interface SimpleUserAppService {
      */
     public void delete(String username, String appClientId);
     
-    /**
-     * Retrieves citesphere apps that the user has access to
-     * @param user user for which the app are to be retrieved
-     * @return List of the apps
-     */
-    public List<CitesphereAppInfo> getCitesphereApps(SimpleUser user) ;
+    
+    
 
 }
