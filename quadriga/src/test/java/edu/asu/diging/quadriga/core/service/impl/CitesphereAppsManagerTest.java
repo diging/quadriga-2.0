@@ -18,117 +18,117 @@ import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 public class CitesphereAppsManagerTest {
-	
+
 	@InjectMocks
 	private CitesphereAppsManagerImpl citesphereAppsManagerImpl;
 
 	@Mock
-    private CitesphereConnector citesphereConnector;
+	private CitesphereConnector citesphereConnector;
 
-    @Mock
-    private SimpleUserAppRepository simpleUserAppRepository;
-    
-    
-    private String USER_1;
-    private String USER_2;
-    private SimpleUser SIMPLE_USER_1;
-    private String CLIENT_ID_1;
-    private String CLIENT_ID_2;
-    private String CLIENT_ID_3;
-    private SimpleUserApp USER_APP_1;
-    private SimpleUserApp USER_APP_2;
-    private List<SimpleUserApp> USER_APP_LIST;
-    private CitesphereAppInfo APP_1;
-    private CitesphereAppInfo APP_2;
-    private CitesphereAppInfo APP_3;
+	@Mock
+	private SimpleUserAppRepository simpleUserAppRepository;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
 
-        USER_1 = "user1";
-        USER_2 = "user2";
+	private String USER_1;
+	private String USER_2;
+	private SimpleUser SIMPLE_USER_1;
+	private String CLIENT_ID_1;
+	private String CLIENT_ID_2;
+	private String CLIENT_ID_3;
+	private SimpleUserApp USER_APP_1;
+	private SimpleUserApp USER_APP_2;
+	private List<SimpleUserApp> USER_APP_LIST;
+	private CitesphereAppInfo APP_1;
+	private CitesphereAppInfo APP_2;
+	private CitesphereAppInfo APP_3;
 
-        SIMPLE_USER_1 = new SimpleUser();
-        SIMPLE_USER_1.setUsername(USER_1);
+	@Before
+	public void setUp() {
+		MockitoAnnotations.openMocks(this);
 
-        CLIENT_ID_1 = "clientId1";
-        CLIENT_ID_2 = "clientId2";
-        CLIENT_ID_3 = "clientId3";
-        
-        USER_APP_LIST = new ArrayList<>();
+		USER_1 = "user1";
+		USER_2 = "user2";
 
-        USER_APP_1 = new SimpleUserApp();
-        USER_APP_1.setId("1");
-        USER_APP_1.setUsername(USER_1);
-        USER_APP_1.setAppClientId(CLIENT_ID_1);
-        USER_APP_LIST.add(USER_APP_1);
+		SIMPLE_USER_1 = new SimpleUser();
+		SIMPLE_USER_1.setUsername(USER_1);
 
-        USER_APP_2 = new SimpleUserApp();
-        USER_APP_2.setId("2");
-        USER_APP_2.setUsername(USER_1);
-        USER_APP_2.setAppClientId(CLIENT_ID_2);
-        USER_APP_LIST.add(USER_APP_2);
+		CLIENT_ID_1 = "clientId1";
+		CLIENT_ID_2 = "clientId2";
+		CLIENT_ID_3 = "clientId3";
 
-        APP_1 = new CitesphereAppInfo();
-        APP_1.setClientId(CLIENT_ID_1);
+		USER_APP_LIST = new ArrayList<>();
 
-        APP_2 = new CitesphereAppInfo();
-        APP_2.setClientId(CLIENT_ID_2);
+		USER_APP_1 = new SimpleUserApp();
+		USER_APP_1.setId("1");
+		USER_APP_1.setUsername(USER_1);
+		USER_APP_1.setAppClientId(CLIENT_ID_1);
+		USER_APP_LIST.add(USER_APP_1);
 
-        APP_3 = new CitesphereAppInfo();
-        APP_3.setClientId(CLIENT_ID_3);
-    }
+		USER_APP_2 = new SimpleUserApp();
+		USER_APP_2.setId("2");
+		USER_APP_2.setUsername(USER_1);
+		USER_APP_2.setAppClientId(CLIENT_ID_2);
+		USER_APP_LIST.add(USER_APP_2);
 
-	
+		APP_1 = new CitesphereAppInfo();
+		APP_1.setClientId(CLIENT_ID_1);
+
+		APP_2 = new CitesphereAppInfo();
+		APP_2.setClientId(CLIENT_ID_2);
+
+		APP_3 = new CitesphereAppInfo();
+		APP_3.setClientId(CLIENT_ID_3);
+	}
+
+
 	@Test
-    public void test_getCitesphereApps_partialMatching() {
-        List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
-        citesphereApps.add(APP_2);
-        citesphereApps.add(APP_3);
+	public void test_getCitesphereApps_partialMatching() {
+		List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
+		citesphereApps.add(APP_2);
+		citesphereApps.add(APP_3);
 
-        Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
-        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
+		Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
+		Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
 
-        List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
-        
-        Assert.assertEquals(1, response.size());
-        Assert.assertTrue(response.get(0).getClientId().equals(CLIENT_ID_2));
-    }
+		List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
 
-    @Test
-    public void test_getCitesphereApps_noMatching() {
-        List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
-        citesphereApps.add(APP_3);
+		Assert.assertEquals(1, response.size());
+		Assert.assertTrue(response.get(0).getClientId().equals(CLIENT_ID_2));
+	}
 
-        Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
-        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
+	@Test
+	public void test_getCitesphereApps_noMatching() {
+		List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
+		citesphereApps.add(APP_3);
 
-        List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
-        
-        Assert.assertEquals(0, response.size());
-    }
-    @Test
-    public void test_getCitesphereApps_allMatching() {
-        List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
-        citesphereApps.add(APP_1);
-        citesphereApps.add(APP_2);
+		Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
+		Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
 
-        Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
-        Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
+		List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
 
-        List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
+		Assert.assertEquals(0, response.size());
+	}
+	@Test
+	public void test_getCitesphereApps_allMatching() {
+		List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
+		citesphereApps.add(APP_1);
+		citesphereApps.add(APP_2);
 
-        for (CitesphereAppInfo app : citesphereApps) {
-            Assert.assertTrue(response.stream().anyMatch(responseApp -> responseApp.getClientId().equals(app.getClientId())));
-        }
-    }
+		Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
+		Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
 
-    
-	
-	
-	
-	
-	
+		List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
+
+		for (CitesphereAppInfo app : citesphereApps) {
+			Assert.assertTrue(response.stream().anyMatch(responseApp -> responseApp.getClientId().equals(app.getClientId())));
+		}
+	}
+
+
+
+
+
+
+
 
 }
