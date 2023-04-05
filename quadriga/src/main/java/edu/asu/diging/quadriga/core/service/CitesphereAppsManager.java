@@ -12,6 +12,6 @@ public interface CitesphereAppsManager {
      * @param user user for which the app are to be retrieved
      * @return List of the apps
      */
-   public List<CitesphereAppInfo> getCitesphereApps(SimpleUser user) ;
+    public List<CitesphereAppInfo> getCitesphereApps(SimpleUser user) ;
 
 }

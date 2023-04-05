@@ -19,10 +19,10 @@ import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 @Service
 public class CitesphereAppsManagerImpl implements CitesphereAppsManager {
 
-   @Autowired
+    @Autowired
     private CitesphereConnector citesphereConnector;
 
-   @Autowired
+    @Autowired
     private SimpleUserAppRepository simpleUserAppRepository;
 
 
@@ -34,7 +34,7 @@ public class CitesphereAppsManagerImpl implements CitesphereAppsManager {
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CitesphereAppsManager#getCitesphereApps(edu.asu.diging.simpleusers.core.model.impl.SimpleUser)
      */
-   @Override
+    @Override
     public List<CitesphereAppInfo> getCitesphereApps(SimpleUser user) {
         // Get the set of apps that are accessible by the user
         Set<String> userAppClientIds = findByUsername(user.getUsername()).stream()

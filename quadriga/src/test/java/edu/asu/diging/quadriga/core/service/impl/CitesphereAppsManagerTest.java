@@ -19,13 +19,13 @@ import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 public class CitesphereAppsManagerTest {
 
-   @InjectMocks
+    @InjectMocks
     private CitesphereAppsManagerImpl citesphereAppsManagerImpl;
 
-   @Mock
+    @Mock
     private CitesphereConnector citesphereConnector;
 
-   @Mock
+    @Mock
     private SimpleUserAppRepository simpleUserAppRepository;
 
 
@@ -81,7 +81,7 @@ public class CitesphereAppsManagerTest {
     }
 
 
-   @Test
+    @Test
     public void test_getCitesphereApps_partialMatching() {
         List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
         citesphereApps.add(APP_2);

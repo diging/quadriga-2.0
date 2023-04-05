@@ -37,16 +37,16 @@ public class CollectionManagerImpl implements CollectionManager {
 
     @Autowired
     private CitesphereConnector citesphereConnector;
-    
+
     @Autowired
     private CollectionRepository collectionRepo;
-    
+
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
-    
+
     @Autowired
     private PredicateManager predicateManager;
-    
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     /* (non-Javadoc)
@@ -74,7 +74,7 @@ public class CollectionManagerImpl implements CollectionManager {
             throw new InvalidObjectIdException(e);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#getCollections(java.lang.String)
      */
@@ -82,7 +82,7 @@ public class CollectionManagerImpl implements CollectionManager {
     public List<Collection> getCollections(String app) {
         return collectionRepo.findByAppsContaining(app);
     }
-    
+
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#editCollection(java.lang.String, java.lang.String, java.lang.String, java.util.List)
@@ -109,20 +109,20 @@ public class CollectionManagerImpl implements CollectionManager {
     public void deleteCollection(String id,SimpleUser simpleUser) throws CollectionNotFoundException, InvalidObjectIdException,SecurityException {
         Collection collection = findCollection(id);
         if(Objects.nonNull(collection)) {
-            
+
             // Once networks are linked with collections, only empty collections will be deleted
             // If it is linked to a network, we will archive the collection.
-        if (!collection.getOwner().equals(simpleUser.getUsername())) {
-             	//If someone other than the owner tries to delete,an exception is thrown
-             	throw new SecurityException();
-             	
+            if (!collection.getOwner().equals(simpleUser.getUsername())) {
+                //If someone other than the owner tries to delete,an exception is thrown
+                throw new SecurityException();
+
             }
             collectionRepo.delete(collection);
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
-        
-       
+
+
     }
 
     /* (non-Javadoc)
@@ -151,7 +151,7 @@ public class CollectionManagerImpl implements CollectionManager {
             }
         }
     }
-    
+
     /**
      * This method returns the number of default mappings present in the collection
      * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
