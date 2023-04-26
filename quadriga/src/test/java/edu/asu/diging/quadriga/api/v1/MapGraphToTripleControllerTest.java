@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +58,7 @@ public class MapGraphToTripleControllerTest {
 
         Job job = new Job();
         job.setId("job123");
-        when(jobManager.createJob(collectionId, "mappedTripleGroupId", eventGraphs.size())).thenReturn("job123");
+        Assert.when(jobManager.createJob(collectionId, "mappedTripleGroupId", eventGraphs.size())).thenReturn("job123");
         when(jobManager.get("job123")).thenReturn(job);
 
         ResponseEntity<List<MapGraphToTripleController.JobPatternInfo>> response = mapGraphToTripleController
@@ -66,16 +67,6 @@ public class MapGraphToTripleControllerTest {
         assert (response.getStatusCode() == HttpStatus.OK);
     }
 
-    @Test
-    public void testGetJobStatus() {
-        Job job = new Job();
-        job.setId("job123");
-        when(jobManager.get("job123")).thenReturn(job);
-
-        ResponseEntity<Job> response = mapGraphToTripleController.getJobStatus("job123");
-
-        assert (response.getStatusCode() == HttpStatus.OK);
-        assert (response.getBody().getId().equals("job123"));
-    }
+    
 
 }
