@@ -48,7 +48,7 @@
         
         <citesphere.base.url>https://diging-dev.asu.edu/citesphere-review/</citesphere.base.url>
         <citesphere.client.id>OAUTHCLIENT40</citesphere.client.id>
-        <citesphere.client.secret>8eaf546b-dce1-4d45-8bf5-bf12756a5d1d</citesphere.client.secret>
+        <citesphere.client.secret>0748493c-45cc-4699-a85e-51082b0ce3c6</citesphere.client.secret>
 
         <log.level>info</log.level>
 

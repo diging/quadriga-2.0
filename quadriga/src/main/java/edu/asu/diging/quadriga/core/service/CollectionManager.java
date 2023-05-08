@@ -16,7 +16,7 @@ public interface CollectionManager {
      * Saves a collection in database with the given details
      * @param name collection name
      * @param description collection description
-     * @param username user name of the creator
+     * @param owner name of the creator
      * @param apps list of citesphere apps attached to the collection
      * @return the saved collection
      */

@@ -36,7 +36,6 @@ public class SimpleUserApp implements Serializable {
     @GeneratedValue(generator = "userapp_id_generator")
     @GenericGenerator(name = "userapp_id_generator", parameters = @Parameter(name = "prefix", value = "UA"), strategy = "edu.asu.diging.quadriga.core.data.IdGenerator")
     private String id;
-
     private String username;
     private String appClientId;
 
