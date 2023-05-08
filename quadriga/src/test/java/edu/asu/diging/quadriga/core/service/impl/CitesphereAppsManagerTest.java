@@ -18,17 +18,17 @@ import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 public class CitesphereAppsManagerTest {
-	
-	@InjectMocks
-	private CitesphereAppsManagerImpl citesphereAppsManagerImpl;
 
-	@Mock
+    @InjectMocks
+    private CitesphereAppsManagerImpl citesphereAppsManagerImpl;
+
+    @Mock
     private CitesphereConnector citesphereConnector;
 
     @Mock
     private SimpleUserAppRepository simpleUserAppRepository;
-    
-    
+
+
     private String USER_1;
     private String USER_2;
     private SimpleUser SIMPLE_USER_1;
@@ -55,7 +55,7 @@ public class CitesphereAppsManagerTest {
         CLIENT_ID_1 = "clientId1";
         CLIENT_ID_2 = "clientId2";
         CLIENT_ID_3 = "clientId3";
-        
+
         USER_APP_LIST = new ArrayList<>();
 
         USER_APP_1 = new SimpleUserApp();
@@ -80,8 +80,8 @@ public class CitesphereAppsManagerTest {
         APP_3.setClientId(CLIENT_ID_3);
     }
 
-	
-	@Test
+
+    @Test
     public void test_getCitesphereApps_partialMatching() {
         List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
         citesphereApps.add(APP_2);
@@ -91,7 +91,7 @@ public class CitesphereAppsManagerTest {
         Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
 
         List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
-        
+
         Assert.assertEquals(1, response.size());
         Assert.assertTrue(response.get(0).getClientId().equals(CLIENT_ID_2));
     }
@@ -105,7 +105,7 @@ public class CitesphereAppsManagerTest {
         Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
 
         List<CitesphereAppInfo> response = citesphereAppsManagerImpl.getCitesphereApps(SIMPLE_USER_1);
-        
+
         Assert.assertEquals(0, response.size());
     }
     @Test
@@ -124,11 +124,11 @@ public class CitesphereAppsManagerTest {
         }
     }
 
-    
-	
-	
-	
-	
-	
+
+
+
+
+
+
 
 }
