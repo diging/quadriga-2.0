@@ -84,7 +84,7 @@ public class SimpleUserAppServiceImplTest {
     public void test_findByUsername_success() {
         Mockito.when(simpleUserAppRepository.findByUsername(USER_1)).thenReturn(USER_APP_LIST);
         List<SimpleUserApp> response = simpleUserAppService.findByUsername(USER_1);
-        Assert.assertNotEquals(0, response.size());
+        Assert.assertEquals(2, response.size());
         for (SimpleUserApp app : response) {
             Assert.assertTrue(USER_APP_LIST.stream().anyMatch(userapp -> userapp.getId().equals(app.getId())));
         }

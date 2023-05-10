@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+import edu.asu.diging.quadriga.core.exceptions.SimpleUserAppNotFoundException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
@@ -9,7 +10,7 @@ import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 public interface SimpleUserAppService {
 
     /**
-     * Saves a mapping of the user and a client id
+     * Saves a mapping of the Quadriga user to client id of Citesphere apps.
      * @param username username for the mapping
      * @param clientId client id for the mapping
      * @return the saved details
@@ -30,7 +31,7 @@ public interface SimpleUserAppService {
      * @param username is the username to be searched
      * @param appClientId is the app Client Id to be searched
      */
-    public void delete(String username, String appClientId);
+    public void delete(String username, String appClientId) throws SimpleUserAppNotFoundException;
     
     
     

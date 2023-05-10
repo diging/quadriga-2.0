@@ -42,7 +42,6 @@ public class ListCollectionController {
             @RequestParam(defaultValue = "20", required = false, value = "size") String size, Model model, Authentication authentication) {
 
         SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
-
         List<SimpleUserApp> userApps = simpleUserAppService.findByUsername(simpleUser.getUsername());
         
         List<String> clientIds = null;

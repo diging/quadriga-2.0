@@ -1,11 +1,13 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.data.SimpleUserAppRepository;
+import edu.asu.diging.quadriga.core.exceptions.SimpleUserAppNotFoundException;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 
@@ -30,7 +32,6 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     @Override
     public SimpleUserApp save(String username, String clientId) {
         SimpleUserApp simpleUserApp = new SimpleUserApp();
-        simpleUserApp.setId(UUID.randomUUID().toString());
         simpleUserApp.setUsername(username);
         simpleUserApp.setAppClientId(clientId);
         return simpleUserAppRepository.save(simpleUserApp);
@@ -48,10 +49,13 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
      * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#delete(java.lang.String, java.lang.String)
      */
     @Override
-    public void delete(String username, String appClientId) {
+    public void delete(String username, String appClientId) throws SimpleUserAppNotFoundException {
         SimpleUserApp userApp = simpleUserAppRepository.findByUsernameAndAppClientId(username, appClientId);
         if (userApp != null) {
             simpleUserAppRepository.delete(userApp);
+        }
+        else {
+            throw new SimpleUserAppNotFoundException(); 
         }
     }
 

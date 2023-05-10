@@ -24,7 +24,7 @@ public class RevokeAppsController {
     private SimpleUserAppService simpleUserAppService;
 
     @RequestMapping(value = "/admin/user/{username}/app/{clientId}/revoke", method = RequestMethod.POST)
-    public String withdraw(@PathVariable String username, @PathVariable String clientId,@RequestParam("_csrf") String csrfToken,HttpServletRequest request ) {
+    public String withdraw(@PathVariable String username, @PathVariable String clientId,HttpServletRequest request ) {
         simpleUserAppService.delete(username, clientId);
         return "redirect:/admin/user/" + username + "/apps";
     }

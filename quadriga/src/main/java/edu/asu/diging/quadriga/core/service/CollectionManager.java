@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.UserNotAuthorisedException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
@@ -56,12 +57,12 @@ public interface CollectionManager {
      * @param authentication is used for knowing whether the user is the owner of the collection
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
-    public void deleteCollection(String id,SimpleUser simpleUser) throws CollectionNotFoundException, InvalidObjectIdException,SecurityException;
+    public void deleteCollection(String id,SimpleUser simpleUser) throws CollectionNotFoundException, InvalidObjectIdException,UserNotAuthorisedException;
     
     /**
      * Finds all collections that the given list of apps can access
      * 
-     * @param username user for which the collections are to be searched
+     * @param owner is the user for which the collections are to be searched
      * @param apps is a list of apps to be searched
      * @param pageable requested page details
      * @return a list of collections

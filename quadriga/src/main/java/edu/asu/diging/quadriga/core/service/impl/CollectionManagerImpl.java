@@ -23,6 +23,7 @@ import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.UserNotAuthorisedException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
@@ -106,7 +107,7 @@ public class CollectionManagerImpl implements CollectionManager {
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#deleteCollection(java.lang.String)
      */
     @Override
-    public void deleteCollection(String id,SimpleUser simpleUser) throws CollectionNotFoundException, InvalidObjectIdException,SecurityException {
+    public void deleteCollection(String id,SimpleUser simpleUser) throws CollectionNotFoundException, InvalidObjectIdException,UserNotAuthorisedException {
         Collection collection = findCollection(id);
         if(Objects.nonNull(collection)) {
 
@@ -114,7 +115,7 @@ public class CollectionManagerImpl implements CollectionManager {
             // If it is linked to a network, we will archive the collection.
             if (!collection.getOwner().equals(simpleUser.getUsername())) {
                 //If someone other than the owner tries to delete,an exception is thrown
-                throw new SecurityException();
+                throw new UserNotAuthorisedException();
 
             }
             collectionRepo.delete(collection);

@@ -28,7 +28,9 @@ public class SimpleUserApp implements Serializable {
     private static final long serialVersionUID = -8474699901885186804L;
     /**
 
-    *A generator used to generate unique IDs for instances of the UserApp class.
+    * A generator used to generate unique IDs for instances of the UserApp class.
+    * The prefix parameter specifies the prefix to be used in the generated value
+    * Strategy parameter for the generator is specified for generating a unique identifier.
 
     */
     

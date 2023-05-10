@@ -38,12 +38,12 @@ public class AssignAppsController {
 
         model.addAttribute("username", username);
         model.addAttribute("userApps", userApps);
-        model.addAttribute("csrfToken",csrfToken.getToken());
+        //model.addAttribute("csrfToken",csrfToken.getToken());
         return "admin/user/apps";
     }
     
     @RequestMapping(value = "/admin/user/{username}/app/{clientId}/assign", method = RequestMethod.POST)
-    public String assign(@PathVariable String username, @PathVariable String clientId,@RequestParam("_csrf") String csrfToken,HttpServletRequest request){
+    public String assign(@PathVariable String username, @PathVariable String clientId,HttpServletRequest request){
         simpleUserAppService.save(username, clientId);
         return "redirect:/admin/user/" + username + "/apps";
     }
