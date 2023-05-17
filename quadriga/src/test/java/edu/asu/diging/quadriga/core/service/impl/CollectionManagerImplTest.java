@@ -152,7 +152,7 @@ public class CollectionManagerImplTest {
         Collection response = new Collection();
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
         Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(new EventGraph());
-        Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(response);
+        Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(collection);
         Collection actualResponse = managerToTest.deleteCollection(id.toString());
         Assert.assertEquals(id,actualResponse.getId());
         Assert.assertTrue(actualResponse.isArchived());
