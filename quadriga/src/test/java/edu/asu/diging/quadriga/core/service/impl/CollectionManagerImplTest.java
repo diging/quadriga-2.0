@@ -20,6 +20,7 @@ import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.UserNotAuthorisedException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
@@ -112,7 +113,7 @@ public class CollectionManagerImplTest {
     
     
     @Test
-    public void test_deleteCollection_success() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_deleteCollection_success() throws CollectionNotFoundException, InvalidObjectIdException,UserNotAuthorisedException {
         
         String name = "name";
         String desc = "description";
@@ -159,6 +160,29 @@ public class CollectionManagerImplTest {
         Assert.assertThrows(CollectionNotFoundException.class,
                 ()  -> managerToTest.deleteCollection(id.toString(),simpleUser));
     }
+    @Test
+    public void test_deleteCollection_UserNotAuthorised() throws UserNotAuthorisedException {
+        
+        String name = "name";
+        String otherName = "OtherName";
+        String desc = "description";
+        Collection collection = new Collection();
+        ObjectId id = new ObjectId();
+        collection.setId(id);
+        collection.setName(name);
+        collection.setDescription(desc);
+        collection.setOwner(name);
+        SimpleUser simpleUser = new SimpleUser();
+        simpleUser.setUsername(name);
+        SimpleUser otherUser = new SimpleUser();
+        otherUser.setUsername(otherName);
+        
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
+        
+        Assert.assertThrows(UserNotAuthorisedException.class,
+                ()  -> managerToTest.deleteCollection(id.toString(),otherUser));
+    }
+    
 
     @Test
     public void test_findCollection_success() throws InvalidObjectIdException {

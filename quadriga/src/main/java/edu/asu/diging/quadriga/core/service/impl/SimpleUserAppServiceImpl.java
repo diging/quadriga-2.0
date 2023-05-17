@@ -1,8 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +55,13 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
         else {
             throw new SimpleUserAppNotFoundException(); 
         }
+    }
+    @Override
+    public List<SimpleUserApp> findByUsernameWithPagination(String username,int offset,int pageSize)
+    {
+        
+        return simpleUserAppRepository.findByUsernameWithPagination(username,offset,pageSize);
+        
     }
 
     

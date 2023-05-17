@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
+import edu.asu.diging.quadriga.core.exceptions.SimpleUserAppNotFoundException;
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 
 @Controller
@@ -24,7 +24,7 @@ public class RevokeAppsController {
     private SimpleUserAppService simpleUserAppService;
 
     @RequestMapping(value = "/admin/user/{username}/app/{clientId}/revoke", method = RequestMethod.POST)
-    public String withdraw(@PathVariable String username, @PathVariable String clientId,HttpServletRequest request ) {
+    public String withdraw(@PathVariable String username, @PathVariable String clientId,HttpServletRequest request ) throws SimpleUserAppNotFoundException {
         simpleUserAppService.delete(username, clientId);
         return "redirect:/admin/user/" + username + "/apps";
     }

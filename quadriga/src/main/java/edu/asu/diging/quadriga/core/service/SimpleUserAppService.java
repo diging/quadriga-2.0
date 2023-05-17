@@ -3,9 +3,7 @@ package edu.asu.diging.quadriga.core.service;
 import java.util.List;
 
 import edu.asu.diging.quadriga.core.exceptions.SimpleUserAppNotFoundException;
-import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
-import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 public interface SimpleUserAppService {
 
@@ -32,6 +30,13 @@ public interface SimpleUserAppService {
      * @param appClientId is the app Client Id to be searched
      */
     public void delete(String username, String appClientId) throws SimpleUserAppNotFoundException;
+    
+    /**\
+     * To find list of all apps that user has access to with pagination
+     * @param offset determines the starting point of the result set
+     * @param pageSize is the number of items per page
+     */
+    public List<SimpleUserApp> findByUsernameWithPagination(String username,int offset,int pageSize);
     
     
     

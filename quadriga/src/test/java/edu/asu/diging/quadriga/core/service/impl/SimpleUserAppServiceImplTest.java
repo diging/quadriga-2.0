@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.data.SimpleUserAppRepository;
+import edu.asu.diging.quadriga.core.exceptions.SimpleUserAppNotFoundException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
@@ -99,17 +100,20 @@ public class SimpleUserAppServiceImplTest {
     }
     
     @Test
-    public void test_delete_success() {
+    public void test_delete_success() throws SimpleUserAppNotFoundException {
         Mockito.when(simpleUserAppRepository.findByUsernameAndAppClientId(USER_1, CLIENT_ID_1)).thenReturn(USER_APP_1);
         simpleUserAppService.delete(USER_1, CLIENT_ID_1);
         Mockito.verify(simpleUserAppRepository).delete(USER_APP_1);
     }
     
     @Test
-    public void test_delete_noEntry() {
+    public void test_delete_noEntry() throws SimpleUserAppNotFoundException {
         Mockito.when(simpleUserAppRepository.findByUsernameAndAppClientId(USER_1, CLIENT_ID_1)).thenReturn(null);
-        simpleUserAppService.delete(USER_1, CLIENT_ID_1);
-        Mockito.verify(simpleUserAppRepository, Mockito.times(0)).delete(Mockito.any(SimpleUserApp.class));
+        Assert.assertThrows(SimpleUserAppNotFoundException.class, () -> {
+            simpleUserAppService.delete(USER_1 ,CLIENT_ID_1 );
+        });
+
+        
     }
         
     
