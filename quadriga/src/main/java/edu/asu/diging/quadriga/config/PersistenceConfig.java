@@ -71,7 +71,7 @@ public class PersistenceConfig {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
 
-        properties.setProperty("hibernate.dialect", "${hibarnate.dialect}");
+        properties.setProperty("hibernate.dialect", "${hibernate.dialect}");
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("hibernate.id.new_generator_mappings", "true");
 
