@@ -18,8 +18,7 @@
         <simple-users-version>1.1</simple-users-version>
 
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
-        <hibernate.dialect>org.dialect.MySQL57Dialect</hibernate.dialect>
-
+        
 
         <hibernate.dialect>org.hibernate.dialect.MySQL57Dialect</hibernate.dialect>
         

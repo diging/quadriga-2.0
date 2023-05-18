@@ -10,7 +10,7 @@
             var userApps = [[${userApps}]];
             var username = [[${username}]];
             var url = [[@{|/admin/user/${username}/app/|}]];
-            var csrf_token = [[${csrfToken}]];
+            var csrf_token = [[${_csrf.token}]];
             $.ajax({
                 'url': [[@{|/citesphere/apps|}]],
                 'type': "GET",
