@@ -27,7 +27,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Table(name = "conceptpower_concept_cache")
 public class ConceptCache implements Serializable, Comparable<ConceptCache> {
 
-    private static final long serialVersionUID = 6260562492095202271L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String uri;
@@ -185,7 +185,6 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
         // If old value is null/blank/empty, new value is not null/blank/empty, difference present
         // If old value is not null/blank/empty, new value is null/blank/empty, difference present
         // If both are not null/blank/empty, we need to check difference
-        
         if(isDifferentList(conceptCache.getAlternativeUris(), this.getAlternativeUris())) return -1;
         if(isDifferentList(conceptCache.getEqualTo(), this.getEqualTo())) return -1;
         if(isDifferentList(conceptCache.getWordNetIds(), this.getWordNetIds())) return -1;
@@ -201,6 +200,9 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
     }
     
     private static boolean isDifferentString(String str1, String str2) {
+        /**
+         * If none of the strings are empty and 
+         */
         if(!(StringUtils.isEmpty(str1) && StringUtils.isEmpty(str2)) 
                 && (StringUtils.isEmpty(str1) || !str1.equals(str2))) {
             return true;

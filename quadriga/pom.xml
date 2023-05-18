@@ -39,14 +39,14 @@
         <mongo.database.authdb>admin</mongo.database.authdb>
 
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
-        <neo4j.database></neo4j.database>
+        <neo4j.database>quadriga2</neo4j.database>
         
-        <citesphere.base.url></citesphere.base.url>
-        <citesphere.client.id></citesphere.client.id>
+        <citesphere.base.url>https://diging-dev.asu.edu/citesphere-review/</citesphere.base.url>
+        <citesphere.client.id>OAUTHCLIENT40</citesphere.client.id>
         <citesphere.client.secret></citesphere.client.secret>
         
-        <conceptpower.base.url></conceptpower.base.url>
-        <conceptpower.id.endpoint></conceptpower.id.endpoint>
+        <conceptpower.base.url>https://chps.asu.edu/conceptpower/rest/</conceptpower.base.url>
+        <conceptpower.id.endpoint>https://chps.asu.edu/conceptpower/</conceptpower.id.endpoint>
         
         <log.level>info</log.level>
 

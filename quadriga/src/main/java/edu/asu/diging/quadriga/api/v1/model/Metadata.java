@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.api.v1.model;
 
 import edu.asu.diging.quadriga.core.model.Context;
+
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
 
 public class Metadata {
