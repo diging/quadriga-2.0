@@ -204,11 +204,11 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(uri);
         if(matcher.find()) {
-        String extractedText = matcher.group(1);
-        listOfUris.add(URI_PREFIX + extractedText);
-        listOfUris.add(URI_PREFIX + extractedText+"/");
-        listOfUris.add(URI_PREFIX_1 + extractedText);
-        listOfUris.add(URI_PREFIX_1 + extractedText+"/");
+            String extractedText = matcher.group(1);
+            listOfUris.add(URI_PREFIX + extractedText);
+            listOfUris.add(URI_PREFIX + extractedText+"/");
+            listOfUris.add(URI_PREFIX_1 + extractedText);
+            listOfUris.add(URI_PREFIX_1 + extractedText+"/");
         }
         return listOfUris;
     }
