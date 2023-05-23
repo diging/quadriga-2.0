@@ -2,6 +2,8 @@ package edu.asu.diging.quadriga.web;
 
 import java.util.ArrayList;
 
+
+
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -16,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
-import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
+import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptService;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
@@ -29,7 +31,7 @@ import edu.asu.diging.quadriga.core.model.mapped.Concept;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.impl.CollectionManagerImpl;
-import edu.asu.diging.quadriga.web.model.GraphElements;
+import edu.asu.diging.quadriga.web.service.model.GraphElements;
 
 
 public class ExploreCollectionControllerTest {
@@ -99,7 +101,7 @@ public class ExploreCollectionControllerTest {
     public void testGetGraphForUriWithValidInput() throws InvalidObjectIdException, CollectionNotFoundException {
         ObjectId objectId = new ObjectId();
         String uri ="https:/uri/";
-        ConceptCache conceptCache = new ConceptCache();
+        CachedConcept conceptCache = new CachedConcept();
         List<String> equalTo = new ArrayList<>();
         equalTo.add(uri);
         conceptCache.setUri(uri);

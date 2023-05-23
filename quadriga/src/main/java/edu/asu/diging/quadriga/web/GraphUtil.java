@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +10,12 @@ import org.bson.types.ObjectId;
 
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.TripleElement;
-import edu.asu.diging.quadriga.web.model.GraphData;
-import edu.asu.diging.quadriga.web.model.GraphEdgeData;
-import edu.asu.diging.quadriga.web.model.GraphElement;
-import edu.asu.diging.quadriga.web.model.GraphElements;
-import edu.asu.diging.quadriga.web.model.GraphNodeData;
-import edu.asu.diging.quadriga.web.model.GraphNodeType;
+import edu.asu.diging.quadriga.web.service.model.GraphData;
+import edu.asu.diging.quadriga.web.service.model.GraphEdgeData;
+import edu.asu.diging.quadriga.web.service.model.GraphElement;
+import edu.asu.diging.quadriga.web.service.model.GraphElements;
+import edu.asu.diging.quadriga.web.service.model.GraphNodeData;
+import edu.asu.diging.quadriga.web.service.model.GraphNodeType;
 
 public class GraphUtil {
 

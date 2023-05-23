@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.conceptpower.service.impl;
 
 import java.time.LocalDateTime;
+
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
+import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptType;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptEntry;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
@@ -43,11 +44,9 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
     private Integer conceptCacheUpdateInterval;
 
     @Override
-    public ConceptCache getConceptByUri(String uri) {
+    public CachedConcept getConceptByUri(String uri) {
 
-        ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
-        
-        conceptCacheUpdateInterval=0;
+        CachedConcept conceptCache = conceptCacheService.getConceptByUri(uri);
         if (conceptCache == null || ChronoUnit.HOURS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= conceptCacheUpdateInterval) {
             conceptCache = saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
         }
@@ -79,8 +78,8 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
      * @param uri               to be used for logging in case no ConceptCache entry
      *                          was generated
      */
-    private ConceptCache saveConceptCacheFromConceptPowerReply(ConceptCache conceptCacheOld, ConceptPowerReply conceptPowerReply, String uri) {
-        ConceptCache conceptCache = mapConceptPowerReplyToConceptCache(conceptPowerReply);
+    private CachedConcept saveConceptCacheFromConceptPowerReply(CachedConcept conceptCacheOld, ConceptPowerReply conceptPowerReply, String uri) {
+        CachedConcept conceptCache = mapConceptPowerReplyToConceptCache(conceptPowerReply);
         
         // Before returning, we need to check if we've updated ConceptCache or not
         // If no diff was found, conceptCache won't be updated and 'lastUpdated' would stay the same
@@ -97,7 +96,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
      * @param conceptCacheOld
      * @return
      */
-    private boolean updateConceptType(ConceptCache conceptCache, ConceptCache conceptCacheOld) {
+    private boolean updateConceptType(CachedConcept conceptCache, CachedConcept conceptCacheOld) {
         if(conceptCache != null && conceptCache.getConceptType() != null) {
 
             ConceptType conceptType = conceptCache.getConceptType();
@@ -126,7 +125,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
      * @param uri
      * @return
      */
-    private boolean updateConceptCache(ConceptCache conceptCache, ConceptCache conceptCacheOld, String uri) {
+    private boolean updateConceptCache(CachedConcept conceptCache, CachedConcept conceptCacheOld, String uri) {
         
         // ConceptPower returned a concept and either no conceptCache entry exists in the DB
         // or if one exists, it is different from the current conceptCache entry
@@ -152,14 +151,14 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
     }
 
     @Override
-    public ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
+    public CachedConcept mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
         // If we get multiple ConceptPower entries in the reply, we use the first one
         List<ConceptEntry> conceptEntries = conceptPowerReply.getConceptEntries();
-        ConceptCache conceptCache = null;
+        CachedConcept conceptCache = null;
 
         if (conceptEntries != null && !conceptEntries.isEmpty()) {
             ConceptEntry conceptEntry = conceptEntries.get(0);
-            conceptCache = new ConceptCache();
+            conceptCache = new CachedConcept();
             conceptCache.setUri(conceptEntry.getConceptUri());
             conceptCache.setConceptList(conceptEntry.getConceptList());
             conceptCache.setDescription(conceptEntry.getDescription());

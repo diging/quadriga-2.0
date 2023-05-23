@@ -1,12 +1,18 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import java.util.ArrayList;
+
 import java.util.List;
 
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +21,8 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.MappedTriplesPage;
 import edu.asu.diging.quadriga.api.v1.model.NodeData;
+import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
+import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
@@ -27,13 +35,23 @@ import edu.asu.diging.quadriga.core.service.MappedTripleService;
 
 @Service
 public class MappedTripleServiceImpl implements MappedTripleService {
+    
+    Logger logger = LoggerFactory.getLogger(getClass());
+    
+    private static final String URI_PREFIX = "http";
+    private static final String URI_PREFIX_1 = "https";
 
     @Autowired
     private ConceptRepository conceptRepo;
 
     @Autowired
     private PredicateRepository predicateRepo;
-
+    
+    @Autowired
+    private ConceptCacheService conceptCacheService;
+    
+   
+    
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph, edu.asu.diging.quadriga.core.model.MappedTripleGroup)
      */
@@ -119,7 +137,8 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     @Override
     public List<DefaultMapping> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList){
         
-        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(uri,ignoreList,mappedTripleGroupId);
+        CachedConcept conceptCache = conceptCacheService.getConceptByUri(uri);
+        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(mapConceptUriToDatabaseUri(mappedTripleGroupId,conceptCache.getEqualTo()),ignoreList,mappedTripleGroupId);
         return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
     }    
 
@@ -153,6 +172,45 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         tripleElement.setLabel(predicate.getLabel());
         tripleElement.setUri(predicate.getRelationship());
         return tripleElement;
+    }
+    private String mapConceptUriToDatabaseUri(String mappedTripleGroupId,List<String> equalTo)
+    {
+        List<Concept> concept = conceptRepo.findByMappedTripleGroupId(mappedTripleGroupId);
+        List<String> conceptUris = new ArrayList<>();
+        try {
+            for(Concept eachConcept:concept){
+                conceptUris.add(eachConcept.getUri());
+            }
+            for(String similarUris:equalTo){
+                List<String> listOfUris = processUri(similarUris);
+                listOfUris.retainAll(conceptUris);
+                if(!listOfUris.isEmpty()) {
+                    return listOfUris.get(0);
+                }
+            }
+        }
+        catch(NullPointerException e)
+        {
+            logger.error("Couldn't find concept", e);
+            return "error404Page";
+        }
+        return "error404Page";       
+    }
+    
+    // Normalize the URI prefix and suffix
+    private List<String> processUri(String uri) {
+        List<String> listOfUris = new ArrayList<>();
+        String regex = "https?(://.*?)/?$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(uri);
+        if(matcher.find()) {
+        String extractedText = matcher.group(1);
+        listOfUris.add(URI_PREFIX + extractedText);
+        listOfUris.add(URI_PREFIX + extractedText+"/");
+        listOfUris.add(URI_PREFIX_1 + extractedText);
+        listOfUris.add(URI_PREFIX_1 + extractedText+"/");
+        }
+        return listOfUris;
     }
 
 }

@@ -2,11 +2,12 @@ package edu.asu.diging.quadriga.core.conceptpower.service.impl;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.conceptpower.data.ConceptCacheRepository;
-import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
+import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 
 @Service
@@ -16,8 +17,8 @@ public class ConceptCacheServiceImpl implements ConceptCacheService {
     private ConceptCacheRepository conceptCacheRepository;
 
     @Override
-    public ConceptCache getConceptByUri(String uri) {
-        ConceptCache conceptCache = conceptCacheRepository.findById(uri).orElse(null);
+    public CachedConcept getConceptByUri(String uri) {
+        CachedConcept conceptCache = conceptCacheRepository.findById(uri).orElse(null);
         if (conceptCache == null) {
             conceptCache = getConceptByAlternativeUri(uri);
         }
@@ -25,8 +26,8 @@ public class ConceptCacheServiceImpl implements ConceptCacheService {
     }
 
     @Override
-    public ConceptCache getConceptByAlternativeUri(String uri) {
-        List<ConceptCache> conceptCacheList = conceptCacheRepository.findConceptByAlternativeURI(uri);
+    public CachedConcept getConceptByAlternativeUri(String uri) {
+        List<CachedConcept> conceptCacheList = conceptCacheRepository.findConceptByAlternativeURI(uri);
         if (conceptCacheList != null && !conceptCacheList.isEmpty()) {
             return conceptCacheList.get(0);
         }
@@ -34,7 +35,7 @@ public class ConceptCacheServiceImpl implements ConceptCacheService {
     }
 
     @Override
-    public void saveConceptCache(ConceptCache conceptCache) {
+    public void saveConceptCache(CachedConcept conceptCache) {
         conceptCacheRepository.save(conceptCache);
     }
 

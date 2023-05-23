@@ -18,8 +18,7 @@ public class ConceptServiceImpl implements ConceptService{
 
     @Override
     public List<Concept> findByMappedTripleGroupId(String mappedTripleGroupId) {
-        List<Concept> concept = conceptRepository.findByMappedTripleGroupId(mappedTripleGroupId);
-        return concept;
+        return conceptRepository.findByMappedTripleGroupId(mappedTripleGroupId);
     }
     
 

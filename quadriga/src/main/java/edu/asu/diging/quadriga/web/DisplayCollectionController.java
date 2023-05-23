@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.web;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,8 @@ public class DisplayCollectionController {
     @Autowired
     private PredicateManager predicateManager;
     
+    //@Value("${defaultPageSize}")
+    private Integer defaultPageSize=10;
     
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -59,7 +62,7 @@ public class DisplayCollectionController {
 
 //      Determine page number and size for network pagination      
         page = (page == null || page < 0) ? 0 : page - 1;
-        size = (size == null || size < 1) ? 10 : size;
+        size = (size == null || size < 1) ? defaultPageSize : size;
         
 
         model.addAttribute("size", size);

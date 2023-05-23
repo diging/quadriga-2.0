@@ -1,6 +1,6 @@
 package edu.asu.diging.quadriga.core.conceptpower.service;
 
-import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
+import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerSearchResults;
 
@@ -25,7 +25,7 @@ public interface ConceptPowerService {
      *            conceptpower
      * @return the conceptCache database entry
      */
-    public ConceptCache getConceptByUri(String uri);
+    public CachedConcept getConceptByUri(String uri);
     
     /**
      * This method maps the ConceptPowerReply object returned from ConceptPower to a
@@ -34,7 +34,7 @@ public interface ConceptPowerService {
      * @param conceptPowerReply is the object used to generate a ConceptCache object
      * @return the generated ConceptCache object
      */
-    public ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply);
+    public CachedConcept mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply);
     
     /**
      * Searches conceptpower for the given search term

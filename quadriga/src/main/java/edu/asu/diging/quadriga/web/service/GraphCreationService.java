@@ -3,13 +3,16 @@ package edu.asu.diging.quadriga.web.service;
 import java.util.List;
 import java.util.Map;
 
+import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.EventGraph;
+import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
-import edu.asu.diging.quadriga.web.model.GraphData;
-import edu.asu.diging.quadriga.web.model.GraphElements;
-import edu.asu.diging.quadriga.web.model.GraphNodeData;
-import edu.asu.diging.quadriga.web.model.GraphNodeType;
+import edu.asu.diging.quadriga.web.service.model.GraphData;
+import edu.asu.diging.quadriga.web.service.model.GraphElement;
+import edu.asu.diging.quadriga.web.service.model.GraphElements;
+import edu.asu.diging.quadriga.web.service.model.GraphNodeData;
+import edu.asu.diging.quadriga.web.service.model.GraphNodeType;
 
 /**
  * This class is used as a service to create a network graph for the Cytoscape JS
@@ -111,7 +114,17 @@ public interface GraphCreationService {
      * @param sourceId is the source node's id to be linked to the target
      * @param targetId is the target node's id to be linked to the source
      */
-    public void createEdge(List<GraphData> graphEdges, String sourceId, String targetId, String eventGraphId);
+    public void createEdge(List<GraphData> graphEdges, String sourceId, String targetId,String eventGraphId);
+    
+    /**
+     * Mapping triples to a graph
+     * @param triples is the list of triples which is used to create edges and nodes of the graph
+     * @return GraphElement object which is created using the nodes and edges created
+     */
+    
+    public GraphElements mapToGraph(List<DefaultMapping> triples);
+    
+  
     
 
 }

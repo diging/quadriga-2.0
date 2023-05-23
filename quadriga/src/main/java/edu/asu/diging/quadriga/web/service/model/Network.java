@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.web.model;
+package edu.asu.diging.quadriga.web.service.model;
 
 import java.time.ZonedDateTime;
 

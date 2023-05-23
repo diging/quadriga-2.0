@@ -15,9 +15,10 @@ public class ConceptType implements Serializable, Comparable<ConceptType> {
 
     private static final long serialVersionUID = 4228339422371096758L;
 
-    @Id
+   
     private String id;
     private String name;
+    @Id
     private String uri;
 
     @Lob
@@ -56,12 +57,7 @@ public class ConceptType implements Serializable, Comparable<ConceptType> {
     }
 
     @Override
-    public int compareTo(ConceptType type) {
-        // If both old and new types are null/blank, nothing has changed
-        // If old value is null/blank, new value is not null/blank, difference present
-        // If old value is not null/blank, new value is null/blank, difference present
-        // If both are not null/blank, we need to check difference
-        
+    public int compareTo(ConceptType type) {      
         if (type == null ) return -1;
         if(isDifferentString(type.getId(), this.getId())) return -1;
         if(isDifferentString(type.getDescription(), this.getDescription())) return -1;
@@ -71,6 +67,10 @@ public class ConceptType implements Serializable, Comparable<ConceptType> {
     }
     
     private static boolean isDifferentString(String str1, String str2) {
+        // If both old and new strings are null/blank, nothing has changed
+        // If old value is null/blank, new value is not null/blank, difference present
+        // If old value is not null/blank, new value is null/blank, difference present
+        // If both are not null/blank, we need to check difference
         if(!(StringUtils.isEmpty(str1) && StringUtils.isEmpty(str2)) 
                 && (StringUtils.isEmpty(str1) || !str1.equals(str2))) {
             return true;

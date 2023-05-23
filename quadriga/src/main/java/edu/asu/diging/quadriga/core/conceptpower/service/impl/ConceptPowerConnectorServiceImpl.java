@@ -90,7 +90,7 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
                 logger.error("Error while searching concept power");
             }
         } catch (RestClientException e) {
-            logger.error(e.getMessage());
+            logger.error("An exception has occured",e);
         }
 
         return null;

@@ -25,7 +25,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  */
 @Entity
 @Table(name = "conceptpower_concept_cache")
-public class ConceptCache implements Serializable, Comparable<ConceptCache> {
+public class CachedConcept implements Serializable, Comparable<CachedConcept> {
 
     private static final long serialVersionUID = 1L;
 
@@ -63,7 +63,7 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
     @Transient
     private ConceptType conceptType;
 
-    public ConceptCache() {
+    public CachedConcept() {
         this.lastUpdated = LocalDateTime.now();
     }
 
@@ -180,28 +180,27 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
     }
 
     @Override
-    public int compareTo(ConceptCache conceptCache) {
-        // If both old and new cache values are null/blank/empty, nothing has changed
-        // If old value is null/blank/empty, new value is not null/blank/empty, difference present
-        // If old value is not null/blank/empty, new value is null/blank/empty, difference present
-        // If both are not null/blank/empty, we need to check difference
-        if(isDifferentList(conceptCache.getAlternativeUris(), this.getAlternativeUris())) return -1;
-        if(isDifferentList(conceptCache.getEqualTo(), this.getEqualTo())) return -1;
-        if(isDifferentList(conceptCache.getWordNetIds(), this.getWordNetIds())) return -1;
-        if (isDifferentString(conceptCache.getConceptList(), this.getConceptList())) return -1;
-        if (isDifferentString(conceptCache.getCreatorId(), this.getCreatorId())) return -1;
-        if (isDifferentString(conceptCache.getDescription(), this.getDescription())) return -1;
-        if (isDifferentString(conceptCache.getId(), this.getId())) return -1;
-        if (isDifferentString(conceptCache.getPos(), this.getPos())) return -1;
-        if (isDifferentString(conceptCache.getTypeId(), this.getTypeId())) return -1;
-        if (isDifferentString(conceptCache.getUri(), this.getUri())) return -1;
-        if (isDifferentString(conceptCache.getWord(), this.getWord())) return -1;
+    public int compareTo(CachedConcept cachedConcept) {
+        if(isDifferentList(cachedConcept.getAlternativeUris(), this.getAlternativeUris())) return -1;
+        if(isDifferentList(cachedConcept.getEqualTo(), this.getEqualTo())) return -1;
+        if(isDifferentList(cachedConcept.getWordNetIds(), this.getWordNetIds())) return -1;
+        if (isDifferentString(cachedConcept.getConceptList(), this.getConceptList())) return -1;
+        if (isDifferentString(cachedConcept.getCreatorId(), this.getCreatorId())) return -1;
+        if (isDifferentString(cachedConcept.getDescription(), this.getDescription())) return -1;
+        if (isDifferentString(cachedConcept.getId(), this.getId())) return -1;
+        if (isDifferentString(cachedConcept.getPos(), this.getPos())) return -1;
+        if (isDifferentString(cachedConcept.getTypeId(), this.getTypeId())) return -1;
+        if (isDifferentString(cachedConcept.getUri(), this.getUri())) return -1;
+        if (isDifferentString(cachedConcept.getWord(), this.getWord())) return -1;
         return 0;
     }
     
     private static boolean isDifferentString(String str1, String str2) {
         /**
-         * If none of the strings are empty and 
+         * If both old and new string values are null/blank/empty, nothing has changed
+         * If old value is null/blank/empty, new value is not null/blank/empty, difference present
+         * If old value is not null/blank/empty, new value is null/blank/empty, difference present
+         * If both are not null/blank/empty, we need to check difference
          */
         if(!(StringUtils.isEmpty(str1) && StringUtils.isEmpty(str2)) 
                 && (StringUtils.isEmpty(str1) || !str1.equals(str2))) {
@@ -211,6 +210,12 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
     }
 
     private static boolean isDifferentList(List<String> list1, List<String> list2) {
+        /**
+         * If both old and new List values are null/blank/empty, nothing has changed
+         * If old value is null/blank/empty, new value is not null/blank/empty, difference present
+         * If old value is not null/blank/empty, new value is null/blank/empty, difference present
+         * If both are not null/blank/empty, we need to check difference
+         */
         if (!(isNullOrEmpty(list1) && isNullOrEmpty(list2) 
                 && (isNullOrEmpty(list1) || !list1.equals(list2)))) {
             return true;

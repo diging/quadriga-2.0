@@ -1,6 +1,8 @@
 package edu.asu.diging.quadriga.web.service.impl;
 
 import java.util.ArrayList;
+
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,19 +19,21 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
+import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerService;
+import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.EventGraph;
+import edu.asu.diging.quadriga.core.model.TripleElement;
 import edu.asu.diging.quadriga.core.model.elements.Concept;
 import edu.asu.diging.quadriga.core.model.elements.Relation;
 import edu.asu.diging.quadriga.core.model.elements.Term;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
-import edu.asu.diging.quadriga.web.model.GraphData;
-import edu.asu.diging.quadriga.web.model.GraphElement;
-import edu.asu.diging.quadriga.web.model.GraphElements;
-import edu.asu.diging.quadriga.web.model.GraphNodeData;
-import edu.asu.diging.quadriga.web.model.GraphNodeType;
+import edu.asu.diging.quadriga.web.service.model.GraphData;
+import edu.asu.diging.quadriga.web.service.model.GraphElement;
+import edu.asu.diging.quadriga.web.service.model.GraphElements;
+import edu.asu.diging.quadriga.web.service.model.GraphNodeData;
+import edu.asu.diging.quadriga.web.service.model.GraphNodeType;
 
 public class GraphCreationServiceImplTest {
 
@@ -40,9 +44,9 @@ public class GraphCreationServiceImplTest {
     private GraphCreationServiceImpl graphCreationServiceImpl;
 
     private static List<List<EventGraph>> sampleEventGraphLists = new ArrayList<>();
-    private static ConceptCache subject1, subject2;
-    private static ConceptCache predicate1, predicate2;
-    private static ConceptCache object1;
+    private static CachedConcept subject1, subject2;
+    private static CachedConcept predicate1, predicate2;
+    private static CachedConcept object1;
 
     @BeforeClass
     public static void setUpOnceBeforeAllTests() {
@@ -328,35 +332,35 @@ public class GraphCreationServiceImplTest {
 
     private static void createSampleConceptCache() {
 
-        subject1 = new ConceptCache();
+        subject1 = new CachedConcept();
         subject1.setUri("http://www.digitalhps.org/concepts/albert-einstein");
         subject1.setWord("Albert Einstein");
         subject1.setDescription("Albert Einstein was a German-born theoretical physicist");
         subject1.setAlternativeUris(Arrays.asList("http://www.digitalhps.org/concepts/albert-einstein",
                 "http://www.digitalhps.org/concepts/albert-einstein-alt"));
 
-        predicate1 = new ConceptCache();
+        predicate1 = new CachedConcept();
         predicate1.setUri("http://www.digitalhps.org/concepts/WID-10295819-N-01-married");
         predicate1.setWord("married");
         predicate1.setDescription("a person who is married; \"we invited several young marrieds\"");
         predicate1.setAlternativeUris(Arrays.asList("http://www.digitalhps.org/concepts/WID-10295819-N-01-married",
                 "http://www.digitalhps.org/concepts/WID-10295819-N-02-married"));
 
-        object1 = new ConceptCache();
+        object1 = new CachedConcept();
         object1.setWord("Elsa Einstein");
         object1.setUri("http://www.digitalhps.org/concepts/elsa-einstein");
         object1.setDescription("Elsa Einstein was the second wife and cousin of Albert Einstein");
         object1.setAlternativeUris(Arrays.asList("http://www.digitalhps.org/concepts/elsa-einstein",
                 "http://www.digitalhps.org/concepts/elsa-einstein-alt"));
 
-        subject2 = new ConceptCache();
+        subject2 = new CachedConcept();
         subject2.setUri("http://www.digitalhps.org/concepts/cousin");
         subject2.setWord("cousin");
         subject2.setDescription("the child of your aunt or uncle");
         subject2.setAlternativeUris(Arrays.asList("http://www.digitalhps.org/concepts/cousin",
                 "http://www.digitalhps.org/concepts/cousin-2"));
 
-        predicate2 = new ConceptCache();
+        predicate2 = new CachedConcept();
         predicate2.setUri("http://www.digitalhps.org/concepts/be");
         predicate2.setWord("be");
         predicate2.setDescription(
@@ -364,5 +368,36 @@ public class GraphCreationServiceImplTest {
         predicate2.setAlternativeUris(
                 Arrays.asList("http://www.digitalhps.org/concepts/be", "http://www.digitalhps.org/concepts/be-2"));
     }
+    
+    @Test
+    public void testMapToGraph() {
+        List<DefaultMapping> triples = new ArrayList<DefaultMapping>();
+        
+        TripleElement subject1 = new TripleElement();
+        TripleElement predicate1 = new TripleElement();
+        TripleElement object1 = new TripleElement();
+        
+        TripleElement subject2 = new TripleElement();
+        TripleElement predicate2 = new TripleElement();
+        TripleElement object2 = new TripleElement();
+        
+        DefaultMapping defaultMapping1 =  new DefaultMapping();
+        defaultMapping1.setSubject(subject1);
+        defaultMapping1.setPredicate(predicate1);
+        defaultMapping1.setObject(object1);
+        
+        DefaultMapping defaultMapping2 =  new DefaultMapping();
+        defaultMapping2.setSubject(subject2);
+        defaultMapping2.setPredicate(predicate2);
+        defaultMapping2.setObject(object2);
+        
+        GraphElements graphElements = graphCreationServiceImpl.mapToGraph(triples);
+
+
+        Assert.assertNotNull(graphElements);
+        Assert.assertNotNull(graphElements.getNodes());
+        Assert.assertNotNull(graphElements.getEdges());
+    }
+    
 
 }
