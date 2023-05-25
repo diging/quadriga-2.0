@@ -1,22 +1,18 @@
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+package edu.asu.diging.quadriga.api.v1;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.asu.diging.quadriga.api.v1.MapGraphToTripleController;
+import edu.asu.diging.quadriga.api.v1.MapGraphToTripleController.JobPatternInfo;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.api.v1.model.PatternMappingList;
 import edu.asu.diging.quadriga.core.model.EventGraph;
@@ -24,6 +20,8 @@ import edu.asu.diging.quadriga.core.model.jobs.Job;
 import edu.asu.diging.quadriga.core.service.AsyncPatternProcessor;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.JobManager;
+import org.junit.Assert;
+import org.junit.Before;
 
 public class MapGraphToTripleControllerTest {
 
@@ -41,30 +39,38 @@ public class MapGraphToTripleControllerTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);        
     }
 
+
     @Test
-    public void testMapPatternToTriples() {
-        String collectionId = "collection123";
+    public void test_mapPatternToTriples_Success() {
+        ObjectId collectionId = new ObjectId();
         PatternMappingList patternMappingList = new PatternMappingList();
         List<PatternMapping> patternMappings = new ArrayList<>();
         patternMappingList.setPatternMappings(patternMappings);
 
         ObjectId objectId = new ObjectId();
         List<EventGraph> eventGraphs = new ArrayList<>();
-        eventGraphs.add(mock(EventGraph.class));
-        when(eventGraphService.getEventGraphs(objectId)).thenReturn(eventGraphs);
+        Mockito.when(eventGraphService.getEventGraphs(objectId)).thenReturn(eventGraphs);
 
         Job job = new Job();
         job.setId("job123");
-        Assert.when(jobManager.createJob(collectionId, "mappedTripleGroupId", eventGraphs.size())).thenReturn("job123");
-        when(jobManager.get("job123")).thenReturn(job);
+        Mockito.when(jobManager.createJob(collectionId.toString(), "mappedTripleGroupId", eventGraphs.size())).thenReturn("job123");
+        Mockito.when(jobManager.get("job123")).thenReturn(job);
 
-        ResponseEntity<List<MapGraphToTripleController.JobPatternInfo>> response = mapGraphToTripleController
-                .mapPatternToTriples(collectionId, patternMappingList);
-
-        assert (response.getStatusCode() == HttpStatus.OK);
+        ResponseEntity<List<MapGraphToTripleController.JobPatternInfo>> response = mapGraphToTripleController.mapPatternToTriples(collectionId.toString(), patternMappingList);
+        Assert.assertEquals(HttpStatus.OK,response.getStatusCode());
+    }
+    @Test
+    public void test_mapPatternTriples_NotFound()
+    {
+        ObjectId collectionId = new ObjectId();
+        PatternMappingList patternMappingList = new PatternMappingList();
+        Mockito.when(eventGraphService.getEventGraphs(collectionId)).thenReturn(null);
+        ResponseEntity<List<JobPatternInfo>> response = mapGraphToTripleController.mapPatternToTriples(collectionId.toString(),patternMappingList);
+        Assert.assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
+        
     }
 
     

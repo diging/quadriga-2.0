@@ -17,7 +17,12 @@ public class JobStatusController {
     
     @GetMapping(value = "/api/v1/job/{jobId}/status")
     public ResponseEntity<Job> getJobStatus(@PathVariable String jobId) {
-        return new ResponseEntity<>(jobManager.get(jobId), HttpStatus.OK);
+        Job job = jobManager.get(jobId);
+        if(job == null)
+        {
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(job, HttpStatus.OK);
     }
     
     
