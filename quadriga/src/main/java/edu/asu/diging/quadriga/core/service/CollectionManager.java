@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
@@ -66,6 +67,8 @@ public interface CollectionManager {
      * @return the number of default mappings
      */
     public int getNumberOfDefaultMappings(String collectionId);
+    
+    public Page<Collection> findByArchived(boolean archived, int pageInt,int sizeInt);
     
    
 

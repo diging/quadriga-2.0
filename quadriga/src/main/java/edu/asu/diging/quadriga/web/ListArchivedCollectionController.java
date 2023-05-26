@@ -1,16 +1,16 @@
 package edu.asu.diging.quadriga.web;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.quadriga.core.data.CollectionRepository;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
 
 @Controller
 public class ListArchivedCollectionController {
@@ -18,7 +18,7 @@ public class ListArchivedCollectionController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private CollectionRepository collectionRepo;
+    private CollectionManager collectionManager;
 
     @RequestMapping(value = "/auth/collections/archived", method = RequestMethod.GET)
     public String list(@RequestParam(value = "page", required = false, defaultValue = "1") String page,
@@ -41,7 +41,7 @@ public class ListArchivedCollectionController {
             sizeInt = 20;
         }
 
-        model.addAttribute("collections", collectionRepo.findByArchived(true, PageRequest.of(pageInt, sizeInt)));
+        model.addAttribute("collections", collectionManager.findByArchived(true, pageInt, sizeInt));
         return "auth/showArchivedCollections";
     }
 

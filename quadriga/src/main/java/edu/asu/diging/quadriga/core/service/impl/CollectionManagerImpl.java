@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.time.OffsetDateTime;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -10,6 +11,8 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
@@ -163,5 +166,11 @@ public class CollectionManagerImpl implements CollectionManager {
             logger.error("Couldn't find number of default mappings for collection ",e);
         }
         return 0;
+    }
+
+    @Override
+    public Page<Collection> findByArchived(boolean archived,int pageInt,int sizeInt) {
+        
+        return collectionRepo.findByArchived(archived, PageRequest.of(pageInt, sizeInt));
     }
 }

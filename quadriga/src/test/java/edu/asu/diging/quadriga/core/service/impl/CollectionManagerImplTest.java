@@ -149,7 +149,6 @@ public class CollectionManagerImplTest {
         collection.setId(id);
         collection.setName(name);
         collection.setDescription(desc);
-        Collection response = new Collection();
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
         Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(new EventGraph());
         Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(collection);
