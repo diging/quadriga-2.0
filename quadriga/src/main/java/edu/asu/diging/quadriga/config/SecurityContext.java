@@ -27,7 +27,6 @@ import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
 @EnableWebSecurity
 public class SecurityContext extends WebSecurityConfigurerAdapter {
     
-    
     @Configuration
     @Order(2)
     public static class WebSecurityConfig extends WebSecurityConfigurerAdapter {

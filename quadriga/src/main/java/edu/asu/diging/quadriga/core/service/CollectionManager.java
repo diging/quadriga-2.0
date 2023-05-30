@@ -81,11 +81,6 @@ public interface CollectionManager {
      * @param collectionId used to find mappedTripleGroupId
      * @return the number of default mappings
      */
-    public int getNumberOfDefaultMappings(String collectionId);
-
-
-   
-    
-   
+    public int getNumberOfDefaultMappings(String collectionId);   
 
 }

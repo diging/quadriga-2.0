@@ -22,22 +22,21 @@ import org.hibernate.annotations.Parameter;
 @Table
 public class SimpleUserApp implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -8474699901885186804L;
+    
     /**
-
     * A generator used to generate unique IDs for instances of the UserApp class.
     * The prefix parameter specifies the prefix to be used in the generated value
     * Strategy parameter for the generator is specified for generating a unique identifier.
-
     */
     
     @Id
     @GeneratedValue(generator = "userapp_id_generator")
     @GenericGenerator(name = "userapp_id_generator", parameters = @Parameter(name = "prefix", value = "UA"), strategy = "edu.asu.diging.quadriga.core.data.IdGenerator")
     private String id;
+    /**
+     * User name of the user 
+     */
     private String username;
     private String appClientId;
 

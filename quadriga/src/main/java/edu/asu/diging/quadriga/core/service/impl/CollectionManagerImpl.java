@@ -84,7 +84,6 @@ public class CollectionManagerImpl implements CollectionManager {
         return collectionRepo.findByAppsContaining(app);
     }
 
-
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#editCollection(java.lang.String, java.lang.String, java.lang.String, java.util.List)
      */
@@ -122,8 +121,6 @@ public class CollectionManagerImpl implements CollectionManager {
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
-
-
     }
 
     /* (non-Javadoc)

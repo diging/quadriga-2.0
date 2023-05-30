@@ -51,11 +51,11 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
         SimpleUserApp userApp = simpleUserAppRepository.findByUsernameAndAppClientId(username, appClientId);
         if (userApp != null) {
             simpleUserAppRepository.delete(userApp);
-        }
-        else {
+        }else {
             throw new SimpleUserAppNotFoundException(); 
         }
     }
+    
     @Override
     public List<SimpleUserApp> findByUsernameWithPagination(String username,int offset,int pageSize)
     {
@@ -63,7 +63,4 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
         return simpleUserAppRepository.findByUsernameWithPagination(username,offset,pageSize);
         
     }
-
-    
-
 }
