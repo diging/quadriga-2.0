@@ -40,8 +40,8 @@ public class EventGraphServiceImpl implements EventGraphService {
     }
 
     @Override
-    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId) {
-        return repo.findByCollectionIdOrderByCreationTimeAsc(collectionId).orElse(null);
+    public List<EventGraph> findAllEventGraphsByCollectionId(String collectionId) {
+        return repo.findByCollectionIdOrderByCreationTimeAsc(new ObjectId(collectionId)).orElse(null);
     }
     
     @Override
@@ -73,7 +73,6 @@ public class EventGraphServiceImpl implements EventGraphService {
             e.setContext(graph.getMetadata().getContext());
             /**
              * FIXME:
-             * 
              * A new story will later be created to get info about just one app from citesphere using OAuth token.
              * This app's name should be stored in eventGraph instead of the client id
              * Until that story is done, we need to store clientId instead of appName

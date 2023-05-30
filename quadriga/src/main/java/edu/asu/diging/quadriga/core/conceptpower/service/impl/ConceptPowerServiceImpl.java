@@ -130,9 +130,6 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         // ConceptPower returned a concept and either no conceptCache entry exists in the DB
         // or if one exists, it is different from the current conceptCache entry
         if (conceptCache != null && (conceptCacheOld == null || conceptCacheOld.compareTo(conceptCache) != 0)) {
-            
-           
-            
             conceptCacheService.saveConceptCache(conceptCache);
             
             Optional.ofNullable(conceptCache.getAlternativeUris())
@@ -150,8 +147,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         return false;
     }
 
-    @Override
-    public CachedConcept mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
+    private CachedConcept mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
         // If we get multiple ConceptPower entries in the reply, we use the first one
         List<ConceptEntry> conceptEntries = conceptPowerReply.getConceptEntries();
         CachedConcept conceptCache = null;

@@ -28,15 +28,6 @@ public interface ConceptPowerService {
     public CachedConcept getConceptByUri(String uri);
     
     /**
-     * This method maps the ConceptPowerReply object returned from ConceptPower to a
-     * ConceptCache object that would be stored in the database
-     * 
-     * @param conceptPowerReply is the object used to generate a ConceptCache object
-     * @return the generated ConceptCache object
-     */
-    public CachedConcept mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply);
-    
-    /**
      * Searches conceptpower for the given search term
      * @param searchTerm Term to be searched
      * @param page Page number to be retrieved

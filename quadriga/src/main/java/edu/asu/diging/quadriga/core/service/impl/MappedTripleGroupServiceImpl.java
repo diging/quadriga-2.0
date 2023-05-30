@@ -151,13 +151,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         // we create a new MappedTripleGroup entry
         if (mappedTripleGroup == null) {
             mappedTripleGroup = add(collectionId, mappedTripleType);
-            
-            // If mappedTripleGroup add fails
-            if (mappedTripleGroup == null) {
-                logger.error("Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
-            }
         }
-       
         return mappedTripleGroup;
     }
 

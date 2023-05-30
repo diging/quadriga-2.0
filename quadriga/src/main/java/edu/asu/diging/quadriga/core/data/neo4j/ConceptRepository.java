@@ -12,9 +12,4 @@ public interface ConceptRepository extends Neo4jRepository<Concept, Long> {
     
     
     public List<Concept> findByMappedTripleGroupId(String mappedTripleGroupId);
-    
-    
-    
-    
-
 }

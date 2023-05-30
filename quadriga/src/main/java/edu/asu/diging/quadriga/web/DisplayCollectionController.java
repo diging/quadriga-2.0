@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +20,6 @@ import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
-import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
-import edu.asu.diging.quadriga.core.service.PredicateManager;
 
 @Controller
 public class DisplayCollectionController {
@@ -31,13 +30,8 @@ public class DisplayCollectionController {
     @Autowired
     private EventGraphService eventGraphService;
 
-    @Autowired
-    private MappedTripleGroupService mappedTripleGroupService;
     
-    @Autowired
-    private PredicateManager predicateManager;
-    
-    //@Value("${defaultPageSize}")
+    @Value("${defaultPageSize}")
     private Integer defaultPageSize=10;
     
     private Logger logger = LoggerFactory.getLogger(getClass());

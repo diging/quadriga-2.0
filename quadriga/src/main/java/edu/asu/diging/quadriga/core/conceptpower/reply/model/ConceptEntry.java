@@ -50,82 +50,82 @@ public class ConceptEntry {
     @JsonProperty("alternativeIds")
     private List<AlternativeId> alternativeIds = null;
 
-    @JsonProperty("id")
+    
     public String getId() {
         return id;
     }
 
-    @JsonProperty("id")
+    
     public void setId(String id) {
         this.id = id;
     }
 
-    @JsonProperty("lemma")
+    
     public String getLemma() {
         return lemma;
     }
 
-    @JsonProperty("lemma")
+    
     public void setLemma(String lemma) {
         this.lemma = lemma;
     }
 
-    @JsonProperty("pos")
+    
     public String getPos() {
         return pos;
     }
 
-    @JsonProperty("pos")
+    
     public void setPos(String pos) {
         this.pos = pos;
     }
 
-    @JsonProperty("description")
+    
     public String getDescription() {
         return description;
     }
 
-    @JsonProperty("description")
+    
     public void setDescription(String description) {
         this.description = description;
     }
 
-    @JsonProperty("conceptList")
+    
     public String getConceptList() {
         return conceptList;
     }
 
-    @JsonProperty("type")
+    
     public Type getType() {
         return type;
     }
 
-    @JsonProperty("type")
+    
     public void setType(Type type) {
         this.type = type;
     }
 
-    @JsonProperty("conceptList")
+    
     public void setConceptList(String conceptList) {
         this.conceptList = conceptList;
     }
 
-    @JsonProperty("deleted")
+    
     public Boolean getDeleted() {
         return deleted;
     }
 
-    @JsonProperty("deleted")
+    
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
 
-    @JsonProperty("concept_uri")
+    
     public String getConceptUri() {
         return conceptUri;
     }
 
-    @JsonProperty("concept_uri")
+    
     public void setConceptUri(String conceptUri) {
         this.conceptUri = conceptUri;
     }
@@ -135,67 +135,67 @@ public class ConceptEntry {
         return creatorId;
     }
 
-    @JsonProperty("creator_id")
+    
     public void setCreatorId(String creatorId) {
         this.creatorId = creatorId;
     }
 
-    @JsonProperty("equal_to")
+    
     public String getEqualTo() {
         return equalTo;
     }
 
-    @JsonProperty("equal_to")
+    
     public void setEqualTo(String equalTo) {
         this.equalTo = equalTo;
     }
 
-    @JsonProperty("modified_by")
+    
     public String getModifiedBy() {
         return modifiedBy;
     }
 
-    @JsonProperty("modified_by")
+    
     public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
-    @JsonProperty("similar_to")
+    
     public String getSimilarTo() {
         return similarTo;
     }
 
-    @JsonProperty("similar_to")
+    
     public void setSimilarTo(String similarTo) {
         this.similarTo = similarTo;
     }
 
-    @JsonProperty("synonym_ids")
+    
     public String getSynonymIds() {
         return synonymIds;
     }
 
-    @JsonProperty("synonym_ids")
+    
     public void setSynonymIds(String synonymIds) {
         this.synonymIds = synonymIds;
     }
 
-    @JsonProperty("wordnet_id")
+    
     public String getWordnetId() {
         return wordnetId;
     }
 
-    @JsonProperty("wordnet_id")
+    
     public void setWordnetId(String wordnetId) {
         this.wordnetId = wordnetId;
     }
 
-    @JsonProperty("alternativeIds")
+    
     public List<AlternativeId> getAlternativeIds() {
         return alternativeIds;
     }
 
-    @JsonProperty("alternativeIds")
+    
     public void setAlternativeIds(List<AlternativeId> alternativeIds) {
         this.alternativeIds = alternativeIds;
     }

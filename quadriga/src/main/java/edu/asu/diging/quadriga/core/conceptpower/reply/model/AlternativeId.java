@@ -13,22 +13,22 @@ public class AlternativeId {
     @JsonProperty("concept_uri")
     private String conceptUri;
 
-    @JsonProperty("concept_id")
+    
     public String getConceptId() {
         return conceptId;
     }
 
-    @JsonProperty("concept_id")
+    
     public void setConceptId(String conceptId) {
         this.conceptId = conceptId;
     }
 
-    @JsonProperty("concept_uri")
+    
     public String getConceptUri() {
         return conceptUri;
     }
 
-    @JsonProperty("concept_uri")
+    
     public void setConceptUri(String conceptUri) {
         this.conceptUri = conceptUri;
     }

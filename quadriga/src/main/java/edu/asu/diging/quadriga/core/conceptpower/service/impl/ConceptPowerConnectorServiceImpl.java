@@ -87,10 +87,10 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
             if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             } else {
-                logger.error("Error while searching concept power");
+                logger.error("Error while searching concept power"+response.getStatusCode()+response.getBody());
             }
         } catch (RestClientException e) {
-            logger.error("An exception has occured",e);
+            logger.error("An exception has occured for the URL"+searchURL+e);
         }
 
         return null;

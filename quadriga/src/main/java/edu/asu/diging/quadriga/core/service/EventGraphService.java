@@ -45,7 +45,7 @@ public interface EventGraphService {
     public Page<EventGraph>  findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable);
     
     
-    public List<EventGraph>  findAllEventGraphsByCollectionId(ObjectId collectionId);
+    public List<EventGraph>  findAllEventGraphsByCollectionId(String collectionId);
     
     /**
      * Maps the network to events and saves it in the database

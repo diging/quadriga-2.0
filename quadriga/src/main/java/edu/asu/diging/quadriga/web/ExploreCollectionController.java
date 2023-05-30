@@ -1,11 +1,5 @@
-package edu.asu.diging.quadriga.web;
-
-
-
-
-
+package edu.asu.diging.quadriga.web;    
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +20,7 @@ import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
+import edu.asu.diging.quadriga.web.service.GraphCreationService;
 import edu.asu.diging.quadriga.web.service.model.GraphElements;
 
 @Controller
@@ -42,6 +37,8 @@ public class ExploreCollectionController {
     @Autowired
     private MappedTripleService mappedTripleService;
     
+    @Autowired
+    private GraphCreationService graphCreationService;
   
     @RequestMapping(value = "/auth/collections/{collectionId}/explore")
     public String exploreTriples(@PathVariable String collectionId, Model model) {
@@ -68,16 +65,10 @@ public class ExploreCollectionController {
             List<DefaultMapping> triples= mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                     uri, ignoreList);
             
-            graphElements = GraphUtil.mapToGraph(triples);
-        }
-        catch(InvalidObjectIdException e)
+            graphElements = graphCreationService.mapToGraph(triples);
+        }catch(CollectionNotFoundException e)
         {
-            logger.error("Invalid Object Id ",e);
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
-        }
-        catch(CollectionNotFoundException e)
-        {
-            logger.error("No Collection found",e);
+            logger.error("No Collection found for "+collectionId+e);
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(graphElements, HttpStatus.OK);

@@ -138,7 +138,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     public List<DefaultMapping> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList){
         
         CachedConcept conceptCache = conceptCacheService.getConceptByUri(uri);
-        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(mapConceptUriToDatabaseUri(mappedTripleGroupId,conceptCache.getEqualTo()),ignoreList,mappedTripleGroupId);
+        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(mapConceptUriToDatabaseURI(mappedTripleGroupId,conceptCache.getEqualTo()),ignoreList,mappedTripleGroupId);
         return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
     }    
 
@@ -173,28 +173,24 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         tripleElement.setUri(predicate.getRelationship());
         return tripleElement;
     }
-    private String mapConceptUriToDatabaseUri(String mappedTripleGroupId,List<String> equalTo)
+    
+    private String mapConceptUriToDatabaseURI(String mappedTripleGroupId,List<String> equalTo)
     {
-        List<Concept> concept = conceptRepo.findByMappedTripleGroupId(mappedTripleGroupId);
+        List<Concept> concepts = conceptRepo.findByMappedTripleGroupId(mappedTripleGroupId);
         List<String> conceptUris = new ArrayList<>();
-        try {
-            for(Concept eachConcept:concept){
-                conceptUris.add(eachConcept.getUri());
-            }
-            for(String similarUris:equalTo){
-                List<String> listOfUris = processUri(similarUris);
-                listOfUris.retainAll(conceptUris);
-                if(!listOfUris.isEmpty()) {
-                    return listOfUris.get(0);
-                }
+      
+        for(Concept eachConcept:concepts){
+            conceptUris.add(eachConcept.getUri());
+        }
+        for(String similarUri:equalTo){
+            List<String> listOfUris = processUri(similarUri);
+            listOfUris.retainAll(conceptUris);
+            if(!listOfUris.isEmpty()) {
+                return listOfUris.get(0);
             }
         }
-        catch(NullPointerException e)
-        {
-            logger.error("Couldn't find concept", e);
-            return "error404Page";
-        }
-        return "error404Page";       
+        return null;
+             
     }
     
     // Normalize the URI prefix and suffix

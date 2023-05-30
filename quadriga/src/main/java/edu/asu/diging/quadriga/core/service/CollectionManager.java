@@ -34,8 +34,6 @@ public interface CollectionManager {
     public List<Collection> getCollections(String app);
     
     /**
-     * 
-
      * Edits an existing Collection and updates it in the db
      * @param id of the collection that needs to be updated
      * @param name will be the updated name value
