@@ -37,14 +37,8 @@ public class ListCollectionController {
             @RequestParam(defaultValue = "20", required = false, value = "size") String size, Model model, Authentication authentication) {
 
         SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
-        List<SimpleUserApp> userApps = simpleUserAppService.findByUsername(simpleUser.getUsername());
+        List<String> appClientIds = simpleUserAppService.findAppClientIdsByUsername(simpleUser.getUsername());
         
-        List<String> clientIds = null;
-
-        if (userApps != null) {
-            clientIds = userApps.stream().map(userApp -> userApp.getAppClientId()).collect(Collectors.toList());
-        }
-
         Integer pageInt;
         Integer sizeInt;
 
@@ -62,8 +56,8 @@ public class ListCollectionController {
             sizeInt = 20;
         }
 
-        if (clientIds != null) {
-            model.addAttribute("collections",collectionManager.findCollections(simpleUser.getUsername(), clientIds,
+        if (appClientIds != null) {
+            model.addAttribute("collections",collectionManager.findCollections(simpleUser.getUsername(), appClientIds,
                     PageRequest.of(pageInt, sizeInt))); 
             model.addAttribute("username", simpleUser.getUsername());
         }

@@ -35,5 +35,12 @@ public interface SimpleUserAppService {
      * @param pageSize is the number of items per page
      */
     public List<SimpleUserApp> findByUsernameWithPagination(String username,int offset,int pageSize);
+    
+    /**
+     * 
+     * @param username username is the username to be searched
+     * @return a List of client Ids associated with the user
+     */
+    public List<String> findAppClientIdsByUsername(String username);
    
 }
