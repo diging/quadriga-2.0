@@ -1,9 +1,5 @@
 package edu.asu.diging.quadriga.web;
 import java.util.List;
-
-
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
