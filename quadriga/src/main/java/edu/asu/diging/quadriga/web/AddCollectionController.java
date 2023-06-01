@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
-import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 import edu.asu.diging.quadriga.web.forms.CollectionForm;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
@@ -25,8 +24,6 @@ public class AddCollectionController {
 
     @Autowired
     private CollectionManager collectionManager;
-    @Autowired
-    private SimpleUserAppService simpleUserAppService;
 
     @RequestMapping(value = "/auth/collections/add", method = RequestMethod.GET)
     public String get(Model model) {
@@ -52,7 +49,6 @@ public class AddCollectionController {
             return "auth/addCollection";
         }
         
-
         redirectAttrs.addFlashAttribute("show_alert", true);
         redirectAttrs.addFlashAttribute("alert_type", "success");
         redirectAttrs.addFlashAttribute("alert_msg", "Collection has been added.");

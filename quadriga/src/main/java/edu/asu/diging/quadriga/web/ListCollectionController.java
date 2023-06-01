@@ -32,7 +32,6 @@ public class ListCollectionController {
     @Autowired
     public SimpleUserAppService simpleUserAppService;
     
-
     @RequestMapping(value = "/auth/collections", method = RequestMethod.GET)
     public String list(@RequestParam(defaultValue = "1", required = false, value = "page") String page,
             @RequestParam(defaultValue = "20", required = false, value = "size") String size, Model model, Authentication authentication) {
@@ -68,8 +67,6 @@ public class ListCollectionController {
                     PageRequest.of(pageInt, sizeInt))); 
             model.addAttribute("username", simpleUser.getUsername());
         }
-
-
         return "auth/showcollections";
     }
 

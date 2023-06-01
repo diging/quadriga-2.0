@@ -14,8 +14,6 @@ import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 
-
-
 @Controller
 public class DisplayCollectionController {
 
@@ -24,20 +22,13 @@ public class DisplayCollectionController {
 
     @Autowired
     private EventGraphService eventGraphService;
-    
- 
- 
-   
-    
+        
     private Logger logger = LoggerFactory.getLogger(getClass());
-
-  
 
     @RequestMapping(value = "/auth/collections/{id}", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
         
         Collection collection;
-        
         try {
             collection = collectionManager.findCollection(id);
             if(collection == null) {
@@ -49,21 +40,14 @@ public class DisplayCollectionController {
             return "error404Page";
         }
         
-       
-        
         EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
-        
         model.addAttribute("latestNetwork", latestNetwork);
-
         model.addAttribute("collection", collection);
-        
         long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());
-       
         model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
         
         // Get default mappings from Concepts
         model.addAttribute("defaultMappings", collectionManager.getNumberOfDefaultMappings(collection.getId().toString()));
-        
         return "auth/displayCollection";
         
     }

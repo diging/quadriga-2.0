@@ -18,7 +18,6 @@ import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
 @Controller
 public class GetAllAppsController {
     
-
     @Autowired
     private SimpleUserAppService simpleUserAppService;
 
@@ -31,6 +30,4 @@ public class GetAllAppsController {
         return "admin/user/apps";
     }
     
-  
-
 }
