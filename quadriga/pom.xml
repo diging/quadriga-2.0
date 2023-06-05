@@ -23,6 +23,8 @@
         <db.database.url>jdbc:mysql://localhost:3306/quadriga</db.database.url>
         <db.user></db.user>
         <db.password></db.password>
+
+
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
@@ -47,9 +49,12 @@
         <citesphere.base.url>https://diging-dev.asu.edu/citesphere-review/</citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
         <citesphere.client.secret></citesphere.client.secret>
+
+        <citesphere.client.id></citesphere.client.id>
+        <citesphere.client.secret></citesphere.client.secret>
+
         
         <conceptpower.base.url></conceptpower.base.url>
-
         <log.level>info</log.level>
 
         <tomcat.deploy.path></tomcat.deploy.path>
