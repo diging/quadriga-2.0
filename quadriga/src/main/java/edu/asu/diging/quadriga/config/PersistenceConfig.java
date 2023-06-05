@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.config;
+ package edu.asu.diging.quadriga.config;
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
