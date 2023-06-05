@@ -170,12 +170,12 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         tripleElement.setId(predicate.getId());
 
         tripleElement.setLabel(predicate.getLabel());
+        
         tripleElement.setUri(predicate.getRelationship());
         return tripleElement;
     }
     
-    private String mapConceptUriToDatabaseURI(String mappedTripleGroupId,List<String> equalTo)
-    {
+    private String mapConceptUriToDatabaseURI(String mappedTripleGroupId,List<String> equalTo){
         List<Concept> concepts = conceptRepo.findByMappedTripleGroupId(mappedTripleGroupId);
         List<String> conceptUris = new ArrayList<>();
       
@@ -193,14 +193,22 @@ public class MappedTripleServiceImpl implements MappedTripleService {
              
     }
     
-    // Normalize the URI prefix and suffix
+    /**
+     * 
+     * @param uri is the uri that has to be normalized with two prefixes and a trailing slash
+     * @return a list of strings which are the uri normalised with the prefixes and trailing slash
+     */
     private List<String> processUri(String uri) {
         List<String> listOfUris = new ArrayList<>();
         String regex = "https?(://.*?)/?$";
+        
         Pattern pattern = Pattern.compile(regex);
+        
         Matcher matcher = pattern.matcher(uri);
+        
         if(matcher.find()) {
             String extractedText = matcher.group(1);
+            
             listOfUris.add(URI_PREFIX + extractedText);
             listOfUris.add(URI_PREFIX + extractedText+"/");
             listOfUris.add(URI_PREFIX_1 + extractedText);

@@ -20,9 +20,8 @@ import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
 @Repository
 public interface ConceptCacheRepository extends PagingAndSortingRepository<CachedConcept, String> {
 
-    @Query("SELECT c from ConceptCache c WHERE ?1 in elements(c.alternativeUris)")
+    @Query("SELECT c from CachedConcept c WHERE ?1 in elements(c.alternativeUris)")
     public List<CachedConcept> findConceptByAlternativeURI(String uri);
-    
     
     public CachedConcept findByUri(String uri);
 }
