@@ -29,9 +29,8 @@ public class DisplayCollectionController {
 
     @Autowired
     private EventGraphService eventGraphService;
-
     
-    @Value("${defaultPageSize}")
+    //@Value("${defaultPageSize}")
     private Integer defaultPageSize=10;
     
     private Logger logger = LoggerFactory.getLogger(getClass());

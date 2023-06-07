@@ -1,5 +1,6 @@
 package edu.asu.diging.quadriga.web;    
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
@@ -26,7 +28,7 @@ import edu.asu.diging.quadriga.web.service.model.GraphElements;
 @Controller
 public class ExploreCollectionController {
 
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CollectionManager collectionManager;
@@ -59,20 +61,21 @@ public class ExploreCollectionController {
             @RequestParam(value = "uri", required = true) String uri,
             @RequestParam(value = "ignoreList", required = false, defaultValue = "{}") List<String> ignoreList)
             throws InvalidObjectIdException,CollectionNotFoundException{
+        
         GraphElements graphElements = new GraphElements();
+        
         try {
             MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndMappingType(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            
             List<DefaultMapping> triples= mappedTripleService.getTriplesByUri(mappedTripleGroup.get_id().toString(),
                     uri, ignoreList);
             
             graphElements = graphCreationService.mapToGraph(triples);
-        }catch(CollectionNotFoundException e)
-        {
+        }catch(CollectionNotFoundException e){
             logger.error("No Collection found for "+collectionId+e);
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
-
 
 }

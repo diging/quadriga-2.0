@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.MappedTriplesPage;
 import edu.asu.diging.quadriga.api.v1.model.NodeData;
+import edu.asu.diging.quadriga.core.conceptpower.data.ConceptCacheRepository;
 import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
@@ -49,6 +50,9 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     
     @Autowired
     private ConceptCacheService conceptCacheService;
+    
+    @Autowired
+    private ConceptCacheRepository conceptCacheRepo;
     
    
     
@@ -194,7 +198,6 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     }
     
     /**
-     * 
      * @param uri is the uri that has to be normalized with two prefixes and a trailing slash
      * @return a list of strings which are the uri normalised with the prefixes and trailing slash
      */

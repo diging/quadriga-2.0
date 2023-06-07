@@ -34,6 +34,8 @@ import edu.asu.diging.quadriga.web.service.GraphCreationService;
 public class GraphCreationServiceImpl implements GraphCreationService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+    
+    private final String source = "www.digitalhps.org";
 
     @Autowired
     private ConceptPowerService conceptPowerService;
@@ -150,7 +152,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
 
         String sourceURI = event.getTerm().getInterpretation().getSourceURI();
 
-        if (sourceURI != null && sourceURI.contains("www.digitalhps.org")) {
+        if (sourceURI != null && sourceURI.contains(source)) {
 
             node.setUri(sourceURI);
             CachedConcept conceptCache = conceptPowerService.getConceptByUri(sourceURI);
@@ -170,6 +172,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
     
     private static  GraphNodeData createNode(TripleElement tripleElement, GraphNodeType graphNodeType,
             Map<String, GraphNodeData> conceptNodeMap, List<GraphData> nodes) {
+        
         String elementUri = tripleElement.getUri();
         //Avoid node duplication if the element is not a predicate element and if it already exists
         if (graphNodeType != GraphNodeType.PREDICATE && elementUri != null && !elementUri.isEmpty()
@@ -190,6 +193,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
     
     @Override
     public void createEdge(List<GraphData> graphEdges, String sourceId, String targetId, String eventGraphId) {
+        
         GraphEdgeData edge = new GraphEdgeData();
         edge.setId(new ObjectId().toString());
         edge.setSource(sourceId);
@@ -197,7 +201,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         edge.setEventGraphId(eventGraphId);
         graphEdges.add(edge);
     }
-    private static  void createEdge(GraphData source, GraphData target, List<GraphData> edges) {
+    private static void createEdge(GraphData source, GraphData target, List<GraphData> edges) {
+        
         GraphEdgeData edgeData = new GraphEdgeData();
         edgeData.setId(new ObjectId().toString());
         edgeData.setSource(source.getId());
@@ -205,7 +210,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         edges.add(edgeData);
     }
     
-    private static  List<GraphElement> wrapInGraphElements(List<GraphData> dataList) {
+    private static List<GraphElement> wrapInGraphElements(List<GraphData> dataList) {
+        
         List<GraphElement> elements = new ArrayList<>();
         dataList.forEach(data -> {
             GraphElement element = new GraphElement();
@@ -215,8 +221,9 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         return elements;
     }
     
-    @Override
+    @Override 
     public GraphElements mapToGraph(List<DefaultMapping> triples) {
+        
         Map<String, GraphNodeData> conceptNodeMap = new HashMap<>();
         List<GraphData> nodes = new ArrayList<>();
         List<GraphData> edges = new ArrayList<>();
