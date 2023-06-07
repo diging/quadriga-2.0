@@ -171,5 +171,6 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         return mappedTripleGroupRepository.findBy_idAndCollectionId(mappedTripleGroupObjectId, collectionObjectId)
                 .orElse(null);
     }
+    
 
 }
