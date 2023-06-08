@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
@@ -48,9 +49,11 @@ public interface CollectionManager {
     /**
      * Deletes a collection from collection table by id
      * @param id used to look up the collection in database
+     * @return collection details if it is archived
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
-    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
+
+    public Collection deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
     
     /**
      * This method checks whether a collection with given collectionId exists and
@@ -65,7 +68,7 @@ public interface CollectionManager {
      *                                     does't exist
      */
     public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException;
-
+    
     /**
      * This method returns the number of default mappings present in the collection
      * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
@@ -79,5 +82,7 @@ public interface CollectionManager {
      * @return the number of default mappings
      */
     public int getNumberOfDefaultMappings(String collectionId);
+
+    public Page<Collection> findByArchived(boolean archived, int pageInt,int sizeInt);
 
 }

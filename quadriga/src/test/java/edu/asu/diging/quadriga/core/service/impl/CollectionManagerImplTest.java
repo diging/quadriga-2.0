@@ -1,5 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -160,6 +162,15 @@ public class CollectionManagerImplTest {
         
         managerToTest.deleteCollection(id.toString());
         Mockito.when(managerToTest.deleteCollection(id.toString())).thenReturn();
+
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
+        Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(new EventGraph());
+        Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(collection);
+        Collection actualResponse = managerToTest.deleteCollection(id.toString());
+        Assert.assertEquals(id,actualResponse.getId());
+        Assert.assertTrue(actualResponse.isArchived());
+        
+
     }
     
     
