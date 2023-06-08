@@ -24,6 +24,7 @@ import edu.asu.diging.quadriga.api.v1.model.NodeData;
 import edu.asu.diging.quadriga.core.conceptpower.data.ConceptCacheRepository;
 import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
+import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerService;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
@@ -49,12 +50,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     private PredicateRepository predicateRepo;
     
     @Autowired
-    private ConceptCacheService conceptCacheService;
-    
-    @Autowired
-    private ConceptCacheRepository conceptCacheRepo;
-    
-   
+    private ConceptPowerService conceptPowerService;
     
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph, edu.asu.diging.quadriga.core.model.MappedTripleGroup)
@@ -141,7 +137,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     @Override
     public List<DefaultMapping> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList){
         
-        CachedConcept conceptCache = conceptCacheService.getConceptByUri(uri);
+        CachedConcept conceptCache = conceptPowerService.getConceptByUri(uri);
         List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(mapConceptUriToDatabaseURI(mappedTripleGroupId,conceptCache.getEqualTo()),ignoreList,mappedTripleGroupId);
         return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
     }    
