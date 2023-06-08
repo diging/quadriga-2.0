@@ -170,7 +170,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         return node;
     }
     
-    private static  GraphNodeData createNode(TripleElement tripleElement, GraphNodeType graphNodeType,
+    private GraphNodeData createNode(TripleElement tripleElement, GraphNodeType graphNodeType,
             Map<String, GraphNodeData> conceptNodeMap, List<GraphData> nodes) {
         
         String elementUri = tripleElement.getUri();
@@ -201,7 +201,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         edge.setEventGraphId(eventGraphId);
         graphEdges.add(edge);
     }
-    private static void createEdge(GraphData source, GraphData target, List<GraphData> edges) {
+    private void createEdge(GraphData source, GraphData target, List<GraphData> edges) {
         
         GraphEdgeData edgeData = new GraphEdgeData();
         edgeData.setId(new ObjectId().toString());
@@ -210,7 +210,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         edges.add(edgeData);
     }
     
-    private static List<GraphElement> wrapInGraphElements(List<GraphData> dataList) {
+    private List<GraphElement> wrapInGraphElements(List<GraphData> dataList) {
         
         List<GraphElement> elements = new ArrayList<>();
         dataList.forEach(data -> {
