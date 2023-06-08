@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.ArrayList;
 
+
 import java.util.List;
 
 
@@ -21,9 +22,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.MappedTriplesPage;
 import edu.asu.diging.quadriga.api.v1.model.NodeData;
-import edu.asu.diging.quadriga.core.conceptpower.data.ConceptCacheRepository;
 import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
-import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerService;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
