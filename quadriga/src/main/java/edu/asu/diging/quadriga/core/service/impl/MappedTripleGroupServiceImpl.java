@@ -148,18 +148,8 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         return mappedTripleGroup;
     }
 
-    /**
-     * This method tries to find a MappedTripleGroup with the given collection id and
-     * mappedTripleGroup id.
-     * 
-     * @param collectionId is the id of the collection
-     * @param mappedTripleGroupId is the id used to find a MappedTripleGroup
-     * @return the found mappedTripleGroupEntry
-     * @throws InvalidObjectIdException if mappedTripleGroupId couldn't be converted
-     *                                  to ObjectId
-     */
     @Override
-    public MappedTripleGroup getByCollectionIdAndId(String collectionId, String mappedTripleGroupId) throws InvalidObjectIdException {
+    public MappedTripleGroup findByCollectionIdAndId(String collectionId, String mappedTripleGroupId) throws InvalidObjectIdException {
         ObjectId collectionObjectId;
         ObjectId mappedTripleGroupObjectId;
         try {
@@ -168,9 +158,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         } catch (IllegalArgumentException e) {
             throw new InvalidObjectIdException("MappedTripleGroupId: " + mappedTripleGroupId, e);
         }
-        return mappedTripleGroupRepository.findBy_idAndCollectionId(mappedTripleGroupObjectId, collectionObjectId)
-                .orElse(null);
+        return mappedTripleGroupRepository.findBy_idAndCollectionId(mappedTripleGroupObjectId, collectionObjectId).orElse(null);
     }
-    
 
 }

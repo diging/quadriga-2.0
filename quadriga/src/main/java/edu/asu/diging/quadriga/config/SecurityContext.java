@@ -62,7 +62,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                         }
                     }).and().headers().frameOptions().sameOrigin();
              
-           config.and().formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed").and()
+            config.and().formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed").and()
                     .logout()
                     .deleteCookies("JSESSIONID")
                     .logoutUrl("/logout")

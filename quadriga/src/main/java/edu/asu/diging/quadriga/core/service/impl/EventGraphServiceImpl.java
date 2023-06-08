@@ -58,7 +58,7 @@ public class EventGraphServiceImpl implements EventGraphService {
         eventGraphs.forEach(e -> {
             e.setCollectionId(new ObjectId(collectionId));
             e.setDefaultMapping(graph.getMetadata().getDefaultMapping());
-            /**
+            /*
              * FIXME:
              * 
              * A new story will later be created to get info about just one app from citesphere using OAuth token.

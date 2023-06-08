@@ -21,6 +21,8 @@ public interface MappedTripleGroupService {
 
     public MappedTripleGroup findByCollectionIdAndMappingType(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException;
+    
+    public MappedTripleGroup findByCollectionIdAndId(String collectionId, String mappedTripleGroupId) throws InvalidObjectIdException;
 
     public MappedTripleGroup getById(String mappedTripleGroupId) throws InvalidObjectIdException;
 
@@ -29,7 +31,5 @@ public interface MappedTripleGroupService {
     
     public MappedTripleGroup get(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException;
-    
-    public MappedTripleGroup getByCollectionIdAndId(String collectionId, String mappedTripleGroupId) throws InvalidObjectIdException;
 
 }

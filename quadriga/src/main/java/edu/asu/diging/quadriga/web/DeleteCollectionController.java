@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 
 @Controller
@@ -24,10 +25,16 @@ public class DeleteCollectionController {
     @RequestMapping(value = "/auth/collections/{id}/delete", method = RequestMethod.GET)
     public String get(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
-            collectionManager.deleteCollection(id);
-            redirectAttributes.addFlashAttribute("alert_type", "success");
-            redirectAttributes.addFlashAttribute("alert_msg", "Collection has been deleted.");
-            redirectAttributes.addFlashAttribute("show_alert", true);
+            Collection collection = collectionManager.deleteCollection(id);
+            if (collection == null) {
+                redirectAttributes.addFlashAttribute("alert_type", "success");
+                redirectAttributes.addFlashAttribute("alert_msg", "Collection has been deleted.");
+                redirectAttributes.addFlashAttribute("show_alert", true);
+            } else {
+                redirectAttributes.addFlashAttribute("alert_type", "warning");
+                redirectAttributes.addFlashAttribute("alert_msg", "Collection has been archived.");
+                redirectAttributes.addFlashAttribute("show_alert", true);
+            }
         
             return "redirect:/auth/collections";
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
