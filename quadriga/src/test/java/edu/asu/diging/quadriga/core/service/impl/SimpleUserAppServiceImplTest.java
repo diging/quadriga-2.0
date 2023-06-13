@@ -111,13 +111,7 @@ public class SimpleUserAppServiceImplTest {
         Mockito.when(simpleUserAppRepository.findByUsernameAndAppClientId(USER_1, CLIENT_ID_1)).thenReturn(null);
         Assert.assertThrows(SimpleUserAppNotFoundException.class, () -> {
             simpleUserAppService.delete(USER_1 ,CLIENT_ID_1 );
-        });
-
-        
+        });       
     }
-        
-    
-
-   
 
 }

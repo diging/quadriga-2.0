@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.ArrayList;
 
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -20,7 +21,7 @@ import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
-import edu.asu.diging.quadriga.core.exceptions.UserNotAuthorisedException;
+import edu.asu.diging.quadriga.core.exceptions.UserNotAuthorizedException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
@@ -113,7 +114,7 @@ public class CollectionManagerImplTest {
     
     
     @Test
-    public void test_deleteCollection_success() throws CollectionNotFoundException, InvalidObjectIdException,UserNotAuthorisedException {
+    public void test_deleteCollection_success() throws CollectionNotFoundException, InvalidObjectIdException,UserNotAuthorizedException {
         
         String name = "name";
         String desc = "description";
@@ -161,7 +162,7 @@ public class CollectionManagerImplTest {
                 ()  -> managerToTest.deleteCollection(id.toString(),simpleUser));
     }
     @Test
-    public void test_deleteCollection_UserNotAuthorised() throws UserNotAuthorisedException {
+    public void test_deleteCollection_UserNotAuthorised() throws UserNotAuthorizedException {
         
         String name = "name";
         String otherName = "OtherName";
@@ -179,7 +180,7 @@ public class CollectionManagerImplTest {
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
         
-        Assert.assertThrows(UserNotAuthorisedException.class,
+        Assert.assertThrows(UserNotAuthorizedException.class,
                 ()  -> managerToTest.deleteCollection(id.toString(),otherUser));
     }
     

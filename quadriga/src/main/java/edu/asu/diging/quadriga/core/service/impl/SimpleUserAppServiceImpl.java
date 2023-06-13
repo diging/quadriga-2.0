@@ -57,7 +57,7 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     }
     
     @Override
-    public List<SimpleUserApp> findByUsernameWithPagination(String username,int offset,int pageSize){        
+    public List<SimpleUserApp> findByUsername(String username,int offset,int pageSize){        
         return simpleUserAppRepository.findByUsernameWithPagination(username,offset,pageSize);  
     }
 

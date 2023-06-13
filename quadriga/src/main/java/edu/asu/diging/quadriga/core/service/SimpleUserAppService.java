@@ -34,7 +34,7 @@ public interface SimpleUserAppService {
      * @param offset determines the starting point of the result set
      * @param pageSize is the number of items per page
      */
-    public List<SimpleUserApp> findByUsernameWithPagination(String username,int offset,int pageSize);
+    public List<SimpleUserApp> findByUsername(String username,int offset,int pageSize);
     
     /**
      * 

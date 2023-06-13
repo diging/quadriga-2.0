@@ -123,12 +123,4 @@ public class CitesphereAppsManagerTest {
             Assert.assertTrue(response.stream().anyMatch(responseApp -> responseApp.getClientId().equals(app.getClientId())));
         }
     }
-
-
-
-
-
-
-
-
 }
