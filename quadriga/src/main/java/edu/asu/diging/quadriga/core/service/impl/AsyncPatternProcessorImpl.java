@@ -69,7 +69,7 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
         MappedTripleGroup mappedTripleGroup;
         try {
             if (patternMapping.getMappedTripleGroupId() != null && !patternMapping.getMappedTripleGroupId().isEmpty()) {
-                mappedTripleGroup = mappedTripleGroupService.getByCollectionIdAndId(collectionId,
+                mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndId(collectionId,
                         patternMapping.getMappedTripleGroupId());
                 if (mappedTripleGroup == null) {
                     job.setStatus(JobStatus.FAILURE);
