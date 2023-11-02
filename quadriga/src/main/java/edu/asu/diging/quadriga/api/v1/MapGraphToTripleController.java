@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.api.v1.model.PatternMappingList;
 import edu.asu.diging.quadriga.core.model.EventGraph;
+import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.jobs.Job;
 import edu.asu.diging.quadriga.core.service.AsyncPatternProcessor;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
@@ -25,13 +26,13 @@ import edu.asu.diging.quadriga.core.service.JobManager;
 @Controller
 public class MapGraphToTripleController {
 
-    @Value("{quadriga_base_url}")
+    @Value("${quadriga_base_url}")
     private String quadrigaBaseUri;
     
-    @Value("{quadriga_job_status_api}")
+    @Value("${quadriga_job_status_api}")
     private String quadrigaJobStatusUri;
     
-    @Value("{quadriga_collection_page}")
+    @Value("${quadriga_collection_page}")
     private String quadrigaCollectionPageUri;
     
     @Autowired
@@ -53,16 +54,37 @@ public class MapGraphToTripleController {
         }
 
         List<JobPatternInfo> jobInfos = new ArrayList<>();
+        
+        MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
+        mappedTripleGroup.set_id(new ObjectId());
+        mappedTripleGroup.setCollectionId(new ObjectId(collectionId));
+        
+        String jobId = jobManager.createJob(collectionId, mappedTripleGroup.get_id().toString(), eventGraphs.size());//new MappedTripleGroup().get_id().toString()
+        
+        List<Thread> transformationThreads = new ArrayList<>();
         for (PatternMapping pattern : patternMappingList.getPatternMappings()) {
-            String jobId = jobManager.createJob(collectionId, pattern.getMappedTripleGroupId(), eventGraphs.size());
-            asyncPatternProcessor.processPattern(jobId, collectionId, pattern, eventGraphs);
-            JobPatternInfo jobInfo = new JobPatternInfo();
-            jobInfo.setJobId(jobId);
-            jobInfo.setTrack(quadrigaBaseUri + quadrigaJobStatusUri + jobId);
-            jobInfo.setExplore(quadrigaBaseUri + quadrigaCollectionPageUri + collectionId);
-            jobInfos.add(jobInfo);
+//            String jobId = jobManager.createJob(collectionId, pattern.getMappedTripleGroupId(), eventGraphs.size());
+            System.out.println(pattern.getMetadata());
+            System.out.println(pattern.getNodes());
+            
+            Thread transformationThread = new Thread(() -> {
+                asyncPatternProcessor.processPattern(jobId, collectionId, pattern, eventGraphs);
+                JobPatternInfo jobInfo = new JobPatternInfo();
+                jobInfo.setJobId(jobId);
+                jobInfo.setTrack(quadrigaBaseUri + quadrigaJobStatusUri + jobId);
+                jobInfo.setExplore(quadrigaBaseUri + quadrigaCollectionPageUri + collectionId);
+                jobInfos.add(jobInfo);
+               
+            });
+            transformationThreads.add(transformationThread);
+            transformationThread.start();
         }
-
+        for (Thread thread : transformationThreads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+            }
+        }
         return new ResponseEntity<>(jobInfos, HttpStatus.OK);
     }
 
