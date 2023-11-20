@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.List;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,7 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
         
         if (job == null || patternRoot == null) {
             job.setStatus(JobStatus.FAILURE);
+            System.out.println("Failed 1");
             jobRepository.save(job);
             return;
         } else {
@@ -72,16 +74,18 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
                 mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndId(collectionId,
                         patternMapping.getMappedTripleGroupId());
                 if (mappedTripleGroup == null) {
+                    System.out.println("Failed 3");
                     job.setStatus(JobStatus.FAILURE);
                     jobRepository.save(job);
                     return;
                 }
             } else {
-                mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
+                mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.CUSTOM_MAPPING);
             }
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
             logger.error("Invalid triple group id {} or collection id {} for job {}",
                     patternMapping.getMappedTripleGroupId(), collectionId, job.getId(), e);
+            System.out.println("Failed 4");
             job.setStatus(JobStatus.FAILURE);
             jobRepository.save(job);
             return;
@@ -103,5 +107,20 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
         job.setStatus(JobStatus.DONE);
         jobRepository.save(job);
     }
+    
+//  DefaultMapping getCustomMapping(PatternMapping pattern) {
+//
+//      //Create a custom mapping in default mapping class
+//      DefaultMapping customMapping = new DefaultMapping();
+//      
+//      customMapping.setObject(pattern.getMetadata().getDefaultMapping().getObject());
+//      customMapping.setPredicate(pattern.getMetadata().getDefaultMapping().getPredicate());
+//      customMapping.setSubject(pattern.getMetadata().getDefaultMapping().getSubject());
+//      
+//      
+//      return null;
+//      
+//      
+//  }
 
 }

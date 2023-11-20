@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.api.v1;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -18,6 +19,7 @@ import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.api.v1.model.PatternMappingList;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.jobs.Job;
 import edu.asu.diging.quadriga.core.service.AsyncPatternProcessor;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
@@ -52,21 +54,17 @@ public class MapGraphToTripleController {
         if (eventGraphs == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
+        
         List<JobPatternInfo> jobInfos = new ArrayList<>();
         
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
         mappedTripleGroup.set_id(new ObjectId());
         mappedTripleGroup.setCollectionId(new ObjectId(collectionId));
         
-        String jobId = jobManager.createJob(collectionId, mappedTripleGroup.get_id().toString(), eventGraphs.size());//new MappedTripleGroup().get_id().toString()
+        String jobId = jobManager.createJob(collectionId, mappedTripleGroup.get_id().toString(), eventGraphs.size());
         
         List<Thread> transformationThreads = new ArrayList<>();
         for (PatternMapping pattern : patternMappingList.getPatternMappings()) {
-//            String jobId = jobManager.createJob(collectionId, pattern.getMappedTripleGroupId(), eventGraphs.size());
-            System.out.println(pattern.getMetadata());
-            System.out.println(pattern.getNodes());
-            
             Thread transformationThread = new Thread(() -> {
                 asyncPatternProcessor.processPattern(jobId, collectionId, pattern, eventGraphs);
                 JobPatternInfo jobInfo = new JobPatternInfo();
@@ -74,7 +72,6 @@ public class MapGraphToTripleController {
                 jobInfo.setTrack(quadrigaBaseUri + quadrigaJobStatusUri + jobId);
                 jobInfo.setExplore(quadrigaBaseUri + quadrigaCollectionPageUri + collectionId);
                 jobInfos.add(jobInfo);
-               
             });
             transformationThreads.add(transformationThread);
             transformationThread.start();
@@ -83,6 +80,7 @@ public class MapGraphToTripleController {
             try {
                 thread.join();
             } catch (InterruptedException e) {
+                System.out.println("Job thread was interrupted due to the exception:"+e);
             }
         }
         return new ResponseEntity<>(jobInfos, HttpStatus.OK);
@@ -92,6 +90,19 @@ public class MapGraphToTripleController {
     public ResponseEntity<Job> getJobStatus(@PathVariable String jobId) {
         return new ResponseEntity<>(jobManager.get(jobId), HttpStatus.OK);
     }
+    
+//    DefaultMapping getCustomMapping(PatternMapping pattern) {
+//
+//        //Create a custom mapping in default mapping class
+//        DefaultMapping customMapping = new DefaultMapping();
+//        
+//        
+//        return null;
+//        
+//        
+//    }
+    
+    
     
     class JobPatternInfo {
         private String jobId;
