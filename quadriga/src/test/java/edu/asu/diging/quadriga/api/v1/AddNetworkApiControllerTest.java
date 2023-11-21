@@ -70,14 +70,14 @@ class AddNetworkApiControllerTest {
         Mockito.when(mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedTripleGroup)).thenReturn(new Predicate());
         
         
-        HttpStatus result = addNetworkApiController.processJson(quadruple, collectionId.toString());
+        HttpStatus result = addNetworkApiController.processJson(quadruple, collectionId.toString(), null);
 
         Assert.assertEquals(HttpStatus.ACCEPTED, result);
     }
 
     @Test
     void testProcessJson_NullQuadruple() throws NodeNotFoundException, InvalidObjectIdException, CollectionNotFoundException {
-        HttpStatus result = addNetworkApiController.processJson(null, "collectionId");
+        HttpStatus result = addNetworkApiController.processJson(null, "collectionId", null);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, result);
     }
 
@@ -87,7 +87,7 @@ class AddNetworkApiControllerTest {
         Graph graph = new Graph();
         quadruple.setGraph(graph);
 
-        HttpStatus result = addNetworkApiController.processJson(quadruple, "collectionId");
+        HttpStatus result = addNetworkApiController.processJson(quadruple, "collectionId", null);
 
         Assert.assertEquals(HttpStatus.NOT_FOUND, result);
     }
@@ -104,7 +104,7 @@ class AddNetworkApiControllerTest {
         mappedTripleGroup.setCollectionId(collectionId);
         mappedTripleGroup.setMappedTripleType(MappedTripleType.DEFAULT_MAPPING);
 
-        HttpStatus result = addNetworkApiController.processJson(quadruple, collectionId.toString());
+        HttpStatus result = addNetworkApiController.processJson(quadruple, collectionId.toString(), null);
 
         Assert.assertEquals(HttpStatus.NOT_FOUND, result);
     }

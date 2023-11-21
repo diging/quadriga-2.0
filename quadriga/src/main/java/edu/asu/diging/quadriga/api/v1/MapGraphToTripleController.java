@@ -19,7 +19,6 @@ import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.api.v1.model.PatternMappingList;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
-import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.model.jobs.Job;
 import edu.asu.diging.quadriga.core.service.AsyncPatternProcessor;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
@@ -69,7 +68,7 @@ public class MapGraphToTripleController {
                 asyncPatternProcessor.processPattern(jobId, collectionId, pattern, eventGraphs);
                 JobPatternInfo jobInfo = new JobPatternInfo();
                 jobInfo.setJobId(jobId);
-                jobInfo.setTrack(quadrigaBaseUri + quadrigaJobStatusUri + jobId);
+                jobInfo.setTrack(quadrigaBaseUri + quadrigaJobStatusUri + jobId + "/status");
                 jobInfo.setExplore(quadrigaBaseUri + quadrigaCollectionPageUri + collectionId);
                 jobInfos.add(jobInfo);
             });
@@ -90,20 +89,7 @@ public class MapGraphToTripleController {
     public ResponseEntity<Job> getJobStatus(@PathVariable String jobId) {
         return new ResponseEntity<>(jobManager.get(jobId), HttpStatus.OK);
     }
-    
-//    DefaultMapping getCustomMapping(PatternMapping pattern) {
-//
-//        //Create a custom mapping in default mapping class
-//        DefaultMapping customMapping = new DefaultMapping();
-//        
-//        
-//        return null;
-//        
-//        
-//    }
-    
-    
-    
+     
     class JobPatternInfo {
         private String jobId;
         private String track;

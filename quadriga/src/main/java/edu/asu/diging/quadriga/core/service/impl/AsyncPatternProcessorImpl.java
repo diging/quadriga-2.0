@@ -60,7 +60,6 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
         
         if (job == null || patternRoot == null) {
             job.setStatus(JobStatus.FAILURE);
-            System.out.println("Failed 1");
             jobRepository.save(job);
             return;
         } else {
@@ -107,20 +106,4 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
         job.setStatus(JobStatus.DONE);
         jobRepository.save(job);
     }
-    
-//  DefaultMapping getCustomMapping(PatternMapping pattern) {
-//
-//      //Create a custom mapping in default mapping class
-//      DefaultMapping customMapping = new DefaultMapping();
-//      
-//      customMapping.setObject(pattern.getMetadata().getDefaultMapping().getObject());
-//      customMapping.setPredicate(pattern.getMetadata().getDefaultMapping().getPredicate());
-//      customMapping.setSubject(pattern.getMetadata().getDefaultMapping().getSubject());
-//      
-//      
-//      return null;
-//      
-//      
-//  }
-
 }
