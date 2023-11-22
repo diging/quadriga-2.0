@@ -2,7 +2,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.List;
 
-
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +73,10 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
                 mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndId(collectionId,
                         patternMapping.getMappedTripleGroupId());
                 if (mappedTripleGroup == null) {
-                    System.out.println("Failed 3");
-                    job.setStatus(JobStatus.FAILURE);
+                    mappedTripleGroup = new MappedTripleGroup();
+                    mappedTripleGroup.set_id(new ObjectId(patternMapping.getMappedTripleGroupId()));
+                    job.setStatus(JobStatus.PROCESSING);
                     jobRepository.save(job);
-                    return;
                 }
             } else {
                 mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.CUSTOM_MAPPING);
