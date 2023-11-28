@@ -16,12 +16,14 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
+import edu.asu.diging.quadriga.api.v1.model.Metadata;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.core.data.JobRepository;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent;
 import edu.asu.diging.quadriga.core.model.jobs.Job;
 import edu.asu.diging.quadriga.core.model.jobs.JobStatus;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
@@ -66,10 +68,11 @@ public class AsyncPatternProcessorImplTest {
     @Test
     public void testProcessPatternSuccess() throws InvalidObjectIdException, CollectionNotFoundException {
     
-        Mockito.when(jobRepository.findById("job123").thenReturn(Optional.of(job));
-        Mockito.when(patternMapper.mapPattern(any())).thenReturn(new PatternCreationEvent()); 
-        Mockito.when(mappedTripleGroupService.findByCollectionIdAndId(anyString(), anyString())).thenReturn(mappedTripleGroup);
-        Mockito.when(patternFinder.findGraphsWithPattern(any(), any(), any())).thenReturn(new ArrayList<>()); 
+        Mockito.when(jobRepository.findById("job123")).thenReturn(Optional.of(job));
+        Mockito.when(patternMapper.mapPattern(patternMapping)).thenReturn(new PatternCreationEvent()); 
+        Mockito.when(mappedTripleGroupService.findByCollectionIdAndId("collectionId",mappedTripleGroup.get_id().toString())).thenReturn(mappedTripleGroup);
+        Mockito.when(patternFinder.findGraphsWithPattern(new Metadata() , new PatternCreationEvent() ,
+                new EventGraph() ).thenReturn(new ArrayList<Graph>()); 
 
   
         asyncPatternProcessor.processPattern("123", "collectionId", patternMapping, networks);
