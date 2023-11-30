@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
+import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.Metadata;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.core.data.JobRepository;
@@ -56,13 +58,22 @@ public class AsyncPatternProcessorImplTest {
     private PatternMapping patternMapping;
     private Job job;
     private MappedTripleGroup mappedTripleGroup;
-
+    private List<Graph> listOfGraphs = new ArrayList<>() ; 
+    ObjectId mappedTripleGroupId;
+    
+    
+    
+    
     @Before
     public void setUp() {
         networks = new ArrayList<>();
         patternMapping = new PatternMapping();
         job = new Job();
+        job.setId("job123");
         mappedTripleGroup = new MappedTripleGroup();
+        mappedTripleGroupId = new ObjectId();
+        mappedTripleGroup.set_id(mappedTripleGroupId);
+        
     }
 
     @Test
@@ -70,15 +81,13 @@ public class AsyncPatternProcessorImplTest {
     
         Mockito.when(jobRepository.findById("job123")).thenReturn(Optional.of(job));
         Mockito.when(patternMapper.mapPattern(patternMapping)).thenReturn(new PatternCreationEvent()); 
-        Mockito.when(mappedTripleGroupService.findByCollectionIdAndId("collectionId",mappedTripleGroup.get_id().toString())).thenReturn(mappedTripleGroup);
-        Mockito.when(patternFinder.findGraphsWithPattern(new Metadata() , new PatternCreationEvent() ,
-                new EventGraph() ).thenReturn(new ArrayList<Graph>()); 
+        Mockito.when(mappedTripleGroupService.findByCollectionIdAndId("collectionId",mappedTripleGroupId.toString())).thenReturn(mappedTripleGroup);
+        Mockito.when(patternFinder.findGraphsWithPattern(Mockito.any(Metadata.class), 
+                Mockito.any(PatternCreationEvent.class),
+                Mockito.any(EventGraph.class))).thenReturn(listOfGraphs);
 
-  
+
         asyncPatternProcessor.processPattern("123", "collectionId", patternMapping, networks);
-
-      
     }
-
     
 }
