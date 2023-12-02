@@ -18,6 +18,8 @@ public interface CollectionRepository extends MongoRepository<Collection, Object
     
     Page<Collection> findByOwnerOrAppsIn(String owner, List<String> apps, Pageable pageable);
 
+    Page<Collection> findByArchived(boolean archived, Pageable paging);
+
     List<Collection> findByAppsContaining(String app);
     
 }

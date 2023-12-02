@@ -2,16 +2,13 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
-
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
-import edu.asu.diging.quadriga.core.exceptions.UserNotAuthorizedException;
 import edu.asu.diging.quadriga.core.model.Collection;
-import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 public interface CollectionManager {
     /**
@@ -51,15 +48,7 @@ public interface CollectionManager {
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
     public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException;
-    
-    /**
-     * Deletes a collection from collection table by id
-     * @param id used to look up the collection in database
-     * @param authentication is used for knowing whether the user is the owner of the collection
-     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
-     */
-    public void deleteCollection(String id,SimpleUser simpleUser) throws CollectionNotFoundException, InvalidObjectIdException,UserNotAuthorizedException;
-    
+        
     /**
      * Finds all collections that the given list of apps can access
      * 
@@ -69,6 +58,12 @@ public interface CollectionManager {
      * @return a list of collections
      */
     public Page<Collection> findCollections(String owner, List<String> apps, Pageable pageable);
+    
+    /**
+     * @return collection details if it is archived
+     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
+     */
+    public Collection deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
 
     /**
      * This method returns the number of default mappings present in the collection
@@ -78,10 +73,12 @@ public interface CollectionManager {
      * This is because every default mapping has one predicate
      * So, if the MappedTripleGroupId is present on n predicates, this collection
      * must have n defaultMappings 
-     * 
      * @param collectionId used to find mappedTripleGroupId
      * @return the number of default mappings
      */
+
     public int getNumberOfDefaultMappings(String collectionId);   
+    
+    public Page<Collection> findByArchived(boolean archived, int pageInt,int sizeInt);
 
 }

@@ -55,6 +55,8 @@ public class ListCollectionController {
                     PageRequest.of(pageInt, sizeInt))); 
             model.addAttribute("username", simpleUser.getUsername());
         }
+        
+        model.addAttribute("collections", collectionManager.findByArchived(false, pageInt,sizeInt));
         return "auth/showcollections";
     }
 
