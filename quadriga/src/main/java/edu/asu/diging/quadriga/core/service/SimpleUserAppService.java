@@ -23,18 +23,18 @@ public interface SimpleUserAppService {
     public List<SimpleUserApp> findByUsername(String username);
     
     /**
-     * Deletes the app with given username and app client id
-     * @param username is the username to be searched
-     * @param appClientId is the app Client Id to be searched
-     */
-    public void delete(String username, String appClientId) throws SimpleUserAppNotFoundException;
-    
-    /**
      * To find list of all apps that user has access to with pagination
      * @param offset determines the starting point of the result set
      * @param pageSize is the number of items per page
      */
     public List<SimpleUserApp> findByUsername(String username,int offset,int pageSize);
+    
+    /**
+     * Deletes the app with given username and app client id
+     * @param username is the username to be searched
+     * @param appClientId is the app Client Id to be searched
+     */
+    public void delete(String username, String appClientId) throws SimpleUserAppNotFoundException;
     
     /**
      * 

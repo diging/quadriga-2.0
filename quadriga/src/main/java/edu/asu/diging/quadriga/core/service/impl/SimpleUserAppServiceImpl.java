@@ -42,6 +42,11 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
     public List<SimpleUserApp> findByUsername(String username) {
         return simpleUserAppRepository.findByUsername(username);
     }
+    
+    @Override
+    public List<SimpleUserApp> findByUsername(String username,int offset,int pageSize){        
+        return simpleUserAppRepository.findByUsernameWithPagination(username,offset,pageSize);  
+    }
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.SimpleUserAppService#delete(java.lang.String, java.lang.String)
@@ -56,11 +61,6 @@ public class SimpleUserAppServiceImpl implements SimpleUserAppService {
         }
     }
     
-    @Override
-    public List<SimpleUserApp> findByUsername(String username,int offset,int pageSize){        
-        return simpleUserAppRepository.findByUsernameWithPagination(username,offset,pageSize);  
-    }
-
     @Override
     public List<String> findAppClientIdsByUsername(String username){
         return simpleUserAppRepository.findAppClientIdsByUsername(username);          
