@@ -113,5 +113,4 @@ public class SimpleUserAppServiceImplTest {
             simpleUserAppService.delete(USER_1 ,CLIENT_ID_1 );
         });       
     }
-
 }

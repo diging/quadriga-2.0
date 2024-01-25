@@ -29,7 +29,6 @@ public class SimpleUserApp implements Serializable {
     * The prefix parameter specifies the prefix to be used in the generated value
     * Strategy parameter for the generator is specified for generating a unique identifier.
     */
-    
     @Id
     @GeneratedValue(generator = "userapp_id_generator")
     @GenericGenerator(name = "userapp_id_generator", parameters = @Parameter(name = "prefix", value = "UA"), strategy = "edu.asu.diging.quadriga.core.data.IdGenerator")
@@ -38,6 +37,9 @@ public class SimpleUserApp implements Serializable {
      * User name of the user 
      */
     private String username;
+    /**
+     * Citesphere client Id
+     */
     private String appClientId;
 
     public String getId() {

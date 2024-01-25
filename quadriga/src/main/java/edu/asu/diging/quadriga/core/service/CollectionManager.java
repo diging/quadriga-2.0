@@ -60,6 +60,8 @@ public interface CollectionManager {
     public Page<Collection> findCollections(String owner, List<String> apps, Pageable pageable);
     
     /**
+     * Deletes a collection from collection table by id
+     * @param id used to look up the collection in database
      * @return collection details if it is archived
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */

@@ -37,7 +37,6 @@ public interface SimpleUserAppService {
     public void delete(String username, String appClientId) throws SimpleUserAppNotFoundException;
     
     /**
-     * 
      * @param username username is the username to be searched
      * @return a List of client Ids associated with the user
      */

@@ -15,7 +15,7 @@ public class AssignAppsController {
     private SimpleUserAppService simpleUserAppService;
 
     @RequestMapping(value = "/admin/user/{username}/app/{clientId}/assign", method = RequestMethod.POST)
-    public String assign(@PathVariable String username, @PathVariable String clientId,HttpServletRequest request){
+    public String assign(@PathVariable String username, @PathVariable String clientId, HttpServletRequest request){
         simpleUserAppService.save(username, clientId);
         return "redirect:/admin/user/" + username + "/apps";
     }
