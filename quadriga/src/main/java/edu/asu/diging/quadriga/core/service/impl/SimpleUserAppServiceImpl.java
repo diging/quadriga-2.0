@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.quadriga.core.data.SimpleUserAppRepository;
+import edu.asu.diging.quadriga.core.data.sql.SimpleUserAppRepository;
 import edu.asu.diging.quadriga.core.exceptions.SimpleUserAppNotFoundException;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;
 import edu.asu.diging.quadriga.core.service.SimpleUserAppService;

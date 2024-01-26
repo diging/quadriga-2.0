@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
-import edu.asu.diging.quadriga.core.data.SimpleUserAppRepository;
+import edu.asu.diging.quadriga.core.data.sql.SimpleUserAppRepository;
 import edu.asu.diging.quadriga.core.exceptions.SimpleUserAppNotFoundException;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
 import edu.asu.diging.quadriga.core.model.users.SimpleUserApp;

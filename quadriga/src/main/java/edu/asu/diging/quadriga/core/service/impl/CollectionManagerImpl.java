@@ -106,7 +106,7 @@ public class CollectionManagerImpl implements CollectionManager {
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#deleteCollection(java.lang.String)
      */
-   
+    @Override
     public Collection deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException {
         Collection collection = findCollection(id);
         

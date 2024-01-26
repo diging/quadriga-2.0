@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.core.data;
+package edu.asu.diging.quadriga.core.data.sql;
 
 import java.io.Serializable;
 import java.util.Properties;
