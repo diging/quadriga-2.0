@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.model.users;
 
 import java.io.Serializable;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -31,7 +32,7 @@ public class SimpleUserApp implements Serializable {
     */
     @Id
     @GeneratedValue(generator = "userapp_id_generator")
-    @GenericGenerator(name = "userapp_id_generator", parameters = @Parameter(name = "prefix", value = "UA"), strategy = "edu.asu.diging.quadriga.core.data.IdGenerator")
+    @GenericGenerator(name = "userapp_id_generator", parameters = @Parameter(name = "prefix", value = "UA"), strategy = "edu.asu.diging.quadriga.core.data.sql.IdGenerator")
     private String id;
     /**
      * User name of the user 
