@@ -44,13 +44,16 @@ public class ExploreCollectionController {
   
     @RequestMapping(value = "/auth/collections/{collectionId}/explore")
     public String exploreTriples(@PathVariable String collectionId, Model model) {
+        
         Collection collection;
+        
         try {
             collection = collectionManager.findCollection(collectionId);
         } catch (InvalidObjectIdException e) {
             logger.error("No Collection found for id",e);
             return "error404Page";
         }
+        
         model.addAttribute("collectionName", collection.getName());
         model.addAttribute("collection", collectionId);
         return "auth/exploreCollection";
@@ -71,10 +74,11 @@ public class ExploreCollectionController {
                     uri, ignoreList);
             
             graphElements = graphCreationService.mapToGraph(triples);
-        }catch(CollectionNotFoundException e){
+        } catch(CollectionNotFoundException e){
             logger.error("No Collection found for "+collectionId+e);
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
+        
         return new ResponseEntity<>(graphElements, HttpStatus.OK);
     }
 
