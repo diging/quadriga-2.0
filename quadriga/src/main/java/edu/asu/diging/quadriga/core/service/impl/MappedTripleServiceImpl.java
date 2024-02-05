@@ -137,11 +137,12 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     public List<DefaultMapping> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList){
         
         CachedConcept conceptCache = conceptPowerService.getConceptByUri(uri);
-        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(mapConceptUriToDatabaseURI(mappedTripleGroupId,conceptCache.getEqualTo()),ignoreList,mappedTripleGroupId);
+        List<Predicate> predicates = predicateRepo.findBySourceUriOrTargetUriAndMappedTripleGroupId(mapConceptUriToDatabaseUri(mappedTripleGroupId,conceptCache.getEqualTo()),ignoreList,mappedTripleGroupId);
         return predicates.stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList());
     }    
 
     private DefaultMapping toTriple(Predicate predicate) {
+        
         if (predicate == null) {
             return null;
         }
@@ -154,6 +155,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     }
 
     private TripleElement toTripleElement(Concept concept) {
+        
         TripleElement tripleElement = new TripleElement();
 
         tripleElement.setId(concept.getId());
@@ -164,6 +166,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     }
 
     private TripleElement toTripleElement(Predicate predicate) {
+        
         TripleElement tripleElement = new TripleElement();
 
         tripleElement.setId(predicate.getId());
@@ -174,13 +177,15 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         return tripleElement;
     }
     
-    private String mapConceptUriToDatabaseURI(String mappedTripleGroupId,List<String> equalTo){
+    private String mapConceptUriToDatabaseUri(String mappedTripleGroupId, List<String> equalTo){
+        
         List<Concept> concepts = conceptRepo.findByMappedTripleGroupId(mappedTripleGroupId);
         List<String> conceptUris = new ArrayList<>();
       
         for(Concept eachConcept:concepts){
             conceptUris.add(eachConcept.getUri());
         }
+        
         for(String similarUri:equalTo){
             List<String> listOfUris = processUri(similarUri);
             listOfUris.retainAll(conceptUris);
