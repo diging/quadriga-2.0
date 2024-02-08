@@ -74,6 +74,19 @@ public class MapGraphToTripleController {
             });
             transformationThreads.add(transformationThread);
             transformationThread.start();
+            
+//            for (PatternMapping pattern : patternMappingList) {
+//                CompletableFuture<Void> future = processPatternAsync(pattern);
+//                futures.add(future);
+//            }
+//
+//            CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+//            allOf.join(); // Wait for all async tasks to complete
+//
+//            List<JobPatternInfo> jobInfos = new ArrayList<>();
+//            // Build jobInfos here if necessary
+//            
+//            return new ResponseEntity<>(jobInfos, HttpStatus.OK);
         }
         for (Thread thread : transformationThreads) {
             try {

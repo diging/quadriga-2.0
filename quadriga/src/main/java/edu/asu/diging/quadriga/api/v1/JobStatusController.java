@@ -19,7 +19,7 @@ public class JobStatusController {
     public ResponseEntity<Job> getJobStatus(@PathVariable String jobId) {
         Job job = jobManager.get(jobId);
         if(job == null){
-            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(job, HttpStatus.OK);
     }       
