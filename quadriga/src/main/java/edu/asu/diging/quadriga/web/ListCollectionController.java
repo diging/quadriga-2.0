@@ -1,37 +1,61 @@
 package edu.asu.diging.quadriga.web;
+import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import edu.asu.diging.quadriga.core.data.CollectionRepository;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
+import edu.asu.diging.quadriga.core.service.SimpleUserAppService;
+import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 
 @Controller
 public class ListCollectionController {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
-    private CollectionRepository collectionRepo;
-
+    private CollectionManager collectionManager;
+    
+    @Autowired
+    public SimpleUserAppService simpleUserAppService;
+    
     @RequestMapping(value = "/auth/collections", method = RequestMethod.GET)
-    public String list(HttpServletRequest request, Model model) {
+    public String list(@RequestParam(defaultValue = "1", required = false, value = "page") String page,
+            @RequestParam(defaultValue = "20", required = false, value = "size") String size, Model model, Authentication authentication) {
 
-        int page = 0;
-        int size = 20;
+        SimpleUser simpleUser = (SimpleUser) authentication.getPrincipal();
+        List<String> appClientIds = simpleUserAppService.findAppClientIdsByUsername(simpleUser.getUsername());
+        
+        Integer pageInt;
+        Integer sizeInt;
 
-        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
-            page = Integer.parseInt(request.getParameter("page")) - 1;
+        try {
+            pageInt = new Integer(page) - 1;
+        } catch (NumberFormatException ex) {
+            logger.warn("Trying to access invalid page number: " + page, ex);
+            pageInt = 0;
+        }
+        
+        try {
+            sizeInt = new Integer(size);
+        } catch (NumberFormatException ex) {
+            logger.warn("Received invalid page size: " + size, ex);
+            sizeInt = 20;
         }
 
-        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
-            size = Integer.parseInt(request.getParameter("size"));
+        if (appClientIds != null) {
+            model.addAttribute("collections",collectionManager.findCollections(simpleUser.getUsername(), appClientIds,
+                    PageRequest.of(pageInt, sizeInt))); 
+            model.addAttribute("username", simpleUser.getUsername());
         }
-
-        model.addAttribute("collections", collectionRepo.findByArchived(false, PageRequest.of(page, size)));
         return "auth/showcollections";
     }
 
