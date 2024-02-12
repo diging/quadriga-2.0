@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.api.v1;
 
 import java.util.ArrayList;
 
+
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,7 +19,6 @@ import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.api.v1.model.PatternMappingList;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
-import edu.asu.diging.quadriga.core.model.jobs.Job;
 import edu.asu.diging.quadriga.core.service.AsyncPatternProcessor;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.JobManager;
@@ -62,47 +61,25 @@ public class MapGraphToTripleController {
         
         String jobId = jobManager.createJob(collectionId, mappedTripleGroup.get_id().toString(), eventGraphs.size());
         
-        List<Thread> transformationThreads = new ArrayList<>();
         for (PatternMapping pattern : patternMappingList.getPatternMappings()) {
-            Thread transformationThread = new Thread(() -> {
-                asyncPatternProcessor.processPattern(jobId, collectionId, pattern, eventGraphs);
-                JobPatternInfo jobInfo = new JobPatternInfo();
-                jobInfo.setJobId(jobId);
-                jobInfo.setTrack(quadrigaBaseUri + quadrigaJobStatusUri + jobId + "/status");
-                jobInfo.setExplore(quadrigaBaseUri + quadrigaCollectionPageUri + collectionId);
-                jobInfos.add(jobInfo);
-            });
-            transformationThreads.add(transformationThread);
-            transformationThread.start();
             
-//            for (PatternMapping pattern : patternMappingList) {
-//                CompletableFuture<Void> future = processPatternAsync(pattern);
-//                futures.add(future);
-//            }
-//
-//            CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-//            allOf.join(); // Wait for all async tasks to complete
-//
-//            List<JobPatternInfo> jobInfos = new ArrayList<>();
-//            // Build jobInfos here if necessary
-//            
-//            return new ResponseEntity<>(jobInfos, HttpStatus.OK);
+            asyncPatternProcessor.processPattern(jobId, collectionId, pattern, eventGraphs);
+            JobPatternInfo jobInfo = new JobPatternInfo();
+            jobInfo.setJobId(jobId);
+            jobInfo.setTrack(quadrigaBaseUri + quadrigaJobStatusUri + jobId);
+            jobInfo.setExplore(quadrigaBaseUri + quadrigaCollectionPageUri + collectionId);
+            jobInfos.add(jobInfo);
         }
-        for (Thread thread : transformationThreads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                System.out.println("Job thread was interrupted due to the exception:"+e);
-            }
-        }
+        
         return new ResponseEntity<>(jobInfos, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/v1/job/{jobId}/status")
-    public ResponseEntity<Job> getJobStatus(@PathVariable String jobId) {
-        return new ResponseEntity<>(jobManager.get(jobId), HttpStatus.OK);
-    }
-     
+    /*
+     * @JobPatternInfo The object of this class is returned when @MapGraphToTripleController is called to map patterns in a collection.
+     * @param jobId is the jobId of the job created for processing the pattern.
+     * @param track is the URI of the status of the job.
+     * @param explore is the URI of the collection whose graphs are being mapped with the input patterns.
+     */
     class JobPatternInfo {
         private String jobId;
         private String track;
