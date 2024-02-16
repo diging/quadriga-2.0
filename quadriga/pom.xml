@@ -18,13 +18,14 @@
         <simple-users-version>1.1</simple-users-version>
 
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
-        <hibernate.dialect>org.dialect.MySQL5Dialect</hibernate.dialect>
+
+        <hibernate.dialect>org.dialect.MySQL57Dialect</hibernate.dialect>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.database.url>jdbc-url-to-db</db.database.url>
         <db.user>db-user</db.user>
         <db.password>db-password</db.password>
-
+        
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
@@ -48,7 +49,7 @@
         
         <conceptpower.base.url></conceptpower.base.url>
         <conceptpower.id.endpoint></conceptpower.id.endpoint>
-        
+
         <log.level>info</log.level>
 
         <tomcat.deploy.path></tomcat.deploy.path>

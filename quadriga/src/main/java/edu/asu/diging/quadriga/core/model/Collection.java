@@ -18,6 +18,8 @@ public class Collection {
 
     private String name;
     private String description;
+    private String owner;
+    
     private OffsetDateTime creationTime;
     private boolean archived;
 
@@ -49,6 +51,13 @@ public class Collection {
     public void setDescription(String description) {
         this.description = description;
     }
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
 
     public OffsetDateTime getCreationTime() {
         return creationTime;
@@ -73,5 +82,7 @@ public class Collection {
     public void setArchived(boolean archived) {
         this.archived = archived;
     }
+
+   
 
 }

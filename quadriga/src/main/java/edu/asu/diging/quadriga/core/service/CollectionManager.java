@@ -2,7 +2,10 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
@@ -14,10 +17,11 @@ public interface CollectionManager {
      * Saves a collection in database with the given details
      * @param name collection name
      * @param description collection description
+     * @param owner name of the creator
      * @param apps list of citesphere apps attached to the collection
      * @return the saved collection
      */
-    public Collection addCollection(String name, String description, List<String> apps) throws CitesphereAppNotFoundException;
+    public Collection addCollection(String name, String description, String owner, List<String> apps) throws CitesphereAppNotFoundException;
     
     /**
      * Finds a collection from the collection table by id
@@ -45,6 +49,16 @@ public interface CollectionManager {
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
     public Collection editCollection(String id, String name, String description, List<String> apps) throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException;
+        
+    /**
+     * Finds all collections that the given list of apps can access
+     * 
+     * @param owner is the user for which the collections are to be searched
+     * @param apps is a list of apps to be searched
+     * @param pageable requested page details
+     * @return a list of collections
+     */
+    public Page<Collection> findCollections(String owner, List<String> apps, Pageable pageable);
     
     /**
      * Deletes a collection from collection table by id
@@ -77,7 +91,6 @@ public interface CollectionManager {
      * This is because every default mapping has one predicate
      * So, if the MappedTripleGroupId is present on n predicates, this collection
      * must have n defaultMappings 
-     * 
      * @param collectionId used to find mappedTripleGroupId
      * @return the number of default mappings
      */

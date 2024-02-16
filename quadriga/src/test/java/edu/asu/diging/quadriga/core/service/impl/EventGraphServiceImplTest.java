@@ -19,8 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
@@ -28,8 +26,6 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.mongo.impl.EventGraphDaoImpl;
-
-
 
 public class EventGraphServiceImplTest {
 

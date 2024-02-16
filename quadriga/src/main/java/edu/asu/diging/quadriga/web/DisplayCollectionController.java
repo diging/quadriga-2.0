@@ -2,9 +2,9 @@ package edu.asu.diging.quadriga.web;
 
 import org.slf4j.Logger;
 
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +32,7 @@ public class DisplayCollectionController {
     
     //@Value("${defaultPageSize}")
     private Integer defaultPageSize=10;
-    
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/auth/collections/{collectionId}", method = RequestMethod.GET)
@@ -56,19 +56,15 @@ public class DisplayCollectionController {
 //      Determine page number and size for network pagination      
         page = (page == null || page < 0) ? 0 : page - 1;
         size = (size == null || size < 1) ? defaultPageSize : size;
-        
 
         model.addAttribute("size", size);
-
-        EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         
+        EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         model.addAttribute("latestNetwork", latestNetwork);
         
         Pageable paging = PageRequest.of(page, size);
-
         // Get all EventGraphs for this collection
         Page<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), paging);
-
 
         long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());
 
@@ -81,7 +77,7 @@ public class DisplayCollectionController {
         
         // Get default mappings from Concepts
         model.addAttribute("defaultMappings", collectionManager.getNumberOfDefaultMappings(collection.getId().toString()));
-        
         return "auth/displayCollection";       
+
     }
 }
