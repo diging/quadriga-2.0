@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.List;
 
+
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.core.data.JobRepository;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
-import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
@@ -29,6 +29,8 @@ import edu.asu.diging.quadriga.core.service.PatternMapper;
 
 @Component
 public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
+
+    private static final MappedTripleType CUSTOM_MAPPING = null;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -75,13 +77,15 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
                 if (mappedTripleGroup == null) {
                     mappedTripleGroup = new MappedTripleGroup();
                     mappedTripleGroup.set_id(new ObjectId(patternMapping.getMappedTripleGroupId()));
+                    mappedTripleGroup.setMappedTripleType(CUSTOM_MAPPING);
                     job.setStatus(JobStatus.PROCESSING);
                     jobRepository.save(job);
                 }
             } else {
-                mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.CUSTOM_MAPPING);
+//                mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
+                mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndId(collectionId, patternMapping.getMappedTripleGroupId());
             }
-        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
+        } catch (InvalidObjectIdException e) {
             logger.error("Invalid triple group id {} or collection id {} for job {}",
                     patternMapping.getMappedTripleGroupId(), collectionId, job.getId(), e);
             System.out.println("Failed 4");
