@@ -1,4 +1,4 @@
-package edu.asu.diging.quadriga.core.model.events.pattern;
+package edu.asu.diging.quadriga.core.pattern;
 
 public class PatternAppellationEvent extends PatternCreationEvent {
 

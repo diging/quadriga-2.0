@@ -13,9 +13,9 @@ import edu.asu.diging.quadriga.api.v1.model.Edge;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.api.v1.model.NetworkConstants;
 import edu.asu.diging.quadriga.api.v1.model.PatternNodeData;
-import edu.asu.diging.quadriga.core.model.events.pattern.PatternAppellationEvent;
-import edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent;
-import edu.asu.diging.quadriga.core.model.events.pattern.PatternRelationEvent;
+import edu.asu.diging.quadriga.core.pattern.PatternAppellationEvent;
+import edu.asu.diging.quadriga.core.pattern.PatternCreationEvent;
+import edu.asu.diging.quadriga.core.pattern.PatternRelationEvent;
 import edu.asu.diging.quadriga.core.service.PatternMapper;
 import edu.asu.diging.quadriga.core.service.TriFunction;
 

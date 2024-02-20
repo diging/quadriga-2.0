@@ -31,7 +31,7 @@ public class MapGraphToTripleController {
     @Autowired
     private JobManager jobManager;
 
-    @PostMapping(value = "/api/v1/collection/{collectionId}/network/map")
+    @PostMapping(value = "/api/v1/collection/{collectionId}/map")
     public ResponseEntity<List<JobPatternInfo>> mapPatternToTriples(@PathVariable String collectionId,
             @RequestBody PatternMappingList patternMappingList) {
 
@@ -41,10 +41,6 @@ public class MapGraphToTripleController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         
-//        if (patternMappingList == null) {
-//            return new ResponseEntity<>(HttpStatus.)
-//        }
-        
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
         mappedTripleGroup.set_id(new ObjectId());
         mappedTripleGroup.setCollectionId(new ObjectId(collectionId));
@@ -53,7 +49,12 @@ public class MapGraphToTripleController {
         
         List<JobPatternInfo> jobInfos = mapGraphToTriple.getJobPatternInfo(collectionId, jobId, eventGraphs, patternMappingList);
         
-        return new ResponseEntity<>(jobInfos, HttpStatus.OK);
+        if(!jobInfos.isEmpty()) {
+            return new ResponseEntity<>(jobInfos, HttpStatus.OK);
+            
+        }
+        
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }

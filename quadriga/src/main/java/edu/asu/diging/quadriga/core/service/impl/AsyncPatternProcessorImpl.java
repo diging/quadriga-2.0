@@ -14,23 +14,23 @@ import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.core.data.JobRepository;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
-import edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent;
 import edu.asu.diging.quadriga.core.model.jobs.Job;
 import edu.asu.diging.quadriga.core.model.jobs.JobStatus;
+import edu.asu.diging.quadriga.core.pattern.PatternCreationEvent;
 import edu.asu.diging.quadriga.core.service.AsyncPatternProcessor;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.PatternFinder;
 import edu.asu.diging.quadriga.core.service.PatternMapper;
+import edu.asu.diging.quadriga.core.exceptions.JobNotFoundException;
 
 @Component
 public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
-
-    private static final MappedTripleType CUSTOM_MAPPING = null;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -52,15 +52,18 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.AsyncPatternProcessor#processPattern(java.lang.String, java.lang.String, edu.asu.diging.quadriga.api.v1.model.PatternMapping, java.util.List)
      */
-    @Async
     @Override
+    @Async
     public void processPattern(String jobId, String collectionId, PatternMapping patternMapping,
-            List<EventGraph> networks) {
+            List<EventGraph> networks) throws JobNotFoundException {
 
         Job job = jobRepository.findById(jobId).orElse(null);
         PatternCreationEvent patternRoot = patternMapper.mapPattern(patternMapping);
         
-        if (job == null || patternRoot == null) {
+        if (job == null) {
+            throw new JobNotFoundException();
+            
+        } else if(patternRoot == null) {
             job.setStatus(JobStatus.FAILURE);
             jobRepository.save(job);
             return;
@@ -77,15 +80,13 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
                 if (mappedTripleGroup == null) {
                     mappedTripleGroup = new MappedTripleGroup();
                     mappedTripleGroup.set_id(new ObjectId(patternMapping.getMappedTripleGroupId()));
-                    mappedTripleGroup.setMappedTripleType(CUSTOM_MAPPING);
                     job.setStatus(JobStatus.PROCESSING);
                     jobRepository.save(job);
                 }
             } else {
-//                mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
-                mappedTripleGroup = mappedTripleGroupService.findByCollectionIdAndId(collectionId, patternMapping.getMappedTripleGroupId());
+                mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.CUSTOM_MAPPING);
             }
-        } catch (InvalidObjectIdException e) {
+        } catch (InvalidObjectIdException | CollectionNotFoundException e) {
             logger.error("Invalid triple group id {} or collection id {} for job {}",
                     patternMapping.getMappedTripleGroupId(), collectionId, job.getId(), e);
             System.out.println("Failed 4");

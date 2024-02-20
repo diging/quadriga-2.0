@@ -20,9 +20,9 @@ import edu.asu.diging.quadriga.core.model.conceptpower.ConceptpowerAlternativeId
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
-import edu.asu.diging.quadriga.core.model.events.pattern.PatternAppellationEvent;
-import edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent;
-import edu.asu.diging.quadriga.core.model.events.pattern.PatternRelationEvent;
+import edu.asu.diging.quadriga.core.pattern.PatternAppellationEvent;
+import edu.asu.diging.quadriga.core.pattern.PatternCreationEvent;
+import edu.asu.diging.quadriga.core.pattern.PatternRelationEvent;
 import edu.asu.diging.quadriga.core.service.ConceptFinder;
 import edu.asu.diging.quadriga.core.service.PatternFinder;
 

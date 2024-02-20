@@ -5,7 +5,7 @@ import java.util.List;
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.Metadata;
 import edu.asu.diging.quadriga.core.model.EventGraph;
-import edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent;
+import edu.asu.diging.quadriga.core.pattern.PatternCreationEvent;
 
 public interface PatternFinder {
 

@@ -11,7 +11,7 @@ public class PatternMapping {
     
     /*
      * mappedTripleGroupId is the Id assigned for all the patterns in @PatternMappingList
-     * Value assigned in edu.asu.diging.quadriga.api.v1.MapGraphToTripleController while processing pattern
+     * It is given by the user through the /api/v1/collection/{collectionId}/network/map endpoint
      */
     private String mappedTripleGroupId;
     private Metadata metadata;

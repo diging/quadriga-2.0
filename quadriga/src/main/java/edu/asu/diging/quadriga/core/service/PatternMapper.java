@@ -1,7 +1,7 @@
 package edu.asu.diging.quadriga.core.service;
 
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
-import edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent;
+import edu.asu.diging.quadriga.core.pattern.PatternCreationEvent;
 
 public interface PatternMapper {
 
