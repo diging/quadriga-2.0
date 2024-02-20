@@ -1,7 +1,6 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.time.OffsetDateTime;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -12,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -35,30 +36,31 @@ public class CollectionManagerImpl implements CollectionManager {
 
     @Autowired
     private CitesphereConnector citesphereConnector;
-    
+
     @Autowired
     private CollectionRepository collectionRepo;
-    
+
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
-    
+
     @Autowired
     private EventGraphService eventGraphService;
     
     @Autowired
     private PredicateManager predicateManager;
-    
+
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.CollectionManager#addCollection(java.lang.String, java.lang.String, java.util.List)
+     * @see edu.asu.diging.quadriga.core.service.CollectionManager#addCollection(java.lang.String, java.lang.String, java.lang.String, java.util.List)
      */
-    public Collection addCollection(String name, String description, List<String> apps) throws CitesphereAppNotFoundException {   
+    public Collection addCollection(String name, String description, String owner, List<String> apps) throws CitesphereAppNotFoundException {   
         validateApps(apps);      
         Collection collection = new Collection();
         collection.setCreationTime(OffsetDateTime.now());
         collection.setName(name);
         collection.setDescription(description);
+        collection.setOwner(owner);
         collection.setApps(apps);
         return collectionRepo.save(collection);
     }
@@ -74,7 +76,7 @@ public class CollectionManagerImpl implements CollectionManager {
             throw new InvalidObjectIdException(e);
         }
     }
-    
+
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#getCollections(java.lang.String)
      */
@@ -123,6 +125,14 @@ public class CollectionManagerImpl implements CollectionManager {
         }
     }
 
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.CollectionManager#findCollections(java.lang.String, java.util.List, org.springframework.data.domain.Pageable)
+     */
+    @Override
+    public Page<Collection> findCollections(String owner, List<String> apps, Pageable pageable) {
+        return collectionRepo.findByOwnerOrAppsIn(owner, apps, pageable);
+    }
+
     /**
      * Validates the list of apps by verifying the client ids from citesphere. 
      * 
@@ -141,7 +151,7 @@ public class CollectionManagerImpl implements CollectionManager {
             }
         }
     }
-    
+
     /**
      * This method returns the number of default mappings present in the collection
      * One MappedTripleGroup will exist for the "DefaultMappings" for this collection
@@ -173,4 +183,5 @@ public class CollectionManagerImpl implements CollectionManager {
         
         return collectionRepo.findByArchived(archived, PageRequest.of(pageInt, sizeInt));
     }
+
 }

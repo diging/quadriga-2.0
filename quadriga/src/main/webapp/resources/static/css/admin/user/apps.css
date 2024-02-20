@@ -1,0 +1,29 @@
+.apps-table {
+	margin-top: 25px
+}
+
+.assign-action {
+	text-decoration: none;
+	color: rgba(239, 149, 84, 1);
+	cursor: pointer;
+}
+
+.assign-action:hover {
+	text-decoration: none;
+	color: rgba(239, 110, 53, 1);
+}
+
+.revoke-action {
+	text-decoration: none;
+	color: rgba(185, 61, 0, 1);
+	cursor: pointer;
+}
+
+.revoke-action:hover {
+	text-decoration: none;
+	color: rgba(141, 39, 0, 1);
+}
+
+.action-icon {
+	margin-right: 5px;
+}
