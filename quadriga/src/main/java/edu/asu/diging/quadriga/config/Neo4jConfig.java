@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.config;
 
 import org.neo4j.ogm.session.SessionFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +24,7 @@ public class Neo4jConfig {
     public org.neo4j.ogm.config.Configuration getConfiguration() {
         //  there might be  a  bug in Neo4j's HttpDriver? it doesn't seem to take the database.
         // for now  all data is stored in default db
-        return new org.neo4j.ogm.config.Configuration.Builder().uri(neo4jUrl).database(neo4jDb).build();
+        return new org.neo4j.ogm.config.Configuration.Builder().uri(neo4jUrl).credentials("neo4j","quadriga2").database(neo4jDb).build();
     }
 
     @Bean
