@@ -26,18 +26,15 @@ import edu.asu.diging.quadriga.core.pattern.PatternRelationEvent;
 import edu.asu.diging.quadriga.core.service.ConceptFinder;
 import edu.asu.diging.quadriga.core.service.PatternFinder;
 
-/**
- * Finds and extracts the sub-networks which match the pattern
- */
-
 @Service
 public class PatternFinderImpl implements PatternFinder {
 
     @Autowired
     private ConceptFinder conceptFinder;
 
-    /* (non-Javadoc)
+    /** (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.PatternFinder#findGraphsWithPattern(edu.asu.diging.quadriga.api.v1.model.Metadata, edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent, edu.asu.diging.quadriga.core.model.EventGraph)
+     * Finds and extracts the sub-networks which match the pattern
      * @param patternMetaData triple metadata for the pattern
      * @param patternRoot     root node of pattern
      * @param eventGraph      network to be searched
@@ -68,7 +65,7 @@ public class PatternFinderImpl implements PatternFinder {
         return matchingSubNetworks;
     }
 
-    /*
+    /**
      * Checks if a given graph node matches the corresponding pattern node based on their types.
      * @param graphNode   The graph node to be matched against the pattern node.
      * @param patternNode The pattern node to be matched against the graph node.
@@ -92,6 +89,15 @@ public class PatternFinderImpl implements PatternFinder {
         return false;
     }
 
+    /**
+     * 
+     * Matches a graph node representing an appellation against a pattern node representing an appellation based on their concept type and interpretation.
+     *
+     * @param graphNode   The graph node representing an appellation to be matched against the pattern node.
+     * @param patternNode The pattern node representing an appellation to be matched against the graph node.
+     * @return true if the graph node matches the pattern node based on concept type and interpretation,
+     * false otherwise.
+     */
     private boolean matchAppellationNode(AppellationEvent graphNode, PatternAppellationEvent patternNode) {
 
         if (patternNode.getConceptType() != null && !patternNode.getConceptType().isEmpty()
@@ -109,12 +115,28 @@ public class PatternFinderImpl implements PatternFinder {
         return true;
     }
 
+    /**
+     * Matches a graph node representing a relation against a pattern node representing a pattern relation
+     * by recursively checking if the object, subject, and predicate nodes match.
+     *
+     * @param graphNode   The graph node representing a relation to be matched against the pattern node.
+     * @param patternNode The pattern node representing a relation to be matched against the graph node.
+     * @return true if all object, subject, and predicate nodes match, false otherwise.
+     */
     private boolean matchRelationNode(RelationEvent graphNode, PatternRelationEvent patternNode) {
         return doesMatchPattern(graphNode.getRelation().getObject(), patternNode.getObject())
                 && doesMatchPattern(graphNode.getRelation().getSubject(), patternNode.getSubject())
                 && doesMatchPattern(graphNode.getRelation().getPredicate(), patternNode.getPredicate());
     }
 
+    
+    /**
+     * Matches the interpretation of a graph node against the interpretation of a pattern node.
+     *
+     * @param graphNodeInterpretation   The interpretation of the graph node.
+     * @param patternNodeInterpretation The interpretation of the pattern node.
+     * @return true if the interpretations match or if a corresponding concept alternative ID is found, false otherwise.
+     */
     private boolean matchInterpretation(String graphNodeInterpretation, String patternNodeInterpretation) {
         if (graphNodeInterpretation.equals(patternNodeInterpretation)) {
             return true;
@@ -131,7 +153,14 @@ public class PatternFinderImpl implements PatternFinder {
 
         return false;
     }
-
+    
+    /**
+     * Matches the concept type of a graph node against the concept type of a pattern node.
+     *
+     * @param graphNodeInterpretation The interpretation of the graph node.
+     * @param patternConceptType      The concept type of the pattern node.
+     * @return true if the concept types match, false otherwise.
+     */
     private boolean matchConceptType(String graphNodeInterpretation, String patternConceptType) {
         ConceptEntry concept = conceptFinder.getConcept(graphNodeInterpretation);
         if (concept != null && concept.getType() != null) {
@@ -140,6 +169,13 @@ public class PatternFinderImpl implements PatternFinder {
         return false;
     }
 
+    /**
+     * Extracts graph data from a graph node and adds it to the provided graph object.
+     *
+     * @param graph       The graph object to which the extracted data will be added.
+     * @param graphNode   The graph node to be extracted.
+     * @param patternNode The pattern node corresponding to the graph node.
+     */
     private void extractGraph(Graph graph, CreationEvent graphNode, PatternCreationEvent patternNode) {
         if (patternNode == null) {
             return;
@@ -163,6 +199,12 @@ public class PatternFinderImpl implements PatternFinder {
 
     }
 
+    /**
+     * Creates a NodeData object from an AppellationEvent object.
+     *
+     * @param appellationEvent The AppellationEvent object from which the NodeData will be created.
+     * @return The NodeData object created from the AppellationEvent.
+     */
     private NodeData createNodeData(AppellationEvent appellationEvent) {
         NodeData appellationNode = new NodeData();
         NodeMetadata metadata = new NodeMetadata();
@@ -178,6 +220,12 @@ public class PatternFinderImpl implements PatternFinder {
         return appellationNode;
     }
 
+    /**
+     * Creates a NodeData object from a RelationEvent object.
+     *
+     * @param relationEvent The RelationEvent object from which the NodeData will be created.
+     * @return The NodeData object created from the RelationEvent.
+     */
     private NodeData createNodeData(RelationEvent relationEvent) {
         NodeData relationNode = new NodeData();
         NodeMetadata metadata = new NodeMetadata();
