@@ -61,16 +61,11 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
         PatternCreationEvent patternRoot = patternMapper.mapPattern(patternMapping);
         
         if (job == null) {
-            throw new JobNotFoundException();
-            
-        } else if(patternRoot == null) {
-            job.setStatus(JobStatus.FAILURE);
-            jobRepository.save(job);
-            return;
-        } else {
-            job.setStatus(JobStatus.PROCESSING);
-            jobRepository.save(job);
-        }
+            throw new JobNotFoundException();  
+        } 
+        
+        job.setStatus(JobStatus.PROCESSING);
+        jobRepository.save(job);
         
         MappedTripleGroup mappedTripleGroup;
         try {
@@ -80,7 +75,6 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
                 if (mappedTripleGroup == null) {
                     mappedTripleGroup = new MappedTripleGroup();
                     mappedTripleGroup.set_id(new ObjectId(patternMapping.getMappedTripleGroupId()));
-                    job.setStatus(JobStatus.PROCESSING);
                     jobRepository.save(job);
                 }
             } else {
@@ -89,7 +83,7 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
             logger.error("Invalid triple group id {} or collection id {} for job {}",
                     patternMapping.getMappedTripleGroupId(), collectionId, job.getId(), e);
-            System.out.println("Failed 4");
+
             job.setStatus(JobStatus.FAILURE);
             jobRepository.save(job);
             return;

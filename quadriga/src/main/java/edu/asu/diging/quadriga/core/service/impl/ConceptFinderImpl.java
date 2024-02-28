@@ -51,16 +51,13 @@ public class ConceptFinderImpl implements ConceptFinder {
     }
 
     private String getNextFormat(String uri) {
-        boolean containsHttps = uri.startsWith("https");
-        boolean endsWithSeparator = uri.endsWith("/");
 
-        if (!endsWithSeparator) {
-            return uri + "/";
-        } else if (!containsHttps) {
-            uri = uri.replaceFirst("http", "https");
-            uri = uri.endsWith("/") ? uri.substring(0, uri.length() - 1) : uri;
+        if (!uri.endsWith("/")) {
+            uri += "/";
         }
-
+        if (!uri.startsWith("https")) {
+            uri = uri.replaceFirst("http", "https");
+        }
         return uri;
     }
 

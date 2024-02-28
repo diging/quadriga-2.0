@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.api.v1;
 
 import java.util.List;
 
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import edu.asu.diging.quadriga.api.v1.model.JobPatternInfo;
-import edu.asu.diging.quadriga.api.v1.model.PatternMappingList;
+import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.api.v1.service.MapGraphToTriple;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
@@ -33,21 +34,21 @@ public class MapGraphToTripleController {
 
     @PostMapping(value = "/api/v1/collection/{collectionId}/map")
     public ResponseEntity<List<JobPatternInfo>> mapPatternToTriples(@PathVariable String collectionId,
-            @RequestBody PatternMappingList patternMappingList) {
+            @RequestBody List<PatternMapping> patternMappingList) {
 
         List<EventGraph> eventGraphs = eventGraphService.getEventGraphs(new ObjectId(collectionId));
         
         if (eventGraphs == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        
+        System.out.println(patternMappingList);        
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
         mappedTripleGroup.set_id(new ObjectId());
         mappedTripleGroup.setCollectionId(new ObjectId(collectionId));
         
         String jobId = jobManager.createJob(collectionId, mappedTripleGroup.get_id().toString(), eventGraphs.size());
         
-        List<JobPatternInfo> jobInfos = mapGraphToTriple.getJobPatternInfo(collectionId, jobId, eventGraphs, patternMappingList);
+        List<JobPatternInfo> jobInfos = mapGraphToTriple.mapPatterns(collectionId, jobId, eventGraphs, patternMappingList);
         
         if(!jobInfos.isEmpty()) {
             return new ResponseEntity<>(jobInfos, HttpStatus.OK);

@@ -36,6 +36,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
      */
     @Override
     public Predicate storeMappedGraph(Graph graph, MappedTripleGroup mappedTripleGroup) throws NodeNotFoundException {
+        
         DefaultMapping mapping = graph.getMetadata().getDefaultMapping();
         if (mapping == null) {
             return null;

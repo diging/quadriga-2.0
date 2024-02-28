@@ -26,6 +26,10 @@ import edu.asu.diging.quadriga.core.pattern.PatternRelationEvent;
 import edu.asu.diging.quadriga.core.service.ConceptFinder;
 import edu.asu.diging.quadriga.core.service.PatternFinder;
 
+/**
+ * Finds and extracts the sub-networks which match the pattern
+ */
+
 @Service
 public class PatternFinderImpl implements PatternFinder {
 
@@ -34,6 +38,10 @@ public class PatternFinderImpl implements PatternFinder {
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.PatternFinder#findGraphsWithPattern(edu.asu.diging.quadriga.api.v1.model.Metadata, edu.asu.diging.quadriga.core.model.events.pattern.PatternCreationEvent, edu.asu.diging.quadriga.core.model.EventGraph)
+     * @param patternMetaData triple metadata for the pattern
+     * @param patternRoot     root node of pattern
+     * @param eventGraph      network to be searched
+     * @return the list of extracted sub-networks
      */
     @Override
     public List<Graph> findGraphsWithPattern(Metadata patternMetaData, PatternCreationEvent patternRoot,
@@ -60,6 +68,12 @@ public class PatternFinderImpl implements PatternFinder {
         return matchingSubNetworks;
     }
 
+    /*
+     * Checks if a given graph node matches the corresponding pattern node based on their types.
+     * @param graphNode   The graph node to be matched against the pattern node.
+     * @param patternNode The pattern node to be matched against the graph node.
+     * @return true if the graph node matches the pattern node, false otherwise.
+     */
     private boolean doesMatchPattern(CreationEvent graphNode, PatternCreationEvent patternNode) {
         if (patternNode == null) {
             return true;
