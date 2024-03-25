@@ -173,9 +173,9 @@ public class MappedTripleServiceImpl implements MappedTripleService {
     }
     
     /**
-     * 
-     * @param mappedTripleGroupId
-     * @param equalTo
+     * The mapConceptUriToiDatabaseUri function is used to map the concept power uris that are different from the ones sent by the user at times.
+     * @param mappedTripleGroupId is the Id used to find the concept
+     * @param equalTo is the list of strings you want to map the concept power uris to
      * @return
      */
     private String mapConceptUriToDatabaseUri(String mappedTripleGroupId, List<String> equalTo){

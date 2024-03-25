@@ -1,7 +1,7 @@
 package edu.asu.diging.quadriga.core.conceptpower.service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
-import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
+
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerSearchResults;
 
 /**

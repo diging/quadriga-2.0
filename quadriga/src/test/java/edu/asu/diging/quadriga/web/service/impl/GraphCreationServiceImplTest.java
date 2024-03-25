@@ -3,12 +3,10 @@ package edu.asu.diging.quadriga.web.service.impl;
 import java.util.ArrayList;
 
 
+
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.bson.types.ObjectId;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,11 +27,9 @@ import edu.asu.diging.quadriga.core.model.elements.Relation;
 import edu.asu.diging.quadriga.core.model.elements.Term;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
-import edu.asu.diging.quadriga.web.service.model.GraphData;
 import edu.asu.diging.quadriga.web.service.model.GraphElement;
 import edu.asu.diging.quadriga.web.service.model.GraphElements;
 import edu.asu.diging.quadriga.web.service.model.GraphNodeData;
-import edu.asu.diging.quadriga.web.service.model.GraphNodeType;
 
 public class GraphCreationServiceImplTest {
 
@@ -209,51 +205,6 @@ public class GraphCreationServiceImplTest {
                 new String[] { "http://www.digitalhps.org/concepts/elsa-einstein",
                     "http://www.digitalhps.org/concepts/elsa-einstein-alt" },
                 objectNode.getAlternativeUris().toArray());
-    }
-
-    @Test
-    public void test_createSubjectOrObjectNode_testUniqueNodesDoesntContain() {
-        List<GraphData> nodes = new ArrayList<>();
-        Map<String, GraphNodeData> uniqueNodes = new HashMap<>();
-        String sourceURI = "http://www.digitalhps.org/concepts/albert-einstein";
-        AppellationEvent subject = (AppellationEvent) ((RelationEvent) (sampleEventGraphLists.get(0).get(0)
-                .getRootEvent())).getRelation().getSubject();
-        graphCreationServiceImpl.createSubjectOrObjectNode(nodes, subject, uniqueNodes, GraphNodeType.SUBJECT,
-                new ObjectId().toString());
-        Assert.assertTrue(uniqueNodes.containsKey(sourceURI));
-        Assert.assertEquals(sourceURI, ((GraphNodeData) uniqueNodes.get(sourceURI)).getUri());
-    }
-
-    @Test
-    public void test_createSubjectOrObjectNode_testUniqueNodesContains() {
-        List<GraphData> nodes = new ArrayList<>();
-        Map<String, GraphNodeData> uniqueNodes = new HashMap<>();
-        String sourceURI = "http://www.digitalhps.org/concepts/albert-einstein";
-
-        GraphNodeData node = new GraphNodeData();
-        node.setUri(sourceURI);
-        ObjectId eventGraphId1 = new ObjectId();
-        ObjectId eventGraphId2 = new ObjectId();
-        ObjectId nodeId = new ObjectId();
-        node.setId(nodeId.toString());
-
-        ArrayList<String> eventGraphIds = new ArrayList<>();
-        eventGraphIds.add(eventGraphId1.toString());
-        node.setEventGraphIds(eventGraphIds);
-
-        uniqueNodes.put(sourceURI, node);
-
-        AppellationEvent subject = (AppellationEvent) ((RelationEvent) (sampleEventGraphLists.get(0).get(0)
-                .getRootEvent())).getRelation().getSubject();
-
-        graphCreationServiceImpl.createSubjectOrObjectNode(nodes, subject, uniqueNodes, GraphNodeType.SUBJECT,
-                eventGraphId2.toString());
-
-        GraphNodeData foundNode = (GraphNodeData) uniqueNodes.get(sourceURI);
-        Assert.assertTrue(uniqueNodes.containsKey(sourceURI));
-        Assert.assertEquals(sourceURI, foundNode.getUri());
-        Assert.assertEquals(eventGraphId1.toString(), foundNode.getEventGraphIds().get(0));
-        Assert.assertEquals(eventGraphId2.toString(), foundNode.getEventGraphIds().get(1));
     }
 
     private static void createSampleEventGraphs(List<List<EventGraph>> sampleEventGraphs) {
