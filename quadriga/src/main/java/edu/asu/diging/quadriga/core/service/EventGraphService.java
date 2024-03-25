@@ -30,27 +30,30 @@ public interface EventGraphService {
     
     /**
      * Groups the event graphs mapped to a collection by source uri and returns the total count. 
-     * @param collectionId
+     * @param collectionId is the id used to finds all eventGraphs
      * @return total count
      */
     public long getNumberOfSubmittedNetworks(ObjectId collectionId);
 
     /**
-     * Returns all event graphs by collection id
-     * @param collectionId
-     * @param size 
-     * @param page 
-     * @return
+     * Returns all event graphs by collection id and pageable object
+     * @param collectionId is the id used to finds all eventGraphs 
+     * @param pageable the pageable object specifying the page size and page number
+     * @return a paginated list of event graphs 
      */
     public Page<EventGraph>  findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable);
     
-    
+    /**
+     * Returns all event graphs by collection id
+     * @param collectionId is the id used to finds all eventGraphs 
+     * @return a list of event graphs
+     */
     public List<EventGraph>  findAllEventGraphsByCollectionId(String collectionId);
     
     /**
      * Maps the network to events and saves it in the database
-     * @param graph
-     * @param collectionId
+     * @param graph is a given network that is used to map events
+     * @param collectionId is the id of the collection that is added to the event which is mapped from the given network
      */
     public void mapNetworkAndSave(Graph graph, String collectionId);
 }

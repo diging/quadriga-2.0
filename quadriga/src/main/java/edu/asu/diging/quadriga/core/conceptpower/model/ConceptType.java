@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 @Table(name = "conceptpower_concept_type_cache")
 public class ConceptType implements Serializable, Comparable<ConceptType> {
 
-    private static final long serialVersionUID = 4228339422371096758L;
+    private static final long serialVersionUID = 1L;
 
    
     private String id;
@@ -66,7 +66,7 @@ public class ConceptType implements Serializable, Comparable<ConceptType> {
         return 0;
     }
     
-    private static boolean isDifferentString(String str1, String str2) {
+    private boolean isDifferentString(String str1, String str2) {
         // If both old and new strings are null/blank, nothing has changed
         // If old value is null/blank, new value is not null/blank, difference present
         // If old value is not null/blank, new value is null/blank, difference present
