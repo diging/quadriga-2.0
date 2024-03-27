@@ -37,9 +37,9 @@ public interface EventGraphService {
 
     /**
      * Returns all event graphs by collection id and pageable object
-     * @param collectionId is the id used to finds all eventGraphs 
+     * @param collectionId is the id of the collection to search
      * @param pageable the pageable object specifying the page size and page number
-     * @return a paginated list of event graphs 
+     * @return a page list of event graphs 
      */
     public Page<EventGraph>  findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable);
     

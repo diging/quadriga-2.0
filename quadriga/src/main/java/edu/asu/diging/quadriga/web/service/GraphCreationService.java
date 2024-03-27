@@ -46,10 +46,6 @@ public interface GraphCreationService {
      * @param triples is the list of triples which is used to create edges and nodes of the graph
      * @return GraphElement object which is created using the nodes and edges created
      */
-    
     public GraphElements mapToGraph(List<DefaultMapping> triples);
-    
-  
-    
 
 }

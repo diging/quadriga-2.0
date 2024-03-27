@@ -37,7 +37,7 @@ import edu.asu.diging.quadriga.core.service.MappedTripleService;
 @Service
 public class MappedTripleServiceImpl implements MappedTripleService {
     
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
     
     private static final String URI_PREFIX = "http";
     private static final String URI_PREFIX_1 = "https";

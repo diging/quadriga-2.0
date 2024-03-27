@@ -75,7 +75,7 @@ public class ExploreCollectionController {
             
             graphElements = graphCreationService.mapToGraph(triples);
         } catch(CollectionNotFoundException e) {
-            logger.error("No Collection found for "+collectionId+e);
+            logger.error("No Collection found for "+collectionId,e);
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }
         
