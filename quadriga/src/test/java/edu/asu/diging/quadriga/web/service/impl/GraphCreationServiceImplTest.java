@@ -27,7 +27,7 @@ import edu.asu.diging.quadriga.core.model.elements.Relation;
 import edu.asu.diging.quadriga.core.model.elements.Term;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
-import edu.asu.diging.quadriga.web.service.model.GraphElement;
+import edu.asu.diging.quadriga.web.service.model.GraphData;
 import edu.asu.diging.quadriga.web.service.model.GraphElements;
 import edu.asu.diging.quadriga.web.service.model.GraphNodeData;
 
@@ -71,17 +71,17 @@ public class GraphCreationServiceImplTest {
 
         GraphElements graphElements = graphCreationServiceImpl.createGraph(singleEventGraphList);
 
-        List<GraphElement> nodes = graphElements.getNodes();
-        List<GraphElement> edges = graphElements.getEdges();
+        List<GraphData> nodes = graphElements.getNodes();
+        List<GraphData> edges = graphElements.getEdges();
 
         Assert.assertEquals(3, nodes.size());
         Assert.assertEquals(2, edges.size());
-        nodes.forEach(node -> Assert.assertNotNull(node.getData()));
-        edges.forEach(edge -> Assert.assertNotNull(edge.getData()));
+        nodes.forEach(node -> Assert.assertNotNull(node.getId()));
+        edges.forEach(edge -> Assert.assertNotNull(edge.getId()));
 
-        GraphNodeData predicateNode = (GraphNodeData) nodes.get(0).getData();
-        GraphNodeData subjectNode = (GraphNodeData) nodes.get(1).getData();
-        GraphNodeData objectNode = (GraphNodeData) nodes.get(2).getData();
+        GraphNodeData predicateNode = (GraphNodeData) nodes.get(0);
+        GraphNodeData subjectNode = (GraphNodeData) nodes.get(1);
+        GraphNodeData objectNode = (GraphNodeData) nodes.get(2);
 
         Assert.assertEquals(1, subjectNode.getGroup());
         Assert.assertEquals(0, predicateNode.getGroup());
@@ -139,19 +139,19 @@ public class GraphCreationServiceImplTest {
 
         GraphElements graphElements = graphCreationServiceImpl.createGraph(nestedEventGraphList);
 
-        List<GraphElement> nodes = graphElements.getNodes();
-        List<GraphElement> edges = graphElements.getEdges();
+        List<GraphData> nodes = graphElements.getNodes();
+        List<GraphData> edges = graphElements.getEdges();
 
         Assert.assertEquals(5, nodes.size());
         Assert.assertEquals(4, edges.size());
-        nodes.forEach(node -> Assert.assertNotNull(node.getData()));
-        edges.forEach(edge -> Assert.assertNotNull(edge.getData()));
+        nodes.forEach(node -> Assert.assertNotNull(node.getId()));
+        edges.forEach(edge -> Assert.assertNotNull(edge.getId()));
 
-        GraphNodeData predicateNode = (GraphNodeData) nodes.get(0).getData();
-        GraphNodeData subjectNode = (GraphNodeData) nodes.get(1).getData();
-        GraphNodeData predicateNode2 = (GraphNodeData) nodes.get(2).getData();
-        GraphNodeData subjectNode2 = (GraphNodeData) nodes.get(3).getData();
-        GraphNodeData objectNode = (GraphNodeData) nodes.get(4).getData();
+        GraphNodeData predicateNode = (GraphNodeData) nodes.get(0);
+        GraphNodeData subjectNode = (GraphNodeData) nodes.get(1);
+        GraphNodeData predicateNode2 = (GraphNodeData) nodes.get(2);
+        GraphNodeData subjectNode2 = (GraphNodeData) nodes.get(3);
+        GraphNodeData objectNode = (GraphNodeData) nodes.get(4);
 
         Assert.assertEquals(1, subjectNode.getGroup());
         Assert.assertEquals(0, predicateNode.getGroup());

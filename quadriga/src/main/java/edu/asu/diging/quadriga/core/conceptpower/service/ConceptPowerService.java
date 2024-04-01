@@ -1,8 +1,7 @@
 package edu.asu.diging.quadriga.core.conceptpower.service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
-
-import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerSearchResults;
+import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
 
 /**
  * This service is used to get concept data from ConceptPower
@@ -33,6 +32,6 @@ public interface ConceptPowerService {
      * @param page Page number to be retrieved
      * @return the retrieved search response from conceptpower
      */
-    public ConceptPowerSearchResults searchConcepts(String searchTerm, int page);
+    public ConceptPowerReply searchConcepts(String searchTerm, int page);
 
 }

@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.conceptpower.service.impl;
 
 import java.util.Collections;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
-import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerSearchResults;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerConnectorService;
 
 @Service
@@ -72,7 +72,7 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
     }
 
     @Override
-    public ConceptPowerSearchResults searchConcepts(String searchTerm, int page) {
+    public ConceptPowerReply searchConcepts(String searchTerm, int page) {
         Map<String, String> pathVariables = new HashMap<>();
         pathVariables.put("search_term", searchTerm);
         pathVariables.put("page_number", "" + page);
@@ -82,8 +82,8 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
         HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
 
         try {
-            ResponseEntity<ConceptPowerSearchResults> response = restTemplate.exchange(searchURL, HttpMethod.GET,
-                    httpEntity, ConceptPowerSearchResults.class, pathVariables);
+            ResponseEntity<ConceptPowerReply> response = restTemplate.exchange(searchURL, HttpMethod.GET,
+                    httpEntity, ConceptPowerReply.class, pathVariables);
             if (response.getStatusCode() == HttpStatus.OK) {
                 return response.getBody();
             } else {

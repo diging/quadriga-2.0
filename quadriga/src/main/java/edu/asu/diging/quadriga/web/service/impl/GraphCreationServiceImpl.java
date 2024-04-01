@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.web.service.impl;
 import java.util.ArrayList;
 
 
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +25,6 @@ import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
 import edu.asu.diging.quadriga.web.service.model.GraphData;
 import edu.asu.diging.quadriga.web.service.model.GraphEdgeData;
-import edu.asu.diging.quadriga.web.service.model.GraphElement;
 import edu.asu.diging.quadriga.web.service.model.GraphElements;
 import edu.asu.diging.quadriga.web.service.model.GraphNodeData;
 import edu.asu.diging.quadriga.web.service.model.GraphNodeType;
@@ -51,8 +51,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
                         graphNodes, graphEdges, uniqueNodes, validEventGraph.getId().toString()));
 
         GraphElements graphElements = new GraphElements();
-        graphElements.setNodes(wrapInGraphElements(graphNodes));
-        graphElements.setEdges(wrapInGraphElements(graphEdges));
+        graphElements.setNodes(graphNodes);
+        graphElements.setEdges(graphEdges);
 
         return graphElements;
     }
@@ -72,7 +72,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
      * The predicate node's id is returned to the parent of the subtree, so that it could
      * be linked to its parent's predicate
      * 
-     * @param event is the relation event for which the method createes subject, object and predicate nodes
+     * @param event is the relation event for which the method creates subject, object and predicate nodes
      * @param graphNodes maintain the list of nodes created
      * @param graphEdges maintain the list of edges created
      * @param uniqueNodes maintains a map that links every unique sourceURI to its corresponding node
@@ -224,7 +224,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
      * @param tripleElement  the TripleElement from which to create the node
      * @param graphNodeType  the type of the graph node (subject, predicate, or object)
      * @param conceptNodeMap a map containing already created graph nodes, used to avoid duplication
-     * @param nodes          the list of graph nodes to which the newly created node will be added
+     * @param nodes the list of graph nodes to which the newly created node will be added
      * @return the created GraphNodeData representing the graph node
      */
     private GraphNodeData createNode(TripleElement tripleElement, GraphNodeType graphNodeType,
@@ -265,25 +265,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         edge.setTarget(targetId);
         edge.setEventGraphId(eventGraphId);
         graphEdges.add(edge);
-    }
-    
-    /**
-     * Wraps each element in the provided list of GraphData into a GraphElement.
-     *
-     * @param dataList the list of GraphData elements to be wrapped
-     * @return a list of GraphElements containing each GraphData element
-     */
-    private List<GraphElement> wrapInGraphElements(List<GraphData> dataList) {
-        
-        List<GraphElement> elements = new ArrayList<>();
-        dataList.forEach(data -> {
-            GraphElement element = new GraphElement();
-            element.setData(data);
-            elements.add(element);
-        });
-        return elements;
-    }
-    
+    }    
     
     @Override 
     public GraphElements mapToGraph(List<DefaultMapping> triples) {
@@ -302,8 +284,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         });
 
         GraphElements graphElements = new GraphElements();
-        graphElements.setNodes(wrapInGraphElements(nodes));
-        graphElements.setEdges(wrapInGraphElements(edges));
+        graphElements.setNodes(nodes);
+        graphElements.setEdges(edges);
         return graphElements;
     }
 
