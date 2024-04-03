@@ -19,13 +19,13 @@
 
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
 
-        <hibernate.dialect>org.dialect.MySQL57Dialect</hibernate.dialect>
+        <hibernate.dialect>org.hibernate.dialect.MySQL57Dialect</hibernate.dialect>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.database.url>jdbc-url-to-db</db.database.url>
         <db.user>db-user</db.user>
         <db.password>db-password</db.password>
-        
+       
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
@@ -43,7 +43,7 @@
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
         <neo4j.database>quadriga</neo4j.database>
         
-        <citesphere.base.url></citesphere.base.url>
+       	<citesphere.base.url></citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
         <citesphere.client.secret></citesphere.client.secret>
         

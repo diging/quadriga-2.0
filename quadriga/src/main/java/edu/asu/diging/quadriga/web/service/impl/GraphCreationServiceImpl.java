@@ -221,8 +221,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
     /**
      * Creates a graph node based on the provided TripleElement.
      *
-     * @param tripleElement  the TripleElement from which to create the node
-     * @param graphNodeType  the type of the graph node (subject, predicate, or object)
+     * @param tripleElement the TripleElement from which to create the node
+     * @param graphNodeType the type of the graph node (subject, predicate, or object)
      * @param conceptNodeMap a map containing already created graph nodes, used to avoid duplication
      * @param nodes the list of graph nodes to which the newly created node will be added
      * @return the created GraphNodeData representing the graph node
