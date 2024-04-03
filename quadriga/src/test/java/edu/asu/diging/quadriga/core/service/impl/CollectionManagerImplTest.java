@@ -1,6 +1,8 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.ArrayList;
+
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,14 +16,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.UserNotAuthorizedException;
 import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
+import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
+import edu.asu.diging.quadriga.core.service.EventGraphService;
+
 
 public class CollectionManagerImplTest {
     
@@ -45,6 +51,9 @@ public class CollectionManagerImplTest {
     
     @Mock
     private CitesphereConnector citesphereConnector;
+    
+    @Mock
+    private EventGraphService eventGraphService;
 
     @Before
     public void setUp() {
@@ -84,6 +93,7 @@ public class CollectionManagerImplTest {
 
         String name = "name";
         String desc = "description";
+        String username = "username";
         Collection savedCollection = new Collection();
         ObjectId id = new ObjectId();
         savedCollection.setId(id);
@@ -99,7 +109,7 @@ public class CollectionManagerImplTest {
                 return (arg0.getName().equals(name) && arg0.getDescription().equals(desc));
             }
         }))).thenReturn(savedCollection);
-        Collection collection = managerToTest.addCollection(name, desc, COLLECTION_APPS_1);
+        Collection collection = managerToTest.addCollection(name, desc, username, COLLECTION_APPS_1);
         Assert.assertEquals(id, collection.getId());
         Assert.assertEquals(name, collection.getName());
         Assert.assertEquals(desc, collection.getDescription());
@@ -110,7 +120,7 @@ public class CollectionManagerImplTest {
     
     
     @Test
-    public void test_deleteCollection_success() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_deleteCollection_success() throws CollectionNotFoundException, InvalidObjectIdException,UserNotAuthorizedException {
         
         String name = "name";
         String desc = "description";
@@ -119,8 +129,14 @@ public class CollectionManagerImplTest {
         collection.setId(id);
         collection.setName(name);
         collection.setDescription(desc);
+        collection.setOwner(name);
+        SimpleUser simpleUser = new SimpleUser();
+        simpleUser.setUsername(name);
+  
+        
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
+        Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(null);
         Mockito.doNothing().when(collectionRepo).delete(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
@@ -130,6 +146,24 @@ public class CollectionManagerImplTest {
         }));
         
         managerToTest.deleteCollection(id.toString());
+    }
+    
+    @Test
+    public void test_deleteCollection_archived() throws CollectionNotFoundException, InvalidObjectIdException {
+        String name = "name";
+        String desc = "description";
+        Collection collection = new Collection();
+        ObjectId id = new ObjectId();
+        collection.setId(id);
+        collection.setName(name);
+        collection.setDescription(desc);
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
+        Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(new EventGraph());
+        Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(collection);
+        Collection actualResponse = managerToTest.deleteCollection(id.toString());
+        Assert.assertEquals(id,actualResponse.getId());
+        Assert.assertTrue(actualResponse.isArchived());
+        
     }
     
     
@@ -143,13 +177,16 @@ public class CollectionManagerImplTest {
         collection.setId(id);
         collection.setName(name);
         collection.setDescription(desc);
+        collection.setOwner(name);
+        SimpleUser simpleUser = new SimpleUser();
+        simpleUser.setUsername(name);
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.ofNullable(null));
         
         Assert.assertThrows(CollectionNotFoundException.class,
                 ()  -> managerToTest.deleteCollection(id.toString()));
     }
-
+   
     @Test
     public void test_findCollection_success() throws InvalidObjectIdException {
         Collection collection = new Collection();

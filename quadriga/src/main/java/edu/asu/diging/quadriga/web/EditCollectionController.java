@@ -98,8 +98,5 @@ public class EditCollectionController {
             bindingResult.rejectValue("apps", "error.collectionForm", e.getMessage());
             return "auth/editCollection";
         }
-       
-
     }
-
 }
