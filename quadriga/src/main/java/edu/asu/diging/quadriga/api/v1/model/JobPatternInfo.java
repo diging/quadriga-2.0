@@ -1,17 +1,21 @@
 package edu.asu.diging.quadriga.api.v1.model;
 
-/*
- * @JobPatternInfo The object of this class is returned when @MapGraphToTripleController is called to map patterns in a collection.
- * @param jobId is the jobId of the job created for processing the pattern.
- * @param track is the URI of the status of the job.
- * @param explore is the URI of the collection whose graphs are being mapped with the input patterns.
- */
 
 public class JobPatternInfo {
     
-    
+    /*
+     * jobId is the jobId of the job created for processing the pattern.
+     */
     private String jobId;
+    
+    /*
+     * track is the URI of the status of the job.
+     */
     private String track;
+    
+    /*
+     * explore is the URI of the collection whose graphs are being mapped with the input patterns.
+     */
     private String explore;
     
     public String getJobId() {
@@ -32,7 +36,4 @@ public class JobPatternInfo {
     public void setExplore(String explore) {
         this.explore = explore;
     }
-    
-
-
 }

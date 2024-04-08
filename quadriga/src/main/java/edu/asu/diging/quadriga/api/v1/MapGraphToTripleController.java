@@ -41,7 +41,7 @@ public class MapGraphToTripleController {
         if (eventGraphs == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        System.out.println(patternMappingList);        
+               
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
         mappedTripleGroup.set_id(new ObjectId());
         mappedTripleGroup.setCollectionId(new ObjectId(collectionId));
@@ -52,10 +52,9 @@ public class MapGraphToTripleController {
         
         if(!jobInfos.isEmpty()) {
             return new ResponseEntity<>(jobInfos, HttpStatus.OK);
-            
         }
         
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

@@ -52,6 +52,10 @@
         <conceptpower.base.url></conceptpower.base.url>
         <conceptpower.id.endpoint></conceptpower.id.endpoint>
         
+        <quadriga.base.url>http://localhost:8081/quadriga/</quadriga.base.url>
+        <quadriga.jobstatus.api>api/v1/job/</quadriga.jobstatus.api>
+        <quadriga.collectionpage.url>auth/collections/</quadriga.collectionpage.url>
+        
 
         <log.level>info</log.level>
 

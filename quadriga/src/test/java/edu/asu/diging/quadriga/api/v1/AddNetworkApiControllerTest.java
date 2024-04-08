@@ -50,7 +50,7 @@ class AddNetworkApiControllerTest {
     }
 
     @Test
-    void testProcessJson_Success() throws NodeNotFoundException, InvalidObjectIdException, CollectionNotFoundException {
+    void test_processJson_success() throws NodeNotFoundException, InvalidObjectIdException, CollectionNotFoundException {
         
         ObjectId collectionId = new ObjectId();
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
@@ -76,13 +76,13 @@ class AddNetworkApiControllerTest {
     }
 
     @Test
-    void testProcessJson_NullQuadruple() throws NodeNotFoundException, InvalidObjectIdException, CollectionNotFoundException {
+    void test_processJson_nullQuadruple() throws NodeNotFoundException, InvalidObjectIdException, CollectionNotFoundException {
         HttpStatus result = addNetworkApiController.processJson(null, "collectionId", null);
         Assert.assertEquals(HttpStatus.BAD_REQUEST, result);
     }
 
     @Test
-    void testProcessJson_NullMappedTripleGroup() throws NodeNotFoundException, InvalidObjectIdException, CollectionNotFoundException {
+    void test_processJson_nullMappedTripleGroup() throws NodeNotFoundException, InvalidObjectIdException, CollectionNotFoundException {
         Quadruple quadruple = new Quadruple();
         Graph graph = new Graph();
         quadruple.setGraph(graph);
@@ -93,7 +93,7 @@ class AddNetworkApiControllerTest {
     }
 
     @Test
-    void testProcessJson_StoreMappedGraphThrowsException() throws NodeNotFoundException, InvalidObjectIdException, CollectionNotFoundException {
+    void test_processJson_storeMappedGraphThrowsException() throws NodeNotFoundException, InvalidObjectIdException, CollectionNotFoundException {
         Quadruple quadruple = new Quadruple();
         Graph graph = new Graph();
         quadruple.setGraph(graph);
