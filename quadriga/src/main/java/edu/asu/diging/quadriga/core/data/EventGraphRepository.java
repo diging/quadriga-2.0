@@ -15,8 +15,8 @@ public interface EventGraphRepository extends MongoRepository<EventGraph, Object
 
     public Optional<EventGraph> findFirstByCollectionIdOrderByCreationTimeDesc(ObjectId collectionId);
     
+    public List<EventGraph> findFirstByCollectionIdOrderByCreationTimeDesc(ObjectId collectionId, Pageable pageable);
+    
     public Optional<List<EventGraph>> findByCollectionId(ObjectId collectionId);
     
-    public List<EventGraph> findFirstByCollectionIdOrderByCreationTimeDesc(ObjectId collectionId, Pageable pageable);
-
 }
