@@ -17,7 +17,7 @@ public interface PatternFinder {
      * @param eventGraph      network to be searched
      * @return the list of extracted sub-networks
      */
-    List<Graph> findGraphsWithPattern(Metadata patternMetaData, PatternCreationEvent patternRoot,
+    List<Graph> findAndMapGraphsWithPattern(Metadata patternMetaData, PatternCreationEvent patternRoot,
             EventGraph eventGraph);
 
 }

@@ -29,7 +29,7 @@ public interface MappedTripleGroupService {
     public MappedTripleGroup updateName(String mappedTripleGroupId, String name)
             throws InvalidObjectIdException, MappedTripleGroupNotFoundException;
     
-    public MappedTripleGroup get(String collectionId, MappedTripleType mappedTripleType)
+    public MappedTripleGroup getMappedTripleGroupIfExistsOrAdd(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException;
-
+    
 }

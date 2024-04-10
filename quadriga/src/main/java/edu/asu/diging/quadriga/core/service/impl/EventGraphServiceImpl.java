@@ -1,11 +1,13 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
+
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
@@ -78,6 +80,13 @@ public class EventGraphServiceImpl implements EventGraphService {
     @Override
     public List<EventGraph> getEventGraphs(ObjectId collectionId) {
         return repo.findByCollectionId(collectionId).orElse(null);
+    }
+
+    @Override
+    public List<EventGraph> getEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable) {
+        
+        return repo.findFirstByCollectionIdOrderByCreationTimeDesc(collectionId, pageable);
+        
     }
     
 }

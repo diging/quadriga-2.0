@@ -66,7 +66,7 @@ public class AddNetworkApiController {
         // default MappedTripleGroup for given collectionId
         MappedTripleGroup mappedTripleGroup;
         try {
-            mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            mappedTripleGroup = mappedTripleGroupService.getMappedTripleGroupIfExistsOrAdd(collectionId, MappedTripleType.DEFAULT_MAPPING);
             if(mappedTripleGroup == null) {
                 return HttpStatus.NOT_FOUND;
             }

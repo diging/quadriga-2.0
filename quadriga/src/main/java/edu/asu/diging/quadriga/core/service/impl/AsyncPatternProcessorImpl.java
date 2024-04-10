@@ -78,7 +78,7 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
                     jobRepository.save(job);
                 }
             } else {
-                mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.CUSTOM_MAPPING);
+                mappedTripleGroup = mappedTripleGroupService.getMappedTripleGroupIfExistsOrAdd(collectionId, MappedTripleType.CUSTOM_MAPPING);
             }
         } catch (InvalidObjectIdException | CollectionNotFoundException e) {
             logger.error("Invalid triple group id {} or collection id {} for job {}",
@@ -90,7 +90,7 @@ public class AsyncPatternProcessorImpl implements AsyncPatternProcessor {
         }
 
         for (EventGraph network : networks) {
-            List<Graph> extractedGraphs = patternFinder.findGraphsWithPattern(patternMapping.getMetadata(), patternRoot,
+            List<Graph> extractedGraphs = patternFinder.findAndMapGraphsWithPattern(patternMapping.getMetadata(), patternRoot,
                     network);
             for (Graph extractedGraph : extractedGraphs) {
                 try {

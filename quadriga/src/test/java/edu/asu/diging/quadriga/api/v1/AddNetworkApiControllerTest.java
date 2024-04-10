@@ -65,7 +65,7 @@ class AddNetworkApiControllerTest {
         graph.setMetadata(metadata);
         graph.setNodes(map);
         quadruple.setGraph(graph);
-        Mockito.when(mappedTripleGroupService.get(collectionId.toString(),MappedTripleType.DEFAULT_MAPPING)).thenReturn(mappedTripleGroup);
+        Mockito.when(mappedTripleGroupService.getMappedTripleGroupIfExistsOrAdd(collectionId.toString(),MappedTripleType.DEFAULT_MAPPING)).thenReturn(mappedTripleGroup);
         Mockito.doNothing().when(eventGraphService).mapNetworkAndSave(graph, collectionId.toString());
         Mockito.when(mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedTripleGroup)).thenReturn(new Predicate());
         

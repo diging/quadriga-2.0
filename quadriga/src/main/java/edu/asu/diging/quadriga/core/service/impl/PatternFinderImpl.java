@@ -41,7 +41,7 @@ public class PatternFinderImpl implements PatternFinder {
      * @return the list of extracted sub-networks
      */
     @Override
-    public List<Graph> findGraphsWithPattern(Metadata patternMetaData, PatternCreationEvent patternRoot,
+    public List<Graph> findAndMapGraphsWithPattern(Metadata patternMetaData, PatternCreationEvent patternRoot,
             EventGraph eventGraph) {
         List<Graph> matchingSubNetworks = new ArrayList<>();
         Queue<CreationEvent> graphNodes = new LinkedList<>();

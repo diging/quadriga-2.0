@@ -137,7 +137,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
      *                                     doesn't exist
      */
     @Override
-    public MappedTripleGroup get(String collectionId, MappedTripleType mappedTripleType)
+    public MappedTripleGroup getMappedTripleGroupIfExistsOrAdd(String collectionId, MappedTripleType mappedTripleType)
             throws InvalidObjectIdException, CollectionNotFoundException {
         MappedTripleGroup mappedTripleGroup = findByCollectionIdAndMappingType(collectionId, mappedTripleType);
 
@@ -148,7 +148,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         }
         return mappedTripleGroup;
     }
-
+    
     @Override
     public MappedTripleGroup findByCollectionIdAndId(String collectionId, String mappedTripleGroupId) throws InvalidObjectIdException {
         ObjectId collectionObjectId;

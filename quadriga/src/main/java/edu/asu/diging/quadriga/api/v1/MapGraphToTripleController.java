@@ -3,8 +3,10 @@ package edu.asu.diging.quadriga.api.v1;
 import java.util.List;
 
 
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -35,8 +37,12 @@ public class MapGraphToTripleController {
     @PostMapping(value = "/api/v1/collection/{collectionId}/map")
     public ResponseEntity<List<JobPatternInfo>> mapPatternToTriples(@PathVariable String collectionId,
             @RequestBody List<PatternMapping> patternMappingList) {
+        
+        
+        int pageNumber = 0; // Set initial page number
+        int pageSize = 10;
 
-        List<EventGraph> eventGraphs = eventGraphService.getEventGraphs(new ObjectId(collectionId));
+        List<EventGraph> eventGraphs = eventGraphService.getEventGraphsByCollectionId(new ObjectId(collectionId), PageRequest.of(pageNumber, pageSize));
         
         if (eventGraphs == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
