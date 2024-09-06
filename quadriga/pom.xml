@@ -45,7 +45,7 @@
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
         <neo4j.database>quadriga</neo4j.database>
         
-        <citesphere.base.url>/</citesphere.base.url>
+        <citesphere.base.url></citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
         <citesphere.client.secret></citesphere.client.secret>
  
