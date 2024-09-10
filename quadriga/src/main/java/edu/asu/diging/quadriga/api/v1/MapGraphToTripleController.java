@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import edu.asu.diging.quadriga.api.v1.model.JobPatternInfo;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.api.v1.service.MapGraphToTriple;
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.JobManager;
+import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 
 @Controller
 public class MapGraphToTripleController {
@@ -38,10 +40,13 @@ public class MapGraphToTripleController {
     
     @Autowired
     private CollectionManager collectionManager;
+    
+    @Autowired
+    private MappedTripleGroupService mappedTripleGroupService;
 
     @PostMapping(value = "/api/v1/collection/{collectionId}/map")
     public ResponseEntity<List<JobPatternInfo>> mapPatternToTriples(@PathVariable String collectionId,
-            @RequestBody List<PatternMapping> patternMappingList) throws InvalidObjectIdException {
+            @RequestBody List<PatternMapping> patternMappingList) throws InvalidObjectIdException, CollectionNotFoundException {
         
         
         int pageNumber = 0; // Set initial page number
@@ -56,9 +61,7 @@ public class MapGraphToTripleController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
                
-        MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
-        mappedTripleGroup.set_id(new ObjectId());
-        mappedTripleGroup.setCollectionId(new ObjectId(collectionId));
+        MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.add(collectionId, null);
         
         String jobId = jobManager.createJob(collectionId, mappedTripleGroup.get_id().toString(), eventGraphs.size());
         

@@ -39,6 +39,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
             throws InvalidObjectIdException {
         
         MappedTripleGroup mappedTripleGroup = new MappedTripleGroup();
+        mappedTripleGroup.set_id(new ObjectId());
         
         try {
             mappedTripleGroup.setCollectionId(new ObjectId(collectionId));
