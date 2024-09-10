@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.JobPatternInfo;
@@ -20,12 +22,9 @@ import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.service.AsyncPatternProcessor;
 
 @Service
+@PropertySource("classpath:config.properties")
 public class MapGraphToTripleImpl implements MapGraphToTriple{
-    
-//    private final String quadrigaBaseUri = "http://localhost:8081/quadriga/" ;
-//    private final String quadrigaJobStatusUri = "api/v1/job/";
-//    private final String quadrigaCollectionPageUri = "auth/collections/";
-    
+       
     @Value("${quadriga.base-uri}")
     private String quadrigaBaseUri;
 

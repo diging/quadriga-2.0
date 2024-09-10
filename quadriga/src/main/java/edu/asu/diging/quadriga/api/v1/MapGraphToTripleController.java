@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import edu.asu.diging.quadriga.api.v1.model.JobPatternInfo;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.api.v1.service.MapGraphToTriple;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
+import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.JobManager;
 
@@ -33,14 +35,20 @@ public class MapGraphToTripleController {
 
     @Autowired
     private JobManager jobManager;
+    
+    @Autowired
+    private CollectionManager collectionManager;
 
     @PostMapping(value = "/api/v1/collection/{collectionId}/map")
     public ResponseEntity<List<JobPatternInfo>> mapPatternToTriples(@PathVariable String collectionId,
-            @RequestBody List<PatternMapping> patternMappingList) {
+            @RequestBody List<PatternMapping> patternMappingList) throws InvalidObjectIdException {
         
         
         int pageNumber = 0; // Set initial page number
         int pageSize = 10;
+        if(collectionManager.findCollection(collectionId) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
         List<EventGraph> eventGraphs = eventGraphService.getEventGraphsByCollectionId(new ObjectId(collectionId), PageRequest.of(pageNumber, pageSize));
         
