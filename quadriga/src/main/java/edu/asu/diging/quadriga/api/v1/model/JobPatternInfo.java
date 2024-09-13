@@ -1,6 +1,5 @@
 package edu.asu.diging.quadriga.api.v1.model;
 
-
 public class JobPatternInfo {
     
     /*

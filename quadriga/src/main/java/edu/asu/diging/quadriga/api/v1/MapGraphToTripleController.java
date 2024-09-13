@@ -34,21 +34,14 @@ public class MapGraphToTripleController {
     
     @Autowired
     private MapGraphToTriple mapGraphToTriple;
-
-    @Autowired
-    private JobManager jobManager;
     
     @Autowired
     private CollectionManager collectionManager;
     
-    @Autowired
-    private MappedTripleGroupService mappedTripleGroupService;
-
     @PostMapping(value = "/api/v1/collection/{collectionId}/map")
     public ResponseEntity<List<JobPatternInfo>> mapPatternToTriples(@PathVariable String collectionId,
             @RequestBody List<PatternMapping> patternMappingList) throws InvalidObjectIdException, CollectionNotFoundException {
-        
-        
+               
         int pageNumber = 0; // Set initial page number
         int pageSize = 10;
         if(collectionManager.findCollection(collectionId) == null) {
@@ -56,21 +49,12 @@ public class MapGraphToTripleController {
         }
 
         List<EventGraph> eventGraphs = eventGraphService.getEventGraphsByCollectionId(new ObjectId(collectionId), PageRequest.of(pageNumber, pageSize));
-        
-        if (eventGraphs == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-               
-        MappedTripleGroup mappedTripleGroup = mappedTripleGroupService.add(collectionId, null);
-        
-        String jobId = jobManager.createJob(collectionId, mappedTripleGroup.get_id().toString(), eventGraphs.size());
-        
-        List<JobPatternInfo> jobInfos = mapGraphToTriple.mapPatterns(collectionId, jobId, eventGraphs, patternMappingList);
+        List<JobPatternInfo> jobInfos = mapGraphToTriple.mapPatterns(collectionId, eventGraphs, patternMappingList);
         
         if(!jobInfos.isEmpty()) {
             return new ResponseEntity<>(jobInfos, HttpStatus.OK);
         }
-        
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

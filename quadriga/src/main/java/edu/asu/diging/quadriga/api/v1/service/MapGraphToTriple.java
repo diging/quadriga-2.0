@@ -6,10 +6,12 @@ import java.util.List;
 
 import edu.asu.diging.quadriga.api.v1.model.JobPatternInfo;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 
 public interface MapGraphToTriple {
     
-    public List<JobPatternInfo> mapPatterns(String collectionId, String jobId, List<EventGraph> eventGraphs, List<PatternMapping> patternMappingList);
+    public List<JobPatternInfo> mapPatterns(String collectionId, List<EventGraph> eventGraphs, List<PatternMapping> patternMappingList) throws InvalidObjectIdException, CollectionNotFoundException;
     
 }
