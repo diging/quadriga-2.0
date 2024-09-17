@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.JobPatternInfo;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
-import edu.asu.diging.quadriga.api.v1.service.MapGraphToTriple;
+import edu.asu.diging.quadriga.api.v1.service.GraphTripleMapper;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.exceptions.JobNotFoundException;
@@ -28,7 +28,7 @@ import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 
 @Service
 @PropertySource("classpath:config.properties")
-public class MapGraphToTripleImpl implements MapGraphToTriple{
+public class GraphTripleMapperImpl implements GraphTripleMapper{
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     

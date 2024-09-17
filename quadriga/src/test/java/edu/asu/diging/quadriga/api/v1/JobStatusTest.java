@@ -42,7 +42,7 @@ public class JobStatusTest {
         job.setId("job123");
         Mockito.when(jobManager.get("job123")).thenReturn(null);
         ResponseEntity<Job> response = jobStatusController.getJobStatus("job123");
-        Assert.assertEquals(response.getStatusCode(),HttpStatus.BAD_REQUEST);
+        Assert.assertEquals(response.getStatusCode(),HttpStatus.NOT_FOUND);
         
     }
 }

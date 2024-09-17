@@ -16,24 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import edu.asu.diging.quadriga.api.v1.model.JobPatternInfo;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
-import edu.asu.diging.quadriga.api.v1.service.MapGraphToTriple;
+import edu.asu.diging.quadriga.api.v1.service.GraphTripleMapper;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
-import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
-import edu.asu.diging.quadriga.core.service.JobManager;
-import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 
 @Controller
-public class MapGraphToTripleController {
+public class GraphTripleMapperController {
 
     @Autowired
     private EventGraphService eventGraphService;
     
     @Autowired
-    private MapGraphToTriple mapGraphToTriple;
+    private GraphTripleMapper graphTripleMapper;
     
     @Autowired
     private CollectionManager collectionManager;
@@ -49,7 +46,7 @@ public class MapGraphToTripleController {
         }
 
         List<EventGraph> eventGraphs = eventGraphService.getEventGraphsByCollectionId(new ObjectId(collectionId), PageRequest.of(pageNumber, pageSize));
-        List<JobPatternInfo> jobInfos = mapGraphToTriple.mapPatterns(collectionId, eventGraphs, patternMappingList);
+        List<JobPatternInfo> jobInfos = graphTripleMapper.mapPatterns(collectionId, eventGraphs, patternMappingList);
         
         if(!jobInfos.isEmpty()) {
             return new ResponseEntity<>(jobInfos, HttpStatus.OK);

@@ -23,6 +23,7 @@ import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.core.data.JobRepository;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.JobNotFoundException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.jobs.Job;
@@ -77,17 +78,12 @@ public class AsyncPatternProcessorImplTest {
     }
 
     @Test
-    public void testProcessPatternSuccess() throws InvalidObjectIdException, CollectionNotFoundException {
+    public void testProcessPatternSuccess() throws InvalidObjectIdException, CollectionNotFoundException, JobNotFoundException {
     
         Mockito.when(jobRepository.findById("job123")).thenReturn(Optional.of(job));
-        Mockito.when(patternMapper.mapPattern(patternMapping)).thenReturn(new PatternCreationEvent()); 
-        Mockito.when(mappedTripleGroupService.findByCollectionIdAndId("collectionId",mappedTripleGroupId.toString())).thenReturn(mappedTripleGroup);
-        Mockito.when(patternFinder.findGraphsWithPattern(Mockito.any(Metadata.class), 
-                Mockito.any(PatternCreationEvent.class),
-                Mockito.any(EventGraph.class))).thenReturn(listOfGraphs);
+        Mockito.when(patternMapper.mapPattern(patternMapping)).thenReturn(new PatternCreationEvent());
 
-
-        asyncPatternProcessor.processPattern("123", "collectionId", patternMapping, networks);
+        asyncPatternProcessor.processPattern("job123", "collectionId", patternMapping, networks);
     }
     
 }

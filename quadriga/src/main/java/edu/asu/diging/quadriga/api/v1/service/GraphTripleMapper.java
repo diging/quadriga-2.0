@@ -10,7 +10,7 @@ import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 
-public interface MapGraphToTriple {
+public interface GraphTripleMapper {
     
     public List<JobPatternInfo> mapPatterns(String collectionId, List<EventGraph> eventGraphs, List<PatternMapping> patternMappingList) throws InvalidObjectIdException, CollectionNotFoundException;
     

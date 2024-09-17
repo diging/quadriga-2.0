@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /*
- * edu.asu.diging.quadriga.api.v1.MapGraphToTripleController requires a list of patterns from the user of type @PatternMapping 
+ * edu.asu.diging.quadriga.api.v1.GraphTripleMapperController requires a list of patterns from the user of type @PatternMapping 
  */
 
 public class PatternMapping {
