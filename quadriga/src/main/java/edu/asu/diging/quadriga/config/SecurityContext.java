@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.config;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import edu.asu.diging.quadriga.config.web.CitesphereTokenFilter;
@@ -62,7 +64,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
                         }
                     }).and().headers().frameOptions().sameOrigin();
              
-           config.and().formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed").and()
+            config.and().formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed").and()
                     .logout()
                     .deleteCookies("JSESSIONID")
                     .logoutUrl("/logout")

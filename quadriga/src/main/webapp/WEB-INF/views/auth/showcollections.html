@@ -5,6 +5,9 @@
 <body>
 	<div layout:fragment="content">
 		<h2>My Collections</h2>
+        <a th:href="@{/auth/collections/archived}">
+            <i class="fas fa-archive pull-right" title="View archived collections" style="padding-right:15px;"></i><br>
+        </a>
 		<div th:if="${collections.empty}">No Collections available</div>
 		<div action="#" th:action="@{/auth/collections}" method="GET">
 			<ul class="list-group">
@@ -36,7 +39,7 @@
 							 	</div>
 							 </div>
 						</div>
-						<a data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${collection.id}" style="cursor:pointer">
+						<a  data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${collection.id}" style="cursor:pointer">
 							<span class="fas fa-trash"></span>
 						</a>
 					</div>

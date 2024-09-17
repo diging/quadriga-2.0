@@ -1,6 +1,8 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.ArrayList;
+
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,24 +16,31 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-
 import edu.asu.diging.quadriga.core.citesphere.CitesphereConnector;
 import edu.asu.diging.quadriga.core.data.CollectionRepository;
 import edu.asu.diging.quadriga.core.exceptions.CitesphereAppNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.UserNotAuthorizedException;
 import edu.asu.diging.quadriga.core.model.Collection;
+import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.citesphere.CitesphereAppInfo;
+import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
+import edu.asu.diging.quadriga.core.service.EventGraphService;
+
 
 public class CollectionManagerImplTest {
     
     public static final String BLANK = "";
     public static final String COLLECTION_NAME = "Collection name";
     public static final String COLLECTION_DESC = "Collection description";
-    public static final List<String> COLLECTION_APPS = new ArrayList<>();
+    public static final List<String> COLLECTION_APPS_1 = new ArrayList<>();
+    public static final List<String> COLLECTION_APPS_2 = new ArrayList<>();
     public static final String EDITED_NAME = "Edited name";
     public static final String EDITED_DESC = "Edited description";
-    public static final List<String> EDITED_APPS = new ArrayList<>();
+    public static final List<Collection> collections = new ArrayList<>();
+    public static final Collection collection1 = new Collection();
+    public static final Collection collection2 = new Collection();
     public static final List<CitesphereAppInfo> citesphereApps = new ArrayList<>();
 
     @Mock
@@ -42,11 +51,20 @@ public class CollectionManagerImplTest {
     
     @Mock
     private CitesphereConnector citesphereConnector;
+    
+    @Mock
+    private EventGraphService eventGraphService;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         
+        COLLECTION_APPS_1.add("app1");
+        COLLECTION_APPS_1.add("app2");
+        
+        COLLECTION_APPS_2.add("app1");
+        COLLECTION_APPS_2.add("app3");
+
         CitesphereAppInfo app1 = new CitesphereAppInfo();
         app1.setClientId("app1");
         citesphereApps.add(app1);
@@ -59,11 +77,15 @@ public class CollectionManagerImplTest {
         app3.setClientId("app3");
         citesphereApps.add(app3);
         
-        COLLECTION_APPS.add("app1");
-        COLLECTION_APPS.add("app2");
+        ObjectId id1 = new ObjectId();
+        collection1.setId(id1);
+        collection1.setApps(COLLECTION_APPS_1);
+        collections.add(collection1);
         
-        EDITED_APPS.add("app1");
-        EDITED_APPS.add("app3");
+        ObjectId id2 = new ObjectId();
+        collection2.setId(id2);
+        collection2.setApps(COLLECTION_APPS_2);
+        collections.add(collection2);
     }
 
     @Test
@@ -71,12 +93,13 @@ public class CollectionManagerImplTest {
 
         String name = "name";
         String desc = "description";
+        String username = "username";
         Collection savedCollection = new Collection();
         ObjectId id = new ObjectId();
         savedCollection.setId(id);
         savedCollection.setName(name);
         savedCollection.setDescription(desc);
-        savedCollection.setApps(COLLECTION_APPS);
+        savedCollection.setApps(COLLECTION_APPS_1);
         
         Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.save(Mockito.argThat(new ArgumentMatcher<Collection>() {
@@ -86,18 +109,18 @@ public class CollectionManagerImplTest {
                 return (arg0.getName().equals(name) && arg0.getDescription().equals(desc));
             }
         }))).thenReturn(savedCollection);
-        Collection collection = managerToTest.addCollection(name, desc, COLLECTION_APPS);
+        Collection collection = managerToTest.addCollection(name, desc, username, COLLECTION_APPS_1);
         Assert.assertEquals(id, collection.getId());
         Assert.assertEquals(name, collection.getName());
         Assert.assertEquals(desc, collection.getDescription());
-        for(String app : COLLECTION_APPS) {
+        for(String app : COLLECTION_APPS_1) {
             Assert.assertTrue(collection.getApps().contains(app));
         }
     }
     
     
     @Test
-    public void test_deleteCollection_success() throws CollectionNotFoundException, InvalidObjectIdException {
+    public void test_deleteCollection_success() throws CollectionNotFoundException, InvalidObjectIdException,UserNotAuthorizedException {
         
         String name = "name";
         String desc = "description";
@@ -106,8 +129,14 @@ public class CollectionManagerImplTest {
         collection.setId(id);
         collection.setName(name);
         collection.setDescription(desc);
+        collection.setOwner(name);
+        SimpleUser simpleUser = new SimpleUser();
+        simpleUser.setUsername(name);
+  
+        
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
+        Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(null);
         Mockito.doNothing().when(collectionRepo).delete(Mockito.argThat(new ArgumentMatcher<Collection>() {
 
             @Override
@@ -117,6 +146,24 @@ public class CollectionManagerImplTest {
         }));
         
         managerToTest.deleteCollection(id.toString());
+    }
+    
+    @Test
+    public void test_deleteCollection_archived() throws CollectionNotFoundException, InvalidObjectIdException {
+        String name = "name";
+        String desc = "description";
+        Collection collection = new Collection();
+        ObjectId id = new ObjectId();
+        collection.setId(id);
+        collection.setName(name);
+        collection.setDescription(desc);
+        Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
+        Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(new EventGraph());
+        Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(collection);
+        Collection actualResponse = managerToTest.deleteCollection(id.toString());
+        Assert.assertEquals(id,actualResponse.getId());
+        Assert.assertTrue(actualResponse.isArchived());
+        
     }
     
     
@@ -130,13 +177,16 @@ public class CollectionManagerImplTest {
         collection.setId(id);
         collection.setName(name);
         collection.setDescription(desc);
+        collection.setOwner(name);
+        SimpleUser simpleUser = new SimpleUser();
+        simpleUser.setUsername(name);
         
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.ofNullable(null));
         
         Assert.assertThrows(CollectionNotFoundException.class,
                 ()  -> managerToTest.deleteCollection(id.toString()));
     }
-
+   
     @Test
     public void test_findCollection_success() throws InvalidObjectIdException {
         Collection collection = new Collection();
@@ -154,6 +204,30 @@ public class CollectionManagerImplTest {
         Collection foundCollection = managerToTest.findCollection(objectId.toString());
         Assert.assertNull(foundCollection);
     }
+    
+    @Test
+    public void test_getCollections_success() {
+        String clientId = "app1";
+        
+        Mockito.when(collectionRepo.findByAppsContaining(clientId)).thenReturn(collections);
+        
+        List<Collection> response = managerToTest.getCollections(clientId);
+        
+        for(Collection collection : response) {
+            Assert.assertTrue(collection.getApps().contains(clientId));
+        }
+    }
+    
+    @Test
+    public void test_getCollections_empty() {
+        String clientId = "app5";
+        
+        Mockito.when(collectionRepo.findByAppsContaining(clientId)).thenReturn(new ArrayList<>());
+        
+        List<Collection> response = managerToTest.getCollections(clientId);
+        
+        Assert.assertEquals(0, response.size());
+    }
 
     @Test
     public void test_editCollection_success() throws CollectionNotFoundException, CitesphereAppNotFoundException, InvalidObjectIdException {
@@ -163,12 +237,13 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
-        existingCollection.setApps(COLLECTION_APPS);
+        existingCollection.setApps(COLLECTION_APPS_1);
+
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = EDITED_NAME;
         String editedDescription = EDITED_DESC;
-        List<String> editedApps = new ArrayList<>(EDITED_APPS);
+        List<String> editedApps = new ArrayList<>(COLLECTION_APPS_2);
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
@@ -192,7 +267,7 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
 
         for(String app : updatedCollection.getApps()) {
-            Assert.assertTrue(EDITED_APPS.contains(app));
+            Assert.assertTrue(COLLECTION_APPS_2.contains(app));
         }
     }
 
@@ -204,13 +279,13 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
-        existingCollection.setApps(COLLECTION_APPS);
+        existingCollection.setApps(COLLECTION_APPS_1);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = COLLECTION_NAME;
         String editedDescription = null;
-        List<String> editedApps = new ArrayList<>(EDITED_APPS);
+        List<String> editedApps = new ArrayList<>(COLLECTION_APPS_2);
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
@@ -233,7 +308,7 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
         for(String app : updatedCollection.getApps()) {
-            Assert.assertTrue(EDITED_APPS.contains(app));
+            Assert.assertTrue(COLLECTION_APPS_2.contains(app));
         }
     }
 
@@ -245,14 +320,14 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
-        existingCollection.setApps(COLLECTION_APPS);
+        existingCollection.setApps(COLLECTION_APPS_1);
 
         Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = null;
         String editedDescription = EDITED_DESC;
-        List<String> editedApps = new ArrayList<>(EDITED_APPS);
+        List<String> editedApps = new ArrayList<>(COLLECTION_APPS_2);
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
@@ -274,7 +349,7 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
         for(String app : updatedCollection.getApps()) {
-            Assert.assertTrue(EDITED_APPS.contains(app));
+            Assert.assertTrue(COLLECTION_APPS_2.contains(app));
         }
     }
 
@@ -286,14 +361,14 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
-        existingCollection.setApps(COLLECTION_APPS);
+        existingCollection.setApps(COLLECTION_APPS_1);
 
         Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = null;
         String editedDescription = null;
-        List<String> editedApps = new ArrayList<>(EDITED_APPS);
+        List<String> editedApps = new ArrayList<>(COLLECTION_APPS_2);
 
         Collection updatedCollection = new Collection();
         updatedCollection.setId(id);
@@ -316,7 +391,7 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
         for(String app : updatedCollection.getApps()) {
-            Assert.assertTrue(EDITED_APPS.contains(app));
+            Assert.assertTrue(COLLECTION_APPS_2.contains(app));
         }
     }
 
@@ -328,14 +403,14 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
-        existingCollection.setApps(COLLECTION_APPS);
+        existingCollection.setApps(COLLECTION_APPS_1);
 
         Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(citesphereApps);
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         String editedName = BLANK;
         String editedDescription = BLANK;
-        List<String> editedApps = new ArrayList<>(EDITED_APPS);
+        List<String> editedApps = new ArrayList<>(COLLECTION_APPS_2);
 
         Collection editedCollection = new Collection();
         editedCollection.setId(id);
@@ -357,7 +432,7 @@ public class CollectionManagerImplTest {
         Assert.assertEquals(editedName, updatedCollection.getName());
         Assert.assertEquals(editedDescription, updatedCollection.getDescription());
         for(String app : updatedCollection.getApps()) {
-            Assert.assertTrue(EDITED_APPS.contains(app));
+            Assert.assertTrue(COLLECTION_APPS_2.contains(app));
         }
     }
 
@@ -369,7 +444,7 @@ public class CollectionManagerImplTest {
         Mockito.when(collectionRepo.findById(objectId)).thenReturn(Optional.ofNullable(null));
 
         Assert.assertThrows(CollectionNotFoundException.class,
-                ()  -> managerToTest.editCollection(objectId.toString(), EDITED_NAME, EDITED_DESC, EDITED_APPS));
+                ()  -> managerToTest.editCollection(objectId.toString(), EDITED_NAME, EDITED_DESC, COLLECTION_APPS_2));
 
     }
     
@@ -380,13 +455,13 @@ public class CollectionManagerImplTest {
         existingCollection.setId(id);
         existingCollection.setName(COLLECTION_NAME);
         existingCollection.setDescription(COLLECTION_DESC);
-        existingCollection.setApps(COLLECTION_APPS);
+        existingCollection.setApps(COLLECTION_APPS_1);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(existingCollection));
 
         Mockito.when(citesphereConnector.getCitesphereApps()).thenReturn(new ArrayList<>());
 
-        managerToTest.editCollection(id.toString(), EDITED_NAME, EDITED_DESC, new ArrayList<>(EDITED_APPS));
+        managerToTest.editCollection(id.toString(), EDITED_NAME, EDITED_DESC, new ArrayList<>(COLLECTION_APPS_2));
     }
 
 }

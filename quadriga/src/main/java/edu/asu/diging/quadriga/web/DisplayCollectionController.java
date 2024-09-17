@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +26,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
-import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
-import edu.asu.diging.quadriga.core.model.MappedTripleType;
-import edu.asu.diging.quadriga.core.model.mapped.Predicate;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
@@ -55,7 +55,6 @@ public class DisplayCollectionController {
     
     @Autowired
     private PredicateManager predicateManager;
-    
     
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -80,14 +79,12 @@ public class DisplayCollectionController {
 //      Determine page number and size for network pagination      
         page = (page == null || page < 0) ? 0 : page - 1;
         size = (size == null || size < 1) ? 10 : size;
-        
 
         model.addAttribute("size", size);
 
         EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
-        
         model.addAttribute("latestNetwork", latestNetwork);
-        
+
         Pageable paging = PageRequest.of(page, size);
 
         // Get all EventGraphs for this collection
@@ -100,12 +97,13 @@ public class DisplayCollectionController {
         model.addAttribute("networks", eventGraphsList.getContent());
         model.addAttribute("totalPages", eventGraphsList.getTotalPages());
         model.addAttribute("pageNumber", page);
+        model.addAttribute("collection", collection);
         model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
         model.addAttribute("collection", collection);
         
         // Get default mappings from Concepts
         model.addAttribute("defaultMappings", collectionManager.getNumberOfDefaultMappings(collection.getId().toString()));
-        
-        return "auth/displayCollection";       
+        return "auth/displayCollection";
+
     }
 }
