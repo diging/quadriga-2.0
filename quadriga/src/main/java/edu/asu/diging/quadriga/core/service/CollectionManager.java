@@ -66,7 +66,7 @@ public interface CollectionManager {
      * @return collection details if it is archived
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
-    public void deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
+    public Collection deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
     
     /**
      * This method checks whether a collection with given collectionId exists and

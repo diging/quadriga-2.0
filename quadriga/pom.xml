@@ -48,10 +48,9 @@
         <citesphere.base.url></citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
         <citesphere.client.secret></citesphere.client.secret>
-        
-        <conceptpower.base.url></conceptpower.base.url>
-        <conceptpower.id.endpoint></conceptpower.id.endpoint>
-        
+
+
+
         <log.level>info</log.level>
 
         <tomcat.deploy.path></tomcat.deploy.path>

@@ -49,12 +49,6 @@ public class DisplayCollectionController {
 
     @Autowired
     private EventGraphService eventGraphService;
-
-    @Autowired
-    private MappedTripleGroupService mappedTripleGroupService;
-    
-    @Autowired
-    private PredicateManager predicateManager;
     
     private Logger logger = LoggerFactory.getLogger(getClass());
 
