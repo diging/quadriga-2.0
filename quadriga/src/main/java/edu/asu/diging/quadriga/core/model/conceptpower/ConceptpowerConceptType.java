@@ -6,8 +6,10 @@ public class ConceptpowerConceptType {
 
     @JsonProperty("type_id")
     private String typeId;
+    
     @JsonProperty("type_uri")
     private String typeUri;
+    
     @JsonProperty("type_name")
     private String typeName;
 

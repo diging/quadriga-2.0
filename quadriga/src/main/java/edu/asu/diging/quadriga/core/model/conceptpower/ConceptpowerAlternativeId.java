@@ -6,6 +6,7 @@ public class ConceptpowerAlternativeId {
 
     @JsonProperty("concept_id")
     private String conceptId;
+    
     @JsonProperty("concept_uri")
     private String conceptUri;
 

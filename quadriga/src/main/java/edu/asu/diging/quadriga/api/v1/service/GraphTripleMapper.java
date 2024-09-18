@@ -2,8 +2,6 @@ package edu.asu.diging.quadriga.api.v1.service;
 
 import java.util.List;
 
-
-
 import edu.asu.diging.quadriga.api.v1.model.JobPatternInfo;
 import edu.asu.diging.quadriga.api.v1.model.PatternMapping;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
