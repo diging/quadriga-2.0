@@ -89,7 +89,5 @@ public class GraphTripleMapperControllerTest {
         Assert.assertEquals(HttpStatus.NOT_FOUND,response.getStatusCode());
         
     }
-
     
-
 }

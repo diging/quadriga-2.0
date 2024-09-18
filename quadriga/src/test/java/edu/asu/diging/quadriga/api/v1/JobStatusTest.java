@@ -14,8 +14,7 @@ import edu.asu.diging.quadriga.core.service.JobManager;
 import org.junit.Assert;
 
 public class JobStatusTest {
-
-    
+   
     @Mock
     private JobManager jobManager;
     

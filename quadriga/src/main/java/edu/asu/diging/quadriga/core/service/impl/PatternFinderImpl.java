@@ -137,8 +137,7 @@ public class PatternFinderImpl implements PatternFinder {
                 && doesMatchPattern(graphNode.getRelation().getSubject(), patternNode.getSubject())
                 && doesMatchPattern(graphNode.getRelation().getPredicate(), patternNode.getPredicate());
     }
-
-    
+  
     /**
      * Matches the interpretation of a graph node against the interpretation of a pattern node.
      *

@@ -1,7 +1,5 @@
 package edu.asu.diging.quadriga.core.data;
 
-
-
 import java.util.List;
 import java.util.Optional;
 

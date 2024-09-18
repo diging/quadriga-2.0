@@ -35,8 +35,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
      * @see edu.asu.diging.quadriga.core.service.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph, edu.asu.diging.quadriga.core.model.MappedTripleGroup)
      */
     @Override
-    public Predicate storeMappedGraph(Graph graph, MappedTripleGroup mappedTripleGroup) throws NodeNotFoundException {
-        
+    public Predicate storeMappedGraph(Graph graph, MappedTripleGroup mappedTripleGroup) throws NodeNotFoundException {       
         DefaultMapping mapping = graph.getMetadata().getDefaultMapping();
         if (mapping == null) {
             return null;

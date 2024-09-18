@@ -61,10 +61,7 @@ public class AsyncPatternProcessorImplTest {
     private MappedTripleGroup mappedTripleGroup;
     private List<Graph> listOfGraphs = new ArrayList<>() ; 
     ObjectId mappedTripleGroupId;
-    
-    
-    
-    
+       
     @Before
     public void setUp() {
         networks = new ArrayList<>();
