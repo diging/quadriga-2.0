@@ -14,7 +14,7 @@ public class Job {
 
     @Id
     @GeneratedValue(generator = "job_id_generator")
-    @GenericGenerator(name = "job_id_generator", parameters = @Parameter(name = "prefix", value = "JOB"), strategy = "edu.asu.diging.quadriga.core.data.IdGenerator")
+    @GenericGenerator(name = "job_id_generator", parameters = @Parameter(name = "prefix", value = "JOB"), strategy = "edu.asu.diging.quadriga.core.data.sql.IdGenerator")
     private String id;
 
     private String collectionId;
