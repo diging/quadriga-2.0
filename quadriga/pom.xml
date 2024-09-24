@@ -10,8 +10,8 @@
 
     <properties>
         <org.slf4j-version>1.7.26</org.slf4j-version>
-        <org.springframework-version>5.2.9.RELEASE</org.springframework-version>
-        <spring-security-version>5.4.1</spring-security-version>
+        <org.springframework-version>5.3.0</org.springframework-version>
+        <spring-security-version>5.7.12</spring-security-version>
         <spring-data.version>Neumann-SR4</spring-data.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <mongo-version>4.1.0</mongo-version>
@@ -177,7 +177,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.10.3</version>
+            <version>2.12.7.1</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-core -->
@@ -277,7 +277,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.4.2.Final</version>
+            <version>5.4.24.Final</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
