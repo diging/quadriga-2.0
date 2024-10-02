@@ -31,6 +31,7 @@ import edu.asu.diging.quadriga.core.model.mapped.Concept;
 import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
 import edu.asu.diging.quadriga.core.service.MappedTripleService;
 import edu.asu.diging.quadriga.core.service.impl.CollectionManagerImpl;
+import edu.asu.diging.quadriga.web.service.GraphCreationService;
 import edu.asu.diging.quadriga.web.service.model.GraphElements;
 
 
@@ -60,6 +61,9 @@ public class ExploreCollectionControllerTest {
     
     @Mock
     private ConceptService conceptService;
+    
+    @Mock
+    private GraphCreationService graphCreationService;
     
 
     @InjectMocks
@@ -128,14 +132,14 @@ public class ExploreCollectionControllerTest {
     }
     
     
-    @Test()
+    @Test
     public void testGetGraphForUriWithInvalidCollectionId() throws InvalidObjectIdException, CollectionNotFoundException {
         Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType("collectionId", MappedTripleType.DEFAULT_MAPPING)).thenThrow(CollectionNotFoundException.class);
         ResponseEntity<GraphElements> response = exploreCollectionController.getGraphForUri("collectionId", "uri1", null);
         Assert.assertEquals(org.springframework.http.HttpStatus.NOT_FOUND,response.getStatusCode());
         
     }
-    @Test()
+    @Test
     public void testGetGraphForUriWithInvalidObjectId() throws InvalidObjectIdException, CollectionNotFoundException{
         Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType("collectionId",MappedTripleType.DEFAULT_MAPPING )).thenThrow(InvalidObjectIdException.class);
         ResponseEntity<GraphElements> response =  exploreCollectionController.getGraphForUri("collectionId", "InvalidUri",null );

@@ -169,7 +169,7 @@ public class CollectionManagerImplTest {
         Mockito.when(collectionRepo.save(Mockito.any())).thenReturn(response);
         
         managerToTest.deleteCollection(id.toString());
-        Mockito.when(managerToTest.deleteCollection(id.toString())).thenReturn();
+        Mockito.when(managerToTest.deleteCollection(id.toString())).thenReturn(null);
 
         Mockito.when(collectionRepo.findById(id)).thenReturn(Optional.of(collection));
         Mockito.when(eventGraphService.findLatestEventGraphByCollectionId(id)).thenReturn(new EventGraph());
