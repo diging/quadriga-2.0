@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mysql:
+    build:
+      context: ./Docker/mysql
+      dockerfile: Dockerfile
+    image: mysql:9.0.0
+    restart: always
+    environment:
+      - MYSQL_USER=quadriga
+      - MYSQL_PASSWORD=quadriga
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql-var-data:/var/lib/mysql
+      - mysql-etc-data:/etc
+      - mysql-usr-data:/usr  
+      - ./dockers/mysql/data/my.cnf:/etc/my.cnf
+    ports:
+      - "3306:3306"
+
