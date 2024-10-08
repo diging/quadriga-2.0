@@ -3,19 +3,74 @@ version: '3.8'
 services:
   mysql:
     build:
-      context: ./Docker/mysql
+      context: ./mysql
       dockerfile: Dockerfile
     image: mysql:9.0.0
     restart: always
-    environment:
-      - MYSQL_USER=quadriga
-      - MYSQL_PASSWORD=quadriga
-      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - quadriga-network
     volumes:
       - mysql-var-data:/var/lib/mysql
       - mysql-etc-data:/etc
-      - mysql-usr-data:/usr  
-      - ./dockers/mysql/data/my.cnf:/etc/my.cnf
+      - mysql-usr-data:/usr
+    environment:
+      - MYSQL_USER=quadriga
+      - MYSQL_PASSWORD=quadriga
+      - MYSQL_ROOT_PASSWORD=quadriga
     ports:
       - "3306:3306"
 
+  mongodb:
+    image: mongo:4.4.6
+    restart: always
+    networks:
+      - quadriga-network
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - "27017:27017"
+  
+  neo4j:
+    image: neo4j:5.8.0
+    restart: always
+    networks:
+      - quadriga-network
+    volumes:
+      - ./neo4j/data:/data
+      - ./neo4j/logs:/logs
+      - ./neo4j/import:/import
+      - ./neo4j/plugins:/plugins
+    environment:
+      - NEO4J_AUTH=neo4j/quadriga
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+  
+  web:
+    build:
+        context: ./tomcat
+        dockerfile: Dockerfile
+    image: diging/quadriga2.0:latest
+    restart: always
+    networks:
+      - quadriga-network
+    volumes:
+      - quadriga-data:/usr/local/tomcat/data
+    env_file:
+      - ./config/quadriga.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - mongodb
+      - neo4j
+      
+volumes:
+  mysql-var-data:
+  mysql-etc-data:
+  mysql-usr-data:
+  quadriga-data:
+  mongodb-data:
+
+networks:
+  quadriga-network:

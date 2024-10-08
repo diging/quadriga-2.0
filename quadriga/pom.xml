@@ -10,23 +10,22 @@
 
     <properties>
         <org.slf4j-version>1.7.26</org.slf4j-version>
-        <org.springframework-version>5.2.9.RELEASE</org.springframework-version>
+        <org.springframework-version>6.0.17</org.springframework-version>
         <spring-security-version>5.4.1</spring-security-version>
-        <spring-data.version>Neumann-SR5</spring-data.version>
+        <spring-data.version>Neumann-SR8</spring-data.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
-        <mongo-version>4.1.0</mongo-version>
+        <mongo-version>5.2.0</mongo-version>
         <simple-users-version>1.1</simple-users-version>
 
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
         
 
         <hibernate.dialect>org.hibernate.dialect.MySQL57Dialect</hibernate.dialect>
-        
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.database.url>jdbc-url-to-db</db.database.url>
-        <db.user>db-user</db.user>
-        <db.password>db-password</db.password>
+        <db.url>jdbc:mysql://localhost:3306/quadriga?autoreconnect=true&amp;serverTimezone=UTC&amp;useEncoding=true</db.url>
+        <db.user>root</db.user>
+        <db.password>123456</db.password>
         
         <email.user></email.user>
         <email.password></email.password>
@@ -42,8 +41,8 @@
         <mongo.database.password></mongo.database.password>
         <mongo.database.authdb>admin</mongo.database.authdb>
 
-        <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
-        <neo4j.database>quadriga</neo4j.database>
+        <neo4j.url>http://neo4j:123456@localhost:7474/</neo4j.url>
+        <neo4j.database>neo4j</neo4j.database>
         
         <citesphere.base.url></citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
@@ -95,6 +94,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+            <version>6.0.0</version> <!-- Updated to a version without known vulnerabilities -->
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -199,11 +199,11 @@
             <artifactId>neo4j-ogm-http-driver</artifactId>
             <version>3.3.4</version>
         </dependency>
-        <!-- <dependency>
+        <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-ogm-core</artifactId>
             <version>3.3.4</version>
-        </dependency> -->
+        </dependency>
         
         
         <!-- OpenId Connect -->
@@ -324,8 +324,14 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>3.1.0</version>
+            <version>4.0.1</version>
             <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
         <dependency>
@@ -383,7 +389,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.3.1</version>
                 <configuration>
                     <webResources>
                         <resource>
