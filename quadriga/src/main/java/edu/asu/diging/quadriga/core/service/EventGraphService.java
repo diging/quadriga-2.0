@@ -3,6 +3,8 @@ package edu.asu.diging.quadriga.core.service;
 import java.util.List;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
@@ -32,6 +34,20 @@ public interface EventGraphService {
      * @return total count
      */
     public long getNumberOfSubmittedNetworks(ObjectId collectionId);
+
+    /**
+     * Returns all event graphs by collection id
+     * @param collectionId
+     * @param size 
+     * @param page 
+     * @return
+     */
+    public Page<EventGraph>  findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable);
+    
+    
+    public List<EventGraph>  findAllEventGraphsByCollectionId(ObjectId collectionId);
+
+
     
     /**
      * Maps the network to events and saves it in the database

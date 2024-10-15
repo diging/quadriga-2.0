@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
@@ -38,6 +40,16 @@ public class EventGraphServiceImpl implements EventGraphService {
     }
 
     @Override
+    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId) {
+        return repo.findByCollectionIdOrderByCreationTimeAsc(collectionId).orElse(null);
+    }
+    
+    @Override
+    public Page<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable) {
+        return repo.findByCollectionIdOrderByCreationTimeAsc(collectionId, pageable).orElse(null);
+    }
+    
+    @Override
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId) {
         return repo.findFirstByCollectionIdOrderByCreationTimeDesc(collectionId).orElse(null);
     }
@@ -58,6 +70,7 @@ public class EventGraphServiceImpl implements EventGraphService {
         eventGraphs.forEach(e -> {
             e.setCollectionId(new ObjectId(collectionId));
             e.setDefaultMapping(graph.getMetadata().getDefaultMapping());
+            e.setContext(graph.getMetadata().getContext());
             /*
              * FIXME:
              * 

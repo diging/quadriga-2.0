@@ -124,6 +124,18 @@ public class CollectionManagerImpl implements CollectionManager {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#getCollection(java.lang.String)
+     */
+    @Override
+    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException {
+        Collection collection = findCollection(collectionId);
+        if (collection == null) {
+            throw new CollectionNotFoundException("CollectionId: " + collectionId);
+        }
+        return collection;
+    }
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#findCollections(java.lang.String, java.util.List, org.springframework.data.domain.Pageable)

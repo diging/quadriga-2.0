@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,6 +78,16 @@ public class EventGraphServiceImplTest {
         Assert.assertEquals(eventGraphObjectId2, foundEventGraph.getId());
     }
     
+    
+    @Test
+    public void test_findLatestEventGraphByCollectionId_failure() {
+        ObjectId collectionObjectId = new ObjectId();
+
+        Mockito.when(eventGraphRepository.findFirstByCollectionIdOrderByCreationTimeDesc(collectionObjectId))
+                .thenReturn(Optional.ofNullable(null));
+
+        Assert.assertNull(eventGraphServiceImpl.findLatestEventGraphByCollectionId(collectionObjectId));
+    }
     
     @Test
     public void test_countEventGraphsBy_success() throws InterruptedException {

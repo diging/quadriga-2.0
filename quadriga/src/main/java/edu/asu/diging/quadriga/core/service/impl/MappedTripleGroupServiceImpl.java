@@ -2,6 +2,9 @@ package edu.asu.diging.quadriga.core.service.impl;
 
 import org.bson.types.ObjectId;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,9 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
 
     @Autowired
     private CollectionManager collectionManager;
+    
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 
     /**
      * Converts the given collectionId into an ObjectId and persists a
@@ -145,7 +151,13 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
         // we create a new MappedTripleGroup entry
         if (mappedTripleGroup == null) {
             mappedTripleGroup = add(collectionId, mappedTripleType);
+            
+            // If mappedTripleGroup add fails
+            if (mappedTripleGroup == null) {
+                logger.error("Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
+            }
         }
+       
         return mappedTripleGroup;
     }
 
