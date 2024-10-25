@@ -10,11 +10,11 @@
 
     <properties>
         <org.slf4j-version>1.7.26</org.slf4j-version>
-        <org.springframework-version>6.0.0</org.springframework-version>
+        <org.springframework-version>6.0.10</org.springframework-version>
         <spring-security-version>6.0.0</spring-security-version>
         <spring-data.version>Neumann-SR6</spring-data.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
-        <mongo-version>5.2.0</mongo-version>
+        <mongo-version>5.0.0</mongo-version>
         <simple-users-version>1.1</simple-users-version>
 
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
@@ -282,7 +282,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.6.0.Final</version>
+            <version>6.0.0.Final</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
         <dependency>
@@ -290,8 +290,16 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>4.0.0</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.14.18</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
         <dependency>
             <groupId>org.thymeleaf</groupId>
