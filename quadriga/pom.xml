@@ -155,7 +155,6 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-neo4j</artifactId>
-            <version>7.0.0</version>
         </dependency>
 
         <!-- Spring AOP + AspectJ -->
