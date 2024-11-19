@@ -10,8 +10,8 @@
 
     <properties>
         <org.slf4j-version>1.7.26</org.slf4j-version>
-        <org.springframework-version>6.0.10</org.springframework-version>
-        <spring-security-version>6.0.0</spring-security-version>
+        <org.springframework-version>5.2.9.RELEASE</org.springframework-version>
+        <spring-security-version>5.4.1</spring-security-version>
         <spring-data.version>Neumann-SR9</spring-data.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <mongo-version>5.0.0</mongo-version>
@@ -20,9 +20,9 @@
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
         
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.url>jdbc:mysql://localhost:3306/quadriga?autoreconnect=true&amp;serverTimezone=UTC&amp;useEncoding=true</db.url>
+        <db.database.url>jdbc:mysql://localhost:3306/quadriga</db.database.url>
         <db.user>root</db.user>
-        <db.password>123456</db.password>
+        <db.password>quadriga</db.password>
         
         <email.user></email.user>
         <email.password></email.password>
@@ -38,7 +38,7 @@
         <mongo.database.password></mongo.database.password>
         <mongo.database.authdb>admin</mongo.database.authdb>
 
-        <neo4j.url>http://neo4j:123456@localhost:7474/</neo4j.url>
+        <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
         <neo4j.database>neo4j</neo4j.database>
         
         <citesphere.base.url></citesphere.base.url>
@@ -280,7 +280,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.1.0</version>
+            <version>3.2.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
@@ -294,7 +294,7 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>6.2.13.Final</version>
+            <version>5.4.2.Final</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
         <dependency>
