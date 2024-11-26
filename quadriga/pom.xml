@@ -10,12 +10,12 @@
 
     <properties>
         <org.slf4j-version>1.7.26</org.slf4j-version>
-        <org.springframework-version>5.2.9.RELEASE</org.springframework-version>
-        <spring-security-version>5.4.1</spring-security-version>
+        <org.springframework-version>6.0.0</org.springframework-version>
+        <spring-security-version>6.0.0</spring-security-version>
         <spring-data.version>Neumann-SR9</spring-data.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <mongo-version>5.0.0</mongo-version>
-        <simple-users-version>1.1</simple-users-version>
+        <simple-users-version>2.1-SNAPSHOT</simple-users-version>
 
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
         
@@ -231,6 +231,8 @@
             <groupId>edu.asu.diging</groupId>
             <artifactId>simple-users</artifactId>
             <version>${simple-users-version}</version>
+            <scope>system</scope>
+            <systemPath>C:\Users\Pooja\.m2\repository\edu\asu\diging\simple-users\2.1-SNAPSHOT\simple-users-2.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <!-- Logging -->
         <dependency>
@@ -294,18 +296,13 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.4.2.Final</version>
+            <version>6.0.0.Final</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>4.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.0</version>
         </dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>
