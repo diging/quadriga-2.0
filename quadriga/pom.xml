@@ -12,7 +12,7 @@
         <org.slf4j-version>1.7.26</org.slf4j-version>
         <org.springframework-version>6.0.0</org.springframework-version>
         <spring-security-version>6.0.0</spring-security-version>
-        <spring-data.version>Neumann-SR9</spring-data.version>
+        <spring-data.version>2024.0.0</spring-data.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <mongo-version>5.0.0</mongo-version>
         <simple-users-version>2.1-SNAPSHOT</simple-users-version>
@@ -67,7 +67,7 @@
             <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-releasetrain -->
             <dependency>
                 <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-releasetrain</artifactId>
+                <artifactId>spring-data-bom</artifactId>
                 <version>${spring-data.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
