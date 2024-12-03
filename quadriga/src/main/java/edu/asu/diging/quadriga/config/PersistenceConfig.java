@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import jakarta.persistence.EntityManagerFactory;
+
 @Configuration
 @PropertySource("classpath:config.properties")
 @EnableTransactionManagement

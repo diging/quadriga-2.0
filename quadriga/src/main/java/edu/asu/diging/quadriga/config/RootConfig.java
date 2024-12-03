@@ -22,7 +22,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableCaching
 @EnableWebMvc
 @EnableAspectJAutoProxy
-@ComponentScan({"edu.asu.diging.quadriga", "edu.asu.diging.simpleusers.core.*"})
+@ComponentScan({"edu.asu.diging.quadriga", "edu.asu.diging.simpleusers.core"})
 public class RootConfig {
 
     @Bean

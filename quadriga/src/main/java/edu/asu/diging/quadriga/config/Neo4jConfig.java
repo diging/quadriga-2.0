@@ -1,13 +1,14 @@
 package edu.asu.diging.quadriga.config;
 
+import org.neo4j.driver.Driver;
 import org.neo4j.ogm.session.SessionFactory;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.neo4j.core.transaction.Neo4jTransactionManager;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
-import org.springframework.data.neo4j.transaction.Neo4jTransactionManager;
 
 @Configuration
 @PropertySource("classpath:config.properties")
@@ -34,6 +35,6 @@ public class Neo4jConfig {
 
     @Bean
     public Neo4jTransactionManager transactionManager() {
-        return new Neo4jTransactionManager(sessionFactory());
+        return new Neo4jTransactionManager((Driver) sessionFactory());
     }
 }
