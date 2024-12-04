@@ -2,7 +2,9 @@ package edu.asu.diging.quadriga.core.service;
 
 import java.util.List;
 
+
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Pageable;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
@@ -27,6 +29,13 @@ public interface EventGraphService {
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId);
     
     /**
+     * Retrieves all eventGraphs mapped to a collection
+     * @param collectionId Id of the collection
+     * @return a list of all eventGraphs mapped to the collection
+     */
+    public List<EventGraph> getEventGraphs(ObjectId collectionId);
+    
+    /**
      * Groups the event graphs mapped to a collection by source uri and returns the total count. 
      * @param collectionId
      * @return total count
@@ -39,4 +48,14 @@ public interface EventGraphService {
      * @param collectionId
      */
     public void mapNetworkAndSave(Graph graph, String collectionId);
+    
+    /**
+     * Finds all eventGraphs mapped to a collection in the descending order of creation time
+     * 
+     * @param collectionId is the id used to finds all eventGraphs
+     * @return a paginated list of eventGraphs in descending order
+     * @throws InvalidObjectIdException if the collectionId contains non-hexadecimal characters
+     */
+    public List<EventGraph> getEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable);
+    
 }
