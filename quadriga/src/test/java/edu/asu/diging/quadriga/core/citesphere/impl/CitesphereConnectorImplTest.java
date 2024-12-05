@@ -182,8 +182,11 @@ public class CitesphereConnectorImplTest {
         headers.set("Authorization", "Bearer " + accessToken);
         HttpEntity<String> entity1 = new HttpEntity<String>(headers);
 
-        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity1, TokenInfo.class, new Object[] {}))
-                .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+        Mockito.when(restTemplate.postForObject(
+                Mockito.eq(checkTokenUrl),
+                Mockito.eq(entity1),
+                Mockito.eq(TokenInfo.class)))
+               .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
         // After token re-generation, we get another exception that is not an unauth
         // exception
@@ -195,8 +198,11 @@ public class CitesphereConnectorImplTest {
         headers.set("Authorization", "Bearer " + newAccessToken);
         HttpEntity<String> entity2 = new HttpEntity<String>(headers);
 
-        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
-                .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
+        Mockito.when(restTemplate.postForObject(
+                Mockito.eq(checkTokenUrl),
+                Mockito.eq(entity2),
+                Mockito.eq(TokenInfo.class)))
+               .thenReturn(tokenInfo);
 
         Assert.assertThrows(BadCredentialsException.class, () -> citesphereConnectorImpl.getTokenInfo(token));
         tokenResponse.close();    
