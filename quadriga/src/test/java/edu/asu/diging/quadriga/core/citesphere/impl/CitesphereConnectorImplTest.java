@@ -3,7 +3,6 @@ package edu.asu.diging.quadriga.core.citesphere.impl;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,8 +40,6 @@ public class CitesphereConnectorImplTest {
     @InjectMocks
     private CitesphereConnectorImpl citesphereConnectorImpl;
     
-    private MockedStatic<TokenResponse> tokenResponse;
-    
     private String accessToken;
     private String token;
     private String checkTokenUrl;
@@ -53,13 +50,12 @@ public class CitesphereConnectorImplTest {
     public void setUp() throws NoSuchFieldException, SecurityException {
         accessToken = "SAMPLE_ACCESS_TOKEN";
         token = "SAMPLE_TOKEN";
-        checkTokenUrl = "https://diging-dev.asu.edu/citesphere-review/api/oauth/check_token?token=SAMPLE_TOKEN";
+        checkTokenUrl = "http://diging.asu.edu/citesphere/api/oauth/check_token?token=SAMPLE_TOKEN";
         citesphereClientId = "SAMPLE_CLIENT_ID";
         citesphereClientSecret = "SAMPLE_CLIENT_SECRET";
-        tokenResponse = Mockito.mockStatic(TokenResponse.class);
 
         ReflectionTestUtils.setField(citesphereConnectorImpl, "currentAccessToken", accessToken);
-        ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereBaseUrl", "https://diging-dev.asu.edu/citesphere-review");
+        ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereBaseUrl", "http://diging.asu.edu/citesphere");
         ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereCheckTokenEndpoint", "/api/oauth/check_token");
         ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereTokenEndpoint", "/api/oauth/token");
         ReflectionTestUtils.setField(citesphereConnectorImpl, "citesphereClientId", citesphereClientId);
@@ -68,12 +64,7 @@ public class CitesphereConnectorImplTest {
 
         MockitoAnnotations.openMocks(this);
     }
-    
-    @After
-    public void tearDown() {
-        // Closing the mockStatic after each test
-        tokenResponse.close();
-    }
+
     
     @Test
     public void test_validateToken_success() {
@@ -111,16 +102,19 @@ public class CitesphereConnectorImplTest {
         // Then we will receive valid token response using newly generated access token
         AccessTokenResponse accessTokenResponse = new AccessTokenResponse(
                 new Tokens(new BearerAccessToken(newAccessToken), null));
+
+        MockedStatic<TokenResponse> tokenResponse = Mockito.mockStatic(TokenResponse.class);
         tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class))).thenReturn(accessTokenResponse);
 
         headers.set("Authorization", "Bearer " + newAccessToken);
         HttpEntity<String> entity2 = new HttpEntity<String>(headers);
-        
+
         Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
                 .thenReturn(tokenInfo);
 
         TokenInfo receivedTokenInfo = citesphereConnectorImpl.getTokenInfo(token);
         Assert.assertTrue(receivedTokenInfo.isActive());
+        tokenResponse.close();
     }
 
     
@@ -158,8 +152,10 @@ public class CitesphereConnectorImplTest {
         // Even after token re-generation, we get unauth exception
         AccessTokenResponse accessTokenResponse = new AccessTokenResponse(
                 new Tokens(new BearerAccessToken(newAccessToken), null));
+        MockedStatic<TokenResponse> tokenResponse = Mockito.mockStatic(TokenResponse.class);
+
         tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class))).thenReturn(accessTokenResponse);
-        
+
         headers.set("Authorization", "Bearer " + newAccessToken);
         HttpEntity<String> entity2 = new HttpEntity<String>(headers);
 
@@ -167,13 +163,14 @@ public class CitesphereConnectorImplTest {
                 .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
         Assert.assertThrows(OAuthException.class, () -> citesphereConnectorImpl.getTokenInfo(token));
+        tokenResponse.close();
     }
 
     
     @Test
     public void test_validateToken_unauth1_bad_credentials()
             throws URISyntaxException, ParseException, IOException {
-    	String newAccessToken = "NEW_" + accessToken;
+        String newAccessToken = "NEW_" + accessToken;
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setActive(true);
         HttpHeaders headers = new HttpHeaders();
@@ -182,31 +179,25 @@ public class CitesphereConnectorImplTest {
         headers.set("Authorization", "Bearer " + accessToken);
         HttpEntity<String> entity1 = new HttpEntity<String>(headers);
 
-        Mockito.when(restTemplate.postForObject(
-                Mockito.eq(checkTokenUrl),
-                Mockito.eq(entity1),
-                Mockito.eq(TokenInfo.class)))
-               .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
+        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity1, TokenInfo.class, new Object[] {}))
+                .thenThrow(new HttpClientErrorException(HttpStatus.UNAUTHORIZED));
 
         // After token re-generation, we get another exception that is not an unauth
         // exception
         AccessTokenResponse accessTokenResponse = new AccessTokenResponse(
                 new Tokens(new BearerAccessToken(newAccessToken), null));
+        MockedStatic<TokenResponse> tokenResponse = Mockito.mockStatic(TokenResponse.class);
 
         tokenResponse.when(() -> TokenResponse.parse(Mockito.any(HTTPResponse.class))).thenReturn(accessTokenResponse);
 
         headers.set("Authorization", "Bearer " + newAccessToken);
         HttpEntity<String> entity2 = new HttpEntity<String>(headers);
 
-        Mockito.when(restTemplate.postForObject(
-                Mockito.eq(checkTokenUrl),
-                Mockito.eq(entity2),
-                Mockito.eq(TokenInfo.class)))
-               .thenReturn(tokenInfo);
+        Mockito.when(restTemplate.postForObject(checkTokenUrl, entity2, TokenInfo.class, new Object[] {}))
+                .thenThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN));
 
         Assert.assertThrows(BadCredentialsException.class, () -> citesphereConnectorImpl.getTokenInfo(token));
-        tokenResponse.close();    
+        tokenResponse.close();
     }
-
 
 }
