@@ -357,12 +357,6 @@
             <artifactId>spring-security-ldap</artifactId>
             <version>${spring-security-version}</version>
         </dependency>
-        
-        <dependency>
-           <groupId>net.bytebuddy</groupId>
-           <artifactId>byte-buddy</artifactId>
-           <version>1.14.5</version>
-        </dependency>
 
     </dependencies>
 
