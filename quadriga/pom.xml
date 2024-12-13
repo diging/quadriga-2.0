@@ -20,9 +20,9 @@
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
         
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.database.url>jdbc:mysql://localhost:3306/quadriga</db.database.url>
-        <db.user>root</db.user>
-        <db.password>quadriga</db.password>
+        <db.database.url>jdbc-url-to-db</db.database.url>
+        <db.user>db-user</db.user>
+        <db.password>db-password</db.password>
         
         <email.user></email.user>
         <email.password></email.password>
@@ -39,7 +39,7 @@
         <mongo.database.authdb>admin</mongo.database.authdb>
 
         <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
-        <neo4j.database>neo4j</neo4j.database>
+        <neo4j.database>quadriga</neo4j.database>
         
         <citesphere.base.url></citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
@@ -47,7 +47,7 @@
 
 
 
-        <log.level>info</log.level>
+        <log.level>trace</log.level>
 
         <tomcat.deploy.path></tomcat.deploy.path>
         <tomcat.app.name>quadriga2.0</tomcat.app.name>
@@ -142,11 +142,6 @@
             <artifactId>spring-data-jpa</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-commons -->
-        <!--<dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-commons</artifactId>
-            <version>3.0.0</version>
-        </dependency> -->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-commons</artifactId>
@@ -226,13 +221,10 @@
             <artifactId>oauth2-oidc-sdk</artifactId>
             <version>5.17.1</version>
         </dependency>
-
         <dependency>
             <groupId>edu.asu.diging</groupId>
             <artifactId>simple-users</artifactId>
-            <version>${simple-users-version}</version>
-            <scope>system</scope>
-            <systemPath>C:\Users\Pooja\.m2\repository\edu\asu\diging\simple-users\2.1-SNAPSHOT\simple-users-2.1-SNAPSHOT.jar</systemPath>
+            <version>${simple-users-version}</version>            
         </dependency>
         <!-- Logging -->
         <dependency>

@@ -14,9 +14,9 @@ services:
       - mysql-etc-data:/etc
       - mysql-usr-data:/usr
     environment:
-      - MYSQL_USER=quadriga
-      - MYSQL_PASSWORD=quadriga
-      - MYSQL_ROOT_PASSWORD=quadriga
+      - MYSQL_USER={username}
+      - MYSQL_PASSWORD={password}
+      - MYSQL_ROOT_PASSWORD={root_password}
     ports:
       - "3306:3306"
 
