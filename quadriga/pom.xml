@@ -12,7 +12,7 @@
         <org.slf4j-version>1.7.26</org.slf4j-version>
         <org.springframework-version>6.0.0</org.springframework-version>
         <spring-security-version>6.0.0</spring-security-version>
-        <spring-data.version>2024.0.0</spring-data.version>
+        <spring-data.version>2022.0.0</spring-data.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <mongo-version>5.0.0</mongo-version>
         <simple-users-version>2.1-SNAPSHOT</simple-users-version>
@@ -195,17 +195,16 @@
             <version>${mongo-version}</version>
         </dependency>
         
-        <!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-http-driver -->
-        <dependency>
-            <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-ogm-http-driver</artifactId>
-            <version>3.3.4</version>
-        </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-ogm-core</artifactId>
-            <version>3.3.4</version>
+            <version>4.0.13</version>
         </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-ogm-bolt-driver</artifactId>
+            <version>4.0.13</version>
+        </dependency> -->
         
         
         <!-- OpenId Connect -->
