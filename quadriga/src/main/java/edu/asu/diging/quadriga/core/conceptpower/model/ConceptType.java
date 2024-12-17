@@ -54,19 +54,32 @@ public class ConceptType implements Serializable, Comparable<ConceptType> {
     public void setDescription(String description) {
         this.description = description;
     }
-
+    
+    /*
+     * If both old and new types are null/blank, nothing has changed
+     * If old value is null/blank, new value is not null/blank, difference present
+     * If old value is not null/blank, new value is null/blank, difference present
+     * If both are not null/blank, we need to check difference
+     * 
+     */
     @Override
     public int compareTo(ConceptType type) {
-        // If both old and new types are null/blank, nothing has changed
-        // If old value is null/blank, new value is not null/blank, difference present
-        // If old value is not null/blank, new value is null/blank, difference present
-        // If both are not null/blank, we need to check difference
         
-        if (type == null ) return -1;
-        if(isDifferentString(type.getId(), this.getId())) return -1;
-        if(isDifferentString(type.getDescription(), this.getDescription())) return -1;
-        if(isDifferentString(type.getName(), this.getName())) return -1;
-        if(isDifferentString(type.getUri(), this.getUri())) return -1;
+        if (type == null ) {
+            return -1;
+        }
+        if(isDifferentString(type.getId(), this.getId())) {
+            return -1;
+        }
+        if(isDifferentString(type.getDescription(), this.getDescription())) {
+            return -1;
+        }
+        if(isDifferentString(type.getName(), this.getName())) {
+            return -1;
+        }
+        if(isDifferentString(type.getUri(), this.getUri())) {
+            return -1;
+        }
         return 0;
     }
     
