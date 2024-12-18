@@ -119,20 +119,20 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
     }
 
     /**
-     * Updates Concept cache
+     * This method is to update concept cache. 
+     * 
+     * It checks if a concept is returned by conceptpower 
+     * and no conceptcache exists in db or if it does, it is different from the current conceptCache entry 
+     * and updates the conceptcache
+     * 
      * @param conceptCache
      * @param conceptCacheOld
      * @param uri
+     * 
      * @return
      */
     private boolean updateConceptCache(ConceptCache conceptCache, ConceptCache conceptCacheOld, String uri) {
-        
-        // ConceptPower returned a concept and either no conceptCache entry exists in the DB
-        // or if one exists, it is different from the current conceptCache entry
         if (conceptCache != null && (conceptCacheOld == null || conceptCacheOld.compareTo(conceptCache) != 0)) {
-            
-           
-            
             conceptCacheService.saveConceptCache(conceptCache);
             
             Optional.ofNullable(conceptCache.getAlternativeUris())
@@ -156,50 +156,51 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         List<ConceptEntry> conceptEntries = conceptPowerReply.getConceptEntries();
         ConceptCache conceptCache = null;
 
-        if (conceptEntries != null && !conceptEntries.isEmpty()) {
-            ConceptEntry conceptEntry = conceptEntries.get(0);
-            conceptCache = new ConceptCache();
-            conceptCache.setUri(conceptEntry.getConceptUri());
-            conceptCache.setConceptList(conceptEntry.getConceptList());
-            conceptCache.setDescription(conceptEntry.getDescription());
-            conceptCache.setPos(conceptEntry.getPos());
-            conceptCache.setDeleted(conceptEntry.getDeleted() == null ? false : conceptEntry.getDeleted());
-            conceptCache.setCreatorId(conceptEntry.getCreatorId());
-            conceptCache.setWord(conceptEntry.getLemma());
-            conceptCache.setId(conceptEntry.getId());
+        if (conceptEntries == null || conceptEntries.isEmpty()) {
+        	return conceptCache;
+        }
+        ConceptEntry conceptEntry = conceptEntries.get(0);
+        conceptCache = new ConceptCache();
+        conceptCache.setUri(conceptEntry.getConceptUri());
+        conceptCache.setConceptList(conceptEntry.getConceptList());
+        conceptCache.setDescription(conceptEntry.getDescription());
+        conceptCache.setPos(conceptEntry.getPos());
+        conceptCache.setDeleted(conceptEntry.getDeleted() == null ? false : conceptEntry.getDeleted());
+        conceptCache.setCreatorId(conceptEntry.getCreatorId());
+        conceptCache.setWord(conceptEntry.getLemma());
+        conceptCache.setId(conceptEntry.getId());
 
-            if (conceptEntry.getWordnetId() != null && !conceptEntry.getWordnetId().trim().equals("")) {
-                conceptCache.setWordNetIds(Arrays.asList(conceptEntry.getWordnetId().split(",")));
-            } else {
-                conceptCache.setWordNetIds(new ArrayList<>());
-            }
+        if (conceptEntry.getWordnetId() != null && !conceptEntry.getWordnetId().trim().equals("")) {
+            conceptCache.setWordNetIds(Arrays.asList(conceptEntry.getWordnetId().split(",")));
+        } else {
+            conceptCache.setWordNetIds(new ArrayList<>());
+        }
 
-            if (conceptEntry.getEqualTo() != null && !conceptEntry.getEqualTo().trim().equals("")) {
-                conceptCache.setEqualTo(Arrays.asList(conceptEntry.getEqualTo().split(",")));
-            } else {
-                conceptCache.setEqualTo(new ArrayList<>());
-            }
+        if (conceptEntry.getEqualTo() != null && !conceptEntry.getEqualTo().trim().equals("")) {
+            conceptCache.setEqualTo(Arrays.asList(conceptEntry.getEqualTo().split(",")));
+        } else {
+            conceptCache.setEqualTo(new ArrayList<>());
+        }
 
-            if(conceptEntry.getAlternativeIds() != null && !conceptEntry.getAlternativeIds().isEmpty()) {
-                conceptCache.setAlternativeUris(
-                        conceptEntry.getAlternativeIds()
-                        .stream()
-                        .map(alternativeId -> alternativeId.getConceptUri())
-                        .filter(nullableAltUri -> nullableAltUri != null)
-                        .filter(alternativeUri -> !alternativeUri.equals(""))
-                        .collect(Collectors.toList()));
-            }
+        if(conceptEntry.getAlternativeIds() != null && !conceptEntry.getAlternativeIds().isEmpty()) {
+            conceptCache.setAlternativeUris(
+                    conceptEntry.getAlternativeIds()
+                    .stream()
+                    .map(alternativeId -> alternativeId.getConceptUri())
+                    .filter(nullableAltUri -> nullableAltUri != null)
+                    .filter(alternativeUri -> !alternativeUri.equals(""))
+                    .collect(Collectors.toList()));
+        }
 
-            if (conceptEntry.getType() != null) {
-                Type type = conceptEntry.getType();
-                ConceptType conceptType = new ConceptType();
-                conceptType.setUri(type.getTypeUri());
-                conceptType.setId(type.getTypeId());
-                conceptType.setName(type.getTypeName());
-                conceptType.setDescription("");
-                conceptCache.setConceptType(conceptType);
-                conceptCache.setTypeId(conceptEntry.getType().getTypeUri());
-            }
+        if (conceptEntry.getType() != null) {
+            Type type = conceptEntry.getType();
+            ConceptType conceptType = new ConceptType();
+            conceptType.setUri(type.getTypeUri());
+            conceptType.setId(type.getTypeId());
+            conceptType.setName(type.getTypeName());
+            conceptType.setDescription("");
+            conceptCache.setConceptType(conceptType);
+            conceptCache.setTypeId(conceptEntry.getType().getTypeUri());
         }
         return conceptCache;
     }
