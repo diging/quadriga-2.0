@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptEntry;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConceptPowerConnectorServiceImplTest {
@@ -55,7 +56,7 @@ public class ConceptPowerConnectorServiceImplTest {
     
     
     @Test
-    public void test_getConceptPowerReply_success() {
+    public void test_getConceptPowerReply_success() throws ConceptpowerNoResponseException {
         String conceptUri = "http://www.digitalhps.org/concepts/WID-09972010-N-01-cousin";
         String lemma = "cousin";
         
@@ -86,7 +87,7 @@ public class ConceptPowerConnectorServiceImplTest {
     }
     
     @Test
-    public void test_getConceptPowerReply_nullResponse() {
+    public void test_getConceptPowerReply_nullResponse() throws ConceptpowerNoResponseException {
         String conceptUri = "http://www.digitalhps.org/concepts/WID-09972010-N-01-cousin";
         String lemma = "cousin";
         
@@ -113,7 +114,7 @@ public class ConceptPowerConnectorServiceImplTest {
     }
     
     @Test
-    public void test_getConceptPowerReply_restClientException() {
+    public void test_getConceptPowerReply_restClientException() throws ConceptpowerNoResponseException {
         String conceptUri = "http://www.digitalhps.org/concepts/WID-09972010-N-01-cousin";
         String lemma = "cousin";
         

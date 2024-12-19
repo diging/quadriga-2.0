@@ -2,6 +2,7 @@ package edu.asu.diging.quadriga.core.conceptpower.service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 
 /**
  * This service is used to get concept data from ConceptPower
@@ -23,8 +24,9 @@ public interface ConceptPowerService {
      * @param uri used to search entry in database or make a REST call to
      *            conceptpower
      * @return the conceptCache database entry
+     * @throws ConceptpowerNoResponseException 
      */
-    public ConceptCache getConceptByUri(String uri);
+    public ConceptCache getConceptByUri(String uri) throws ConceptpowerNoResponseException;
     
     /**
      * This method maps the ConceptPowerReply object returned from ConceptPower to a

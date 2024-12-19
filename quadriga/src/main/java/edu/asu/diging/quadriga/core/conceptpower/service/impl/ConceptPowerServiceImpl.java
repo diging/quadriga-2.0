@@ -23,6 +23,7 @@ import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerConnectorService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptTypeService;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 
 @Service
 public class ConceptPowerServiceImpl implements ConceptPowerService {
@@ -42,7 +43,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
     private Integer conceptCacheUpdateInterval;
 
     @Override
-    public ConceptCache getConceptByUri(String uri) {
+    public ConceptCache getConceptByUri(String uri) throws ConceptpowerNoResponseException {
 
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
         

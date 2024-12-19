@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerService;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.elements.Relation;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
@@ -35,7 +36,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
     private ConceptPowerService conceptPowerService;
 
     @Override
-    public GraphElements createGraph(List<EventGraph> eventGraphs) {
+    public GraphElements createGraph(List<EventGraph> eventGraphs){
 
         List<GraphData> graphEdges = new ArrayList<>();
         List<GraphData> graphNodes = new ArrayList<>();
@@ -43,8 +44,14 @@ public class GraphCreationServiceImpl implements GraphCreationService {
 
         eventGraphs.stream()
             .filter(eventGraph -> eventGraph.getRootEvent() instanceof RelationEvent)
-            .forEach(validEventGraph -> createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()),
-                        graphNodes, graphEdges, uniqueNodes, validEventGraph.getId().toString()));
+            .forEach(validEventGraph -> {
+				try {
+					createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()),
+					            graphNodes, graphEdges, uniqueNodes, validEventGraph.getId().toString());
+				} catch (ConceptpowerNoResponseException e) {
+					logger.error("Could not create graph for id : "+validEventGraph.getId(), e);
+				}
+			});
 
         GraphElements graphElements = new GraphElements();
         graphElements.setNodes(wrapInGraphElements(graphNodes));
@@ -55,7 +62,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
 
     @Override
     public String createNodesAndEdges(RelationEvent event, List<GraphData> graphNodes, List<GraphData> graphEdges,
-            Map<String, GraphNodeData> uniqueNodes, String eventGraphId) {
+            Map<String, GraphNodeData> uniqueNodes, String eventGraphId) throws ConceptpowerNoResponseException {
         Relation relation = event.getRelation();
         String predicateNodeId = null;
         String subjectNodeId = null;
@@ -103,7 +110,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
     }
 
     @Override
-    public String createPredicateNode(List<GraphData> graphNodes, AppellationEvent event, String eventGraphId) {
+    public String createPredicateNode(List<GraphData> graphNodes, AppellationEvent event, String eventGraphId) throws ConceptpowerNoResponseException {
         GraphNodeData predicateNode = createNode(event, GraphNodeType.PREDICATE, eventGraphId);
         graphNodes.add(predicateNode);
         return predicateNode.getId();
@@ -111,7 +118,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
 
     @Override
     public String createSubjectOrObjectNode(List<GraphData> graphNodes, AppellationEvent event,
-            Map<String, GraphNodeData> uniqueNodes, GraphNodeType graphNodeType, String eventGraphId) {
+            Map<String, GraphNodeData> uniqueNodes, GraphNodeType graphNodeType, String eventGraphId) throws ConceptpowerNoResponseException {
         String sourceUri = event.getTerm().getInterpretation().getSourceURI();
         GraphNodeData node;
         
@@ -137,7 +144,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
     }
 
     @Override
-    public GraphNodeData createNode(AppellationEvent event, GraphNodeType graphNodeType, String eventGraphId) {
+    public GraphNodeData createNode(AppellationEvent event, GraphNodeType graphNodeType, String eventGraphId) throws ConceptpowerNoResponseException {
         
         GraphNodeData node = new GraphNodeData();
         node.setId(new ObjectId().toString());

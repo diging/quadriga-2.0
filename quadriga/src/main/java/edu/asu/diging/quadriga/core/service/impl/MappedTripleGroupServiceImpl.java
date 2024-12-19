@@ -141,10 +141,11 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
      *                                     ObjectId
      * @throws CollectionNotFoundException if a collection for given collectionId
      *                                     doesn't exist
+     * @throws MappedTripleGroupNotFoundException 
      */
     @Override
     public MappedTripleGroup get(String collectionId, MappedTripleType mappedTripleType)
-            throws InvalidObjectIdException, CollectionNotFoundException {
+            throws InvalidObjectIdException, CollectionNotFoundException, MappedTripleGroupNotFoundException {
         MappedTripleGroup mappedTripleGroup = findByCollectionIdAndMappingType(collectionId, mappedTripleType);
 
         // In case this is a new collection, or existing collection but new mapping type for that collection
@@ -154,7 +155,7 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
             
             // If mappedTripleGroup add fails
             if (mappedTripleGroup == null) {
-                logger.error("Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
+                throw new MappedTripleGroupNotFoundException("Couldn't find or persist a new MappedTripleGroup entry for collectionId: " + collectionId);
             }
         }
        

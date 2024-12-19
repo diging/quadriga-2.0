@@ -30,6 +30,6 @@ public interface MappedTripleGroupService {
             throws InvalidObjectIdException, MappedTripleGroupNotFoundException;
     
     public MappedTripleGroup get(String collectionId, MappedTripleType mappedTripleType)
-            throws InvalidObjectIdException, CollectionNotFoundException;
+            throws InvalidObjectIdException, CollectionNotFoundException, MappedTripleGroupNotFoundException;
 
 }

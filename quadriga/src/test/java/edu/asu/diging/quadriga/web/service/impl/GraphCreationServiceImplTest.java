@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerService;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.elements.Concept;
 import edu.asu.diging.quadriga.core.model.elements.Relation;
@@ -56,7 +57,7 @@ public class GraphCreationServiceImplTest {
     }
 
     @Test
-    public void test_createGraph_singleLevelGraph_success() {
+    public void test_createGraph_singleLevelGraph_success() throws ConceptpowerNoResponseException {
         List<EventGraph> singleEventGraphList = sampleEventGraphLists.get(0);
         EventGraph eventGraph = singleEventGraphList.get(0);
         String[] eventGraphIds = new String[] { eventGraph.getId().toString() };
@@ -120,7 +121,7 @@ public class GraphCreationServiceImplTest {
     }
 
     @Test
-    public void test_createGraph_nestedEventGraph_success() {
+    public void test_createGraph_nestedEventGraph_success() throws ConceptpowerNoResponseException {
         List<EventGraph> nestedEventGraphList = sampleEventGraphLists.get(1);
         EventGraph eventGraph = nestedEventGraphList.get(0);
         String[] eventGraphIds = new String[] { eventGraph.getId().toString() };
@@ -208,7 +209,7 @@ public class GraphCreationServiceImplTest {
     }
 
     @Test
-    public void test_createSubjectOrObjectNode_testUniqueNodesDoesntContain() {
+    public void test_createSubjectOrObjectNode_testUniqueNodesDoesntContain() throws ConceptpowerNoResponseException {
         List<GraphData> nodes = new ArrayList<>();
         Map<String, GraphNodeData> uniqueNodes = new HashMap<>();
         String sourceURI = "http://www.digitalhps.org/concepts/albert-einstein";
@@ -221,7 +222,7 @@ public class GraphCreationServiceImplTest {
     }
 
     @Test
-    public void test_createSubjectOrObjectNode_testUniqueNodesContains() {
+    public void test_createSubjectOrObjectNode_testUniqueNodesContains() throws ConceptpowerNoResponseException {
         List<GraphData> nodes = new ArrayList<>();
         Map<String, GraphNodeData> uniqueNodes = new HashMap<>();
         String sourceURI = "http://www.digitalhps.org/concepts/albert-einstein";
