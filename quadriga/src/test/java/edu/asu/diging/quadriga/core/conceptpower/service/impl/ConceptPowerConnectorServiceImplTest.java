@@ -49,7 +49,6 @@ public class ConceptPowerConnectorServiceImplTest {
         conceptPowerURL = conceptPowerBaseUrl + conceptPowerIdUrl;
         
         ReflectionTestUtils.setField(conceptPowerConnectorServiceImpl, "conceptPowerBaseURL", conceptPowerBaseUrl);
-        ReflectionTestUtils.setField(conceptPowerConnectorServiceImpl, "conceptPowerIdURL", conceptPowerIdUrl);
         
         MockitoAnnotations.openMocks(this);
     }

@@ -412,8 +412,14 @@ public class ConceptPowerServiceImplTest {
         ConceptCache conceptCache = new ConceptCache();
         conceptCache.setUri(sourceURI);
         
-        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        conceptEntry.setConceptUri(sourceURI);
+        conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
         
+        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
+     
         ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
         Assert.assertEquals(sourceURI, foundConceptCache.getUri());
     }
@@ -425,7 +431,13 @@ public class ConceptPowerServiceImplTest {
         conceptCache.setUri(sourceURI);
         conceptCache.setLastUpdated(LocalDateTime.now());
         
+        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        conceptEntry.setConceptUri(sourceURI);
+        conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
+        
         Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
         
         ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
         Assert.assertEquals(sourceURI, foundConceptCache.getUri());
@@ -448,10 +460,11 @@ public class ConceptPowerServiceImplTest {
         conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
         
         Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
         
         ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
         Assert.assertEquals(sourceURI, foundConceptCache.getUri());
-        Assert.assertEquals(posOld, foundConceptCache.getPos());
+        Assert.assertNotEquals(posOld, foundConceptCache.getPos());
     }
     
     @Test

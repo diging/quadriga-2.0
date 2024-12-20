@@ -44,24 +44,38 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
     public ConceptPowerReply getConceptPowerReply(String conceptURI) throws ConceptpowerNoResponseException {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("concept_uri", conceptURI);
-
         String conceptPowerURL = conceptPowerBaseURL + conceptPowerIdEndpoint;
+
+        if (conceptPowerURL == null || conceptPowerURL.isEmpty()) {
+            throw new ConceptpowerNoResponseException("ConceptPower URL is blank or null.");
+        }
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<ConceptPowerReply> response;
-        
-        if (conceptPowerURL == null || conceptPowerURL.equals("")) {
-            logger.error("ConceptPowerURL was found to be blank or null");
-        }
+
         try {
-            response = restTemplate.exchange(conceptPowerURL, HttpMethod.GET,
-                    httpEntity, ConceptPowerReply.class, parameters);               
+            ResponseEntity<ConceptPowerReply> response = restTemplate.exchange(
+                conceptPowerURL,
+                HttpMethod.GET,
+                httpEntity,
+                ConceptPowerReply.class,
+                parameters
+            );
+
+            // check for null response body
+            if (response == null || response.getBody() == null) {
+                throw new ConceptpowerNoResponseException("ConceptPower returned a null response for URI: " + conceptURI);
+            }
+
+            return response.getBody();
         } 
         catch (HttpClientErrorException e) {
-        	throw new ConceptpowerNoResponseException("No response returned from ConceptPower for URI: " + conceptURI, e);
+            throw new ConceptpowerNoResponseException("Error occurred while contacting ConceptPower for URI: " + conceptURI,e);
+        } 
+        catch (Exception e) {
+            throw new ConceptpowerNoResponseException("Unexpected error occurred while processing ConceptPower response for URI: " + conceptURI,e);
         }
-        return response.getBody();
     }
 
 }
