@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -59,8 +60,8 @@ public class ConceptPowerConnectorServiceImplTest {
         String conceptUri = "http://www.digitalhps.org/concepts/WID-09972010-N-01-cousin";
         String lemma = "cousin";
         
-        Map<String, String> pathVariables = new HashMap<>();
-        pathVariables.put("concept_uri", conceptUri);
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("concept_uri", conceptUri);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -75,8 +76,8 @@ public class ConceptPowerConnectorServiceImplTest {
         
         ResponseEntity<ConceptPowerReply> responseEntity = new ResponseEntity<>(conceptPowerReply, HttpStatus.ACCEPTED);
         
-        Mockito.when(restTemplate.exchange(conceptPowerURL, HttpMethod.GET, httpEntity, ConceptPowerReply.class, pathVariables))
-                .thenReturn(responseEntity);
+        Mockito.when(restTemplate.exchange(conceptPowerURL, HttpMethod.GET, httpEntity, ConceptPowerReply.class, parameters))
+        	.thenReturn(responseEntity);
         
         ConceptPowerReply replyFromResponse = conceptPowerConnectorServiceImpl.getConceptPowerReply(conceptUri);
         
@@ -86,12 +87,12 @@ public class ConceptPowerConnectorServiceImplTest {
     }
     
     @Test
-    public void test_getConceptPowerReply_nullResponse() throws ConceptpowerNoResponseException {
+    public void test_getConceptPowerReply_conceptpowerNoResponsetException() throws ConceptpowerNoResponseException {
         String conceptUri = "http://www.digitalhps.org/concepts/WID-09972010-N-01-cousin";
         String lemma = "cousin";
         
-        Map<String, String> pathVariables = new HashMap<>();
-        pathVariables.put("concept_uri", conceptUri);
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("concept_uri", conceptUri);
         
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -104,37 +105,10 @@ public class ConceptPowerConnectorServiceImplTest {
         ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
         conceptPowerReply.setConceptEntries(Collections.singletonList(conceptEntry));
         
-        ResponseEntity<ConceptPowerReply> responseEntity = new ResponseEntity<>(null, HttpStatus.ACCEPTED);
+        Mockito.when(restTemplate.exchange(conceptPowerURL, HttpMethod.GET, httpEntity, ConceptPowerReply.class, parameters))
+        	.thenThrow(HttpClientErrorException.class);
         
-        Mockito.when(restTemplate.exchange(conceptPowerURL, HttpMethod.GET, httpEntity, ConceptPowerReply.class, pathVariables))
-                .thenReturn(responseEntity);
-        
-        Assert.assertNull(conceptPowerConnectorServiceImpl.getConceptPowerReply(conceptUri));
-    }
-    
-    @Test
-    public void test_getConceptPowerReply_restClientException() throws ConceptpowerNoResponseException {
-        String conceptUri = "http://www.digitalhps.org/concepts/WID-09972010-N-01-cousin";
-        String lemma = "cousin";
-        
-        Map<String, String> pathVariables = new HashMap<>();
-        pathVariables.put("concept_uri", conceptUri);
-        
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-        
-        ConceptEntry conceptEntry = new ConceptEntry();
-        conceptEntry.setConceptUri(conceptUri);
-        conceptEntry.setLemma(lemma);
-        
-        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
-        conceptPowerReply.setConceptEntries(Collections.singletonList(conceptEntry));
-        
-        Mockito.when(restTemplate.exchange(conceptPowerURL, HttpMethod.GET, httpEntity, ConceptPowerReply.class, pathVariables))
-                .thenThrow(RestClientException.class);
-        
-        Assert.assertNull(conceptPowerConnectorServiceImpl.getConceptPowerReply(conceptUri));
+        Assert.assertThrows(ConceptpowerNoResponseException.class,() -> conceptPowerConnectorServiceImpl.getConceptPowerReply(conceptUri).getClass());
     }
 
 }
