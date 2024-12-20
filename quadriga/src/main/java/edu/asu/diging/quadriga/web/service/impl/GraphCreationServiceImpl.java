@@ -45,13 +45,14 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         eventGraphs.stream()
             .filter(eventGraph -> eventGraph.getRootEvent() instanceof RelationEvent)
             .forEach(validEventGraph -> {
-				try {
-					createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()),
-					            graphNodes, graphEdges, uniqueNodes, validEventGraph.getId().toString());
-				} catch (ConceptpowerNoResponseException e) {
-					logger.error("Could not create graph for id : "+validEventGraph.getId(), e);
-				}
-			});
+            	try {
+            	    createNodesAndEdges((RelationEvent) (validEventGraph.getRootEvent()),
+            	    		graphNodes, graphEdges, uniqueNodes, validEventGraph.getId().toString());
+            	}
+            	catch (ConceptpowerNoResponseException e) {
+            	    logger.error("Could not create graph for id : "+validEventGraph.getId(), e);
+            	}
+            });
 
         GraphElements graphElements = new GraphElements();
         graphElements.setNodes(wrapInGraphElements(graphNodes));

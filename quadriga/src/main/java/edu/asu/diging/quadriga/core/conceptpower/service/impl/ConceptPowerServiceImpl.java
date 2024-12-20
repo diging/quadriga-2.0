@@ -158,7 +158,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         ConceptCache conceptCache = null;
 
         if (conceptEntries == null || conceptEntries.isEmpty()) {
-        	return conceptCache;
+            return conceptCache;
         }
         ConceptEntry conceptEntry = conceptEntries.get(0);
         conceptCache = new ConceptCache();
