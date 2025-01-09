@@ -58,11 +58,6 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
                     httpEntity, ConceptPowerReply.class, pathVariables);
             if (response != null) {
                 return response.getBody();
-            } else {
-                logger.error("No response returned from ConceptPower for URI: " + conceptURI);
-                if (conceptPowerURL == null || conceptPowerURL.equals("")) {
-                    logger.error("ConceptPowerURL was found to be blank or null");
-                }
             }
         } catch (RestClientException e) {
             logger.error("Could not get concept for URI: " + conceptURI + " at URL: " + conceptPowerURL, e);
@@ -90,7 +85,7 @@ public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorSe
                 logger.error("Error while searching concept power"+response.getStatusCode()+response.getBody());
             }
         } catch (RestClientException e) {
-            logger.error("An exception has occured for the URL"+searchURL+e);
+            logger.error("An exception has occured for the URL", e);
         }
 
         return null;

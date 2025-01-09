@@ -2,8 +2,6 @@ package edu.asu.diging.quadriga.web.service.impl;
 
 import java.util.ArrayList;
 
-
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +11,7 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
@@ -37,6 +36,9 @@ public class GraphCreationServiceImpl implements GraphCreationService {
 
     @Autowired
     private ConceptPowerService conceptPowerService;
+    
+    @Value("${digitalhps_domain}")
+    private String digitalhpsDomain;
 
     @Override
     public GraphElements createGraph(List<EventGraph> eventGraphs) {
@@ -90,6 +92,7 @@ public class GraphCreationServiceImpl implements GraphCreationService {
             predicateNodeId = createPredicateNode(graphNodes, relation.getPredicate(), eventGraphId);
         } else {
             logger.error("A predicate is missing in one of the relations for EventGraph: " + eventGraphId);
+            return null;
         }
 
         if (relation.getSubject() != null) {
@@ -199,9 +202,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
         node.setEventGraphIds(new ArrayList<String>(Collections.singletonList(eventGraphId)));
 
         String sourceURI = event.getTerm().getInterpretation().getSourceURI();
-
-        if (sourceURI != null && sourceURI.contains("www.digitalhps.org")) {
-
+ 
+        if (sourceURI != null && sourceURI.contains(digitalhpsDomain)) {
             node.setUri(sourceURI);
             CachedConcept conceptCache = conceptPowerService.getConceptByUri(sourceURI);
 

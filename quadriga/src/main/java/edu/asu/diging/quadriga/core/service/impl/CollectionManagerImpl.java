@@ -132,9 +132,6 @@ public class CollectionManagerImpl implements CollectionManager {
     @Override
     public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException {
         Collection collection = findCollection(collectionId);
-        if (collection == null) {
-            throw new CollectionNotFoundException("CollectionId: " + collectionId);
-        }
         return collection;
     }
 
