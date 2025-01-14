@@ -1,5 +1,20 @@
 package edu.asu.diging.quadriga.web;
 
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.bson.types.ObjectId;
+
 import org.slf4j.Logger;
 
 
@@ -14,13 +29,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
 import org.springframework.web.bind.annotation.RequestParam;
+
+import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.service.CollectionManager;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
+import edu.asu.diging.quadriga.core.service.MappedTripleGroupService;
+import edu.asu.diging.quadriga.core.service.PredicateManager;
 
 @Controller
 public class DisplayCollectionController {
@@ -31,9 +51,6 @@ public class DisplayCollectionController {
     @Autowired
     private EventGraphService eventGraphService;
     
-    @Value("${defaultPageSize}")
-    private Integer defaultPageSize=10;
-
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/auth/collections/{collectionId}", method = RequestMethod.GET)
@@ -56,13 +73,14 @@ public class DisplayCollectionController {
 
 //      Determine page number and size for network pagination      
         page = (page == null || page < 0) ? 0 : page - 1;
-        size = (size == null || size < 1) ? defaultPageSize : size;
+        
+        size = (size == null || size < 1) ? 10 : size;
 
         model.addAttribute("size", size);
-        
+
         EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
         model.addAttribute("latestNetwork", latestNetwork);
-        
+
         Pageable paging = PageRequest.of(page, size);
         // Get all EventGraphs for this collection
         Page<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), paging);
@@ -78,7 +96,8 @@ public class DisplayCollectionController {
         
         // Get default mappings from Concepts
         model.addAttribute("defaultMappings", collectionManager.getNumberOfDefaultMappings(collection.getId().toString()));
-        return "auth/displayCollection";       
+
+        return "auth/displayCollection";
 
     }
 }

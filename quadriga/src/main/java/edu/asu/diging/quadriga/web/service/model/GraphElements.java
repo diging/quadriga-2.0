@@ -4,19 +4,19 @@ import java.util.List;
 
 public class GraphElements {
     
-    private List<GraphData> nodes;
-    private List<GraphData> edges;
+    private List<GraphElement> nodes;
+    private List<GraphElement> edges;
     
-    public List<GraphData> getNodes() {
+    public List<GraphElement> getNodes() {
         return nodes;
     }
-    public void setNodes(List<GraphData> nodes) {
+    public void setNodes(List<GraphElement> nodes) {
         this.nodes = nodes;
     }
-    public List<GraphData> getEdges() {
+    public List<GraphElement> getEdges() {
         return edges;
     }
-    public void setEdges(List<GraphData> edges) {
+    public void setEdges(List<GraphElement> edges) {
         this.edges = edges;
     }
 

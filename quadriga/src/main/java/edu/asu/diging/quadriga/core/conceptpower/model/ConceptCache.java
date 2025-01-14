@@ -25,7 +25,7 @@ import org.hibernate.annotations.LazyCollectionOption;
  */
 @Entity
 @Table(name = "conceptpower_concept_cache")
-public class CachedConcept implements Serializable, Comparable<CachedConcept> {
+public class ConceptCache implements Serializable, Comparable<ConceptCache> {
 
     private static final long serialVersionUID = 1L;
 
@@ -63,7 +63,7 @@ public class CachedConcept implements Serializable, Comparable<CachedConcept> {
     @Transient
     private ConceptType conceptType;
 
-    public CachedConcept() {
+    public ConceptCache() {
         this.lastUpdated = LocalDateTime.now();
     }
 
@@ -178,20 +178,51 @@ public class CachedConcept implements Serializable, Comparable<CachedConcept> {
     public void setConceptType(ConceptType conceptType) {
         this.conceptType = conceptType;
     }
-
+    
+    /**
+     * Compares the old and new cache values to determine if a difference exists.
+     * 
+     *If both old and new cache values are {@code null}, blank, or empty, no difference is present.
+     *If the old value is {@code null}, blank, or empty, and the new value is not {@code null}, blank, or empty, a difference is present.
+     *If the old value is not {@code null}, blank, or empty, and the new value is {@code null}, blank, or empty, a difference is present.
+     *If both values are not {@code null}, blank, or empty, their content must be compared to determine if a difference exists.
+     *
+     */
     @Override
-    public int compareTo(CachedConcept cachedConcept) {
-        if(isDifferentList(cachedConcept.getAlternativeUris(), this.getAlternativeUris())) return -1;
-        if(isDifferentList(cachedConcept.getEqualTo(), this.getEqualTo())) return -1;
-        if(isDifferentList(cachedConcept.getWordNetIds(), this.getWordNetIds())) return -1;
-        if (isDifferentString(cachedConcept.getConceptList(), this.getConceptList())) return -1;
-        if (isDifferentString(cachedConcept.getCreatorId(), this.getCreatorId())) return -1;
-        if (isDifferentString(cachedConcept.getDescription(), this.getDescription())) return -1;
-        if (isDifferentString(cachedConcept.getId(), this.getId())) return -1;
-        if (isDifferentString(cachedConcept.getPos(), this.getPos())) return -1;
-        if (isDifferentString(cachedConcept.getTypeId(), this.getTypeId())) return -1;
-        if (isDifferentString(cachedConcept.getUri(), this.getUri())) return -1;
-        if (isDifferentString(cachedConcept.getWord(), this.getWord())) return -1;
+    public int compareTo(ConceptCache conceptCache) {    
+        if(isDifferentList(conceptCache.getAlternativeUris(), this.getAlternativeUris())) {
+            return -1;
+        }
+        if(isDifferentList(conceptCache.getEqualTo(), this.getEqualTo())) {
+            return -1;
+        }
+        if(isDifferentList(conceptCache.getWordNetIds(), this.getWordNetIds())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getConceptList(), this.getConceptList())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getCreatorId(), this.getCreatorId())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getDescription(), this.getDescription())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getId(), this.getId())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getPos(), this.getPos())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getTypeId(), this.getTypeId())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getUri(), this.getUri())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getWord(), this.getWord())) {
+            return -1;
+        }
         return 0;
     }
     

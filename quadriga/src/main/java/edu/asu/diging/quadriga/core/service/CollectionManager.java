@@ -66,7 +66,6 @@ public interface CollectionManager {
      * @return collection details if it is archived
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
-
     public Collection deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
     
     /**
@@ -94,7 +93,7 @@ public interface CollectionManager {
      * @param collectionId used to find mappedTripleGroupId
      * @return the number of default mappings
      */
-    public int getNumberOfDefaultMappings(String collectionId);
+    public int getNumberOfDefaultMappings(String collectionId);   
 
     public Page<Collection> findByArchived(boolean archived, int pageInt,int sizeInt);
 

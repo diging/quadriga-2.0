@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.conceptpower.service;
 
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 
 /**
  * A service that extracts XML data from ConceptPower using REST calls and
@@ -11,8 +12,8 @@ import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
  */
 public interface ConceptPowerConnectorService {
 
-    public ConceptPowerReply getConceptPowerReply(String conceptURI);
-    
     public ConceptPowerReply searchConcepts(String searchTerm, int page);
+    
+    public ConceptPowerReply getConceptPowerReply(String conceptURI) throws ConceptpowerNoResponseException;
     
 }
