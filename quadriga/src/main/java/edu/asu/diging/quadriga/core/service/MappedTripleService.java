@@ -6,6 +6,7 @@ import java.util.List;
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.api.v1.model.MappedTriplesPage;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.mapped.Predicate;
@@ -27,6 +28,7 @@ public interface MappedTripleService {
      * @param uri URI of the concept
      * @param ignoreList List of concept URIs to be ignored which are directly connected to the query concept
      * @return the retrieved Triples
+     * @throws ConceptpowerNoResponseException 
      */
-    List<DefaultMapping> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList);
+    List<DefaultMapping> getTriplesByUri(String mappedTripleGroupId, String uri, List<String> ignoreList) throws ConceptpowerNoResponseException;
 }

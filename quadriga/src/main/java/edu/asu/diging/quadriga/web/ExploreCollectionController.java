@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
@@ -63,7 +64,7 @@ public class ExploreCollectionController {
     public ResponseEntity<GraphElements> getGraphForUri(@PathVariable String collectionId,
             @RequestParam(value = "uri", required = true) String uri,
             @RequestParam(value = "ignoreList", required = false, defaultValue = "{}") List<String> ignoreList)
-            throws InvalidObjectIdException,CollectionNotFoundException{
+            throws InvalidObjectIdException,CollectionNotFoundException, ConceptpowerNoResponseException{
         
         GraphElements graphElements = new GraphElements();
         

@@ -64,8 +64,8 @@ public class GraphCreationServiceImpl implements GraphCreationService {
             });
 
         GraphElements graphElements = new GraphElements();
-        graphElements.setNodes(graphNodes);
-        graphElements.setEdges(graphEdges);
+        graphElements.setNodes(wrapInGraphElements(graphNodes));
+        graphElements.setEdges(wrapInGraphElements(graphEdges));
 
         return graphElements;
     }
@@ -205,6 +205,58 @@ public class GraphCreationServiceImpl implements GraphCreationService {
             elements.add(element);
         });
         return elements;
+    }
+    
+    /**
+     * Creates a graph node based on the provided TripleElement.
+     *
+     * @param tripleElement the TripleElement from which to create the node
+     * @param graphNodeType the type of the graph node (subject, predicate, or object)
+     * @param conceptNodeMap a map containing already created graph nodes, used to avoid duplication
+     * @param nodes the list of graph nodes to which the newly created node will be added
+     * @return the created GraphNodeData representing the graph node
+     */
+    private GraphNodeData createNode(TripleElement tripleElement, GraphNodeType graphNodeType,
+            Map<String, GraphNodeData> conceptNodeMap, List<GraphData> nodes) {
+
+        String elementUri = tripleElement.getUri();
+        //Avoid node duplication if the element is not a predicate element and if it already exists
+        if (graphNodeType != GraphNodeType.PREDICATE && elementUri != null && !elementUri.isEmpty()
+                && conceptNodeMap.containsKey(elementUri)) {
+            return conceptNodeMap.get(elementUri);
+        }
+        GraphNodeData nodeData = new GraphNodeData();
+        nodeData.setId(new ObjectId().toString());
+        nodeData.setLabel(tripleElement.getLabel());
+        nodeData.setGroup(graphNodeType.getGroupId());
+        nodeData.setUri(tripleElement.getUri());
+        if (graphNodeType != GraphNodeType.PREDICATE && elementUri != null && !elementUri.isEmpty()) {
+            conceptNodeMap.put(elementUri, nodeData);
+        }
+        nodes.add(nodeData);
+        return nodeData;
+    }
+    
+    @Override 
+    public GraphElements mapToGraph(List<DefaultMapping> triples) {
+
+        Map<String, GraphNodeData> conceptNodeMap = new HashMap<>();
+        List<GraphData> nodes = new ArrayList<>();
+        List<GraphData> edges = new ArrayList<>();
+
+        triples.forEach(triple -> {
+            GraphNodeData subject = createNode(triple.getSubject(), GraphNodeType.SUBJECT, conceptNodeMap, nodes);
+            GraphNodeData object = createNode(triple.getObject(), GraphNodeType.OBJECT, conceptNodeMap, nodes);
+            GraphNodeData predicate = createNode(triple.getPredicate(), GraphNodeType.PREDICATE, conceptNodeMap, nodes);
+
+            createEdge(edges, subject.getId(), predicate.getId(), null);
+            createEdge(edges, predicate.getId(), object.getId(), null);
+        });
+
+        GraphElements graphElements = new GraphElements();
+        graphElements.setNodes(wrapInGraphElements(nodes));
+        graphElements.setEdges(wrapInGraphElements(edges));
+        return graphElements;
     }
 
 }

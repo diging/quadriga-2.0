@@ -120,5 +120,7 @@ public interface GraphCreationService {
      * @param targetId is the target node's id to be linked to the source
      */
     public void createEdge(List<GraphData> graphEdges, String sourceId, String targetId, String eventGraphId);
+
+    public GraphElements mapToGraph(List<DefaultMapping> triples);
     
 }
