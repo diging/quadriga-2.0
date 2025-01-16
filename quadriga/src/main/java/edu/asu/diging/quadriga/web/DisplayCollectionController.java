@@ -12,11 +12,14 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -51,14 +54,14 @@ public class DisplayCollectionController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/auth/collections/{collectionId}", method = RequestMethod.GET)
-    public String get(HttpServletRequest request, @PathVariable String collectionId, Model model) {
+    public String get( @RequestParam(required = false) Integer page , @RequestParam(required = false) Integer  size, @PathVariable String collectionId, Model model) {
 
         // Get collection details
         Collection collection;
         try {
             collection = collectionManager.findCollection(collectionId);
             if(collection == null) {
-            	logger.error("Couldn't find collection: ", collectionId);
+                logger.error("Couldn't find collection: ", collectionId);
                 return "error404Page";
             }
         } catch (InvalidObjectIdException e) {
@@ -68,48 +71,32 @@ public class DisplayCollectionController {
 
         model.addAttribute("collection", collection);
 
-        // Determine page number and size for network pagination
-        int page = 0;
-        int size = 10;
-
-        if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
-            page = Integer.parseInt(request.getParameter("page")) - 1;
-            page = page < 0 ? 0 : page;
-        }
-
-        if (request.getParameter("size") != null && !request.getParameter("size").isEmpty()) {
-            size = Integer.parseInt(request.getParameter("size"));
-            size = size < 1 ? 10 : size;
-        }
+//      Determine page number and size for network pagination      
+        page = (page == null || page < 0) ? 0 : page - 1;
+        size = (size == null || size < 1) ? 10 : size;
 
         model.addAttribute("size", size);
 
+        EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
+        model.addAttribute("latestNetwork", latestNetwork);
+
+        Pageable paging = PageRequest.of(page, size);
 
         // Get all EventGraphs for this collection
-        List<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId());
+        Page<EventGraph> eventGraphsList = eventGraphService.findAllEventGraphsByCollectionId(collection.getId(), paging);
 
-        // if (!eventGraphsList.isEmpty()) {
-            EventGraph latestNetwork = eventGraphService.findLatestEventGraphByCollectionId(collection.getId());
-        
-            if( latestNetwork!=null ) {
-                model.addAttribute("lastNetworkSubmittedAt", latestNetwork.getCreationTime());
-                model.addAttribute("lastNetworkSubmittedBy", latestNetwork.getSubmittingApp());
-            }
-            
-        model.addAttribute("networks", eventGraphsList.subList(page * size, Math.min(eventGraphsList.size(), page * size + size)));
+        long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());
 
-        model.addAttribute("totalPages", eventGraphsList.size() % 10 == 0 ? (eventGraphsList.size()/size) : (eventGraphsList.size()/size + 1));
+
+        model.addAttribute("networks", eventGraphsList.getContent());
+        model.addAttribute("totalPages", eventGraphsList.getTotalPages());
         model.addAttribute("pageNumber", page);
-     
+        model.addAttribute("collection", collection);
+        model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
         model.addAttribute("collection", collection);
         
-        long numberOfSubmittedNetworks = eventGraphService.getNumberOfSubmittedNetworks(collection.getId());
-       
-        model.addAttribute("numberOfSubmittedNetworks", numberOfSubmittedNetworks);
-        
         // Get default mappings from Concepts
-        model.addAttribute("defaultMappings", getNumberOfDefaultMappings(collection.getId().toString()));
-        
+        model.addAttribute("defaultMappings", collectionManager.getNumberOfDefaultMappings(collection.getId().toString()));
         return "auth/displayCollection";
 
     }
@@ -138,6 +125,4 @@ public class DisplayCollectionController {
         }
         return 0;
     }
-    
-
 }

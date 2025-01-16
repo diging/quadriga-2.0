@@ -1,11 +1,16 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
+import edu.asu.diging.quadriga.api.v1.model.MappedTriplesPage;
 import edu.asu.diging.quadriga.api.v1.model.NodeData;
 import edu.asu.diging.quadriga.core.data.neo4j.ConceptRepository;
 import edu.asu.diging.quadriga.core.data.neo4j.PredicateRepository;
@@ -22,12 +27,12 @@ public class MappedTripleServiceImpl implements MappedTripleService {
 
     @Autowired
     private ConceptRepository conceptRepo;
-    
+
     @Autowired
     private PredicateRepository predicateRepo;
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.impl.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph)
+     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#storeMappedGraph(edu.asu.diging.quadriga.api.v1.model.Graph, edu.asu.diging.quadriga.core.model.MappedTripleGroup)
      */
     @Override
     public Predicate storeMappedGraph(Graph graph, MappedTripleGroup mappedTripleGroup) throws NodeNotFoundException {
@@ -44,7 +49,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         object = conceptRepo.save(object);
         Predicate predicate = createPredicate(mapping.getPredicate(), nodes, subject, object, mappedTripleGroupId);
         predicateRepo.save(predicate);
-        
+
         return predicate;
     }
 
@@ -57,11 +62,11 @@ public class MappedTripleServiceImpl implements MappedTripleService {
         }
 
         NodeData data = nodes.get(element.getReference());
-        
+
         if (data == null) {
             throw new NodeNotFoundException("Can't find node with id " + element.getReference());
         }
-        
+
         concept.setLabel(data.getLabel());
         concept.setUri(data.getMetadata().getInterpretation());
         concept.setMappedTripleGroupId(mappedTripleGroupId);
@@ -70,7 +75,7 @@ public class MappedTripleServiceImpl implements MappedTripleService {
 
     private Predicate createPredicate(TripleElement element, Map<String, NodeData> nodes, Concept subject, Concept object, String mappedTripleGroupId) throws NodeNotFoundException {
         Predicate predicate = new Predicate();
-        
+
         if (element.getType().equals(TripleElement.TYPE_URI)) {
             predicate.setLabel(element.getLabel());
             predicate.setRelationship(element.getUri());
@@ -82,10 +87,51 @@ public class MappedTripleServiceImpl implements MappedTripleService {
             predicate.setLabel(data.getLabel());
             predicate.setRelationship(data.getMetadata().getInterpretation());
         }
-        
+
         predicate.setSource(subject);
         predicate.setTarget(object);
         predicate.setMappedTripleGroupId(mappedTripleGroupId);
         return predicate;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.MappedTripleService#getMappedTriples(java.lang.String, int, int)
+     */
+    @Override
+    public MappedTriplesPage getMappedTriples(String mappedTripleGroupId, int page, int pageSize) {
+        MappedTriplesPage triplePage = new MappedTriplesPage();
+        Optional<Page<Predicate>> predicates = predicateRepo.findByMappedTripleGroupId(mappedTripleGroupId, PageRequest.of(page-1, pageSize));
+        if (predicates.isPresent()) {
+            triplePage.setTriples(predicates.get().stream().map(predicate -> toTriple(predicate)).collect(Collectors.toList()));
+            triplePage.setCurrentPage(predicates.get().getNumber() + 1);
+            triplePage.setTotalPages(predicates.get().getTotalPages());
+        }
+        return triplePage;
+    }
+
+    private DefaultMapping toTriple(Predicate predicate) {
+        if (predicate == null) {
+            return null;
+        }
+
+        DefaultMapping triple = new DefaultMapping();
+        triple.setSubject(toTripleElement(predicate.getSource()));
+        triple.setObject(toTripleElement(predicate.getTarget()));
+        triple.setPredicate(toTripleElement(predicate));
+        return triple;
+    }
+
+    private TripleElement toTripleElement(Concept concept) {
+        TripleElement tripleElement = new TripleElement();
+        tripleElement.setLabel(concept.getLabel());
+        tripleElement.setUri(concept.getUri());
+        return tripleElement;
+    }
+
+    private TripleElement toTripleElement(Predicate predicate) {
+        TripleElement tripleElement = new TripleElement();
+        tripleElement.setLabel(predicate.getLabel());
+        tripleElement.setUri(predicate.getRelationship());
+        return tripleElement;
     }
 }

@@ -1,0 +1,60 @@
+<html layout:decorate="~{layouts/main}">
+<head>
+	
+    <title>Quadriga 2.0</title>
+    <link rel="stylesheet" th:href="@{/resources/static/css/admin/user/apps.css}" type="text/css" />
+    <script th:inline="javascript">
+        $(document).ready(function() {
+        	
+            var container = $('#applicationList');
+            var userApps = [[${userApps}]];
+            var username = [[${username}]];
+            var url = [[@{|/admin/user/${username}/app/|}]];
+            var csrf_token = [[${_csrf.token}]];
+            $.ajax({
+                'url': [[@{|/citesphere/apps|}]],
+                'type': "GET",
+                
+                async: true,
+                'success': function(data) {
+                	
+                	
+                    data.forEach(function(app) {
+                        var item = $('<tr>');
+                        item.append('<td>'+ app.clientId +'</td><td>'+ app.name +'</td><td>'+ app.description +'</td>');
+                        if (userApps && userApps.includes(app.clientId)) {
+                            item.append('<td><form action="'+url+app.clientId+'/revoke" method="post" class="revoke-action"><input type="hidden" name="_csrf" value="'+csrf_token+'"/><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Revoke </form></td>');
+	                 } else {
+                         item.append('<td><form action="'+url+app.clientId+'/assign" method="post" class="revoke-action"><input type="hidden" name="_csrf" value="'+csrf_token+'"/><input type="submit" value="" class="fas fa-times-circle action-icon"></input>Assign</form></td>');
+	                 }
+                        item.append('</tr>');
+                        container.append(item);
+                    });
+                    
+                },
+                'error': function(data) {
+                    container.append('<span class="text-danger">Error fetching apps from citesphere</span>');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h2>Assign apps to user <span th:text="${username}"></span></h2>
+        <div class="table-bordered table-responsive apps-table">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Client Id</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="applicationList"></tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -18,12 +18,16 @@
         <simple-users-version>1.1</simple-users-version>
 
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
+        
+
+        <hibernate.dialect>org.hibernate.dialect.MySQL57Dialect</hibernate.dialect>
+        
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.database.url>jdbc-url-to-db</db.database.url>
         <db.user>db-user</db.user>
         <db.password>db-password</db.password>
-
+        
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
@@ -44,6 +48,8 @@
         <citesphere.base.url></citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
         <citesphere.client.secret></citesphere.client.secret>
+
+
 
         <log.level>info</log.level>
 
@@ -352,6 +358,12 @@
             <artifactId>jdom2</artifactId>
             <version>2.0.5</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+            <version>${spring-security-version}</version>
+        </dependency>
 
     </dependencies>
 
@@ -372,7 +384,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
+                <version>3.3.1</version>
                 <configuration>
                     <webResources>
                         <resource>

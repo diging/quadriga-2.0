@@ -1,6 +1,7 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import org.bson.types.ObjectId;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -146,6 +147,19 @@ public class MappedTripleGroupServiceImpl implements MappedTripleGroupService {
             mappedTripleGroup = add(collectionId, mappedTripleType);
         }
         return mappedTripleGroup;
+    }
+
+    @Override
+    public MappedTripleGroup findByCollectionIdAndId(String collectionId, String mappedTripleGroupId) throws InvalidObjectIdException {
+        ObjectId collectionObjectId;
+        ObjectId mappedTripleGroupObjectId;
+        try {
+            collectionObjectId = new ObjectId(collectionId);
+            mappedTripleGroupObjectId = new ObjectId(mappedTripleGroupId);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidObjectIdException("MappedTripleGroupId: " + mappedTripleGroupId, e);
+        }
+        return mappedTripleGroupRepository.findBy_idAndCollectionId(mappedTripleGroupObjectId, collectionObjectId).orElse(null);
     }
 
 }

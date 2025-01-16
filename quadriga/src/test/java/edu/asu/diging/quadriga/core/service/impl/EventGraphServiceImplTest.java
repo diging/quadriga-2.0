@@ -6,7 +6,9 @@ import static org.mockito.Mockito.mock;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+
 import java.util.Collections;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -22,16 +24,16 @@ import org.mockito.MockitoAnnotations;
 
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
 import edu.asu.diging.quadriga.core.model.EventGraph;
+
 import edu.asu.diging.quadriga.core.mongo.EventGraphDao;
 import edu.asu.diging.quadriga.core.mongo.impl.EventGraphDaoImpl;
-
-
 
 public class EventGraphServiceImplTest {
 
@@ -133,7 +135,6 @@ public class EventGraphServiceImplTest {
         Assert.assertEquals(eventGraphs.get(0).getId(), foundEventGraphs.get(0).getId());
     }
     
-    
     @Test
     public void test_countEventGraphsBy_success() throws InterruptedException {
         ObjectId collectionObjectId = new ObjectId();
@@ -177,7 +178,7 @@ public class EventGraphServiceImplTest {
     
     
     @Test
-    public void test_countZeroEventGraphsBy_success() throws InterruptedException {
+    public void test_countEventGraphsBy_zeroEventGraphs() throws InterruptedException {
         ObjectId collectionObjectId = new ObjectId();
 
         Document doc1= new Document();
