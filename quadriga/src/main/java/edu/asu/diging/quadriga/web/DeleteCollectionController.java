@@ -25,7 +25,7 @@ public class DeleteCollectionController {
     
     private Logger logger = LoggerFactory.getLogger(getClass());
     
-    @RequestMapping(value = "/auth/collections/{id}/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/auth/collections/{id}/delete", method = RequestMethod.POST)
     public String get(@PathVariable String id, RedirectAttributes redirectAttributes) {
         try {
             Collection collection = collectionManager.deleteCollection(id);
