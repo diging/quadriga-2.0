@@ -2,8 +2,6 @@ package edu.asu.diging.quadriga.web;
 
 import java.util.ArrayList;
 
-
-
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -18,10 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
-import edu.asu.diging.quadriga.core.conceptpower.model.CachedConcept;
+import edu.asu.diging.quadriga.core.conceptpower.model.ConceptCache;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptService;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
 import edu.asu.diging.quadriga.core.model.Collection;
 import edu.asu.diging.quadriga.core.model.DefaultMapping;
@@ -102,10 +101,10 @@ public class ExploreCollectionControllerTest {
     }
     
     @Test
-    public void testGetGraphForUriWithValidInput() throws InvalidObjectIdException, CollectionNotFoundException {
+    public void testGetGraphForUriWithValidInput() throws InvalidObjectIdException, CollectionNotFoundException, ConceptpowerNoResponseException {
         ObjectId objectId = new ObjectId();
         String uri ="https:/uri/";
-        CachedConcept conceptCache = new CachedConcept();
+        ConceptCache conceptCache = new ConceptCache();
         List<String> equalTo = new ArrayList<>();
         equalTo.add(uri);
         conceptCache.setUri(uri);
@@ -133,14 +132,14 @@ public class ExploreCollectionControllerTest {
     
     
     @Test
-    public void testGetGraphForUriWithInvalidCollectionId() throws InvalidObjectIdException, CollectionNotFoundException {
+    public void testGetGraphForUriWithInvalidCollectionId() throws InvalidObjectIdException, CollectionNotFoundException, ConceptpowerNoResponseException {
         Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType("collectionId", MappedTripleType.DEFAULT_MAPPING)).thenThrow(CollectionNotFoundException.class);
         ResponseEntity<GraphElements> response = exploreCollectionController.getGraphForUri("collectionId", "uri1", null);
         Assert.assertEquals(org.springframework.http.HttpStatus.NOT_FOUND,response.getStatusCode());
         
     }
     @Test
-    public void testGetGraphForUriWithInvalidObjectId() throws InvalidObjectIdException, CollectionNotFoundException{
+    public void testGetGraphForUriWithInvalidObjectId() throws InvalidObjectIdException, CollectionNotFoundException, ConceptpowerNoResponseException{
         Mockito.when(mappedTripleGroupService.findByCollectionIdAndMappingType("collectionId",MappedTripleType.DEFAULT_MAPPING )).thenThrow(InvalidObjectIdException.class);
         ResponseEntity<GraphElements> response =  exploreCollectionController.getGraphForUri("collectionId", "InvalidUri",null );
         Assert.assertEquals(org.springframework.http.HttpStatus.BAD_REQUEST,response.getStatusCode());

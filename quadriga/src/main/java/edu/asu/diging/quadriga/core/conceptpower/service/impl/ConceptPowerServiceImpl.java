@@ -150,7 +150,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
         return false;
     }
 
-    private ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
+    public ConceptCache mapConceptPowerReplyToConceptCache(ConceptPowerReply conceptPowerReply) {
         // If we get multiple ConceptPower entries in the reply, we use the first one
         List<ConceptEntry> conceptEntries = conceptPowerReply.getConceptEntries();
         ConceptCache conceptCache = null;
