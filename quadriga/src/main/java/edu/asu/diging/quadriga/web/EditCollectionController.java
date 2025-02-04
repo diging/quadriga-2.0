@@ -46,7 +46,6 @@ public class EditCollectionController {
      */
     @RequestMapping(value = "/auth/collections/{id}/edit", method = RequestMethod.GET)
     public String get(@PathVariable String id, Model model) {
-
         Collection collection = null;
 
         try {

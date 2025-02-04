@@ -23,8 +23,10 @@ public interface CollectionManager {
     
     /**
      * Finds a collection from the collection table by id
-     * @param id used to look up the collection in the database
+     * 
+     * @param id used to look up the collection in mongodb
      * @throws InvalidObjectIdException if the id passed is not a hex string
+     * 
      * @return Collection Instance that is found from the database
      * 
      **/
@@ -39,6 +41,7 @@ public interface CollectionManager {
     
     /**
      * 
+
      * Edits an existing Collection and updates it in the db
      * @param id of the collection that needs to be updated
      * @param name will be the updated name value
@@ -63,9 +66,10 @@ public interface CollectionManager {
     /**
      * Deletes a collection from collection table by id
      * @param id used to look up the collection in database
-     * @return 
+     * 
+     * @return collection details if it is archived
      * @throws CollectionNotFoundException in case the collection for the given id is missing
-     * @throws InvalidObjectIdException if the id passed is not a hex string
+     * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
     public Collection deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
     

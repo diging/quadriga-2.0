@@ -21,17 +21,6 @@ public interface EventGraphService {
     public void saveEventGraphs(List<EventGraph> graphs);
     
     /**
-     * Finds all eventGraphs mapped to a collection in the descending order of creation time
-     * 
-     * @param collectionId is the id used to finds all eventGraphs
-     * @param pageable used to specify page number and size per page
-     * @return a list of eventGraphs in descending order
-     */
-    public Page<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable);
-    
-    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId);
-    
-    /**
      * Finds the latest eventGraph mapped to a collection in the descending order of creation time
      * 
      * @param collectionId is the id used to finds the latest eventGraph
@@ -40,22 +29,25 @@ public interface EventGraphService {
      * @throws InvalidObjectIdException if the collectionId contains non-hexadecimal characters
      */
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId);
-    
+           
     /**
-     * Finds event graphs by sourceURI
-     * 
-     * @param sourceURI used for searching eventGraph
-     */
-    public List<EventGraph> findEventGraphsBySourceURI(String sourceURI);
-        
-    /**
-
      * Groups the event graphs mapped to a collection by source uri and returns the total count. 
      * @param collectionId
      * @return total count
      */
     public long getNumberOfSubmittedNetworks(ObjectId collectionId);
-
+    
+    /**
+     * Finds all eventGraphs mapped to a collection in the descending order of creation time
+     * 
+     * @param collectionId is the id used to finds all eventGraphs
+     * 
+     * @param pageable used to specify page number and size per page
+     * @return a list of eventGraphs in descending order
+     */
+    public Page<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable);
+    
+    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId);
     
     /**
      * Maps the network to events and saves it in the database
@@ -63,4 +55,12 @@ public interface EventGraphService {
      * @param collectionId
      */
     public void mapNetworkAndSave(Graph graph, String collectionId);
+    
+    /**
+     * Finds event graphs by sourceURI
+     * 
+     * @param sourceURI used for searching eventGraph
+     */
+    public List<EventGraph> findEventGraphsBySourceURI(String sourceURI);
+    
 }

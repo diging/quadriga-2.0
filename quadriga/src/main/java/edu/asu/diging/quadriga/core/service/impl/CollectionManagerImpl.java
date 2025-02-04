@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
@@ -70,8 +69,6 @@ public class CollectionManagerImpl implements CollectionManager {
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.ICollectionManager#findCollection(java.lang.String)
-    /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.CollectionManager#findCollection(java.lang.String)
      */
     @Override
     public Collection findCollection(String id) throws InvalidObjectIdException {
@@ -129,6 +126,18 @@ public class CollectionManagerImpl implements CollectionManager {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
     }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#getCollection(java.lang.String)
+     */
+    @Override
+    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException {
+        Collection collection = findCollection(collectionId);
+        if (collection == null) {
+            throw new CollectionNotFoundException("CollectionId: " + collectionId);
+        }
+        return collection;
+    }
 
     /* (non-Javadoc)
      * @see edu.asu.diging.quadriga.core.service.CollectionManager#findCollections(java.lang.String, java.util.List, org.springframework.data.domain.Pageable)
@@ -157,17 +166,6 @@ public class CollectionManagerImpl implements CollectionManager {
         }
     }
 
-    /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#getCollection(java.lang.String)
-     */
-    @Override
-    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException {
-        Collection collection = findCollection(collectionId);
-        if (collection == null) {
-            throw new CollectionNotFoundException("CollectionId: " + collectionId);
-        }
-        return collection;
-    }
     /**
      * This method returns the number of default mappings present in the collection
      * One MappedTripleGroup will exist for the "DefaultMappings" for this collection

@@ -3,6 +3,7 @@ package edu.asu.diging.quadriga.web.service;
 import java.util.List;
 import java.util.Map;
 
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 import edu.asu.diging.quadriga.core.model.EventGraph;
 import edu.asu.diging.quadriga.core.model.events.AppellationEvent;
 import edu.asu.diging.quadriga.core.model.events.RelationEvent;
@@ -66,9 +67,10 @@ public interface GraphCreationService {
      * @param uniqueNodes maintains a map that links every unique sourceURI to its corresponding node
      * @param eventGraphId is the id of the current EventGraph
      * @return
+     * @throws ConceptpowerNoResponseException 
      */
     public String createNodesAndEdges(RelationEvent event, List<GraphData> graphNodes, List<GraphData> graphEdges,
-            Map<String, GraphNodeData> uniqueNodes, String eventGraphId);
+            Map<String, GraphNodeData> uniqueNodes, String eventGraphId) throws ConceptpowerNoResponseException;
     
     /**
      * Creates a predicate node using the event data and adds it to list of graph nodes
@@ -76,8 +78,9 @@ public interface GraphCreationService {
      * @param graphNodes list to maintain all current graph nodes
      * @param event is an appellation event that contains data to be set to the node
      * @return the id of the created predicate node
+     * @throws ConceptpowerNoResponseException 
      */
-    public String createPredicateNode(List<GraphData> graphNodes, AppellationEvent event, String eventGraphId);
+    public String createPredicateNode(List<GraphData> graphNodes, AppellationEvent event, String eventGraphId) throws ConceptpowerNoResponseException;
     
     /**
      * Checks if the unique nodes map contains the same sourceURI as the node to be created
@@ -90,9 +93,10 @@ public interface GraphCreationService {
      * @param uniqueNodes map to maintain nodes with unique sourceURI that can be reused
      * @param graphNodeType indicates whether node to be created is subject or object node to accordingly set group id
      * @return the id of an existing node from unique nodes or the newly created node
+     * @throws ConceptpowerNoResponseException 
      */
     
-    public String createSubjectOrObjectNode(List<GraphData> graphNodes, AppellationEvent event, Map<String, GraphNodeData> uniqueNodes, GraphNodeType graphNodeType, String eventGraphId);
+    public String createSubjectOrObjectNode(List<GraphData> graphNodes, AppellationEvent event, Map<String, GraphNodeData> uniqueNodes, GraphNodeType graphNodeType, String eventGraphId) throws ConceptpowerNoResponseException;
     
     /**
      * Creates a GraphNodeData object and sets details such as id, label, group
@@ -100,8 +104,9 @@ public interface GraphCreationService {
      * @param event is the appellation event for which node is being created
      * @param graphNodeType used to set group id
      * @return the created GraphNodeData object
+     * @throws ConceptpowerNoResponseException 
      */
-    public GraphNodeData createNode(AppellationEvent event, GraphNodeType graphNodeType, String eventGraphId);
+    public GraphNodeData createNode(AppellationEvent event, GraphNodeType graphNodeType, String eventGraphId) throws ConceptpowerNoResponseException;
     
     /**
      * Creates that edge that links the provided source and target using their IDs and it to

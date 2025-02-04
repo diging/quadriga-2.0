@@ -50,7 +50,6 @@ public class EventGraphServiceImpl implements EventGraphService {
     public Page<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable) {
         return repo.findByCollectionIdOrderByCreationTimeAsc(collectionId, pageable).orElse(null);
     }
-
     
     @Override
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId) {
@@ -78,6 +77,7 @@ public class EventGraphServiceImpl implements EventGraphService {
         eventGraphs.forEach(e -> {
             e.setCollectionId(new ObjectId(collectionId));
             e.setDefaultMapping(graph.getMetadata().getDefaultMapping());
+            e.setContext(graph.getMetadata().getContext());
             /*
              * FIXME:
              * 

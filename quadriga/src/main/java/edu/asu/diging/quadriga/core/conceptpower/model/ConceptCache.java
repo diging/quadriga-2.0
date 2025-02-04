@@ -20,17 +20,14 @@ import org.hibernate.annotations.LazyCollectionOption;
  * This class represents the 'conceptpower_concept_cache' table present in the
  * database that stores cached concept data
  * 
- * @author poojakulkarni
+ * @author Digital Innovation Group
  *
  */
 @Entity
 @Table(name = "conceptpower_concept_cache")
 public class ConceptCache implements Serializable, Comparable<ConceptCache> {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 6260562492095202271L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     private String uri;
@@ -181,25 +178,52 @@ public class ConceptCache implements Serializable, Comparable<ConceptCache> {
     public void setConceptType(ConceptType conceptType) {
         this.conceptType = conceptType;
     }
-
+    
+    /**
+     * Compares the old and new cache values to determine if a difference exists.
+     * 
+     *If both old and new cache values are {@code null}, blank, or empty, no difference is present.
+     *If the old value is {@code null}, blank, or empty, and the new value is not {@code null}, blank, or empty, a difference is present.
+     *If the old value is not {@code null}, blank, or empty, and the new value is {@code null}, blank, or empty, a difference is present.
+     *If both values are not {@code null}, blank, or empty, their content must be compared to determine if a difference exists.
+     *
+     */
     @Override
     public int compareTo(ConceptCache conceptCache) {
-        // If both old and new cache values are null/blank/empty, nothing has changed
-        // If old value is null/blank/empty, new value is not null/blank/empty, difference present
-        // If old value is not null/blank/empty, new value is null/blank/empty, difference present
-        // If both are not null/blank/empty, we need to check difference
         
-        if(isDifferentList(conceptCache.getAlternativeUris(), this.getAlternativeUris())) return -1;
-        if(isDifferentList(conceptCache.getEqualTo(), this.getEqualTo())) return -1;
-        if(isDifferentList(conceptCache.getWordNetIds(), this.getWordNetIds())) return -1;
-        if (isDifferentString(conceptCache.getConceptList(), this.getConceptList())) return -1;
-        if (isDifferentString(conceptCache.getCreatorId(), this.getCreatorId())) return -1;
-        if (isDifferentString(conceptCache.getDescription(), this.getDescription())) return -1;
-        if (isDifferentString(conceptCache.getId(), this.getId())) return -1;
-        if (isDifferentString(conceptCache.getPos(), this.getPos())) return -1;
-        if (isDifferentString(conceptCache.getTypeId(), this.getTypeId())) return -1;
-        if (isDifferentString(conceptCache.getUri(), this.getUri())) return -1;
-        if (isDifferentString(conceptCache.getWord(), this.getWord())) return -1;
+        if(isDifferentList(conceptCache.getAlternativeUris(), this.getAlternativeUris())) {
+            return -1;
+        }
+        if(isDifferentList(conceptCache.getEqualTo(), this.getEqualTo())) {
+            return -1;
+        }
+        if(isDifferentList(conceptCache.getWordNetIds(), this.getWordNetIds())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getConceptList(), this.getConceptList())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getCreatorId(), this.getCreatorId())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getDescription(), this.getDescription())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getId(), this.getId())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getPos(), this.getPos())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getTypeId(), this.getTypeId())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getUri(), this.getUri())) {
+            return -1;
+        }
+        if (isDifferentString(conceptCache.getWord(), this.getWord())) {
+            return -1;
+        }
         return 0;
     }
     

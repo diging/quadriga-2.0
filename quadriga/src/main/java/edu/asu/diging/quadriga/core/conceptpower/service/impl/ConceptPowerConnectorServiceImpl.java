@@ -14,60 +14,57 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import edu.asu.diging.quadriga.core.conceptpower.reply.model.ConceptPowerReply;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerConnectorService;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 
 @Service
 @PropertySource({ "classpath:config.properties" })
 public class ConceptPowerConnectorServiceImpl implements ConceptPowerConnectorService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Value("${conceptpower_base_url}")
     private String conceptPowerBaseURL;
 
-    @Value("${conceptpower_id_url}")
-    private String conceptPowerIdURL;
+    @Value("${conceptpower_id_endpoint}")
+    private String conceptPowerIdEndpoint;
 
     private RestTemplate restTemplate;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     public ConceptPowerConnectorServiceImpl() {
         restTemplate = new RestTemplate();
     }
 
     @Override
-    public ConceptPowerReply getConceptPowerReply(String conceptURI) {
-        Map<String, String> pathVariables = new HashMap<>();
-        pathVariables.put("concept_uri", conceptURI);
+    public ConceptPowerReply getConceptPowerReply(String conceptURI) throws ConceptpowerNoResponseException {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("concept_uri", conceptURI);
+        String conceptPowerURL = conceptPowerBaseURL + conceptPowerIdEndpoint;
 
-        String conceptPowerURL = conceptPowerBaseURL + conceptPowerIdURL;
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
+        ResponseEntity<ConceptPowerReply> response;
 
         try {
-            ResponseEntity<ConceptPowerReply> response = restTemplate.exchange(conceptPowerURL, HttpMethod.GET,
-                    httpEntity, ConceptPowerReply.class, pathVariables);
-            if (response != null) {
-                return response.getBody();
-            } else {
-                logger.error("No response returned from ConceptPower for URI: " + conceptURI);
-                if (conceptPowerURL == null || conceptPowerURL.equals("")) {
-                    logger.error("ConceptPowerURL was found to be blank or null");
-                }
+            response = restTemplate.exchange(conceptPowerURL,
+            	HttpMethod.GET, httpEntity, ConceptPowerReply.class, parameters);
+            if(response == null) {
+            	throw new ConceptpowerNoResponseException("ConceptPower returned a null response for URI: " + conceptURI);
             }
-        } catch (RestClientException e) {
-            logger.error(e.getMessage());
-            logger.error("Could not get concept for URI: " + conceptURI);
-            if (conceptPowerURL == null || conceptPowerURL.equals("")) {
-                logger.error("ConceptPowerURL was found to be blank or null");
-            }
+        } 
+        catch (HttpClientErrorException e) {
+            throw new ConceptpowerNoResponseException("Error occurred while contacting ConceptPower for URI: " + conceptURI,e);
         }
-
-        return null;
+        catch(Exception e) {
+            throw new ConceptpowerNoResponseException("Unexpected error occurred while processing ConceptPower response for URI: " + conceptURI,e);
+        }
+        return response.getBody();
     }
 
 }

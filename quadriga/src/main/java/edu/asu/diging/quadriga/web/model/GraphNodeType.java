@@ -6,6 +6,9 @@ public enum GraphNodeType {
     SUBJECT(1),
     OBJECT(1);
     
+    /**
+     * Corresponds to the group in GraphNodeData. 
+     */
     private int groupId;
 
     private GraphNodeType(int groupId) {

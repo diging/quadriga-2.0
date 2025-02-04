@@ -22,6 +22,7 @@ import edu.asu.diging.quadriga.core.conceptpower.reply.model.Type;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptCacheService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptPowerConnectorService;
 import edu.asu.diging.quadriga.core.conceptpower.service.ConceptTypeService;
+import edu.asu.diging.quadriga.core.exceptions.ConceptpowerNoResponseException;
 
 public class ConceptPowerServiceImplTest {
 
@@ -90,8 +91,9 @@ public class ConceptPowerServiceImplTest {
         conceptEntry.setDeleted(deleted);
         conceptEntry.setCreatorId(creatorId);
         conceptEntry.setLemma(word);
-        
+               
         String expectedId = "WID-09972010-N-01-cousin";
+        conceptEntry.setId(expectedId);
         
         ConceptCache conceptCache = conceptPowerServiceImpl.mapConceptPowerReplyToConceptCache(conceptPowerReply);
         
@@ -388,7 +390,7 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_noConceptInDB() {
+    public void test_getConceptByUri_noConceptInDB() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         
         ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
@@ -405,32 +407,44 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB() {
+    public void test_getConceptByUri_conceptPresentInDB() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         ConceptCache conceptCache = new ConceptCache();
         conceptCache.setUri(sourceURI);
         
-        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        conceptEntry.setConceptUri(sourceURI);
+        conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
         
+        Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
+     
         ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
         Assert.assertEquals(sourceURI, foundConceptCache.getUri());
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdatedToday_noDiff() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdatedToday_noDiff() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         ConceptCache conceptCache = new ConceptCache();
         conceptCache.setUri(sourceURI);
         conceptCache.setLastUpdated(LocalDateTime.now());
         
+        ConceptPowerReply conceptPowerReply = new ConceptPowerReply();
+        ConceptEntry conceptEntry = new ConceptEntry();
+        conceptEntry.setConceptUri(sourceURI);
+        conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
+        
         Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
         
         ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
         Assert.assertEquals(sourceURI, foundConceptCache.getUri());
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdatedToday_posDiff() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdatedToday_posDiff() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         String posOld = "NOUN";
         String posNew = "VERB";
@@ -446,14 +460,15 @@ public class ConceptPowerServiceImplTest {
         conceptPowerReply.setConceptEntries(Arrays.asList(conceptEntry));
         
         Mockito.when(conceptCacheService.getConceptByUri(sourceURI)).thenReturn(conceptCache);
+        Mockito.when(conceptPowerConnectorService.getConceptPowerReply(sourceURI)).thenReturn(conceptPowerReply);
         
         ConceptCache foundConceptCache = conceptPowerServiceImpl.getConceptByUri(sourceURI);
         Assert.assertEquals(sourceURI, foundConceptCache.getUri());
-        Assert.assertEquals(posOld, foundConceptCache.getPos());
+        Assert.assertNotEquals(posOld, foundConceptCache.getPos());
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_noDiff() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_noDiff() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         ConceptCache conceptCache = new ConceptCache();
         conceptCache.setUri(sourceURI);
@@ -475,7 +490,7 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_posDiff() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_posDiff() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         String posOld = "NOUN";
         String posNew = "VERB";
@@ -500,7 +515,7 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_oldPosNullNewPosNotNull() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_oldPosNullNewPosNotNull() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         String posOld = null;
         String posNew = "VERB";
@@ -525,7 +540,7 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_oldPosNotNullNewPosNull() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_oldPosNotNullNewPosNull() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         String posOld = "NOUN";
         String posNew = null;
@@ -550,7 +565,7 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_oldPosAndNewPosNull() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_oldPosAndNewPosNull() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         String posOld = null;
         String posNew = null;
@@ -575,7 +590,7 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_altUrisNoDiff() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_altUrisNoDiff() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         String altURI = "ALT-URI-1";
         
@@ -608,7 +623,7 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_altUrisDiffPresent() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_altUrisDiffPresent() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         String altURI = "ALT-URI-1";
         String altURIDiff = "ALT-URI-2";
@@ -645,7 +660,7 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_typeNoDiff() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_typeNoDiff() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         String nameOld = "NAME-1";
         String nameNew = "NAME-1";
@@ -677,7 +692,7 @@ public class ConceptPowerServiceImplTest {
     }
     
     @Test
-    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_typeNameDiff() {
+    public void test_getConceptByUri_conceptPresentInDB_lastUpdated3DaysBack_typeNameDiff() throws ConceptpowerNoResponseException {
         String sourceURI = "URI-1";
         String nameOld = "NAME-1";
         String nameNew = "NAME-2";

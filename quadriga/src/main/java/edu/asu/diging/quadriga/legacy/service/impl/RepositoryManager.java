@@ -40,7 +40,8 @@ public class RepositoryManager implements IRepositoryManager {
         creationEventList = xmlToObject.parseXML(xml);
         List<EventGraph> flattenedlist = creationEventList.stream().flatMap(List::stream)
                 .map(event ->new EventGraph(event)).collect(Collectors.toList());
-        
+
+                
         elementDao.saveEventGraphs(flattenedlist);
 
         return creationEventList.stream().flatMap(Collection::stream).map(e -> e.getId()).collect(Collectors.toList());

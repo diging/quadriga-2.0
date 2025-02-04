@@ -26,6 +26,7 @@ import edu.asu.diging.quadriga.core.aspect.annotation.VerifyCollectionAccess;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.MappedTripleGroupNotFoundException;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
@@ -45,7 +46,7 @@ public class AddNetworkApiController {
 
     @Autowired
     private MappedTripleGroupService mappedTripleGroupService;
-    
+
     /**
      * The method parse given Json from the post request body and add Network
      * instance to the database
@@ -74,10 +75,11 @@ public class AddNetworkApiController {
         MappedTripleGroup mappedTripleGroup;
         try {
             mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            logger.info("mapped triple found " + mappedTripleGroup);
             if(mappedTripleGroup == null) {
                 return HttpStatus.NOT_FOUND;
             }
-        } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
+        } catch(InvalidObjectIdException | CollectionNotFoundException | MappedTripleGroupNotFoundException e)  {
             logger.error("Couldn't submit network", e);
             return HttpStatus.NOT_FOUND;
         }
