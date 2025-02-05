@@ -29,9 +29,8 @@ import edu.asu.diging.quadriga.core.service.PatternFinder;
 /**
  * This class implements the PatternFinder interface to search 
  * and extract networks that match a specified pattern from an event graph.
- * This class provides methods to compare and match nodes and relations
- * between the graph and pattern, as well as utility functions for graph 
- * extraction.
+ * It has methods to match nodes and relations between the graph and pattern, 
+ * as well as utility functions for graph extraction.
  * 
  * @author Pooja Thalur
  */
