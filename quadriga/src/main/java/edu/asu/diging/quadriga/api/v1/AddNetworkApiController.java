@@ -1,5 +1,11 @@
 package edu.asu.diging.quadriga.api.v1;
 
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.bson.types.ObjectId;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +26,7 @@ import edu.asu.diging.quadriga.core.aspect.annotation.VerifyCollectionAccess;
 import edu.asu.diging.quadriga.core.exception.NodeNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.CollectionNotFoundException;
 import edu.asu.diging.quadriga.core.exceptions.InvalidObjectIdException;
+import edu.asu.diging.quadriga.core.exceptions.MappedTripleGroupNotFoundException;
 import edu.asu.diging.quadriga.core.model.MappedTripleGroup;
 import edu.asu.diging.quadriga.core.model.MappedTripleType;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
@@ -60,23 +68,24 @@ public class AddNetworkApiController {
             logger.error("Quadruple not present in network submission request for collectionId: " + collectionId);
             return HttpStatus.BAD_REQUEST;
         }
-        
+
         // Next, we check whether a collection and mappedTripleGroup is present
         // Every time a new network is submitted, the triple in that network has to be added as the
         // default MappedTripleGroup for given collectionId
         MappedTripleGroup mappedTripleGroup;
         try {
             mappedTripleGroup = mappedTripleGroupService.get(collectionId, MappedTripleType.DEFAULT_MAPPING);
+            logger.info("mapped triple found " + mappedTripleGroup);
             if(mappedTripleGroup == null) {
                 return HttpStatus.NOT_FOUND;
             }
-        } catch(InvalidObjectIdException | CollectionNotFoundException e)  {
+        } catch(InvalidObjectIdException | CollectionNotFoundException | MappedTripleGroupNotFoundException e)  {
             logger.error("Couldn't submit network", e);
             return HttpStatus.NOT_FOUND;
         }
 
         eventGraphService.mapNetworkAndSave(quadruple.getGraph(), collectionId);
- 
+
         try {
             // The new MappedTripleGroup's Id has to be added to Concepts and Predicates
             mappedTripleService.storeMappedGraph(quadruple.getGraph(), mappedTripleGroup);

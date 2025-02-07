@@ -17,10 +17,13 @@ public class Collection {
     private ObjectId _id;
 
     private String name;
+    
     private String description;
+
     private String owner;
     
     private OffsetDateTime creationTime;
+
     private boolean archived;
 
     /**
@@ -51,6 +54,7 @@ public class Collection {
     public void setDescription(String description) {
         this.description = description;
     }
+
     public String getOwner() {
         return owner;
     }

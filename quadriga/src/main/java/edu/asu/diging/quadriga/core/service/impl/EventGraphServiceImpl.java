@@ -6,12 +6,16 @@ import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.quadriga.api.v1.model.Graph;
 import edu.asu.diging.quadriga.core.data.EventGraphRepository;
 import edu.asu.diging.quadriga.core.model.EventGraph;
+
 import edu.asu.diging.quadriga.core.model.events.CreationEvent;
+
 import edu.asu.diging.quadriga.core.mongo.EventGraphDao;
 import edu.asu.diging.quadriga.core.service.EventGraphService;
 import edu.asu.diging.quadriga.core.service.NetworkMapper;
@@ -38,6 +42,16 @@ public class EventGraphServiceImpl implements EventGraphService {
     }
 
     @Override
+    public List<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId) {
+        return repo.findByCollectionIdOrderByCreationTimeAsc(collectionId).orElse(null);
+    }
+    
+    @Override
+    public Page<EventGraph> findAllEventGraphsByCollectionId(ObjectId collectionId, Pageable pageable) {
+        return repo.findByCollectionIdOrderByCreationTimeAsc(collectionId, pageable).orElse(null);
+    }
+    
+    @Override
     public EventGraph findLatestEventGraphByCollectionId(ObjectId collectionId) {
         return repo.findFirstByCollectionIdOrderByCreationTimeDesc(collectionId).orElse(null);
     }
@@ -49,6 +63,11 @@ public class EventGraphServiceImpl implements EventGraphService {
         return eventGraphDao.countEventGraphsByCollectionId(collectionId);
         
     }
+
+    @Override
+    public List<EventGraph> findEventGraphsBySourceURI(String sourceURI) {
+        return repo.findByContextSourceUri(sourceURI).orElse(null);
+    }
     
     @Override
     public void mapNetworkAndSave(Graph graph, String collectionId) {
@@ -58,6 +77,7 @@ public class EventGraphServiceImpl implements EventGraphService {
         eventGraphs.forEach(e -> {
             e.setCollectionId(new ObjectId(collectionId));
             e.setDefaultMapping(graph.getMetadata().getDefaultMapping());
+            e.setContext(graph.getMetadata().getContext());
             /*
              * FIXME:
              * 

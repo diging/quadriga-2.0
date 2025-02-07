@@ -1,0 +1,82 @@
+.new-collection-button-div {
+	margin-top:20px
+}
+
+.new-collection-button {
+	background: rgba(239, 149, 84, 1);
+	color: white;
+	width: 100%;
+}
+
+.search-bar-div {
+	margin-top: 25px;
+	margin-bottom: 35px;
+	width: 56%;
+	height: 40px;
+	border-radius: 2px;
+	position: relative;
+}
+
+.search-text-div {
+	color: rgba(132, 132, 132, 1);
+	background: rgba(242, 242, 242, 1);
+    border: none !important;
+	padding-left: 18px !important
+}
+
+.search-text {
+	margin-left: 20px;
+}
+
+.collection-actions {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	width: 75%
+}
+
+.collection-action {
+	flex: 1
+}
+
+.collection-action-link {
+	text-decoration: none;
+	color: rgba(239, 149, 84, 1);
+	cursor: pointer;
+}
+
+.collection-action-link:hover {
+	text-decoration: none;
+	color: rgba(239, 110, 53, 1);
+}
+
+.collection-action-icon {
+	margin-right: 10px;
+}
+
+.delete-yes-action {
+	background: rgba(239, 149, 84, 1);
+	color: white;
+}
+
+ .left-border-none {
+    border: none !important;
+    box-shadow: inset 0px 0px 0 rgba(0,0,0,0) !important;
+ }
+ 
+ .form-control {
+	background: rgba(242, 242, 242, 1) !important;
+ }
+ 
+ .delete-modal {
+ 	color:black
+ }
+ 
+ .cancel-delete-button {
+ 	margin-left:15px
+ }
+ 
+ .collection-page-number {
+ 	background-color: rgba(239, 149, 84, 1) !important;
+ 	border-color: rgba(239, 149, 84, 1) !important;
+ }

@@ -34,9 +34,9 @@ $(document).ready(function() {
 	var spinner = $('#spinner');
 	var selectedApps = [[${collectionForm.getApps()}]];
 	$.ajax({
-		'url': [[@{|/citesphere/apps|}]],
-		'type': "GET",
-		async: true,
+		'url' : [[@{|/citesphere/apps|}]],
+		'type' : "GET",
+		'async' : true,
 		'success': function(data) {
 			spinner.hide();
 			data.forEach(function(app) {

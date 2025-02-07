@@ -1,0 +1,50 @@
+@charset "UTF-8";
+
+body {
+	padding-bottom: 20px;
+}
+
+.quadriga-page-header {
+	margin-bottom: 50px
+}
+
+.quadriga-navbar {
+	box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.15);
+	height: 56px
+}
+
+.quadriga-brand {
+	padding: 0;
+}
+
+.quadriga-logo {
+	height: 52px
+}
+
+.quadriga-navbar-item {
+	color: black !important;
+}
+
+.quadriga-navbar-item:hover {
+	color: #808080 !important
+}
+
+.collections-dropdown {
+	color: black !important;
+	cursor: pointer;
+}
+
+.collections-dropdown:hover {
+	color: #808080 !important
+}
+
+.logout-icon {
+	padding-top: 9px;
+	height: 25px;
+	margin-left: 15px
+}
+
+.login-icon {
+	height: 17px;
+	margin-left: 15px
+}

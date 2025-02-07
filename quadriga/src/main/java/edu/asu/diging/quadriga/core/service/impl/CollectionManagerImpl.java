@@ -1,9 +1,11 @@
 package edu.asu.diging.quadriga.core.service.impl;
 
 import java.time.OffsetDateTime;
+
+import java.util.Objects;
+
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
@@ -66,7 +68,7 @@ public class CollectionManagerImpl implements CollectionManager {
     }
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.quadriga.core.service.CollectionManager#findCollection(java.lang.String)
+     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#findCollection(java.lang.String)
      */
     @Override
     public Collection findCollection(String id) throws InvalidObjectIdException {
@@ -123,6 +125,18 @@ public class CollectionManagerImpl implements CollectionManager {
         } else {
             throw new CollectionNotFoundException("CollectionId: " + id);
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.quadriga.core.service.ICollectionManager#getCollection(java.lang.String)
+     */
+    @Override
+    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException {
+        Collection collection = findCollection(collectionId);
+        if (collection == null) {
+            throw new CollectionNotFoundException("CollectionId: " + collectionId);
+        }
+        return collection;
     }
 
     /* (non-Javadoc)
@@ -183,5 +197,4 @@ public class CollectionManagerImpl implements CollectionManager {
         
         return collectionRepo.findByArchived(archived, PageRequest.of(pageInt, sizeInt));
     }
-
 }

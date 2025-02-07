@@ -56,6 +56,7 @@ public class ListCollectionController {
                     PageRequest.of(pageInt, sizeInt))); 
             model.addAttribute("username", simpleUser.getUsername());
         }
+
         return "auth/showcollections";
     }
 
