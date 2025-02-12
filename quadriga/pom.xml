@@ -38,8 +38,10 @@
         <mongo.database.password></mongo.database.password>
         <mongo.database.authdb>admin</mongo.database.authdb>
 
-        <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
+        <neo4j.url>bolt://localhost:7687</neo4j.url>
         <neo4j.database>quadriga</neo4j.database>
+        <neo4j.username>neo4j</neo4j.username>
+        <neo4j.password>quadriga</neo4j.password>
         
         <citesphere.base.url></citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
@@ -87,6 +89,10 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

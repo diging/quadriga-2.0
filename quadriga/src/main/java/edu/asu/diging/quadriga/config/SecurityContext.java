@@ -33,13 +33,13 @@ public class SecurityContext {
     @Order(2)
     public static class WebSecurityConfig {
         
-//        @Autowired
-//        private UserDetailsService userManager;
+        @Autowired
+        private UserDetailsService userManager;
         
-//        public void configure(AuthenticationManagerBuilder builder)
-//                throws Exception {
-//            builder.userDetailsService(userManager);
-//        }
+        public void configure(AuthenticationManagerBuilder builder)
+                throws Exception {
+            builder.userDetailsService(userManager);
+        }
         
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

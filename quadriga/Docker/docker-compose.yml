@@ -46,24 +46,22 @@ services:
       - "7474:7474"
       - "7687:7687"
   
-  web:
-    build:
-        context: ./tomcat
-        dockerfile: Dockerfile
-    image: diging/quadriga2.0:latest
-    restart: always
-    networks:
-      - quadriga-network
-    volumes:
-      - quadriga-data:/usr/local/tomcat/data
-    env_file:
-      - ./config/quadriga.env
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mysql
-      - mongodb
-      - neo4j
+#  web:
+#    build:
+#        context: ./tomcat
+#        dockerfile: Dockerfile
+#    image: diging/quadriga2.0:latest
+#    restart: always
+#    networks:
+#      - quadriga-network
+#    volumes:
+#      - quadriga-data:/usr/local/tomcat/data
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - mysql
+#      - mongodb
+#      - neo4j
       
 volumes:
   mysql-var-data:
