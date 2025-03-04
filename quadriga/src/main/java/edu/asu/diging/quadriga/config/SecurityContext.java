@@ -5,18 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -37,30 +38,23 @@ public class SecurityContext {
         @Autowired
         private UserDetailsService userManager;
         
-        @Bean
-        InMemoryUserDetailsManager userDetailsService() {
-            UserDetails user = User.withDefaultPasswordEncoder()
-              .username("Admin")
-              .password("admin")
-              .roles("ROLE_ADMIN")
-              .roles("ROLE_USER")
-              .build();
-
-            return new InMemoryUserDetailsManager(user);
+        public void configure(AuthenticationManagerBuilder builder)
+                throws Exception {
+            builder.userDetailsService(userManager);
         }
         
         @Bean
-        public WebSecurityCustomizer webSecurityCustomizer() throws Exception {           
+        public WebSecurityCustomizer webSecurityCustomizer() throws Exception {
+            
                     // Spring Security ignores request to static resources such as CSS or JS
                     // files.
-            return (web)-> web.ignoring().requestMatchers("/static/**");
+            return (web)->web.ignoring().requestMatchers("/static/**");
         }
-        
+
         @Bean
-        SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http.cors().and().authorizeHttpRequests()
-            .requestMatchers("**");
-            HeadersConfigurer<HttpSecurity> config = http.csrf()
+        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+            HeadersConfigurer<HttpSecurity> config = http.cors().and().authorizeHttpRequests()
+                    .requestMatchers("**").permitAll().and().csrf()
                     .requireCsrfProtectionMatcher(new RequestMatcher() {
                         @Override
                         public boolean matches(HttpServletRequest arg0) {
@@ -74,7 +68,6 @@ public class SecurityContext {
                             return true;
                         }
                     }).and().headers().frameOptions().sameOrigin();
-             
             config.and().formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed").and()
                     .logout()
                     .deleteCookies("JSESSIONID")
@@ -82,15 +75,15 @@ public class SecurityContext {
                     .logoutSuccessUrl("/login")
                     .and().exceptionHandling().accessDeniedPage("/403")
                     // Configures url based authorization
-                    .and().authorizeHttpRequests()
+                    .and().authorizeHttpRequests((authorize)->authorize
                     // Anyone can access the urls
                     .requestMatchers("/", "/resources/**", "/register", "/login", "/loginFailed", "/register", "/logout",
                             "/reset/**")
                     .permitAll()
                     // The rest of the our application is protected.
-                    .requestMatchers("/users/**", "/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/users/**", "/admin/**").hasAuthority("ROLE_ADMIN")
                     .requestMatchers("/auth/**").hasAnyRole("USER", "ADMIN")
-                    .requestMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE);
+                    .requestMatchers("/password/**").hasAuthority(SimpleUsersConstants.CHANGE_PASSWORD_ROLE));
             return http.build();
         }
     
