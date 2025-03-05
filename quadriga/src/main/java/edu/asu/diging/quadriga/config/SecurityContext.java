@@ -97,23 +97,26 @@ public class SecurityContext {
     @Configuration
     @Order(1)
     public class ApiV1WebSecurityConfig {
-
+        
+        @Autowired
+        private AuthenticationConfiguration authConfig;
+        
         @Bean
-        SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-            CitesphereTokenFilter citesphereTokenFilter = new CitesphereTokenFilter("/api/v1/**");
-            citesphereTokenFilter.setAuthenticationManager(authenticationManager());
-            
-            httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                    .authorizeHttpRequests().requestMatchers("/api/v1/**").permitAll().and()
-                    .addFilterBefore(citesphereTokenFilter, BasicAuthenticationFilter.class)
-                    .csrf().disable();
+        public AuthenticationManager authenticationManager() throws Exception {
+            return authConfig.getAuthenticationManager();
         }
         
         @Bean
-        public CitesphereAuthenticationProvider authenticationProvider() {
-            return new CitesphereAuthenticationProvider();
+        public SecurityFilterChain apiFilterChain(HttpSecurity httpSecurity) throws Exception {
+            CitesphereTokenFilter citesphereTokenFilter = new CitesphereTokenFilter("/api/v1/**");
+            citesphereTokenFilter.setAuthenticationManager(authConfig.getAuthenticationManager());
+            
+            return httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                    .authorizeHttpRequests((authorize)->authorize
+                            .requestMatchers("/api/v1/**").permitAll())
+                            .addFilterBefore(citesphereTokenFilter, BasicAuthenticationFilter.class)
+                    .csrf().disable().build();
         }
-
     }
 
 }
