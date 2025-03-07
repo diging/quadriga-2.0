@@ -1,13 +1,10 @@
 package edu.asu.diging.quadriga.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -75,15 +72,15 @@ public class SecurityContext {
                     .logoutSuccessUrl("/login")
                     .and().exceptionHandling().accessDeniedPage("/403")
                     // Configures url based authorization
-                    .and().authorizeHttpRequests((authorize)->authorize
+                    .and().authorizeHttpRequests()
                     // Anyone can access the urls
                     .requestMatchers("/", "/resources/**", "/register", "/login", "/loginFailed", "/register", "/logout",
-                            "/reset/**")
+                            "/reset/**", "/**")
                     .permitAll()
                     // The rest of the our application is protected.
-                    .requestMatchers("/users/**", "/admin/**").hasAuthority("ROLE_ADMIN")
+                    .requestMatchers("/users/**", "/admin/**").hasRole("ADMIN")
                     .requestMatchers("/auth/**").hasAnyRole("USER", "ADMIN")
-                    .requestMatchers("/password/**").hasAuthority(SimpleUsersConstants.CHANGE_PASSWORD_ROLE));
+                    .requestMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE);
             return http.build();
         }
     
@@ -91,6 +88,11 @@ public class SecurityContext {
         public BCryptPasswordEncoder passwordEncoder() {
             return new BCryptPasswordEncoder(4);
         }
+        
+//        @Bean
+//        public CitesphereAuthenticationProvider authenticationProvider() {
+//            return new CitesphereAuthenticationProvider();
+//        }
         
     }
     
@@ -109,12 +111,12 @@ public class SecurityContext {
         @Bean
         public SecurityFilterChain apiFilterChain(HttpSecurity httpSecurity) throws Exception {
             CitesphereTokenFilter citesphereTokenFilter = new CitesphereTokenFilter("/api/v1/**");
-            citesphereTokenFilter.setAuthenticationManager(authConfig.getAuthenticationManager());
+            citesphereTokenFilter.setAuthenticationManager(authenticationManager());
             
             return httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                    .authorizeHttpRequests((authorize)->authorize
-                            .requestMatchers("/api/v1/**").permitAll())
-                            .addFilterBefore(citesphereTokenFilter, BasicAuthenticationFilter.class)
+                    .authorizeHttpRequests()
+                    .requestMatchers("/api/v1/**").authenticated().and()
+                    .addFilterBefore(citesphereTokenFilter, BasicAuthenticationFilter.class)
                     .csrf().disable().build();
         }
     }
