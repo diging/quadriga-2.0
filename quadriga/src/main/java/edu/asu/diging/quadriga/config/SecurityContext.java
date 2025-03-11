@@ -35,6 +35,7 @@ public class SecurityContext {
         @Autowired
         private UserDetailsService userManager;
         
+        @Autowired
         public void configure(AuthenticationManagerBuilder builder)
                 throws Exception {
             builder.userDetailsService(userManager);
