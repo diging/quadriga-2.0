@@ -51,8 +51,8 @@ public class SecurityContext {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            HeadersConfigurer<HttpSecurity> config = http.cors().and().authorizeHttpRequests()
-                    .requestMatchers("**").permitAll().and().csrf()
+            HeadersConfigurer<HttpSecurity> config = http.cors().and().authorizeHttpRequests(authorizationManager->
+            authorizationManager.requestMatchers("**")).csrf()
                     .requireCsrfProtectionMatcher(new RequestMatcher() {
                         @Override
                         public boolean matches(HttpServletRequest arg0) {
@@ -76,9 +76,9 @@ public class SecurityContext {
                     .and().authorizeHttpRequests()
                     // Anyone can access the urls
                     .requestMatchers("/", "/resources/**", "/register", "/login", "/loginFailed", "/register", "/logout",
-                            "/reset/**", "/**")
+                            "/reset/**", "/citesphere/**")
                     .permitAll()
-                    // The rest of the our application is protected.
+                    // The rest of our application is protected.
                     .requestMatchers("/users/**", "/admin/**").hasRole("ADMIN")
                     .requestMatchers("/auth/**").hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE);
@@ -89,36 +89,33 @@ public class SecurityContext {
         public BCryptPasswordEncoder passwordEncoder() {
             return new BCryptPasswordEncoder(4);
         }
-        
-//        @Bean
-//        public CitesphereAuthenticationProvider authenticationProvider() {
-//            return new CitesphereAuthenticationProvider();
-//        }
-        
+                
     }
     
     @Configuration
     @Order(1)
     public class ApiV1WebSecurityConfig {
         
-        @Autowired
-        private AuthenticationConfiguration authConfig;
+//        @Autowired
+//        public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+//            return authConfig.getAuthenticationManager();
+//        }
         
         @Bean
-        public AuthenticationManager authenticationManager() throws Exception {
-            return authConfig.getAuthenticationManager();
+        public SecurityFilterChain apiFilterChain(HttpSecurity httpSecurity, AuthenticationConfiguration authenticationConfiguration) throws Exception {
+            CitesphereTokenFilter citesphereTokenFilter = new CitesphereTokenFilter("/api/v1/**");
+            citesphereTokenFilter.setAuthenticationManager(authenticationConfiguration.getAuthenticationManager());
+
+            httpSecurity.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .authorizeHttpRequests(authorizationManager -> authorizationManager
+                            .requestMatchers("/api/v1/**").permitAll()).addFilterBefore(citesphereTokenFilter, BasicAuthenticationFilter.class)
+                    .csrf().disable();
+            return httpSecurity.build();
         }
         
         @Bean
-        public SecurityFilterChain apiFilterChain(HttpSecurity httpSecurity) throws Exception {
-            CitesphereTokenFilter citesphereTokenFilter = new CitesphereTokenFilter("/api/v1/**");
-            citesphereTokenFilter.setAuthenticationManager(authenticationManager());
-            
-            return httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                    .authorizeHttpRequests()
-                    .requestMatchers("/api/v1/**").authenticated().and()
-                    .addFilterBefore(citesphereTokenFilter, BasicAuthenticationFilter.class)
-                    .csrf().disable().build();
+        public CitesphereAuthenticationProvider authenticationProvider() {
+            return new CitesphereAuthenticationProvider();
         }
     }
 
