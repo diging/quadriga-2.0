@@ -51,8 +51,8 @@ public class SecurityContext {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            HeadersConfigurer<HttpSecurity> config = http.cors().and().authorizeHttpRequests(authorizationManager->
-            authorizationManager.requestMatchers("**")).csrf()
+            HeadersConfigurer<HttpSecurity> config = http.cors(withDefaults()).authorizeHttpRequests(authorizationManager ->
+                    authorizationManager.requestMatchers("**")).csrf(csrf -> csrf
                     .requireCsrfProtectionMatcher(new RequestMatcher() {
                         @Override
                         public boolean matches(HttpServletRequest arg0) {
@@ -65,15 +65,14 @@ public class SecurityContext {
                             }
                             return true;
                         }
-                    }).and().headers().frameOptions().sameOrigin();
-            config.and().formLogin().loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed").and()
-                    .logout()
-                    .deleteCookies("JSESSIONID")
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login")
-                    .and().exceptionHandling().accessDeniedPage("/403")
-                    // Configures url based authorization
-                    .and().authorizeHttpRequests()
+                    })).headers(headers -> headers.frameOptions().sameOrigin());
+
+            config.and().formLogin(login -> login.loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed"))
+                    .logout(logout -> logout
+                            .deleteCookies("JSESSIONID")
+                            .logoutUrl("/logout")
+                            .logoutSuccessUrl("/login")).exceptionHandling(handling -> handling.accessDeniedPage("/403"))
+                            .authorizeHttpRequests(requests -> requests
                     // Anyone can access the urls
                     .requestMatchers("/", "/resources/**", "/register", "/login", "/loginFailed", "/register", "/logout",
                             "/reset/**", "/citesphere/**")
@@ -81,7 +80,7 @@ public class SecurityContext {
                     // The rest of our application is protected.
                     .requestMatchers("/users/**", "/admin/**").hasRole("ADMIN")
                     .requestMatchers("/auth/**").hasAnyRole("USER", "ADMIN")
-                    .requestMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE);
+                    .requestMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE));
             return http.build();
         }
     
