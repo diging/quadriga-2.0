@@ -19,7 +19,7 @@ import org.hibernate.annotations.Parameter;
  *
  */
 @Entity
-@Table(name = "SimpleUserApp")
+@Table
 public class SimpleUserApp implements Serializable {
 
     private static final long serialVersionUID = -8474699901885186804L;

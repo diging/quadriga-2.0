@@ -50,7 +50,7 @@
 
 
 
-        <log.level>trace</log.level>
+        <log.level>info</log.level>
 
         <tomcat.deploy.path></tomcat.deploy.path>
         <tomcat.app.name>quadriga2.0</tomcat.app.name>
