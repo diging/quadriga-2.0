@@ -1,24 +1,24 @@
 version: '3.8'
 
 services:
-  mysql:
-    build:
-      context: ./mysql
-      dockerfile: Dockerfile
-    image: mysql:9.0.0
-    restart: always
-    networks:
-      - quadriga-network
-    volumes:
-      - mysql-var-data:/var/lib/mysql
-      - mysql-etc-data:/etc
-      - mysql-usr-data:/usr
-    environment:
-      - MYSQL_USER={username}
-      - MYSQL_PASSWORD={password}
-      - MYSQL_ROOT_PASSWORD={root_password}
-    ports:
-      - "3306:3306"
+#  mysql:
+#    build:
+#      context: ./mysql
+#      dockerfile: Dockerfile
+#    image: mysql:9.0.0
+#    restart: always
+#    networks:
+#      - quadriga-network
+#    volumes:
+#      - mysql-var-data:/var/lib/mysql
+#      - mysql-etc-data:/etc
+#      - mysql-usr-data:/usr
+#    environment:
+#      - MYSQL_USER={username}
+#      - MYSQL_PASSWORD={password}
+#      - MYSQL_ROOT_PASSWORD={root_password}
+#    ports:
+#      - "3306:3306"
 
   mongodb:
     image: mongo:4.4.6
@@ -46,22 +46,22 @@ services:
       - "7474:7474"
       - "7687:7687"
   
-#  web:
-#    build:
-#        context: ./tomcat
-#        dockerfile: Dockerfile
-#    image: diging/quadriga2.0:latest
-#    restart: always
-#    networks:
-#      - quadriga-network
-#    volumes:
-#      - quadriga-data:/usr/local/tomcat/data
-#    ports:
-#      - "8080:8080"
-#    depends_on:
+  web:
+    build:
+        context: ./tomcat
+        dockerfile: Dockerfile
+    image: diging/quadriga2.0:latest
+    restart: always
+    networks:
+      - quadriga-network
+    volumes:
+      - quadriga-data:/usr/local/tomcat/data
+    ports:
+      - "8080:8080"
+    depends_on:
 #      - mysql
-#      - mongodb
-#      - neo4j
+      - mongodb
+      - neo4j
       
 volumes:
   mysql-var-data:

@@ -17,7 +17,7 @@ RUN apt clean && \
 
 RUN apt-get update && apt-get install git -y && apt install maven -y
 
-RUN git clone -b develop https://github.com/diging/quadriga-2.0.git
+RUN git clone -b story/Q20-25 https://github.com/diging/quadriga-2.0.git
 
 RUN cd quadriga-2.0/quadriga && mvn clean package -Dlog.level=info
 RUN cp quadriga-2.0/quadriga/target/vspace.war ../webapps
