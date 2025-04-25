@@ -2,15 +2,12 @@ version: '3.8'
 
 services:
   mysql:
-    build:
-      context: ./mysql
-      dockerfile: Dockerfile
     image: mysql:9.0.0
     restart: always
     networks:
       - quadriga-network
     volumes:
-      - mysql-var-data:/var/lib/mysql
+      - mysql-var-data:/data/mysql
       - mysql-etc-data:/etc
       - mysql-usr-data:/usr
     environment:
@@ -50,12 +47,13 @@ services:
     build:
         context: ./tomcat
         dockerfile: Dockerfile
-    image: diging/quadriga2.0:latest
+#    image: diging/quadriga2.0:latest
     restart: always
     networks:
       - quadriga-network
     volumes:
       - quadriga-data:/usr/local/tomcat/data
+      - ./tomcat/webapps:/usr/local/tomcat/webapps
     ports:
       - "8080:8080"
     depends_on:
