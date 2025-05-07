@@ -47,7 +47,6 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
 
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
         
-        conceptCacheUpdateInterval=0;
         if (conceptCache == null || ChronoUnit.HOURS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= conceptCacheUpdateInterval) {
             conceptCache = saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
         }
