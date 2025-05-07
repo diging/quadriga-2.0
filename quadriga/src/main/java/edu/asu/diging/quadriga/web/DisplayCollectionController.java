@@ -54,7 +54,7 @@ public class DisplayCollectionController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/auth/collections/{collectionId}", method = RequestMethod.GET)
-    public String get( @RequestParam(required = false) Integer page , @RequestParam(required = false) Integer  size, @PathVariable String collectionId, Model model) {
+    public String get( @RequestParam(value = "0", required = false) Integer page, @RequestParam(value="10", required = false) Integer  size, @PathVariable String collectionId, Model model) {
 
         // Get collection details
         Collection collection;
@@ -70,11 +70,6 @@ public class DisplayCollectionController {
         }
 
         model.addAttribute("collection", collection);
-
-//      Determine page number and size for network pagination      
-        page = (page == null || page < 0) ? 0 : page - 1;
-        
-        size = (size == null || size < 1) ? 10 : size;
 
         model.addAttribute("size", size);
 

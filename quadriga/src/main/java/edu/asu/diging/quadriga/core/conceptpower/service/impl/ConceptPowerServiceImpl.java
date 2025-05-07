@@ -47,6 +47,7 @@ public class ConceptPowerServiceImpl implements ConceptPowerService {
     @Override
     public ConceptCache getConceptByUri(String uri) throws ConceptpowerNoResponseException {
         ConceptCache conceptCache = conceptCacheService.getConceptByUri(uri);
+
         if (conceptCache == null || ChronoUnit.HOURS.between(conceptCache.getLastUpdated(), LocalDateTime.now()) >= conceptCacheUpdateInterval) {
             conceptCache = saveConceptCacheFromConceptPowerReply(conceptCache, conceptPowerConnectorService.getConceptPowerReply(uri), uri);
         }
