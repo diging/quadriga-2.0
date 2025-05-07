@@ -38,6 +38,7 @@ public interface CollectionManager {
     
     /**
      * 
+
      * Edits an existing Collection and updates it in the db
      * @param id of the collection that needs to be updated
      * @param name will be the updated name value
@@ -66,7 +67,21 @@ public interface CollectionManager {
      * @throws InvalidObjectIdException if collectionId couldn't be converted to ObjectId
      */
     public Collection deleteCollection(String id) throws CollectionNotFoundException, InvalidObjectIdException;
-
+    
+    /**
+     * This method checks whether a collection with given collectionId exists and
+     * returns the collection if it exists.
+     * If it doesn't exist, it simply throws an exception
+     * 
+     * @param collectionId is the id of the collection to be checked
+     * @return the Collection entry found in the database
+     * @throws InvalidObjectIdException    if collectionId couldn't be conveted to
+     *                                     ObjectId
+     * @throws CollectionNotFoundException if collection with given collectionId
+     *                                     does't exist
+     */
+    public Collection getCollection(String collectionId) throws InvalidObjectIdException, CollectionNotFoundException;
+    
     /**
      * This method returns the number of default mappings present in the collection
      * One MappedTripleGroup will exist for the "DefaultMappings" for this collection

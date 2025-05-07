@@ -49,8 +49,8 @@
         <citesphere.client.id></citesphere.client.id>
         <citesphere.client.secret></citesphere.client.secret>
 
-
-
+        <conceptpower.base.url></conceptpower.base.url>
+        
         <log.level>info</log.level>
 
         <tomcat.deploy.path></tomcat.deploy.path>
@@ -112,7 +112,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.8.0</version>
+            <version>4.11.0</version>
             <scope>test</scope>
         </dependency>
         

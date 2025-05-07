@@ -21,6 +21,7 @@ public class Collection {
     private String owner;
     
     private OffsetDateTime creationTime;
+
     private boolean archived;
 
     /**
