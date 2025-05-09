@@ -23,6 +23,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import edu.asu.diging.quadriga.config.web.CitesphereTokenFilter;
 import edu.asu.diging.simpleusers.core.service.SimpleUsersConstants;
 import jakarta.servlet.http.HttpServletRequest;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -51,33 +52,27 @@ public class SecurityContext {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            HeadersConfigurer<HttpSecurity> config = http.cors(withDefaults()).authorizeHttpRequests(authorizationManager ->
-                    authorizationManager.requestMatchers("**")).csrf(csrf -> csrf
-                    .requireCsrfProtectionMatcher(new RequestMatcher() {
-                        @Override
-                        public boolean matches(HttpServletRequest arg0) {
-                            // don't require CSRF for REST calls
-                            if (arg0.getRequestURI().indexOf("/api/") > -1) {
-                                return false;
-                            }
-                            if (arg0.getMethod().equals("GET")) {
-                                return false;
-                            }
-                            return true;
+            http.cors(withDefaults())
+                .authorizeHttpRequests(authorizationManager -> authorizationManager.requestMatchers("**"))
+                .csrf(csrf -> csrf.requireCsrfProtectionMatcher(new RequestMatcher() {
+                    @Override
+                    public boolean matches(HttpServletRequest arg0) {
+                        // don't require CSRF for REST calls
+                        if (arg0.getRequestURI().indexOf("/api/") > -1) {
+                            return false;
                         }
-                    })).headers(headers -> headers.frameOptions().sameOrigin());
-
-            config.and().formLogin(login -> login.loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed"))
-                    .logout(logout -> logout
-                            .deleteCookies("JSESSIONID")
-                            .logoutUrl("/logout")
-                            .logoutSuccessUrl("/login")).exceptionHandling(handling -> handling.accessDeniedPage("/403"))
-                            .authorizeHttpRequests(requests -> requests
-                    // Anyone can access the urls
-                    .requestMatchers("/", "/resources/**", "/register", "/login", "/loginFailed", "/register", "/logout",
-                            "/reset/**", "/citesphere/**")
-                    .permitAll()
-                    // The rest of our application is protected.
+                        if (arg0.getMethod().equals("GET")) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }))
+                .headers(headers -> headers.frameOptions().sameOrigin())
+                .formLogin(login -> login.loginPage("/login").loginProcessingUrl("/login/authenticate").failureUrl("/loginFailed"))
+                .logout(logout -> logout.deleteCookies("JSESSIONID").logoutUrl("/logout").logoutSuccessUrl("/login"))
+                .exceptionHandling(handling -> handling.accessDeniedPage("/403"))
+                .authorizeHttpRequests(requests -> requests
+                    .requestMatchers("/", "/resources/**", "/register", "/login", "/loginFailed", "/register", "/logout", "/reset/**", "/citesphere/**").permitAll()
                     .requestMatchers("/users/**", "/admin/**").hasRole("ADMIN")
                     .requestMatchers("/auth/**").hasAnyRole("USER", "ADMIN")
                     .requestMatchers("/password/**").hasRole(SimpleUsersConstants.CHANGE_PASSWORD_ROLE));
