@@ -26,7 +26,7 @@ public class DisplayCollectionController {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/auth/collections/{id}", method = RequestMethod.GET)
-    public String get(@PathVariable String id, Model model) {
+    public String get(@PathVariable("id") String id, Model model) {
         
         Collection collection;
         try {
