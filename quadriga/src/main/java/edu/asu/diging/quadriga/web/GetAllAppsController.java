@@ -1,7 +1,7 @@
 package edu.asu.diging.quadriga.web;
 
 import java.util.HashSet;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

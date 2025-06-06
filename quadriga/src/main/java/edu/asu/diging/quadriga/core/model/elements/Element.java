@@ -1,7 +1,7 @@
 package edu.asu.diging.quadriga.core.model.elements;
 
-import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.persistence.Transient;
+import jakarta.xml.bind.annotation.XmlElement;
 
 import org.springframework.data.annotation.Id;
 

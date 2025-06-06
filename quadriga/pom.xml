@@ -10,19 +10,16 @@
 
     <properties>
         <org.slf4j-version>1.7.26</org.slf4j-version>
-        <org.springframework-version>5.2.9.RELEASE</org.springframework-version>
-        <spring-security-version>5.4.11</spring-security-version>
-        <spring-data.version>Neumann-SR4</spring-data.version>
-        <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
-        <mongo-version>4.1.0</mongo-version>
-        <simple-users-version>1.1</simple-users-version>
+
+        <org.springframework-version>6.2.7</org.springframework-version>
+        <spring-security-version>6.0.0</spring-security-version>
+        <spring-data.version>2025.0.0</spring-data.version>
+        <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
+        <mongo-version>5.5.0</mongo-version>
+        <simple-users-version>1.3</simple-users-version>
 
         <admin.password>$2a$04$oQo44vqcDIFRoYKiAXoNheurzkwX9dcNmowvTX/hsWuBMwijqn44i</admin.password>
         
-
-        <hibernate.dialect>org.hibernate.dialect.MySQL57Dialect</hibernate.dialect>
-        
-
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.database.url>jdbc-url-to-db</db.database.url>
         <db.user>db-user</db.user>
@@ -42,8 +39,10 @@
         <mongo.database.password></mongo.database.password>
         <mongo.database.authdb>admin</mongo.database.authdb>
 
-        <neo4j.url>http://neo4j:quadriga@localhost:7474/</neo4j.url>
+        <neo4j.url>bolt://localhost:7687</neo4j.url>
         <neo4j.database>quadriga</neo4j.database>
+        <neo4j.username>neo4j</neo4j.username>
+        <neo4j.password>quadriga</neo4j.password>
         
         <citesphere.base.url></citesphere.base.url>
         <citesphere.client.id></citesphere.client.id>
@@ -71,7 +70,7 @@
             <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-releasetrain -->
             <dependency>
                 <groupId>org.springframework.data</groupId>
-                <artifactId>spring-data-releasetrain</artifactId>
+                <artifactId>spring-data-bom</artifactId>
                 <version>${spring-data.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
@@ -94,6 +93,10 @@
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
         <dependency>
@@ -112,14 +115,14 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.8.0</version>
+            <version>5.18.0</version>
             <scope>test</scope>
         </dependency>
         
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
-            <version>3.8.0</version>
+            <version>5.2.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -145,6 +148,12 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-commons -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-neo4j</artifactId>
@@ -177,7 +186,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.12.7.1</version>
+            <version>2.15.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mongodb/mongodb-driver-core -->
@@ -192,13 +201,18 @@
             <artifactId>mongodb-driver-sync</artifactId>
             <version>${mongo-version}</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-ogm-http-driver -->
+        
+        <!--<dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-ogm-core</artifactId>
+            <version>4.0.13</version>
+        </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-ogm-http-driver</artifactId>
-            <version>3.2.11</version>
-        </dependency>
+            <artifactId>neo4j-ogm-bolt-driver</artifactId>
+            <version>4.0.13</version>
+        </dependency> -->
+        
         
         <!-- OpenId Connect -->
         <!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
@@ -213,11 +227,10 @@
             <artifactId>oauth2-oidc-sdk</artifactId>
             <version>5.17.1</version>
         </dependency>
-
         <dependency>
             <groupId>edu.asu.diging</groupId>
             <artifactId>simple-users</artifactId>
-            <version>${simple-users-version}</version>
+            <version>${simple-users-version}</version>            
         </dependency>
         <!-- Logging -->
         <dependency>
@@ -263,23 +276,37 @@
         </dependency>
 
         <!-- DataSource (HikariCP) -->
+        <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.2.0</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.2.0</version>
         </dependency>
 
+
         <dependency>
-            <groupId>org.hibernate</groupId>
+            <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.4.24.Final</version>
+            <version>6.0.0.Final</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>1.14.18</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
         <dependency>
             <groupId>org.thymeleaf</groupId>
@@ -297,14 +324,14 @@
         <dependency>
             <groupId>nz.net.ultraq.thymeleaf</groupId>
             <artifactId>thymeleaf-layout-dialect</artifactId>
-            <version>2.4.1</version>
+            <version>3.0.0</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity5 -->
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
-            <version>3.0.4.RELEASE</version>
+            <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+            <version>3.1.2.RELEASE</version>
         </dependency>
 
         <dependency>
@@ -312,14 +339,18 @@
             <artifactId>thymeleaf-extras-java8time</artifactId>
             <version>3.0.4.RELEASE</version>
         </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        
+        <!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
             <version>3.1.0</version>
-            <scope>provided</scope>
+        </dependency>
+       
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/commons-validator/commons-validator -->
         <dependency>
@@ -331,7 +362,14 @@
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-            <version>3.6.2</version>
+            <classifier>jakarta</classifier>
+            <version>3.10.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.glassfish.jaxb</groupId>
+                    <artifactId>jaxb-runtime</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- https://mvnrepository.com/artifact/javax.cache/cache-api -->
         <dependency>
@@ -357,6 +395,15 @@
             <artifactId>spring-security-ldap</artifactId>
             <version>${spring-security-version}</version>
         </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
 
     </dependencies>
 
@@ -390,6 +437,7 @@
                                 <exclude>**/*.woff</exclude>
                                 <exclude>**/*.ttf</exclude>
                                 <exclude>**/*.woff2</exclude>
+                                <exclude>**/*.eot</exclude>
                             </excludes>
                         </resource>
 
@@ -399,10 +447,12 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>17</source>
+                    <target>17</target>
+                    <compilerArgument>-parameters</compilerArgument>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <artifactId>tomcat7-maven-plugin</artifactId>

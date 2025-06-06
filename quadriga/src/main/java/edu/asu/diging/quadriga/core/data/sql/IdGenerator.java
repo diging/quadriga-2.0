@@ -10,8 +10,8 @@ import org.hibernate.id.Configurable;
 import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.id.enhanced.SequenceStyleGenerator;
 import org.hibernate.service.ServiceRegistry;
-import org.hibernate.type.LongType;
 import org.hibernate.type.Type;
+import org.hibernate.type.spi.TypeConfiguration;
 
 public class IdGenerator extends SequenceStyleGenerator implements IdentifierGenerator, Configurable {
 
@@ -20,7 +20,7 @@ public class IdGenerator extends SequenceStyleGenerator implements IdentifierGen
 
     @Override
     public void configure(Type type, Properties properties, ServiceRegistry sr) throws MappingException {
-        super.configure(LongType.INSTANCE, properties, sr);
+        super.configure(new TypeConfiguration().getBasicTypeRegistry().getRegisteredType(Long.class), properties, sr);
         prefix = properties.getProperty("prefix");
         numberFormat = "%d";
     }

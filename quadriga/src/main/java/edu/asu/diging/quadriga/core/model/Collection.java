@@ -2,7 +2,7 @@ package edu.asu.diging.quadriga.core.model;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 
 import org.bson.types.ObjectId;
 

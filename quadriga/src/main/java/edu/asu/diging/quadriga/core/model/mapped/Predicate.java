@@ -1,12 +1,13 @@
 package edu.asu.diging.quadriga.core.model.mapped;
 
-import org.neo4j.ogm.annotation.EndNode;
-import org.neo4j.ogm.annotation.GeneratedValue;
-import org.neo4j.ogm.annotation.Id;
-import org.neo4j.ogm.annotation.RelationshipEntity;
-import org.neo4j.ogm.annotation.StartNode;
+import org.springframework.data.neo4j.core.schema.GeneratedValue;
+import org.springframework.data.neo4j.core.schema.Id;
+import org.springframework.data.neo4j.core.schema.Relationship;
+import org.springframework.data.neo4j.core.schema.Relationship.Direction;
+import org.springframework.data.neo4j.core.schema.RelationshipProperties;
+import org.springframework.data.neo4j.core.schema.TargetNode;
 
-@RelationshipEntity(type = "PREDICATE")
+@RelationshipProperties
 public class Predicate {
     
     @Id 
@@ -18,10 +19,10 @@ public class Predicate {
     
     private String mappedTripleGroupId;
     
-    @StartNode
+    @Relationship(direction = Direction.OUTGOING)
     private Concept source;
 
-    @EndNode
+    @TargetNode
     private Concept target;
 
     public String getRelationship() {

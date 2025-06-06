@@ -1,6 +1,6 @@
 package edu.asu.diging.quadriga.core.model;
 
-import javax.persistence.Id;
+import jakarta.persistence.Id;
 
 import org.bson.types.ObjectId;
 
