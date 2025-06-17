@@ -6,11 +6,15 @@
 	<div layout:fragment="content">
 		<a th:if="${collection.isArchived()}" th:href="@{/auth/collections/archived}" class="btn btn-primary btn-sm">
 		    <i class="fas fa-arrow-left" aria-hidden="true"></i>
-		    <span>Back to all collections</span>
+		    <span>Back to All Collections</span>
 		</a>
 		<a th:unless="${collection.isArchived()}" th:href="@{/auth/collections}" class="btn btn-primary btn-sm">
 			<i class="fas fa-arrow-left" aria-hidden="true"></i>
-			<span>Back to all collections</span>
+			<span>Back to All Collections</span>
+		</a>
+		<a th:href="@{/auth/collections/{id}/edit(id=${collection.id})}" class="btn btn-primary btn-sm" style="float: right;">
+			<i class="fas fa-edit" aria-hidden="true"></i>
+			<span>Edit Collection</span>
 		</a>
 		<h2><span th:text="${collection.name}"></span></h2>
 		<h4>Description: <span th:text="${collection.description}"></span></h4>
